@@ -8,7 +8,10 @@ import {
 } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
 import { Checkbox } from "@workspace/ui/components/checkbox";
-import { cn } from "@workspace/ui/lib/utils";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@workspace/ui/components/native-select";
 
 import type { FuelType } from "../lib/car-import-calculator";
 import { CAR_IMPORT_CONSTANTS } from "../lib/car-import-calculator";
@@ -126,11 +129,9 @@ export function CarImportTaxesInputs({
               Standardi i emetimeve
             </FieldLabel>
             <FieldContent>
-              <select
+              <NativeSelect
                 id={euroSelectId}
-                className={cn(
-                  "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
-                )}
+                wrapperClassName="w-full"
                 value={`Euro ${euroStandard}`}
                 onChange={(event) => {
                   const numericValue = Number.parseInt(
@@ -145,11 +146,11 @@ export function CarImportTaxesInputs({
                 }}
               >
                 {EURO_OPTIONS.map((option) => (
-                  <option key={option} value={`Euro ${option}`}>
+                  <NativeSelectOption key={option} value={`Euro ${option}`}>
                     Euro {option}
-                  </option>
+                  </NativeSelectOption>
                 ))}
-              </select>
+              </NativeSelect>
             </FieldContent>
             <FieldDescription className="text-xs text-muted-foreground">
               Ligji për Automjete kërkon së paku Euro{" "}
@@ -161,21 +162,21 @@ export function CarImportTaxesInputs({
           <Field>
             <FieldLabel htmlFor="fuel-type">Lloji i karburantit</FieldLabel>
             <FieldContent>
-              <select
+              <NativeSelect
                 id="fuel-type"
-                className={cn(
-                  "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
-                )}
+                wrapperClassName="w-full"
                 value={fuelType}
                 onChange={(event) =>
                   onFuelTypeChange(event.target.value as FuelType)
                 }
               >
-                <option value="petrol">Benzinë</option>
-                <option value="diesel">Naftë</option>
-                <option value="hybrid">Hibride</option>
-                <option value="electric">Elektrike</option>
-              </select>
+                <NativeSelectOption value="petrol">Benzinë</NativeSelectOption>
+                <NativeSelectOption value="diesel">Naftë</NativeSelectOption>
+                <NativeSelectOption value="hybrid">Hibride</NativeSelectOption>
+                <NativeSelectOption value="electric">
+                  Elektrike
+                </NativeSelectOption>
+              </NativeSelect>
             </FieldContent>
           </Field>
           <Field>

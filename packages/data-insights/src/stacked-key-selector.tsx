@@ -9,6 +9,7 @@ import {
   FieldContent,
   FieldLabel,
 } from "@workspace/ui/components/field";
+import { Input } from "@workspace/ui/components/input";
 import { cn } from "@workspace/ui/lib/utils";
 
 export type StackedKeyTotal = {
@@ -187,12 +188,12 @@ export function StackedKeySelector({
               Të gjitha
             </Button>
           </div>
-          <input
+          <Input
             type="search"
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
             placeholder={searchPlaceholder}
-            className="h-8 w-full rounded-md border border-border bg-background px-3 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
+            className="h-8 text-xs"
           />
           <div className="max-h-40 overflow-y-auto rounded-md border bg-background p-2">
             <div className="grid gap-1">
@@ -263,15 +264,13 @@ export function StackedKeySelector({
                   : "opacity-100",
               )}
             >
-              <input
+              <Input
                 type="search"
                 value={otherSearchTerm}
                 onChange={(event) => setOtherSearchTerm(event.target.value)}
                 placeholder={excludedSearchLabel}
                 disabled={otherDisabled}
-                className={
-                  "h-8 w-full flex-1 rounded-md border border-border bg-background px-3 text-xs focus:outline-none focus:ring-2 focus:ring-primary"
-                }
+                className="h-8 flex-1 text-xs"
               />
               {onExcludedKeysChange && (
                 <Button

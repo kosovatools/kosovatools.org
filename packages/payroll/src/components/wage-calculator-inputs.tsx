@@ -9,6 +9,10 @@ import {
   FieldSet,
 } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@workspace/ui/components/native-select";
 import { cn } from "@workspace/ui/lib/utils";
 
 import type { JobType } from "../lib/wage-calculator";
@@ -179,17 +183,19 @@ function WageCalculatorInputs({
       <Field>
         <FieldLabel htmlFor="job-type">A është ky punësimi kryesor?</FieldLabel>
         <FieldContent>
-          <select
+          <NativeSelect
             id="job-type"
-            className={cn(
-              "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
-            )}
+            wrapperClassName="w-full"
             value={jobType}
             onChange={(event) => onJobTypeChange(event.target.value as JobType)}
           >
-            <option value="primary">Po, është punësimi im kryesor</option>
-            <option value="secondary">Jo, është punë shtesë</option>
-          </select>
+            <NativeSelectOption value="primary">
+              Po, është punësimi im kryesor
+            </NativeSelectOption>
+            <NativeSelectOption value="secondary">
+              Jo, është punë shtesë
+            </NativeSelectOption>
+          </NativeSelect>
         </FieldContent>
         <FieldDescription className="text-xs text-muted-foreground">
           Punësimet sekondare tatohen me normë fikse 10% pa shkallët progresive
