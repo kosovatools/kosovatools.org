@@ -4,6 +4,7 @@ import {
   type StackBuildResult,
   type StackSeriesRow,
   type StackTotal,
+  type StackPeriodGrouping,
 } from "../utils/stack";
 import {
   tradePartnerLabelMap,
@@ -20,6 +21,7 @@ export type PartnerStackOptions = {
   includeOther?: boolean;
   selectedKeys?: string[];
   excludedKeys?: string[];
+  periodGrouping?: StackPeriodGrouping;
   labelForKey?: (key: string) => string;
 };
 
@@ -36,15 +38,23 @@ function buildOptions(options: PartnerStackOptions = {}) {
     includeOther: options.includeOther,
     selectedKeys: options.selectedKeys,
     excludedKeys: options.excludedKeys,
+    periodGrouping: options.periodGrouping,
     labelForKey: (key: string) => tradePartnerLabelMap[key] || key,
   };
 }
 
 export function summarizePartnerTotals(
   records: TradePartnerRecord[],
-  months,
+  options?: number | Pick<PartnerStackOptions, "months" | "periodGrouping">,
 ): PartnerTotal[] {
-  return summarizeStackTotals(records, accessors, buildOptions({ months }));
+  const normalizedOptions =
+    typeof options === "number" ? { months: options } : (options ?? {});
+
+  return summarizeStackTotals(
+    records,
+    accessors,
+    buildOptions(normalizedOptions),
+  );
 }
 
 export function buildPartnerStackSeries(

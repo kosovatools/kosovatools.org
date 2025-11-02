@@ -1,5 +1,7 @@
 type MaybeNumber = number | null | undefined;
 
+export type StackPeriodGrouping = "monthly" | "quarterly" | "yearly";
+
 export type StackAccessors<TRecord, TKey extends string> = {
   period: (record: TRecord) => string;
   key: (record: TRecord) => TKey;
@@ -16,6 +18,7 @@ export type StackOptions<TKey extends string> = {
   sortComparator?: (a: StackTotal<TKey>, b: StackTotal<TKey>) => number;
   labelForKey?: (key: TKey) => string;
   otherLabel?: string;
+  periodGrouping?: StackPeriodGrouping;
 };
 
 export type StackTotal<TKey extends string> = {
@@ -28,6 +31,58 @@ export type StackSeriesRow<TKey extends string> = {
   period: string;
   values: Record<TKey | "Other", number>;
 };
+
+const DEFAULT_PERIOD_GROUPING: StackPeriodGrouping = "monthly";
+
+function stringifyQuarter(year: string, month: number) {
+  const safeMonth = Number.isFinite(month) ? month : NaN;
+  if (!Number.isFinite(Number(year)) || !Number.isFinite(safeMonth)) {
+    return year;
+  }
+  const quarter = Math.min(4, Math.max(1, Math.floor((safeMonth - 1) / 3) + 1));
+  return `${year}-Q${quarter}`;
+}
+
+function normalizePeriod(
+  period: string,
+  grouping: StackPeriodGrouping = DEFAULT_PERIOD_GROUPING,
+): string {
+  if (grouping === "yearly") {
+    const [year] = period.split("-");
+    return year ?? period;
+  }
+
+  if (grouping === "quarterly") {
+    const [year, month] = period.split("-");
+    const numericMonth = month ? Number.parseInt(month, 10) : NaN;
+    return stringifyQuarter(year ?? period, numericMonth);
+  }
+
+  return period;
+}
+
+function buildGroupedPeriodList(
+  periods: string[],
+  grouping: StackPeriodGrouping,
+): string[] {
+  if (grouping === "monthly") {
+    return periods;
+  }
+
+  const seen = new Set<string>();
+  const grouped: string[] = [];
+
+  for (const period of periods) {
+    const normalized = normalizePeriod(period, grouping);
+    if (seen.has(normalized)) {
+      continue;
+    }
+    seen.add(normalized);
+    grouped.push(normalized);
+  }
+
+  return grouped;
+}
 
 export type StackBuildResult<TKey extends string> = {
   keys: Array<TKey | "Other">;
@@ -135,11 +190,11 @@ export function buildStackSeries<TRecord, TKey extends string>(
     };
   }
 
-  const periods = slicePeriods(
+  const rawPeriods = slicePeriods(
     collectPeriods(records, accessors),
     options.months,
   );
-  if (!periods.length) {
+  if (!rawPeriods.length) {
     return {
       keys: [],
       series: [],
@@ -147,7 +202,18 @@ export function buildStackSeries<TRecord, TKey extends string>(
       totals: [],
     };
   }
-  const periodSet = new Set(periods);
+  const periodSet = new Set(rawPeriods);
+
+  const grouping = options.periodGrouping ?? DEFAULT_PERIOD_GROUPING;
+  const groupedPeriods = buildGroupedPeriodList(rawPeriods, grouping);
+  if (!groupedPeriods.length) {
+    return {
+      keys: [],
+      series: [],
+      labelMap: {} as Record<TKey | "Other", string>,
+      totals: [],
+    };
+  }
 
   const baseTotals = summarizeStackTotals(records, accessors, options);
   const excludedSet = new Set(options.excludedKeys ?? []);
@@ -176,15 +242,16 @@ export function buildStackSeries<TRecord, TKey extends string>(
   for (const record of records) {
     const period = accessors.period(record);
     if (!periodSet.has(period)) continue;
-    if (!recordsByPeriod.has(period)) {
-      recordsByPeriod.set(period, []);
+    const groupedPeriod = normalizePeriod(period, grouping);
+    if (!recordsByPeriod.has(groupedPeriod)) {
+      recordsByPeriod.set(groupedPeriod, []);
     }
-    recordsByPeriod.get(period)!.push(record);
+    recordsByPeriod.get(groupedPeriod)!.push(record);
   }
 
   const primarySet = new Set(primaryKeys);
-  const series = periods.map<StackSeriesRow<TKey>>((period) => {
-    const rows = recordsByPeriod.get(period) ?? [];
+  const series = groupedPeriods.map<StackSeriesRow<TKey>>((groupedPeriod) => {
+    const rows = recordsByPeriod.get(groupedPeriod) ?? [];
     const values: Record<string, number> = {};
     let otherTotal = 0;
     for (const row of rows) {
@@ -211,7 +278,7 @@ export function buildStackSeries<TRecord, TKey extends string>(
     }
 
     return {
-      period,
+      period: groupedPeriod,
       values: values as Record<TKey | "Other", number>,
     };
   });

@@ -114,8 +114,8 @@ export function ElectricityBalanceChart({
   const importShare =
     latest?.import_share != null
       ? latest.import_share.toLocaleString("en-GB", {
-          maximumFractionDigits: 1,
-        })
+        maximumFractionDigits: 1,
+      })
       : "–";
 
   return (

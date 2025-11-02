@@ -4,11 +4,10 @@ import * as React from "react";
 import { Area, AreaChart, CartesianGrid, Legend, XAxis, YAxis } from "recharts";
 
 import {
-  buildCountryStackSeries,
-  summarizeCountryTotals,
-  type TourismCountryRecord,
+  buildRegionStackSeries,
   formatCount,
   type StackPeriodGrouping,
+  type TourismRegionRecord,
 } from "@workspace/stats";
 
 import {
@@ -17,88 +16,35 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "./stacked-chart-helpers";
-import { StackedKeySelector } from "./stacked-key-selector";
 import { useChartTooltipFormatters } from "./use-chart-tooltip-formatters";
 import {
   STACKED_PERIOD_GROUPING_OPTIONS,
   getStackedPeriodFormatter,
 } from "./stacked-period-utils";
 
-const DEFAULT_TOP_COUNTRIES = 5;
+const groups = [
+  { id: "total", label: "Total" },
+  { id: "local", label: "Local" },
+  { id: "external", label: "External" },
+] as const;
 
-const metricOptions = [
-  { id: "visitors" as const, label: "Visitors" },
-  { id: "nights" as const, label: "Overnight stays" },
-];
-
-export function TourismCountryStackedChart({
+export function TourismRegionCharts({
   data,
   months,
-  top = DEFAULT_TOP_COUNTRIES,
 }: {
-  data: TourismCountryRecord[];
+  data: TourismRegionRecord[];
   months?: number;
-  top?: number;
 }) {
-  const [metric, setMetric] = React.useState<"visitors" | "nights">("visitors");
+  const [group, setGroup] =
+    React.useState<(typeof groups)[number]["id"]>("total");
+
   const [periodGrouping, setPeriodGrouping] =
     React.useState<StackPeriodGrouping>("yearly");
 
-  const totals = React.useMemo(
-    () => summarizeCountryTotals(data, { months, metric, periodGrouping }),
-    [data, months, metric, periodGrouping],
-  );
-
-  const defaultKeys = React.useMemo(
-    () => totals.slice(0, Math.max(1, top)).map((item) => item.key),
-    [totals, top],
-  );
-
-  const [selectedKeys, setSelectedKeys] = React.useState<string[]>(defaultKeys);
-  const [includeOther, setIncludeOther] = React.useState(true);
-  const [excludedKeys, setExcludedKeys] = React.useState<string[]>([]);
-
-  React.useEffect(() => {
-    setSelectedKeys((current) => {
-      if (!totals.length) {
-        return [];
-      }
-      const validKeys = new Set(totals.map((item) => item.key));
-      const next = current.filter((key) => validKeys.has(key));
-      if (next.length === current.length) {
-        return current;
-      }
-      if (!next.length) {
-        return defaultKeys;
-      }
-      return next;
-    });
-  }, [totals, defaultKeys]);
-
-  React.useEffect(() => {
-    const validKeys = new Set(totals.map((item) => item.key));
-    setExcludedKeys((previous) => {
-      const next = previous.filter((key) => validKeys.has(key));
-      return next.length === previous.length ? previous : next;
-    });
-  }, [totals]);
-
-  const handleSelectedKeysChange = React.useCallback((keys: string[]) => {
-    setSelectedKeys(keys);
-  }, []);
-
-  const handleIncludeOtherChange = React.useCallback((value: boolean) => {
-    setIncludeOther(value);
-  }, []);
-
   const { chartData, keyMap, config } = React.useMemo(() => {
-    const { keys, series, labelMap } = buildCountryStackSeries(data, {
+    const { keys, series, labelMap } = buildRegionStackSeries(data, {
       months,
-      top,
-      metric,
-      includeOther,
-      selectedKeys,
-      excludedKeys,
+      group,
       periodGrouping,
     });
 
@@ -108,46 +54,68 @@ export function TourismCountryStackedChart({
       series,
       periodFormatter: getStackedPeriodFormatter(periodGrouping),
     });
-  }, [
-    data,
-    months,
-    top,
-    metric,
-    includeOther,
-    selectedKeys,
-    excludedKeys,
-    periodGrouping,
-  ]);
+  }, [data, group, months, periodGrouping]);
+
+  const latestSummary = React.useMemo<{
+    periodLabel: string;
+    total: number;
+  } | null>(() => {
+    if (!chartData.length || !keyMap.length) {
+      return null;
+    }
+
+    const lastRow = chartData.at(-1);
+    if (!lastRow) {
+      return null;
+    }
+
+    const total = keyMap.reduce(
+      (sum, entry) => sum + Number(lastRow[entry.id] ?? 0),
+      0,
+    );
+
+    return {
+      periodLabel:
+        typeof lastRow.periodLabel === "string"
+          ? lastRow.periodLabel
+          : String(lastRow.periodLabel ?? ""),
+      total,
+    };
+  }, [chartData, keyMap]);
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => formatCount(value),
+    formatValue: (value) => `${formatCount(value)} visitors`,
+    formatTotal: (value) => `${formatCount(value)} visitors`,
     missingValueLabel: "Not reported",
   });
 
   if (!chartData.length || !keyMap.length) {
     return (
-      <ChartContainer config={config}>
+      <ChartContainer config={{}}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          No tourism country data available.
+          No tourism region data available.
         </div>
       </ChartContainer>
     );
   }
 
+  const groupLabel =
+    groups.find((option) => option.id === group)?.label ?? "Total";
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">Metric</span>
+          <span className="text-sm text-muted-foreground">Visitor group</span>
           <div className="flex gap-2 text-xs">
-            {metricOptions.map((option) => {
-              const active = metric === option.id;
+            {groups.map((option) => {
+              const active = option.id === group;
               return (
                 <button
                   key={option.id}
                   type="button"
-                  onClick={() => setMetric(option.id)}
+                  onClick={() => setGroup(option.id)}
                   className={
                     "rounded-full border px-3 py-1 transition-colors " +
                     (active
@@ -185,20 +153,17 @@ export function TourismCountryStackedChart({
           </div>
         </div>
       </div>
-      <StackedKeySelector
-        totals={totals}
-        selectedKeys={selectedKeys}
-        onSelectedKeysChange={handleSelectedKeysChange}
-        topCount={top}
-        formatTotal={(value) => formatCount(value)}
-        selectionLabel="Select countries"
-        searchPlaceholder="Search countries..."
-        includeOther={includeOther}
-        onIncludeOtherChange={handleIncludeOtherChange}
-        promoteLabel="Enable “Other” aggregation"
-        excludedKeys={excludedKeys}
-        onExcludedKeysChange={setExcludedKeys}
-      />
+
+      {latestSummary ? (
+        <p className="text-xs text-muted-foreground">
+          Latest period ({latestSummary.periodLabel}):{" "}
+          <span className="font-medium text-foreground">
+            {formatCount(latestSummary.total)}
+          </span>{" "}
+          {groupLabel.toLowerCase()} visitors across all regions.
+        </p>
+      ) : null}
+
       <ChartContainer config={config} className="h-[360px] !aspect-auto">
         <AreaChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -226,7 +191,7 @@ export function TourismCountryStackedChart({
               key={entry.id}
               type="monotone"
               dataKey={entry.id}
-              stackId="tourism"
+              stackId="tourism-regions"
               stroke={`var(--color-${entry.id})`}
               fill={`var(--color-${entry.id})`}
               fillOpacity={0.85}

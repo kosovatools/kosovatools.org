@@ -57,6 +57,7 @@ type StackBuildResult<TKey extends string> = {
 Wrappers accept options for windowing and selection:
 
 - `months` — limit the trailing period window.
+- `periodGrouping` — aggregate periods into `monthly` (default), `quarterly`, or `yearly` buckets.
 - `top` — auto-select the top N keys by aggregated total.
 - `selectedKeys` — explicit key selection (UI-controlled multiselect).
 - `includeOther` — toggle the “Other” bucket.
@@ -69,11 +70,15 @@ import {
   buildPartnerStackSeries,
 } from "@workspace/stats";
 
-const totals = summarizePartnerTotals(tradeImportsByPartner, 12);
+const totals = summarizePartnerTotals(tradeImportsByPartner, {
+  months: 12,
+  periodGrouping: "quarterly",
+});
 const { keys, series, labelMap } = buildPartnerStackSeries(
   tradeImportsByPartner,
   {
     months: 12,
+    periodGrouping: "quarterly",
     top: 5,
     includeOther: true,
     selectedKeys: totals.slice(0, 3).map((item) => item.key),

@@ -39,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={geist.className}>
+    <html lang="en" className={geist.className} suppressHydrationWarning>
       <body className="font-sans antialiased">
         <Providers>
           <div className="flex min-h-svh flex-col bg-background">

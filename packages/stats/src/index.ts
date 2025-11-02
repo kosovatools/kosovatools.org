@@ -9,3 +9,5 @@ export * from "./stacks/fuels";
 export * from "./stacks/tourism";
 
 export * from "./formatters";
+
+export type { StackPeriodGrouping } from "./utils/stack";

@@ -9,6 +9,7 @@ import {
   type TradePartnerRecord,
   formatEuro,
   formatEuroCompact,
+  type StackPeriodGrouping,
 } from "@workspace/stats";
 
 import {
@@ -19,13 +20,12 @@ import {
 import { buildStackedChartView } from "./stacked-chart-helpers";
 import { StackedKeySelector } from "./stacked-key-selector";
 import { useChartTooltipFormatters } from "./use-chart-tooltip-formatters";
+import {
+  STACKED_PERIOD_GROUPING_OPTIONS,
+  getStackedPeriodFormatter,
+} from "./stacked-period-utils";
 
 const DEFAULT_TOP_PARTNERS = 5;
-
-const axisFormatter = new Intl.DateTimeFormat("en-GB", {
-  month: "short",
-  year: "2-digit",
-});
 
 export function ImportPartnersStackedChart({
   data,
@@ -36,9 +36,16 @@ export function ImportPartnersStackedChart({
   months?: number;
   top?: number;
 }) {
+  const [periodGrouping, setPeriodGrouping] =
+    React.useState<StackPeriodGrouping>("yearly");
+
   const totals = React.useMemo(
-    () => summarizePartnerTotals(data, months),
-    [data, months],
+    () =>
+      summarizePartnerTotals(data, {
+        months,
+        periodGrouping,
+      }),
+    [data, months, periodGrouping],
   );
 
   const defaultKeys = React.useMemo(
@@ -90,16 +97,24 @@ export function ImportPartnersStackedChart({
       includeOther,
       selectedKeys,
       excludedKeys,
+      periodGrouping,
     });
 
     return buildStackedChartView({
       keys,
       labelMap,
       series,
-      periodFormatter: (period) =>
-        axisFormatter.format(new Date(`${period}-01`)),
+      periodFormatter: getStackedPeriodFormatter(periodGrouping),
     });
-  }, [data, months, top, includeOther, selectedKeys, excludedKeys]);
+  }, [
+    data,
+    months,
+    top,
+    includeOther,
+    selectedKeys,
+    excludedKeys,
+    periodGrouping,
+  ]);
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
@@ -119,6 +134,29 @@ export function ImportPartnersStackedChart({
 
   return (
     <div className="flex flex-col gap-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-sm text-muted-foreground">View</span>
+        <div className="flex gap-2 text-xs">
+          {STACKED_PERIOD_GROUPING_OPTIONS.map((option) => {
+            const active = periodGrouping === option.id;
+            return (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => setPeriodGrouping(option.id)}
+                className={
+                  "rounded-full border px-3 py-1 transition-colors " +
+                  (active
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border bg-background hover:bg-muted")
+                }
+              >
+                {option.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
       <StackedKeySelector
         totals={totals}
         selectedKeys={selectedKeys}
