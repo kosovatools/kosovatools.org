@@ -16,6 +16,7 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
+import { Progress } from "@workspace/ui/components/progress";
 import {
   CustomsDataService,
   type CustomsTreeNode,
@@ -249,12 +250,7 @@ export function CustomsExplorer() {
                 ) : null}
               </div>
               {progressPercent !== null ? (
-                <div className="h-1.5 rounded-full bg-muted">
-                  <div
-                    className="h-full rounded-full bg-primary transition-all duration-200 ease-out"
-                    style={{ width: `${progressPercent}%` }}
-                  />
-                </div>
+                <Progress className="h-1.5" value={progressPercent} />
               ) : null}
             </div>
           ) : null}
