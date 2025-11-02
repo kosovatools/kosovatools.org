@@ -106,7 +106,7 @@ export function WageCalculatorClient() {
         </p>
       </header>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] items-start">
         <Card>
           <CardHeader>
             <CardTitle>Shënoni të dhënat e pagës</CardTitle>

@@ -265,7 +265,7 @@ export default function Page() {
             return (
               <Card
                 key={entry.name}
-                className="h-full border-dashed border-border/60 bg-background/60"
+                className="h-full border-dashed border-border/60 bg-background/60 pb-0"
               >
                 <CardHeader className="gap-4">
                   <div className="flex items-center justify-between">

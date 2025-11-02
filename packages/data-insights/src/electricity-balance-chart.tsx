@@ -71,11 +71,11 @@ export function ElectricityBalanceChart({
     const view =
       series.length > 0
         ? buildStackedChartView({
-            keys: SERIES_KEYS.slice(),
-            labelMap: LABEL_MAP,
-            series,
-            periodFormatter,
-          })
+          keys: SERIES_KEYS.slice(),
+          labelMap: LABEL_MAP,
+          series,
+          periodFormatter,
+        })
         : { chartData: [], keyMap: [], config: {} as ChartConfig };
 
     return {
@@ -105,8 +105,8 @@ export function ElectricityBalanceChart({
   const importShare =
     latestSummary?.importShare != null
       ? latestSummary.importShare.toLocaleString("sq", {
-          maximumFractionDigits: 1,
-        })
+        maximumFractionDigits: 1,
+      })
       : "–";
 
   return (
@@ -132,7 +132,7 @@ export function ElectricityBalanceChart({
           )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground">Shiko</span>
+          <span className="text-xs text-muted-foreground">Perioda</span>
           <div className="flex gap-2 text-xs">
             {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
               const active = periodGrouping === option.id;

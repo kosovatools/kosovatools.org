@@ -129,7 +129,7 @@ export function TourismRegionCharts({
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">Shiko</span>
+          <span className="text-sm text-muted-foreground">Perioda</span>
           <div className="flex gap-2 text-xs">
             {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
               const active = periodGrouping === option.id;
