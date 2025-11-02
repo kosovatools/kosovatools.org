@@ -40,15 +40,15 @@ export default function DataInsightsPage() {
       <header className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h1 className="text-3xl font-semibold tracking-tight">
-            Data Insights
+            Analiza të të dhënave
           </h1>
           <span className="text-xs text-muted-foreground">
-            Dataset refresh: {generatedLabel}
+            Përditësim i të dhënave: {generatedLabel}
           </span>
         </div>
         <p className="text-muted-foreground">
-          Explore Kosovo Agency of Statistics datasets that power KosovoTools.
-          Each visualization reflects the most recent cached snapshot in
+          Eksploro datasetet e Agjencisë së Statistikave të Kosovës që fuqizojnë
+          Kosova Tools. Çdo vizualizim pasqyron kopjen më të fundit të ruajtur në
           <code className="mx-1 rounded bg-muted px-1 py-0.5 text-xs">
             packages/stats
           </code>
@@ -57,90 +57,93 @@ export default function DataInsightsPage() {
       </header>
 
       <section className="space-y-6">
-        <h2 className="text-2xl font-semibold">Trade & Customs</h2>
+        <h2 className="text-2xl font-semibold">Tregtia & Dogana</h2>
         <Card>
           <CardHeader>
-            <CardTitle>Partner contributions (stacked)</CardTitle>
+            <CardTitle>Kontributet e partnerëve (shtresuar)</CardTitle>
             <CardDescription>
-              Top trading partners over the last year. Adjust the selection or
-              toggle the “Other” bucket to inspect smaller partners.
+              Partnerët kryesorë tregtarë gjatë vitit të fundit. Rregullo
+              përzgjedhjen ose aktivizo kategorinë “Të tjerët” për të parë
+              partnerët më të vegjël.
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
             <ImportPartnersStackedChart data={tradeImportsByPartner} top={6} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Source: {importsByPartnerSource.table}.
+            Burimi: {importsByPartnerSource.table}.
           </CardFooter>
         </Card>
       </section>
 
       <section className="space-y-6">
-        <h2 className="text-2xl font-semibold">Energy & Fuels</h2>
+        <h2 className="text-2xl font-semibold">Energjia & Karburantet</h2>
 
         <Card>
           <CardHeader>
-            <CardTitle>Power imports vs production</CardTitle>
+            <CardTitle>Importet e energjisë kundrejt prodhimit</CardTitle>
             <CardDescription>
-              Monthly electricity imports and domestic generation (GWh).
+              Importet mujore të energjisë elektrike dhe prodhimi vendor (GWh).
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
             <ElectricityBalanceChart data={electricityMonthly} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Source: {energyMonthlySource.table} ({energyMonthlySource.unit}).
+            Burimi: {energyMonthlySource.table} ({energyMonthlySource.unit}).
           </CardFooter>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Fuel supply balance</CardTitle>
+            <CardTitle>Bilanci i furnizimit me karburante</CardTitle>
             <CardDescription>
-              Monthly fuel availability by type. Toggle metrics to compare
-              production, trade flows, stock, or ready-for-market volumes.
+              Disponueshmëria mujore e karburanteve sipas llojit. Ndrysho
+              metrikat për të krahasuar prodhimin, flukset tregtare, rezervat ose
+              vëllimet gati për treg.
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
             <FuelBalanceChart balances={fuelBalances} months={36} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Sources: {fuelSourceLabel}.
+            Burimet: {fuelSourceLabel}.
           </CardFooter>
         </Card>
       </section>
 
       <section className="space-y-6">
-        <h2 className="text-2xl font-semibold">Tourism</h2>
+        <h2 className="text-2xl font-semibold">Turizmi</h2>
 
         <Card>
           <CardHeader>
-            <CardTitle>Top visitor countries (stacked)</CardTitle>
+            <CardTitle>Vendet kryesore të vizitorëve (shtresuar)</CardTitle>
             <CardDescription>
-              Leading origin countries stacked by visitors or overnight stays
-              across the last year.
+              Vendet e origjinës kryesuese të radhitura sipas vizitorëve ose
+              netëve të qëndrimit gjatë vitit të fundit.
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
             <TourismCountryStackedChart data={tourismByCountry} top={5} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Source: {tourismCountrySource.table}.
+            Burimi: {tourismCountrySource.table}.
           </CardFooter>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Tourism by region</CardTitle>
+            <CardTitle>Turizmi sipas rajonit</CardTitle>
             <CardDescription>
-              Small multiples for Kosovo regions with visitor-group filters.
+              Vizualizime të shumëfishta për rajonet e Kosovës me filtra sipas
+              grupeve të vizitorëve.
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
             <TourismRegionCharts data={tourismByRegion} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Source: {tourismRegionSource.table}.
+            Burimi: {tourismRegionSource.table}.
           </CardFooter>
         </Card>
       </section>

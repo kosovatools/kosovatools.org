@@ -50,10 +50,10 @@ export const STACK_PERIOD_GROUPING_OPTIONS: ReadonlyArray<{
   id: StackPeriodGrouping;
   label: string;
 }> = [
-  { id: "monthly", label: "Monthly" },
-  { id: "quarterly", label: "Quarterly" },
-  { id: "yearly", label: "Yearly" },
-  { id: "seasonal", label: "Seasonal" },
+  { id: "monthly", label: "Mujor" },
+  { id: "quarterly", label: "Tremujor" },
+  { id: "yearly", label: "Vjetor" },
+  { id: "seasonal", label: "Sezonal" },
 ];
 
 type GovernmentPeriod = {
@@ -69,9 +69,18 @@ type GovernmentPeriodRange = {
 };
 
 const DEFAULT_PERIOD_GROUPING: StackPeriodGrouping = "monthly";
-const UNKNOWN_GOVERNMENT_LABEL = "Unknown Government";
+const UNKNOWN_GOVERNMENT_LABEL = "Qeveri e panjohur";
 const QUARTER_PATTERN = /^(\d{4})-Q([1-4])$/;
 const SEASONAL_LABEL_PATTERN = /^(\d{4})-(winter|spring|summer|autumn)$/;
+const SEASON_LABEL_MAP: Record<
+  "winter" | "spring" | "summer" | "autumn",
+  string
+> = {
+  winter: "Dimër",
+  spring: "Pranverë",
+  summer: "Verë",
+  autumn: "Vjeshtë",
+};
 
 const GOVERNMENT_PERIOD_RANGES: GovernmentPeriodRange[] = (
   Array.isArray(governmentPeriodsJson)
@@ -243,7 +252,7 @@ export type StackBuildResult<TKey extends string> = {
   totals: StackTotal<TKey>[];
 };
 
-const DEFAULT_OTHER_LABEL = "Other";
+const DEFAULT_OTHER_LABEL = "Të tjerët";
 
 function toNumber(value: MaybeNumber): number {
   if (typeof value === "number" && Number.isFinite(value)) {
@@ -468,8 +477,9 @@ function formatSeasonalPeriodLabel(period: string): string {
   if (!season) {
     return period;
   }
-  const capitalized = `${season.charAt(0).toUpperCase()}${season.slice(1)}`;
-  return `${capitalized} ${year}`;
+  const label =
+    SEASON_LABEL_MAP[season as keyof typeof SEASON_LABEL_MAP] ?? season;
+  return `${label} ${year}`;
 }
 
 export function formatStackPeriodLabel(
@@ -477,7 +487,7 @@ export function formatStackPeriodLabel(
   grouping: StackPeriodGrouping,
   options: StackPeriodFormatterOptions = {},
 ): string {
-  const { locale = "en-GB", fallback } = options;
+  const { locale = "sq", fallback } = options;
   if (!period) {
     return fallback ?? "";
   }
@@ -504,7 +514,7 @@ export function formatStackPeriodLabel(
       return fallback ?? period;
     }
     const [, year, quarter] = match;
-    return `Q${quarter} ${year}`;
+    return `T${quarter} ${year}`;
   }
   if (grouping === "yearly") {
     const year = Number.parseInt(period, 10);

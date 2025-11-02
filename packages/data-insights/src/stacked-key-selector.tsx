@@ -43,7 +43,7 @@ export function StackedKeySelector({
   searchPlaceholder,
   includeOther,
   onIncludeOtherChange,
-  promoteLabel = `Enable "Other" aggregation`,
+  promoteLabel = `Aktivizo grupimin "Të tjerët"`,
   excludedKeys: controlledExcludedKeys,
   onExcludedKeysChange,
   excludedSearchPlaceholder,
@@ -176,7 +176,7 @@ export function StackedKeySelector({
               onClick={handleSelectTop}
               className="h-7 px-2 text-xs"
             >
-              Top {topCount}
+              Më të mëdhenjtë {topCount}
             </Button>
             <Button
               variant="ghost"
@@ -184,7 +184,7 @@ export function StackedKeySelector({
               onClick={handleSelectAll}
               className="h-7 px-2 text-xs"
             >
-              All
+              Të gjitha
             </Button>
           </div>
           <input
@@ -281,7 +281,7 @@ export function StackedKeySelector({
                   className="h-7 px-2 text-xs"
                   disabled={otherDisabled || excludedKeys.length === 0}
                 >
-                  Unselect all
+                  Hiq zgjedhjet
                 </Button>
               )}
             </div>
@@ -331,7 +331,7 @@ export function StackedKeySelector({
               })}
               {visibleOthers.length === 0 && (
                 <span className="px-2 py-1 text-muted-foreground">
-                  No entries match your search.
+                  Asnjë hyrje nuk përputhet me kërkimin.
                 </span>
               )}
             </div>
@@ -340,8 +340,8 @@ export function StackedKeySelector({
       </div>
       {hasZeroTotals && (
         <p className="mt-3 text-[11px] text-muted-foreground">
-          Entries with zero totals are hidden from the inclusion and exclusion
-          lists.
+          Elementet me total zero fshihen nga listat e përfshirjes dhe
+          përjashtimit.
         </p>
       )}
     </div>

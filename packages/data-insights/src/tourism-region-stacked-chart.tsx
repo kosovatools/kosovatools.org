@@ -21,9 +21,9 @@ import { buildStackedChartView } from "./stacked-chart-helpers";
 import { useChartTooltipFormatters } from "./use-chart-tooltip-formatters";
 
 const groups = [
-  { id: "total", label: "Total" },
-  { id: "local", label: "Local" },
-  { id: "external", label: "External" },
+  { id: "total", label: "Totali" },
+  { id: "local", label: "Lokal" },
+  { id: "external", label: "I jashtëm" },
 ] as const;
 
 export function TourismRegionCharts({
@@ -83,16 +83,15 @@ export function TourismRegionCharts({
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => `${formatCount(value)} visitors`,
-    formatTotal: (value) => `${formatCount(value)} visitors`,
-    missingValueLabel: "Not reported",
+    formatValue: (value) => `${formatCount(value)} vizitorë`,
+    formatTotal: (value) => `${formatCount(value)} vizitorë`,
   });
 
   if (!chartData.length || !keyMap.length) {
     return (
       <ChartContainer config={{}}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          No tourism region data available.
+          Nuk ka të dhëna për rajonet e turizmit.
         </div>
       </ChartContainer>
     );
@@ -105,7 +104,9 @@ export function TourismRegionCharts({
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">Visitor group</span>
+          <span className="text-sm text-muted-foreground">
+            Grupi i vizitorëve
+          </span>
           <div className="flex gap-2 text-xs">
             {groups.map((option) => {
               const active = option.id === group;
@@ -128,7 +129,7 @@ export function TourismRegionCharts({
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">View</span>
+          <span className="text-sm text-muted-foreground">Shiko</span>
           <div className="flex gap-2 text-xs">
             {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
               const active = periodGrouping === option.id;
@@ -154,11 +155,11 @@ export function TourismRegionCharts({
 
       {latestSummary ? (
         <p className="text-xs text-muted-foreground">
-          Latest period ({latestSummary.periodLabel}):{" "}
+          Periudha e fundit ({latestSummary.periodLabel}):{" "}
           <span className="font-medium text-foreground">
             {formatCount(latestSummary.total)}
           </span>{" "}
-          {groupLabel.toLowerCase()} visitors across all regions.
+          {groupLabel.toLowerCase()} vizitorë në të gjitha rajonet.
         </p>
       ) : null}
 

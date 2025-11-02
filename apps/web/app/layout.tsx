@@ -14,18 +14,21 @@ export const metadata: Metadata = {
     default: "Kosova Tools",
     template: "%s | Kosova Tools",
   },
-  description: "Practical tools for Kosovo residents, powered by open data.",
+  description:
+    "Vegla praktike për banorët e Kosovës, të mundësuara nga të dhënat e hapura.",
   openGraph: {
     type: "website",
     url: "https://kosovatools.org",
     title: "Kosova Tools",
-    description: "Practical tools for Kosovo residents, powered by open data.",
+    description:
+      "Vegla praktike për banorët e Kosovës, të mundësuara nga të dhënat e hapura.",
     siteName: "Kosova Tools",
   },
   twitter: {
     card: "summary_large_image",
     title: "Kosova Tools",
-    description: "Practical tools for Kosovo residents, powered by open data.",
+    description:
+      "Vegla praktike për banorët e Kosovës, të mundësuara nga të dhënat e hapura.",
   },
 };
 
@@ -39,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={geist.className} suppressHydrationWarning>
+    <html lang="sq" className={geist.className} suppressHydrationWarning>
       <body className="font-sans antialiased">
         <Providers>
           <div className="flex min-h-svh flex-col bg-background">
@@ -72,19 +75,19 @@ export default function RootLayout({
                     className="transition hover:text-primary"
                     href="/#tools"
                   >
-                    Tools
+                    Veglat
                   </Link>
                   <Link
                     className="transition hover:text-primary"
                     href="/#how-it-works"
                   >
-                    How it works
+                    Si funksionon
                   </Link>
                   <Link
                     className="transition hover:text-primary"
                     href="/#about"
                   >
-                    About
+                    Rreth nesh
                   </Link>
                 </nav>
               </div>

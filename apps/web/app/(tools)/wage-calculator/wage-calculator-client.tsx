@@ -19,13 +19,14 @@ import {
   type JobType,
 } from "@workspace/payroll";
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
+const currencyFormatter = new Intl.NumberFormat("sq", {
   style: "currency",
   currency: "EUR",
   minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
 });
 
-const percentageFormatter = new Intl.NumberFormat("en-US", {
+const percentageFormatter = new Intl.NumberFormat("sq", {
   style: "percent",
   minimumFractionDigits: 0,
   maximumFractionDigits: 1,

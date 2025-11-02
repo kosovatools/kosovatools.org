@@ -90,14 +90,13 @@ export function ElectricityBalanceChart({
     keys: keyMap,
     formatValue: (value) => `${formatEnergyGWh(value)} GWh`,
     formatTotal: (value) => `${formatEnergyGWh(value)} GWh`,
-    missingValueLabel: "Not reported",
   });
 
   if (!chartData.length || !keyMap.length) {
     return (
       <ChartContainer config={{}} className={chartClassName}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          No electricity data available.
+          Nuk ka të dhëna për energjinë.
         </div>
       </ChartContainer>
     );
@@ -105,7 +104,7 @@ export function ElectricityBalanceChart({
 
   const importShare =
     latestSummary?.importShare != null
-      ? latestSummary.importShare.toLocaleString("en-GB", {
+      ? latestSummary.importShare.toLocaleString("sq", {
           maximumFractionDigits: 1,
         })
       : "–";
@@ -114,18 +113,18 @@ export function ElectricityBalanceChart({
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="text-sm text-muted-foreground">
-          Latest period{" "}
+          Periudha e fundit{" "}
           {latestSummary?.periodLabel ? (
             <>
               ({latestSummary.periodLabel}):{" "}
               <span className="font-medium text-foreground">
                 {importShare}%
               </span>{" "}
-              import share
+              pjesë importi
             </>
           ) : (
             <>
-              import share:{" "}
+              pjesë importi:{" "}
               <span className="font-medium text-foreground">
                 {importShare}%
               </span>
@@ -133,7 +132,7 @@ export function ElectricityBalanceChart({
           )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground">View</span>
+          <span className="text-xs text-muted-foreground">Shiko</span>
           <div className="flex gap-2 text-xs">
             {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
               const active = periodGrouping === option.id;

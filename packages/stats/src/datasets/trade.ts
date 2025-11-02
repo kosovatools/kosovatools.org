@@ -2,18 +2,18 @@ import tradeImports from "../../data/kas_imports_monthly.json" with { type: "jso
 import importsByPartner from "../../data/kas_imports_by_partner.json" with { type: "json" };
 // Manual overrides for partners whose labels are missing or duplicated in source data.
 const PARTNER_LABEL_OVERRIDES: Record<string, string> = {
-  "CW:": "Curacao",
-  "ME:ME : Montenegro": "Montenegro",
-  "QU:": "Unknown (QU)",
-  "UE:": "United Emirates",
-  "XC:XC: CEUTA": "Ceuta",
-  "XL:XL:MELILLA": "Melilla",
-  "XX:": "Unknown (XX)",
-  "XY:": "Unknown (XY)",
-  "XZ:": "Unknown (XZ)",
+  "CW:": "Kurasao",
+  "ME:ME : Montenegro": "Mali i Zi",
+  "QU:": "E panjohur (QU)",
+  "UE:": "Emiratet e Bashkuara",
+  "XC:XC: CEUTA": "Seuta",
+  "XL:XL:MELILLA": "Melija",
+  "XX:": "E panjohur (XX)",
+  "XY:": "E panjohur (XY)",
+  "XZ:": "E panjohur (XZ)",
   "XS:SERBIA 06/2005": "Serbia",
-  "YU:": "Serbia and Montenegro",
-  "ZZ:": "Unknown (ZZ)",
+  "YU:": "Serbia dhe Mali i Zi",
+  "ZZ:": "E panjohur (ZZ)",
 };
 
 export type TradeImportRecord = {
@@ -69,7 +69,7 @@ export const tradePartnerLabelMap: Record<string, string> =
 
 function formatPartnerName(partner: string): string {
   if (!partner || partner === "Other") {
-    return partner || "Unknown";
+    return partner ? "Të tjerët" : "E panjohur";
   }
 
   const override = PARTNER_LABEL_OVERRIDES[partner];
@@ -108,8 +108,8 @@ function formatPartnerName(partner: string): string {
 
 export function formatTradePeriodLabel(
   period: string,
-  locale = "en-GB",
-  fallback = "n/a",
+  locale = "sq",
+  fallback = "p/n",
 ): string {
   if (!period) {
     return fallback;

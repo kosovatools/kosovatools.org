@@ -26,10 +26,10 @@ const datasets: Record<FuelKey, FuelBalanceRecord[]> = {
 export const fuelBalances: Record<FuelKey, FuelBalanceRecord[]> = datasets;
 
 export const fuelLabels: Record<FuelKey, string> = {
-  gasoline: "Gasoline",
-  diesel: "Diesel",
-  lng: "LNG",
-  jet: "Jet fuel",
+  gasoline: "Benzinë",
+  diesel: "Naftë",
+  lng: "Gaz i lëngshëm",
+  jet: "Karburant avionësh",
 };
 
 export type FuelMetric = keyof Pick<
@@ -38,9 +38,9 @@ export type FuelMetric = keyof Pick<
 >;
 
 export const fuelMetricLabels: Record<FuelMetric, string> = {
-  import: "Imports",
-  production: "Production",
-  export: "Exports",
-  stock: "Stock",
-  ready_for_market: "Ready for market",
+  import: "Importet",
+  production: "Prodhimi",
+  export: "Eksportet",
+  stock: "Rezervat",
+  ready_for_market: "Gati për treg",
 };

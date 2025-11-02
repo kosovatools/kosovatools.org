@@ -83,8 +83,8 @@ export const importsByPartnerSource = kasSources.sources.imports_by_partner;
 
 export function formatKasGeneratedLabel(
   generatedAt = kasSources.generated_at,
-  locale = "en-GB",
-  fallback = "Unknown",
+  locale = "sq",
+  fallback = "E panjohur",
 ): string {
   const generatedDate = new Date(generatedAt);
   if (Number.isNaN(generatedDate.getTime())) {
@@ -101,7 +101,7 @@ export function formatKasGeneratedLabel(
 
 export function describeFuelSources(
   fuelSource: FuelMonthlySource | undefined = fuelMonthlySource,
-  fallback = "Unknown",
+  fallback = "E panjohur",
 ): string {
   if (!fuelSource) {
     return fallback;

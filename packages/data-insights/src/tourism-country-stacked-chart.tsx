@@ -25,8 +25,8 @@ import { useChartTooltipFormatters } from "./use-chart-tooltip-formatters";
 const DEFAULT_TOP_COUNTRIES = 5;
 
 const metricOptions = [
-  { id: "visitors" as const, label: "Visitors" },
-  { id: "nights" as const, label: "Overnight stays" },
+  { id: "visitors" as const, label: "Vizitorë" },
+  { id: "nights" as const, label: "Qëndrime nate" },
 ];
 
 export function TourismCountryStackedChart({
@@ -120,14 +120,13 @@ export function TourismCountryStackedChart({
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
     formatValue: (value) => formatCount(value),
-    missingValueLabel: "Not reported",
   });
 
   if (!chartData.length || !keyMap.length) {
     return (
       <ChartContainer config={config}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          No tourism country data available.
+          Nuk ka të dhëna për vendet e turizmit.
         </div>
       </ChartContainer>
     );
@@ -137,7 +136,7 @@ export function TourismCountryStackedChart({
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">Metric</span>
+          <span className="text-sm text-muted-foreground">Metrika</span>
           <div className="flex gap-2 text-xs">
             {metricOptions.map((option) => {
               const active = metric === option.id;
@@ -160,7 +159,7 @@ export function TourismCountryStackedChart({
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">View</span>
+          <span className="text-sm text-muted-foreground">Shiko</span>
           <div className="flex gap-2 text-xs">
             {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
               const active = periodGrouping === option.id;
@@ -189,11 +188,11 @@ export function TourismCountryStackedChart({
         onSelectedKeysChange={handleSelectedKeysChange}
         topCount={top}
         formatTotal={(value) => formatCount(value)}
-        selectionLabel="Select countries"
-        searchPlaceholder="Search countries..."
+        selectionLabel="Zgjidh vendet"
+        searchPlaceholder="Kërko vende..."
         includeOther={includeOther}
         onIncludeOtherChange={handleIncludeOtherChange}
-        promoteLabel="Enable “Other” aggregation"
+        promoteLabel='Aktivizo grupimin "Të tjerët"'
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}
       />

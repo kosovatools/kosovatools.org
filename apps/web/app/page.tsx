@@ -29,40 +29,40 @@ type ToolCard = {
 
 const tools: ToolCard[] = [
   {
-    name: "Customs Codes",
+    name: "Tarifat Doganore",
     href: "/customs-codes",
     description:
-      "Search Kosovo's tariff schedule, compare duty rates, and calculate import obligations instantly.",
-    cta: "Browse customs codes",
+      "Kërko listën e tarifave të Kosovës, krahaso normat doganore dhe llogarit detyrimet e importit në çast.",
+    cta: "Shfleto kodet doganore",
     icon: PackageSearch,
-    category: "Trade & customs",
+    category: "Tregtia & dogana",
   },
   {
-    name: "Data Insights",
+    name: "Analiza të të dhënave",
     href: "/data-insights",
     description:
-      "Visual dashboards powered by KAS datasets to understand demographics, employment, and prices.",
-    cta: "See the dashboards",
+      "Pultë vizuale nga të dhënat e ASK për të kuptuar demografinë, punësimin dhe çmimet.",
+    cta: "Shiko grafet",
     icon: BarChart3,
-    category: "Statistics",
+    category: "Statistika",
   },
   {
-    name: "Car Import Taxes",
+    name: "Taksat e importit të veturave",
     href: "/car-import-taxes",
     description:
-      "Estimate VAT, excise, and customs dues for vehicles imported into the Republic of Kosovo.",
-    cta: "Estimate costs",
+      "Vlerëso TVSH-në, akcizën dhe detyrimet doganore për veturat e importuara në Republikën e Kosovës.",
+    cta: "Llogarit kostot",
     icon: Car,
     category: "Transport",
   },
   {
-    name: "Wage Calculator",
+    name: "Kalkulatori i pagave",
     href: "/wage-calculator",
     description:
-      "Project your net salary after pension, income tax, and contributions based on Kosovo regulations.",
-    cta: "Plan your salary",
+      "Parashiko pagën neto pas trustit, tatimit në të ardhura dhe kontributeve sipas rregullave në Kosovë.",
+    cta: "Planifiko pagën",
     icon: HandCoins,
-    category: "Finance",
+    category: "Financa",
   },
 ];
 
@@ -78,12 +78,12 @@ type RoadmapCard = {
 
 const roadmap: RoadmapCard[] = [
   {
-    name: "More civic tools",
+    name: "Më shumë vegla qytetare",
     description:
-      "Help us decide what to build next—budget trackers, procurement explorers, and more.",
-    cta: "Suggest an idea",
+      "Na ndihmo të vendosim çfarë të ndërtojmë më pas—gjurmues buxhetorë, eksplorues të prokurimit e të tjera.",
+    cta: "Sugjero një ide",
     icon: Sparkles,
-    category: "Ideas",
+    category: "Ide",
     href: "https://github.com/kosovatools/kosovatools.org/issues/new/choose",
     external: true,
   },
@@ -94,19 +94,19 @@ export default function Page() {
     <main className="flex flex-col gap-24 px-6 py-16 sm:py-24">
       <section className="mx-auto flex w-full max-w-5xl flex-col items-center gap-8 text-center">
         <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1 text-xs font-medium uppercase tracking-wide text-primary">
-          Open data for everyone
+          Të dhëna të hapura për të gjithë
         </span>
         <div className="space-y-6">
           <h1 className="text-balance text-4xl font-semibold leading-tight sm:text-5xl">
-            Practical tools for Kosovo residents, entrepreneurs, and policy
-            makers.
+            Vegla praktike për banorët e Kosovës, sipërmarrësit dhe hartuesit e
+            politikave.
           </h1>
           <p className="text-balance text-muted-foreground text-sm sm:text-lg">
-            Kosova Tools brings together calculators, explorers, and dashboards
-            so you can make informed decisions using reliable public data.
+            Kosova Tools bashkon kalkulatorë, eksplorues dhe pultë që të merrni
+            vendime të informuara me të dhëna publike të besueshme.
           </p>
           <p className="text-center text-xs text-muted-foreground sm:text-sm">
-            Built for the public good and licensed under the GNU Affero General
+            Ndërtuar për interes publik dhe licencuar nën GNU Affero General
             Public License v3.{" "}
             <a
               className="font-medium underline hover:text-primary"
@@ -114,15 +114,15 @@ export default function Page() {
               rel="noreferrer"
               target="_blank"
             >
-              View the source
+              Shikoni kodin burimor
             </a>{" "}
-            and contribute freely.
+            dhe kontribuoni lirshëm.
           </p>
         </div>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Button asChild size="lg">
             <Link href="/#tools">
-              Explore the tools
+              Eksploro veglat
               <ArrowRight aria-hidden className="ml-2 h-4 w-4" />
             </Link>
           </Button>
@@ -132,7 +132,7 @@ export default function Page() {
               rel="noreferrer"
               target="_blank"
             >
-              Contribute on GitHub
+              Kontribuo në GitHub
             </a>
           </Button>
         </div>
@@ -144,14 +144,14 @@ export default function Page() {
       >
         <header className="flex flex-col gap-3 text-center sm:text-left">
           <span className="text-xs font-semibold uppercase tracking-wide text-primary">
-            Current lineup
+            Përzgjedhja aktuale
           </span>
           <h2 className="text-3xl font-semibold sm:text-4xl">
-            Citizen tools ready to use today
+            Vegla qytetare gati për t'u përdorur sot
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base">
-            Each tool is crafted with bilingual interfaces, accurate
-            calculations, and up-to-date references from Kosovo institutions.
+            Çdo vegël është përgatitur me ndërfaqe dygjuhëshe, llogaritje të
+            sakta dhe referenca të përditësuara nga institucionet e Kosovës.
           </p>
         </header>
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4 auto-rows-auto items-start">
@@ -195,46 +195,46 @@ export default function Page() {
       >
         <div className="space-y-3 text-center sm:text-left">
           <span className="text-xs font-semibold uppercase tracking-wide text-primary">
-            Why it matters
+            Pse ka rëndësi
           </span>
           <h2
             id="how-it-works-title"
             className="text-3xl font-semibold sm:text-4xl"
           >
-            Built for clarity, maintained in the open
+            Ndërtuar për qartësi, mirëmbajtur hapur
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base">
-            Every feature is documented, transparent, and grounded in the latest
-            legal frameworks. You always know which dataset feeds your
-            decisions.
+            Çdo funksionalitet është i dokumentuar, transparent dhe i mbështetur
+            në kornizat ligjore më të fundit. Gjithmonë e dini cilat të dhëna
+            ushqejnë vendimet tuaja.
           </p>
         </div>
         <dl className="grid gap-6 sm:grid-cols-3">
           <div className="space-y-2 rounded-2xl bg-background/70 p-5 shadow-sm">
             <dt className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Verified sources
+              Burime të verifikuara
             </dt>
             <dd className="text-sm text-muted-foreground">
-              Updated directly from Kosovo Customs, Tax Administration, and the
-              Kosovo Agency of Statistics.
+              Përditësuar drejtpërdrejt nga Dogana e Kosovës, Administrata
+              Tatimore dhe Agjencia e Statistikave të Kosovës.
             </dd>
           </div>
           <div className="space-y-2 rounded-2xl bg-background/70 p-5 shadow-sm">
             <dt className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Transparent math
+              Matematikë transparente
             </dt>
             <dd className="text-sm text-muted-foreground">
-              Calculations reference published formulas so you can validate
-              every assumption and rate change.
+              Llogaritjet mbështeten në formulat e publikuara që të verifikoni
+              çdo supozim dhe ndryshim norme.
             </dd>
           </div>
           <div className="space-y-2 rounded-2xl bg-background/70 p-5 shadow-sm">
             <dt className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Accessible design
+              Dizajn i qasshëm
             </dt>
             <dd className="text-sm text-muted-foreground">
-              Interfaces adapt to Albanian and English, keyboard navigation, and
-              dark mode out of the box.
+              Ndërfaqet përshtaten në shqip dhe anglisht, me navigim nga tastiera
+              dhe modalitet të errët të gatshëm.
             </dd>
           </div>
         </dl>
@@ -246,14 +246,15 @@ export default function Page() {
       >
         <header className="flex flex-col gap-3 text-center sm:text-left">
           <span className="text-xs font-semibold uppercase tracking-wide text-primary">
-            Roadmap
+            Plani i zhvillimit
           </span>
           <h2 className="text-3xl font-semibold sm:text-4xl">
-            More public-interest tools on the way
+            Më shumë vegla për interes publik në rrugë e sipër
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base">
-            We collaborate with civic organizations and independent developers
-            to grow the platform. Here is what we are planning next.
+            Kosova Tools është projekt i hapur me kod të publikuar në GitHub.
+            Kontributet nga komuniteti janë të mirëpritura për të zgjeruar
+            platformën. Ja çfarë planifikojmë më tej.
           </p>
         </header>
         <div className="grid gap-6 md:grid-cols-2">

@@ -117,14 +117,13 @@ export function ImportPartnersStackedChart({
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
     formatValue: (value) => formatEuro(value),
-    missingValueLabel: "Not reported",
   });
 
   if (!chartData.length || !keyMap.length) {
     return (
       <ChartContainer config={{}}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          No partner data available.
+          Nuk ka të dhëna për partnerët.
         </div>
       </ChartContainer>
     );
@@ -133,7 +132,7 @@ export function ImportPartnersStackedChart({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm text-muted-foreground">View</span>
+        <span className="text-sm text-muted-foreground">Shiko</span>
         <div className="flex gap-2 text-xs">
           {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
             const active = periodGrouping === option.id;
@@ -161,11 +160,11 @@ export function ImportPartnersStackedChart({
         onSelectedKeysChange={handleSelectedKeysChange}
         topCount={top}
         formatTotal={(value) => formatEuro(value)}
-        selectionLabel="Select partners"
-        searchPlaceholder="Search countries..."
+        selectionLabel="Zgjidh partnerët"
+        searchPlaceholder="Kërko shtetet..."
         includeOther={includeOther}
         onIncludeOtherChange={handleIncludeOtherChange}
-        promoteLabel="Enable “Other” aggregation"
+        promoteLabel='Aktivizo grupimin "Të tjerët"'
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}
       />

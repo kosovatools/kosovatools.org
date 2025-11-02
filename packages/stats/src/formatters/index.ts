@@ -70,19 +70,19 @@ export function createCompactCurrencyFormatter(
   );
 }
 
-export const formatCount = createNumberFormatter("en-GB", {
+export const formatCount = createNumberFormatter("sq", {
   maximumFractionDigits: 0,
 });
 
-export const formatEuro = createCurrencyFormatter("en-GB", "EUR");
+export const formatEuro = createCurrencyFormatter("sq", "EUR");
 
-export const formatEuroCompact = createCompactCurrencyFormatter("en-GB", "EUR");
+export const formatEuroCompact = createCompactCurrencyFormatter("sq", "EUR");
 
-export const formatEnergyGWh = createNumberFormatter("en-GB", {
+export const formatEnergyGWh = createNumberFormatter("sq", {
   maximumFractionDigits: 0,
 });
 
-export const formatPercent = createNumberFormatter("en-GB", {
+export const formatPercent = createNumberFormatter("sq", {
   style: "percent",
   maximumFractionDigits: 1,
 });

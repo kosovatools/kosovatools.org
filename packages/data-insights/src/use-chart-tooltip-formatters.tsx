@@ -28,8 +28,8 @@ export function useChartTooltipFormatters({
   keys,
   formatValue,
   formatTotal = formatValue,
-  totalLabel = "Total",
-  missingValueLabel = "Not reported",
+  totalLabel = "Totali",
+  missingValueLabel = "Pa të dhëna",
 }: TooltipFormatterOptions): {
   formatter: ValueFormatter;
   labelFormatter: LabelFormatter;

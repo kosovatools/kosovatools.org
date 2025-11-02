@@ -7,8 +7,16 @@ import { useTheme } from "next-themes";
 import { Button } from "@workspace/ui/components/button";
 import { cn } from "@workspace/ui/lib/utils";
 
+type ThemeOption = "light" | "dark" | "system";
+
 type ThemeToggleProps = {
   className?: string;
+};
+
+const themeLabels: Record<ThemeOption, string> = {
+  light: "Ndrysho në temën e ndritshme",
+  dark: "Ndrysho në temën e errët",
+  system: "Ndrysho në temën e sistemit",
 };
 
 export function ThemeToggle({ className }: ThemeToggleProps) {
@@ -19,15 +27,19 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     setMounted(true);
   }, []);
 
-  const currentTheme = mounted ? (theme ?? "system") : "system";
+  const currentTheme = (mounted ? theme ?? "system" : "system") as ThemeOption;
+  const activeResolvedTheme = (resolvedTheme ?? "system") as ThemeOption;
   const nextTheme =
     currentTheme === "system"
-      ? resolvedTheme === "dark"
+      ? activeResolvedTheme === "dark"
         ? "light"
         : "dark"
       : currentTheme === "light"
         ? "dark"
         : "system";
+
+  const nextThemeLabel = themeLabels[nextTheme];
+
   const handleClick = () => {
     if (!mounted) return;
     setTheme(nextTheme);
@@ -39,7 +51,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
         type="button"
         variant="ghost"
         size="icon"
-        aria-label={`Switch to ${nextTheme} theme`}
+        aria-label={nextThemeLabel}
         className="relative"
         onClick={handleClick}
         disabled={!mounted}
@@ -71,7 +83,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
               : "scale-0 opacity-0",
           )}
         />
-        <span className="sr-only">{`Switch to ${nextTheme} theme`}</span>
+        <span className="sr-only">{nextThemeLabel}</span>
       </Button>
     </div>
   );

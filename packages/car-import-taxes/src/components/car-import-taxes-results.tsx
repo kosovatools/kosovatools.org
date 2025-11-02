@@ -14,13 +14,14 @@ export interface CarImportTaxesResultsProps {
   formatPercentage?: (value: number) => string;
 }
 
-const defaultCurrencyFormatter = new Intl.NumberFormat("en-US", {
+const defaultCurrencyFormatter = new Intl.NumberFormat("sq", {
   style: "currency",
   currency: "EUR",
   minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
 });
 
-const defaultPercentageFormatter = new Intl.NumberFormat("en-US", {
+const defaultPercentageFormatter = new Intl.NumberFormat("sq", {
   style: "percent",
   minimumFractionDigits: 0,
   maximumFractionDigits: 1,

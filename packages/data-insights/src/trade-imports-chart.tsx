@@ -26,7 +26,7 @@ const importsPalette = {
 
 const chartConfig: ChartConfig = {
   imports_eur: {
-    label: "Imports (EUR)",
+    label: "Importet (EUR)",
     theme: {
       light: importsPalette.light,
       dark: importsPalette.dark,
@@ -41,7 +41,7 @@ const tradeImportsTooltipKeys = [
   },
 ];
 
-const axisFormatter = new Intl.DateTimeFormat("en-GB", {
+const axisFormatter = new Intl.DateTimeFormat("sq", {
   month: "short",
   year: "2-digit",
 });
@@ -71,14 +71,13 @@ export function TradeImportsChart({
   const tooltip = useChartTooltipFormatters({
     keys: tradeImportsTooltipKeys,
     formatValue: (value) => formatEuro(value),
-    missingValueLabel: "Not reported",
   });
 
   if (!series.length) {
     return (
       <ChartContainer config={chartConfig} className={chartClassName}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          No trade import data available.
+          Nuk ka të dhëna për importet tregtare.
         </div>
       </ChartContainer>
     );

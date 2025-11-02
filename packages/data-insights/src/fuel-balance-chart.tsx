@@ -68,9 +68,8 @@ export function FuelBalanceChart({
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => `${formatCount(value)} tonnes`,
-    formatTotal: (value) => `${formatCount(value)} tonnes`,
-    missingValueLabel: "Not reported",
+    formatValue: (value) => `${formatCount(value)} tonë`,
+    formatTotal: (value) => `${formatCount(value)} tonë`,
   });
 
   const latestSummary = React.useMemo(() => {
@@ -99,7 +98,7 @@ export function FuelBalanceChart({
     return (
       <ChartContainer config={{}} className={CHART_CLASS}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          No fuel data available.
+          Nuk ka të dhëna për karburantet.
         </div>
       </ChartContainer>
     );
@@ -108,14 +107,14 @@ export function FuelBalanceChart({
   const metricLabel = fuelMetricLabels[metric];
   const summaryDisplay =
     latestSummary && latestSummary.total != null
-      ? `${formatCount(latestSummary.total)} tonnes`
-      : "Data unavailable";
+      ? `${formatCount(latestSummary.total)} tonë`
+      : "Të dhënat mungojnë";
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">Metric</span>
+          <span className="text-sm text-muted-foreground">Metrika</span>
           <div className="flex flex-wrap gap-2 text-xs">
             {METRIC_OPTIONS.map((option) => {
               const active = metric === option.id;
@@ -138,7 +137,7 @@ export function FuelBalanceChart({
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">View</span>
+          <span className="text-sm text-muted-foreground">Shiko</span>
           <div className="flex gap-2 text-xs">
             {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
               const active = periodGrouping === option.id;
@@ -162,21 +161,21 @@ export function FuelBalanceChart({
         </div>
       </div>
       <div className="text-sm text-muted-foreground">
-        Latest period{" "}
+        Periudha e fundit{" "}
         {latestSummary?.periodLabel ? (
           <>
             ({latestSummary.periodLabel}):{" "}
             <span className="font-medium text-foreground">
               {summaryDisplay}
             </span>{" "}
-            total {metricLabel.toLowerCase()} across fuels.
+            total {metricLabel.toLowerCase()} në të gjitha llojet e karburanteve.
           </>
         ) : (
           <>
             <span className="font-medium text-foreground">
               {summaryDisplay}
             </span>{" "}
-            total {metricLabel.toLowerCase()} across fuels.
+            total {metricLabel.toLowerCase()} në të gjitha llojet e karburanteve.
           </>
         )}
       </div>
