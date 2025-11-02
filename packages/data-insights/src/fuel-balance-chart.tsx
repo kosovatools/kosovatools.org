@@ -168,14 +168,16 @@ export function FuelBalanceChart({
             <span className="font-medium text-foreground">
               {summaryDisplay}
             </span>{" "}
-            total {metricLabel.toLowerCase()} në të gjitha llojet e karburanteve.
+            total {metricLabel.toLowerCase()} në të gjitha llojet e
+            karburanteve.
           </>
         ) : (
           <>
             <span className="font-medium text-foreground">
               {summaryDisplay}
             </span>{" "}
-            total {metricLabel.toLowerCase()} në të gjitha llojet e karburanteve.
+            total {metricLabel.toLowerCase()} në të gjitha llojet e
+            karburanteve.
           </>
         )}
       </div>

@@ -60,8 +60,7 @@ export function buildStackedChartView({
         dark: "var(--muted-foreground)",
       };
     } else {
-      paletteEntry =
-        palette[paletteIndex] ??
+      paletteEntry = palette[paletteIndex] ??
         palette.at(-1) ?? {
           light: "#6d4dd3",
           dark: "#9a78ff",

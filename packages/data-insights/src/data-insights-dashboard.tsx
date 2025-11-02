@@ -46,9 +46,9 @@ export function DataInsightsDashboard() {
           </span>
         </div>
         <p className="text-muted-foreground">
-          Eksploro datasetet e Agjencisë së Statistikave të Kosovës që
-          fuqizojnë Kosova Tools. Çdo vizualizim pasqyron kopjen më të fundit të
-          ruajtur në
+          Eksploro datasetet e Agjencisë së Statistikave të Kosovës që fuqizojnë
+          Kosova Tools. Çdo vizualizim pasqyron kopjen më të fundit të ruajtur
+          në
           <code className="mx-1 rounded bg-muted px-1 py-0.5 text-xs">
             packages/stats
           </code>

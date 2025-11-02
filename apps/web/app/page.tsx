@@ -233,8 +233,8 @@ export default function Page() {
               Dizajn i qasshëm
             </dt>
             <dd className="text-sm text-muted-foreground">
-              Ndërfaqet përshtaten në shqip dhe anglisht, me navigim nga tastiera
-              dhe modalitet të errët të gatshëm.
+              Ndërfaqet përshtaten në shqip dhe anglisht, me navigim nga
+              tastiera dhe modalitet të errët të gatshëm.
             </dd>
           </div>
         </dl>

@@ -304,9 +304,7 @@ export function StackedKeySelector({
                   size="sm"
                   onClick={handleClearExcluded}
                   className="h-7 px-2 text-xs"
-                  disabled={
-                    otherDisabled || excludedKeys.length === 0
-                  }
+                  disabled={otherDisabled || excludedKeys.length === 0}
                 >
                   Hiq zgjedhjet
                 </Button>
@@ -323,11 +321,14 @@ export function StackedKeySelector({
             className="flex-1 overflow-hidden rounded-md border border-border/50 bg-background"
             aria-disabled={otherDisabled}
           >
-            <ul className="flex h-full flex-col gap-1 overflow-y-auto p-2" role="listbox">
+            <ul
+              className="flex h-full flex-col gap-1 overflow-y-auto p-2"
+              role="listbox"
+            >
               {visibleOthers.length === 0 && (
                 <li className="rounded-md px-2 py-2 text-muted-foreground">
                   {otherDisabled
-                    ? "Ndiz \"Të tjerët\" për të menaxhuar përjashtimet."
+                    ? 'Ndiz "Të tjerët" për të menaxhuar përjashtimet.'
                     : "Asnjë hyrje nuk përputhet me kërkimin."}
                 </li>
               )}
@@ -344,7 +345,7 @@ export function StackedKeySelector({
                           ? "border-primary/40 bg-primary/10 text-primary"
                           : "hover:border-border hover:bg-muted",
                         otherDisabled &&
-                        "cursor-not-allowed border-transparent hover:bg-transparent",
+                          "cursor-not-allowed border-transparent hover:bg-transparent",
                       )}
                       aria-disabled={otherDisabled}
                     >

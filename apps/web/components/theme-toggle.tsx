@@ -27,7 +27,9 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     setMounted(true);
   }, []);
 
-  const currentTheme = (mounted ? theme ?? "system" : "system") as ThemeOption;
+  const currentTheme = (
+    mounted ? (theme ?? "system") : "system"
+  ) as ThemeOption;
   const activeResolvedTheme = (resolvedTheme ?? "system") as ThemeOption;
   const nextTheme =
     currentTheme === "system"

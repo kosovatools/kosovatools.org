@@ -71,11 +71,11 @@ export function ElectricityBalanceChart({
     const view =
       series.length > 0
         ? buildStackedChartView({
-          keys: SERIES_KEYS.slice(),
-          labelMap: LABEL_MAP,
-          series,
-          periodFormatter,
-        })
+            keys: SERIES_KEYS.slice(),
+            labelMap: LABEL_MAP,
+            series,
+            periodFormatter,
+          })
         : { chartData: [], keyMap: [], config: {} as ChartConfig };
 
     return {
@@ -105,8 +105,8 @@ export function ElectricityBalanceChart({
   const importShare =
     latestSummary?.importShare != null
       ? latestSummary.importShare.toLocaleString("sq", {
-        maximumFractionDigits: 1,
-      })
+          maximumFractionDigits: 1,
+        })
       : "–";
 
   return (
