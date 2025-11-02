@@ -4,6 +4,7 @@ import {
   type StackBuildResult,
   type StackSeriesRow,
   type StackTotal,
+  type StackPeriodGrouping,
 } from "../utils/stack";
 import {
   fuelKeys,
@@ -28,6 +29,7 @@ export type FuelTypeStackOptions = {
   metric?: FuelMetric;
   includeOther?: boolean;
   selectedKeys?: FuelKey[];
+  periodGrouping?: StackPeriodGrouping;
 };
 
 const DEFAULT_METRIC: FuelMetric = "ready_for_market";
@@ -65,6 +67,7 @@ function buildOptions(options: FuelTypeStackOptions = {}, selected: FuelKey[]) {
     selectedKeys: selected,
     allowedKeys: fuelKeys,
     labelForKey: (key: FuelKey) => fuelLabels[key],
+    periodGrouping: options.periodGrouping,
   };
 }
 
@@ -73,13 +76,15 @@ export function summarizeFuelTotals(
   {
     months,
     metric = DEFAULT_METRIC,
-  }: Pick<FuelTypeStackOptions, "months" | "metric"> = {},
+    periodGrouping,
+  }: Pick<FuelTypeStackOptions, "months" | "metric" | "periodGrouping"> = {},
 ): FuelTotal[] {
   const records = toStackRecords(balances, metric);
   return summarizeStackTotals(records, accessors(), {
     months,
     allowedKeys: fuelKeys,
     labelForKey: (key: FuelKey) => fuelLabels[key],
+    periodGrouping,
   });
 }
 

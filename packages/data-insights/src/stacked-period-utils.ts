@@ -30,15 +30,20 @@ export const STACKED_PERIOD_GROUPING_OPTIONS: Array<{
   id: StackPeriodGrouping;
   label: string;
 }> = [
-  { id: "monthly", label: "Monthly" },
-  { id: "quarterly", label: "Quarterly" },
-  { id: "yearly", label: "Yearly" },
-];
+    { id: "monthly", label: "Monthly" },
+    { id: "quarterly", label: "Quarterly" },
+    { id: "yearly", label: "Yearly" },
+    { id: "seasonal", label: "Seasonal" },
+  ];
 
 export function formatStackedPeriodLabel(
   period: string,
   grouping: StackPeriodGrouping,
 ): string {
+  if (grouping === "seasonal") {
+    return formatSeasonalPeriodLabel(period);
+  }
+
   if (grouping === "monthly") {
     const parsed = parseYearMonth(period);
     return parsed ? monthFormatter.format(parsed) : period;
@@ -68,4 +73,19 @@ export function getStackedPeriodFormatter(
   grouping: StackPeriodGrouping,
 ): (period: string) => string {
   return (period: string) => formatStackedPeriodLabel(period, grouping);
+}
+
+function formatSeasonalPeriodLabel(period: string): string {
+  const match = /^(\d{4})-(winter|spring|summer|autumn)$/.exec(period);
+  if (!match) {
+    return period;
+  }
+
+  const [, year, season] = match;
+  if (!season) {
+    return period;
+  }
+
+  const capitalized = season.charAt(0).toUpperCase() + season.slice(1);
+  return `${capitalized} ${year}`;
 }

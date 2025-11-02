@@ -2,6 +2,7 @@ import { useMemo } from "react";
 
 import {
   electricityMonthly,
+  fuelBalances,
   kasSources,
   tradeImportsByPartner,
   tradeImportsMonthly,
@@ -19,6 +20,7 @@ import {
 } from "@workspace/ui/components/card";
 import {
   ElectricityBalanceChart,
+  FuelBalanceChart,
   ImportPartnersStackedChart,
   TourismCountryStackedChart,
   TourismRegionCharts,
@@ -34,6 +36,10 @@ export default function DataInsightsPage() {
     table: string;
     unit: string;
   };
+  const fuelSource = kasSources.sources["fuel_monthly"] as Record<
+    string,
+    { table: string; label: string }
+  >;
   const tourismSource = kasSources.sources["tourism_monthly"] as {
     region: { table: string };
     country: { table: string };
@@ -74,6 +80,22 @@ export default function DataInsightsPage() {
       })
     : "n/a";
 
+  const fuelSourceLabel = useMemo(() => {
+    const entries = Object.values(fuelSource ?? {});
+    const parts = entries
+      .map((entry) => {
+        if (!entry) {
+          return "";
+        }
+        if (entry.label && entry.table) {
+          return `${entry.label}: ${entry.table}`;
+        }
+        return entry.table ?? entry.label ?? "";
+      })
+      .filter((part) => part.length > 0);
+    return parts.length ? parts.join("; ") : "Unknown";
+  }, [fuelSource]);
+
   const chartContentClass = "px-2 sm:px-6";
 
   return (
@@ -99,22 +121,6 @@ export default function DataInsightsPage() {
 
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold">Trade & Customs</h2>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Monthly goods imports</CardTitle>
-            <CardDescription>
-              CIF values in thousand euro. Latest period: {latestTradeLabel}.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className={chartContentClass}>
-            <TradeImportsChart data={tradeImportsMonthly} />
-          </CardContent>
-          <CardFooter className="text-xs text-muted-foreground">
-            Source: {tradeSource.table} ({tradeSource.unit}).
-          </CardFooter>
-        </Card>
-
         <Card>
           <CardHeader>
             <CardTitle>Partner contributions (stacked)</CardTitle>
@@ -147,6 +153,22 @@ export default function DataInsightsPage() {
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
             Source: {energySource.table} ({energySource.unit}).
+          </CardFooter>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Fuel supply balance</CardTitle>
+            <CardDescription>
+              Monthly fuel availability by type. Toggle metrics to compare
+              production, trade flows, stock, or ready-for-market volumes.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className={chartContentClass}>
+            <FuelBalanceChart balances={fuelBalances} months={36} />
+          </CardContent>
+          <CardFooter className="text-xs text-muted-foreground">
+            Sources: {fuelSourceLabel}.
           </CardFooter>
         </Card>
       </section>

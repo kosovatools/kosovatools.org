@@ -47,7 +47,7 @@ jobs:
       - name: Compute stats dataset cache key
         id: stats-key
         run: |
-          BASE="stats-data-$(date -u +%G-W%V)"
+          BASE="stats-data-120-$(date -u +%G-W%V)"
           HASH="${{ hashFiles('packages/stats/scripts/fetch_kas.mjs', 'pnpm-lock.yaml') }}"
           if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_stats_cache == 'true' }}" = "true" ]; then
             SUFFIX="$HASH-bust-$GITHUB_RUN_ID"
@@ -56,7 +56,7 @@ jobs:
           fi
           echo "key=$BASE-$SUFFIX" >> $GITHUB_OUTPUT
           echo "restore-primary=$BASE-$HASH-" >> $GITHUB_OUTPUT
-          echo "restore-fallback=stats-data-" >> $GITHUB_OUTPUT
+          echo "restore-fallback=stats-data-120-" >> $GITHUB_OUTPUT
 
       - name: Restore cached KAS datasets
         id: cache-stats
@@ -70,7 +70,7 @@ jobs:
 
       - name: Refresh KAS datasets
         if: steps.cache-stats.outputs.cache-hit != 'true'
-        run: node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data --months 36
+        run: node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data --months 120
 
   fetch-customs-data:
     runs-on: ubuntu-latest

@@ -2,16 +2,21 @@
 
 import * as React from "react";
 import {
+  Area,
+  AreaChart,
   CartesianGrid,
   Legend,
-  Line,
-  LineChart,
   ReferenceLine,
   XAxis,
   YAxis,
 } from "recharts";
 
-import { formatEnergyGWh, type ElectricityRecord } from "@workspace/stats";
+import {
+  formatEnergyGWh,
+  type ElectricityRecord,
+  type StackPeriodGrouping,
+  groupStackPeriod,
+} from "@workspace/stats";
 
 import {
   ChartConfig,
@@ -19,90 +24,80 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { createChromaPalette } from "@workspace/ui/lib/chart-palette";
+import { buildStackedChartView } from "./stacked-chart-helpers";
 import { useChartTooltipFormatters } from "./use-chart-tooltip-formatters";
+import {
+  STACKED_PERIOD_GROUPING_OPTIONS,
+  getStackedPeriodFormatter,
+} from "./stacked-period-utils";
 
-const electricityPalette = createChromaPalette(2);
-const fallbackPrimary = { light: "#6d4dd3", dark: "#9a78ff" };
-const fallbackSecondary = { light: "#2d9cdb", dark: "#5fb4ff" };
-
-const importPalette = {
-  light: electricityPalette[0]?.light ?? fallbackPrimary.light,
-  dark: electricityPalette[0]?.dark ?? fallbackPrimary.dark,
+const SERIES_KEYS = ["production_gwh", "import_gwh"] as const;
+const LABEL_MAP: Record<(typeof SERIES_KEYS)[number], string> = {
+  production_gwh: "Production (GWh)",
+  import_gwh: "Import (GWh)",
 };
-
-const productionPalette = {
-  light:
-    electricityPalette[1]?.light ??
-    electricityPalette[0]?.light ??
-    fallbackSecondary.light,
-  dark:
-    electricityPalette[1]?.dark ??
-    electricityPalette[0]?.dark ??
-    fallbackSecondary.dark,
-};
-
-const chartConfig: ChartConfig = {
-  import_gwh: {
-    label: "Import (GWh)",
-    theme: {
-      light: importPalette.light,
-      dark: importPalette.dark,
-    },
-  },
-  production_gwh: {
-    label: "Production (GWh)",
-    theme: {
-      light: productionPalette.light,
-      dark: productionPalette.dark,
-    },
-  },
-};
-
-const electricityTooltipKeys = [
-  { id: "import_gwh", palette: importPalette },
-  { id: "production_gwh", palette: productionPalette },
-];
-
-const axisFormatter = new Intl.DateTimeFormat("en-GB", {
-  month: "short",
-  year: "2-digit",
-});
 
 export function ElectricityBalanceChart({
   data,
-  months = 24,
+  months,
 }: {
   data: ElectricityRecord[];
   months?: number;
 }) {
   const chartClassName = "w-full aspect-[4/3] sm:aspect-video";
 
-  const series = React.useMemo(() => {
-    return data
+  const [periodGrouping, setPeriodGrouping] =
+    React.useState<StackPeriodGrouping>("seasonal");
+
+  const { chartData, keyMap, config, latestSummary } = React.useMemo(() => {
+    const periodFormatter = getStackedPeriodFormatter(periodGrouping);
+
+    const sorted = data
       .slice()
-      .sort((a, b) => a.period.localeCompare(b.period))
-      .slice(-months)
-      .map((row) => ({
-        ...row,
-        periodLabel: axisFormatter.format(new Date(`${row.period}-01`)),
-        import_share:
-          row.import_gwh && row.production_gwh
-            ? (row.import_gwh / row.production_gwh) * 100
-            : null,
-      }));
-  }, [data, months]);
+      .sort((a, b) => a.period.localeCompare(b.period));
+    const limitedRecords =
+      typeof months === "number" && Number.isFinite(months) && months > 0
+        ? sorted.slice(-months)
+        : sorted;
+
+    const aggregated = aggregateByGrouping(limitedRecords, periodGrouping);
+
+    const series = aggregated.map((row) => ({
+      period: row.period,
+      values: {
+        production_gwh: row.productionTotal,
+        import_gwh: row.importTotal,
+      },
+    }));
+
+    const view =
+      series.length > 0
+        ? buildStackedChartView({
+            keys: SERIES_KEYS.slice(),
+            labelMap: LABEL_MAP,
+            series,
+            periodFormatter,
+          })
+        : { chartData: [], keyMap: [], config: {} as ChartConfig };
+
+    return {
+      chartData: view.chartData,
+      keyMap: view.keyMap,
+      config: view.config,
+      latestSummary: buildLatestSummary(aggregated, periodFormatter),
+    };
+  }, [data, months, periodGrouping]);
 
   const tooltip = useChartTooltipFormatters({
-    keys: electricityTooltipKeys,
+    keys: keyMap,
     formatValue: (value) => `${formatEnergyGWh(value)} GWh`,
     formatTotal: (value) => `${formatEnergyGWh(value)} GWh`,
     missingValueLabel: "Not reported",
   });
 
-  if (!series.length) {
+  if (!chartData.length || !keyMap.length) {
     return (
-      <ChartContainer config={chartConfig} className={chartClassName}>
+      <ChartContainer config={{}} className={chartClassName}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
           No electricity data available.
         </div>
@@ -110,22 +105,61 @@ export function ElectricityBalanceChart({
     );
   }
 
-  const latest = series.at(-1);
   const importShare =
-    latest?.import_share != null
-      ? latest.import_share.toLocaleString("en-GB", {
-        maximumFractionDigits: 1,
-      })
+    latestSummary?.importShare != null
+      ? latestSummary.importShare.toLocaleString("en-GB", {
+          maximumFractionDigits: 1,
+        })
       : "–";
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="text-sm text-muted-foreground">
-        Latest import share:{" "}
-        <span className="font-medium text-foreground">{importShare}%</span>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="text-sm text-muted-foreground">
+          Latest period{" "}
+          {latestSummary?.periodLabel ? (
+            <>
+              ({latestSummary.periodLabel}):{" "}
+              <span className="font-medium text-foreground">
+                {importShare}%
+              </span>{" "}
+              import share
+            </>
+          ) : (
+            <>
+              import share:{" "}
+              <span className="font-medium text-foreground">
+                {importShare}%
+              </span>
+            </>
+          )}
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs text-muted-foreground">View</span>
+          <div className="flex gap-2 text-xs">
+            {STACKED_PERIOD_GROUPING_OPTIONS.map((option) => {
+              const active = periodGrouping === option.id;
+              return (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => setPeriodGrouping(option.id)}
+                  className={
+                    "rounded-full border px-3 py-1 transition-colors " +
+                    (active
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border bg-background hover:bg-muted")
+                  }
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
-      <ChartContainer config={chartConfig} className={chartClassName}>
-        <LineChart data={series}>
+      <ChartContainer config={config} className={chartClassName}>
+        <AreaChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="periodLabel"
@@ -147,22 +181,80 @@ export function ElectricityBalanceChart({
             }
           />
           <Legend />
-          <Line
-            type="monotone"
-            dataKey="production_gwh"
-            stroke="var(--color-production_gwh)"
-            strokeWidth={2}
-            dot={false}
-          />
-          <Line
-            type="monotone"
-            dataKey="import_gwh"
-            stroke="var(--color-import_gwh)"
-            strokeWidth={2}
-            dot={false}
-          />
-        </LineChart>
+          {keyMap.map((entry) => (
+            <Area
+              key={entry.id}
+              type="monotone"
+              dataKey={entry.id}
+              stroke={`var(--color-${entry.id})`}
+              strokeWidth={2}
+              fill={`var(--color-${entry.id})`}
+              fillOpacity={0.85}
+              stackId="electricity-balance"
+              name={entry.label}
+            />
+          ))}
+        </AreaChart>
       </ChartContainer>
     </div>
   );
+}
+
+function aggregateByGrouping(
+  records: ElectricityRecord[],
+  grouping: StackPeriodGrouping,
+) {
+  const buckets = new Map<
+    string,
+    { importTotal: number; productionTotal: number }
+  >();
+  const order: string[] = [];
+
+  for (const record of records) {
+    const period = groupStackPeriod(record.period, grouping);
+    if (!buckets.has(period)) {
+      buckets.set(period, { importTotal: 0, productionTotal: 0 });
+      order.push(period);
+    }
+    const bucket = buckets.get(period)!;
+    bucket.importTotal += toNumber(record.import_gwh);
+    bucket.productionTotal += toNumber(record.production_gwh);
+  }
+
+  return order.map((period) => {
+    const bucket = buckets.get(period)!;
+    return {
+      period,
+      importTotal: bucket.importTotal,
+      productionTotal: bucket.productionTotal,
+    };
+  });
+}
+
+function toNumber(value: number | null | undefined): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
+function buildLatestSummary(
+  aggregated: Array<{
+    period: string;
+    importTotal: number;
+    productionTotal: number;
+  }>,
+  formatter: (period: string) => string,
+) {
+  const latest = aggregated.at(-1);
+  if (!latest) {
+    return null;
+  }
+
+  const importShare =
+    latest.productionTotal > 0
+      ? (latest.importTotal / latest.productionTotal) * 100
+      : null;
+
+  return {
+    periodLabel: formatter(latest.period),
+    importShare,
+  };
 }

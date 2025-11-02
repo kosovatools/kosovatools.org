@@ -1,6 +1,13 @@
+import governmentPeriodsJson from "../../data/government-periods.json" with { type: "json" };
+
 type MaybeNumber = number | null | undefined;
 
-export type StackPeriodGrouping = "monthly" | "quarterly" | "yearly";
+export type StackPeriodGrouping =
+  | "monthly"
+  | "quarterly"
+  | "yearly"
+  | "seasonal"
+  | "government";
 
 export type StackAccessors<TRecord, TKey extends string> = {
   period: (record: TRecord) => string;
@@ -32,7 +39,44 @@ export type StackSeriesRow<TKey extends string> = {
   values: Record<TKey | "Other", number>;
 };
 
+type GovernmentPeriod = {
+  name: string;
+  start: string;
+  end?: string;
+};
+
+type GovernmentPeriodRange = {
+  name: string;
+  startIndex: number;
+  endIndex: number;
+};
+
 const DEFAULT_PERIOD_GROUPING: StackPeriodGrouping = "monthly";
+const UNKNOWN_GOVERNMENT_LABEL = "Unknown Government";
+
+const GOVERNMENT_PERIOD_RANGES: GovernmentPeriodRange[] = (
+  Array.isArray(governmentPeriodsJson)
+    ? (governmentPeriodsJson as GovernmentPeriod[])
+    : []
+)
+  .flatMap((entry) => {
+    const startIndex = periodStringToIndex(entry.start);
+    if (startIndex == null) {
+      return [];
+    }
+    const endIndex =
+      entry.end != null
+        ? (periodStringToIndex(entry.end) ?? Number.POSITIVE_INFINITY)
+        : Number.POSITIVE_INFINITY;
+    return [
+      {
+        name: entry.name,
+        startIndex,
+        endIndex,
+      },
+    ];
+  })
+  .sort((a, b) => a.startIndex - b.startIndex);
 
 function stringifyQuarter(year: string, month: number) {
   const safeMonth = Number.isFinite(month) ? month : NaN;
@@ -43,10 +87,18 @@ function stringifyQuarter(year: string, month: number) {
   return `${year}-Q${quarter}`;
 }
 
-function normalizePeriod(
+export function groupStackPeriod(
   period: string,
   grouping: StackPeriodGrouping = DEFAULT_PERIOD_GROUPING,
 ): string {
+  if (grouping === "government") {
+    return toGovernmentKey(period);
+  }
+
+  if (grouping === "seasonal") {
+    return toSeasonalKey(period);
+  }
+
   if (grouping === "yearly") {
     const [year] = period.split("-");
     return year ?? period;
@@ -61,6 +113,72 @@ function normalizePeriod(
   return period;
 }
 
+function periodStringToIndex(period: string): number | null {
+  const [yearStr, monthStr] = period.split("-");
+  const year = Number.parseInt(yearStr ?? "", 10);
+  const month = Number.parseInt(monthStr ?? "", 10);
+  if (!Number.isFinite(year) || !Number.isFinite(month)) {
+    return null;
+  }
+  if (month < 1 || month > 12) {
+    return null;
+  }
+  return year * 12 + (month - 1);
+}
+
+function toSeasonalKey(period: string): string {
+  const [yearStr, monthStr] = period.split("-");
+  const year = Number.parseInt(yearStr ?? "", 10);
+  const month = Number.parseInt(monthStr ?? "", 10);
+  if (!Number.isFinite(year) || !Number.isFinite(month)) {
+    return period;
+  }
+
+  let season: "winter" | "spring" | "summer" | "autumn";
+  let seasonYear = year;
+
+  if (month === 12) {
+    season = "winter";
+    seasonYear = year + 1;
+  } else if (month <= 2) {
+    season = "winter";
+  } else if (month <= 5) {
+    season = "spring";
+  } else if (month <= 8) {
+    season = "summer";
+  } else {
+    season = "autumn";
+  }
+
+  return `${seasonYear}-${season}`;
+}
+
+function toGovernmentKey(period: string): string {
+  const periodIndex = periodStringToIndex(period);
+  if (periodIndex == null) {
+    return UNKNOWN_GOVERNMENT_LABEL;
+  }
+
+  for (
+    let index = GOVERNMENT_PERIOD_RANGES.length - 1;
+    index >= 0;
+    index -= 1
+  ) {
+    const entry = GOVERNMENT_PERIOD_RANGES[index];
+    if (!entry) {
+      continue;
+    }
+    if (periodIndex < entry.startIndex) {
+      continue;
+    }
+    if (periodIndex <= entry.endIndex) {
+      return entry.name;
+    }
+  }
+
+  return UNKNOWN_GOVERNMENT_LABEL;
+}
+
 function buildGroupedPeriodList(
   periods: string[],
   grouping: StackPeriodGrouping,
@@ -73,7 +191,7 @@ function buildGroupedPeriodList(
   const grouped: string[] = [];
 
   for (const period of periods) {
-    const normalized = normalizePeriod(period, grouping);
+    const normalized = groupStackPeriod(period, grouping);
     if (seen.has(normalized)) {
       continue;
     }
@@ -242,7 +360,7 @@ export function buildStackSeries<TRecord, TKey extends string>(
   for (const record of records) {
     const period = accessors.period(record);
     if (!periodSet.has(period)) continue;
-    const groupedPeriod = normalizePeriod(period, grouping);
+    const groupedPeriod = groupStackPeriod(period, grouping);
     if (!recordsByPeriod.has(groupedPeriod)) {
       recordsByPeriod.set(groupedPeriod, []);
     }
