@@ -16,12 +16,12 @@
     "fetch-data": "node scripts/fetch_kas.mjs --out data --months 120"
   },
   "devDependencies": {
-    "@types/chroma-js": "^3.1.1",
+    "@types/chroma-js": "^3.1.2",
     "@types/d3-scale": "^4.0.9",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
-    "eslint": "^9.32.0",
-    "typescript": "^5.9.2"
+    "eslint": "^9.39.0",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "chroma-js": "^3.1.2",

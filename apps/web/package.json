@@ -12,12 +12,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@workspace/car-import-taxes": "workspace:*",
     "@workspace/customs-codes": "workspace:*",
     "@workspace/data-insights": "workspace:*",
-    "@workspace/car-import-taxes": "workspace:*",
     "@workspace/payroll": "workspace:*",
     "@workspace/stats": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "babel-plugin-react-compiler": "^1.0.0",
     "chroma-js": "^3.1.2",
     "d3-scale": "^4.0.2",
     "lucide-react": "^0.475.0",
@@ -28,15 +29,15 @@
     "recharts": "2.15.4"
   },
   "devDependencies": {
-    "@types/chroma-js": "^3.1.1",
+    "@types/chroma-js": "^3.1.2",
     "@types/d3-scale": "^4.0.9",
-    "@types/node": "^24.0.0",
+    "@types/node": "^24.9.2",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@workspace/eslint-config": "workspace:^",
     "@workspace/typescript-config": "workspace:*",
-    "eslint": "^9.32.0",
-    "typescript": "^5.9.2"
+    "eslint": "^9.39.0",
+    "typescript": "^5.9.3"
   },
   "license": "AGPL-3.0-only"
 }

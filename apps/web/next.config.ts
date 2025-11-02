@@ -7,6 +7,7 @@ const buildTime = new Date()
   .replace(/\.[0-9]+Z$/, "");
 
 const nextConfig: NextConfig = {
+  reactCompiler: true,
   output: "export",
   images: {
     unoptimized: true,

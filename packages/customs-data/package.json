@@ -18,14 +18,14 @@
     "fetch-data": "node scripts/fetch-data.mjs"
   },
   "dependencies": {
-    "dexie": "^4.0.8",
-    "minisearch": "^7.1.0"
+    "dexie": "^4.2.1",
+    "minisearch": "^7.2.0"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
-    "eslint": "^9.32.0",
-    "typescript": "^5.9.2"
+    "eslint": "^9.39.0",
+    "typescript": "^5.9.3"
   },
   "license": "AGPL-3.0-only"
 }

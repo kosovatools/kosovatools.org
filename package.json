@@ -10,7 +10,7 @@
     "fetch-data": "turbo run fetch-data"
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
+    "@types/node": "^24.9.2",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "prettier": "^3.6.2",
