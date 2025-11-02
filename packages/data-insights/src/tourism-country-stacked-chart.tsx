@@ -1,7 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { Area, AreaChart, CartesianGrid, Legend, XAxis, YAxis } from "recharts";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Legend,
+  Label,
+  ReferenceLine,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import {
   buildCountryStackSeries,
@@ -21,6 +30,7 @@ import {
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { StackedKeySelector } from "@workspace/ui/components/stacked-key-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/components/use-chart-tooltip-formatters";
+import { useTimelineEventMarkers } from "./use-timeline-event-markers";
 
 const DEFAULT_TOP_COUNTRIES = 5;
 
@@ -28,6 +38,8 @@ const metricOptions = [
   { id: "visitors" as const, label: "Vizitorë" },
   { id: "nights" as const, label: "Qëndrime nate" },
 ];
+
+const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
 
 export function TourismCountryStackedChart({
   data,
@@ -122,6 +134,11 @@ export function TourismCountryStackedChart({
     formatValue: (value) => formatCount(value),
   });
 
+  const eventMarkers = useTimelineEventMarkers(
+    chartData as Array<{ period: string; periodLabel: string }>,
+    periodGrouping,
+  );
+
   if (!chartData.length || !keyMap.length) {
     return (
       <ChartContainer config={config}>
@@ -197,7 +214,7 @@ export function TourismCountryStackedChart({
         onExcludedKeysChange={setExcludedKeys}
       />
       <ChartContainer config={config} className="h-[360px] !aspect-auto">
-        <AreaChart data={chartData}>
+        <AreaChart data={chartData} margin={CHART_MARGIN}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="periodLabel"
@@ -209,6 +226,24 @@ export function TourismCountryStackedChart({
             tickFormatter={(value) => formatCount(value as number)}
             axisLine={false}
           />
+          {eventMarkers.map((event) => (
+            <ReferenceLine
+              key={event.id}
+              x={event.x}
+              stroke="var(--muted-foreground)"
+              strokeDasharray="3 3"
+              ifOverflow="extendDomain"
+              isFront
+            >
+              <Label
+                value={event.label}
+                position="top"
+                fill="var(--muted-foreground)"
+                fontSize={10}
+                offset={4}
+              />
+            </ReferenceLine>
+          ))}
           <ChartTooltip
             content={
               <ChartTooltipContent

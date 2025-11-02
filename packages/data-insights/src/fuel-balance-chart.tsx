@@ -1,7 +1,16 @@
 "use client";
 
 import * as React from "react";
-import { Area, AreaChart, CartesianGrid, Legend, XAxis, YAxis } from "recharts";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Legend,
+  Label,
+  ReferenceLine,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import {
   buildFuelTypeStackSeries,
@@ -23,10 +32,12 @@ import {
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useChartTooltipFormatters } from "@workspace/ui/components/use-chart-tooltip-formatters";
+import { useTimelineEventMarkers } from "./use-timeline-event-markers";
 
 const DEFAULT_METRIC: FuelMetric = "ready_for_market";
 const DEFAULT_MONTHS = 36;
 const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";
+const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
 
 type FuelBalanceChartProps = {
   balances: Record<FuelKey, FuelBalanceRecord[]>;
@@ -71,6 +82,11 @@ export function FuelBalanceChart({
     formatValue: (value) => `${formatCount(value)} tonë`,
     formatTotal: (value) => `${formatCount(value)} tonë`,
   });
+
+  const eventMarkers = useTimelineEventMarkers(
+    chartData as Array<{ period: string; periodLabel: string }>,
+    periodGrouping,
+  );
 
   const latestSummary = React.useMemo(() => {
     if (!chartData.length || !keyMap.length) {
@@ -182,7 +198,7 @@ export function FuelBalanceChart({
         )}
       </div>
       <ChartContainer config={config} className={CHART_CLASS}>
-        <AreaChart data={chartData}>
+        <AreaChart data={chartData} margin={CHART_MARGIN}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="periodLabel"
@@ -194,6 +210,24 @@ export function FuelBalanceChart({
             tickFormatter={(value) => formatCount(value as number)}
             axisLine={false}
           />
+          {eventMarkers.map((event) => (
+            <ReferenceLine
+              key={event.id}
+              x={event.x}
+              stroke="var(--muted-foreground)"
+              strokeDasharray="3 3"
+              ifOverflow="extendDomain"
+              isFront
+            >
+              <Label
+                value={event.label}
+                position="top"
+                fill="var(--muted-foreground)"
+                fontSize={10}
+                offset={4}
+              />
+            </ReferenceLine>
+          ))}
           <ChartTooltip
             content={
               <ChartTooltipContent

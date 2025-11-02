@@ -1,13 +1,10 @@
-import governmentPeriodsJson from "../../data/government-periods.json" with { type: "json" };
-
 type MaybeNumber = number | null | undefined;
 
 export type StackPeriodGrouping =
   | "monthly"
   | "quarterly"
   | "yearly"
-  | "seasonal"
-  | "government";
+  | "seasonal";
 
 export type StackAccessors<TRecord, TKey extends string> = {
   period: (record: TRecord) => string;
@@ -56,20 +53,7 @@ export const STACK_PERIOD_GROUPING_OPTIONS: ReadonlyArray<{
   { id: "seasonal", label: "Sezonal" },
 ];
 
-type GovernmentPeriod = {
-  name: string;
-  start: string;
-  end?: string;
-};
-
-type GovernmentPeriodRange = {
-  name: string;
-  startIndex: number;
-  endIndex: number;
-};
-
 const DEFAULT_PERIOD_GROUPING: StackPeriodGrouping = "monthly";
-const UNKNOWN_GOVERNMENT_LABEL = "Qeveri e panjohur";
 const QUARTER_PATTERN = /^(\d{4})-Q([1-4])$/;
 const SEASONAL_LABEL_PATTERN = /^(\d{4})-(winter|spring|summer|autumn)$/;
 const SEASON_LABEL_MAP: Record<
@@ -81,30 +65,6 @@ const SEASON_LABEL_MAP: Record<
   summer: "Verë",
   autumn: "Vjeshtë",
 };
-
-const GOVERNMENT_PERIOD_RANGES: GovernmentPeriodRange[] = (
-  Array.isArray(governmentPeriodsJson)
-    ? (governmentPeriodsJson as GovernmentPeriod[])
-    : []
-)
-  .flatMap((entry) => {
-    const startIndex = periodStringToIndex(entry.start);
-    if (startIndex == null) {
-      return [];
-    }
-    const endIndex =
-      entry.end != null
-        ? (periodStringToIndex(entry.end) ?? Number.POSITIVE_INFINITY)
-        : Number.POSITIVE_INFINITY;
-    return [
-      {
-        name: entry.name,
-        startIndex,
-        endIndex,
-      },
-    ];
-  })
-  .sort((a, b) => a.startIndex - b.startIndex);
 
 function stringifyQuarter(year: string, month: number) {
   const safeMonth = Number.isFinite(month) ? month : NaN;
@@ -119,10 +79,6 @@ export function groupStackPeriod(
   period: string,
   grouping: StackPeriodGrouping = DEFAULT_PERIOD_GROUPING,
 ): string {
-  if (grouping === "government") {
-    return toGovernmentKey(period);
-  }
-
   if (grouping === "seasonal") {
     return toSeasonalKey(period);
   }
@@ -139,19 +95,6 @@ export function groupStackPeriod(
   }
 
   return period;
-}
-
-function periodStringToIndex(period: string): number | null {
-  const [yearStr, monthStr] = period.split("-");
-  const year = Number.parseInt(yearStr ?? "", 10);
-  const month = Number.parseInt(monthStr ?? "", 10);
-  if (!Number.isFinite(year) || !Number.isFinite(month)) {
-    return null;
-  }
-  if (month < 1 || month > 12) {
-    return null;
-  }
-  return year * 12 + (month - 1);
 }
 
 function toSeasonalKey(period: string): string {
@@ -194,32 +137,6 @@ function parseYearMonth(
     return null;
   }
   return { year, month };
-}
-
-function toGovernmentKey(period: string): string {
-  const periodIndex = periodStringToIndex(period);
-  if (periodIndex == null) {
-    return UNKNOWN_GOVERNMENT_LABEL;
-  }
-
-  for (
-    let index = GOVERNMENT_PERIOD_RANGES.length - 1;
-    index >= 0;
-    index -= 1
-  ) {
-    const entry = GOVERNMENT_PERIOD_RANGES[index];
-    if (!entry) {
-      continue;
-    }
-    if (periodIndex < entry.startIndex) {
-      continue;
-    }
-    if (periodIndex <= entry.endIndex) {
-      return entry.name;
-    }
-  }
-
-  return UNKNOWN_GOVERNMENT_LABEL;
 }
 
 function buildGroupedPeriodList(

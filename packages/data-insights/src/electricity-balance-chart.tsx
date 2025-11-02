@@ -6,6 +6,7 @@ import {
   AreaChart,
   CartesianGrid,
   Legend,
+  Label,
   ReferenceLine,
   XAxis,
   YAxis,
@@ -28,6 +29,7 @@ import {
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useChartTooltipFormatters } from "@workspace/ui/components/use-chart-tooltip-formatters";
+import { useTimelineEventMarkers } from "./use-timeline-event-markers";
 
 const SERIES_KEYS = ["production_gwh", "import_gwh"] as const;
 const LABEL_MAP: Record<(typeof SERIES_KEYS)[number], string> = {
@@ -43,6 +45,7 @@ export function ElectricityBalanceChart({
   months?: number;
 }) {
   const chartClassName = "w-full aspect-[4/3] sm:aspect-video";
+  const chartMargin = { top: 56, right: 24, left: 8, bottom: 0 };
 
   const [periodGrouping, setPeriodGrouping] =
     React.useState<StackPeriodGrouping>("seasonal");
@@ -91,6 +94,11 @@ export function ElectricityBalanceChart({
     formatValue: (value) => `${formatEnergyGWh(value)} GWh`,
     formatTotal: (value) => `${formatEnergyGWh(value)} GWh`,
   });
+
+  const eventMarkers = useTimelineEventMarkers(
+    chartData as Array<{ period: string; periodLabel: string }>,
+    periodGrouping,
+  );
 
   if (!chartData.length || !keyMap.length) {
     return (
@@ -156,7 +164,7 @@ export function ElectricityBalanceChart({
         </div>
       </div>
       <ChartContainer config={config} className={chartClassName}>
-        <AreaChart data={chartData}>
+        <AreaChart data={chartData} margin={chartMargin}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="periodLabel"
@@ -168,6 +176,24 @@ export function ElectricityBalanceChart({
             tickFormatter={(value) => formatEnergyGWh(value as number)}
             axisLine={false}
           />
+          {eventMarkers.map((event) => (
+            <ReferenceLine
+              key={event.id}
+              x={event.x}
+              stroke="var(--muted-foreground)"
+              strokeDasharray="3 3"
+              ifOverflow="extendDomain"
+              isFront
+            >
+              <Label
+                value={event.label}
+                position="top"
+                fill="var(--muted-foreground)"
+                fontSize={10}
+                offset={4}
+              />
+            </ReferenceLine>
+          ))}
           <ReferenceLine y={0} stroke="var(--border)" />
           <ChartTooltip
             content={
