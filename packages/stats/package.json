@@ -13,7 +13,7 @@
   "scripts": {
     "lint": "eslint src scripts --max-warnings 0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "fetch-data": "node scripts/fetch_kas.mjs --out data --months 36"
+    "fetch-data": "node scripts/fetch_kas.mjs --out data --months 120"
   },
   "devDependencies": {
     "@types/chroma-js": "^3.1.1",

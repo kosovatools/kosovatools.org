@@ -71,7 +71,7 @@ function buildOptions(options: FuelTypeStackOptions = {}, selected: FuelKey[]) {
 export function summarizeFuelTotals(
   balances: Record<FuelKey, FuelBalanceRecord[]>,
   {
-    months = 12,
+    months,
     metric = DEFAULT_METRIC,
   }: Pick<FuelTypeStackOptions, "months" | "metric"> = {},
 ): FuelTotal[] {

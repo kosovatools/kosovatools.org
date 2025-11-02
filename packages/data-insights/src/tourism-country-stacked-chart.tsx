@@ -33,7 +33,7 @@ const metricOptions = [
 
 export function TourismCountryStackedChart({
   data,
-  months = 12,
+  months,
   top = DEFAULT_TOP_COUNTRIES,
 }: {
   data: TourismCountryRecord[];

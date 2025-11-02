@@ -49,7 +49,7 @@ const DEFAULT_METRIC: TourismMetric = "visitors";
 export function summarizeCountryTotals(
   records: TourismCountryRecord[],
   {
-    months = 12,
+    months,
     metric = DEFAULT_METRIC,
   }: Pick<CountryStackOptions, "months" | "metric"> = {},
 ): CountryTotal[] {

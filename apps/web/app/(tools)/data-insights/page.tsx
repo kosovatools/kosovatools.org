@@ -108,7 +108,7 @@ export default function DataInsightsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
-            <TradeImportsChart data={tradeImportsMonthly} months={24} />
+            <TradeImportsChart data={tradeImportsMonthly} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
             Source: {tradeSource.table} ({tradeSource.unit}).
@@ -124,11 +124,7 @@ export default function DataInsightsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
-            <ImportPartnersStackedChart
-              data={tradeImportsByPartner}
-              months={12}
-              top={6}
-            />
+            <ImportPartnersStackedChart data={tradeImportsByPartner} top={6} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
             Source: {importsPartnerSource.table}.
@@ -147,7 +143,7 @@ export default function DataInsightsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
-            <ElectricityBalanceChart data={electricityMonthly} months={24} />
+            <ElectricityBalanceChart data={electricityMonthly} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
             Source: {energySource.table} ({energySource.unit}).
@@ -167,11 +163,7 @@ export default function DataInsightsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
-            <TourismCountryStackedChart
-              data={tourismByCountry}
-              months={12}
-              top={5}
-            />
+            <TourismCountryStackedChart data={tourismByCountry} top={5} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
             Source: {tourismCountrySource.table}.
@@ -186,7 +178,7 @@ export default function DataInsightsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
-            <TourismRegionCharts data={tourismByRegion} months={12} />
+            <TourismRegionCharts data={tourismByRegion} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
             Source: {tourismRegionSource.table}.

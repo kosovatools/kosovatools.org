@@ -29,7 +29,7 @@ const axisFormatter = new Intl.DateTimeFormat("en-GB", {
 
 export function ImportPartnersStackedChart({
   data,
-  months = 12,
+  months,
   top = DEFAULT_TOP_PARTNERS,
 }: {
   data: TradePartnerRecord[];

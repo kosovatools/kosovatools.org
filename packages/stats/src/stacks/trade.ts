@@ -42,7 +42,7 @@ function buildOptions(options: PartnerStackOptions = {}) {
 
 export function summarizePartnerTotals(
   records: TradePartnerRecord[],
-  months = 12,
+  months,
 ): PartnerTotal[] {
   return summarizeStackTotals(records, accessors, buildOptions({ months }));
 }

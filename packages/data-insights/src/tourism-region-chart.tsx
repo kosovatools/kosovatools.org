@@ -44,7 +44,7 @@ type RegionKey = {
 
 export function TourismRegionCharts({
   data,
-  months = 12,
+  months,
 }: {
   data: TourismRegionRecord[];
   months?: number;
