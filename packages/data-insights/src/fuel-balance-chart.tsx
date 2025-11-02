@@ -21,8 +21,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { buildStackedChartView } from "./stacked-chart-helpers";
-import { useChartTooltipFormatters } from "./use-chart-tooltip-formatters";
+import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
+import { useChartTooltipFormatters } from "@workspace/ui/components/use-chart-tooltip-formatters";
 
 const DEFAULT_METRIC: FuelMetric = "ready_for_market";
 const DEFAULT_MONTHS = 36;

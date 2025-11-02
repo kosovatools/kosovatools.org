@@ -26,8 +26,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { buildStackedChartView } from "./stacked-chart-helpers";
-import { useChartTooltipFormatters } from "./use-chart-tooltip-formatters";
+import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
+import { useChartTooltipFormatters } from "@workspace/ui/components/use-chart-tooltip-formatters";
 
 const SERIES_KEYS = ["production_gwh", "import_gwh"] as const;
 const LABEL_MAP: Record<(typeof SERIES_KEYS)[number], string> = {
