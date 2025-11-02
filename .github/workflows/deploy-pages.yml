@@ -85,7 +85,7 @@ jobs:
       - name: Compute customs dataset cache key
         id: customs-key
         run: |
-          BASE="customs-data-$(date -u +%G-W%V)"
+          BASE="customs-codes-data-$(date -u +%G-W%V)"
           HASH="${{ hashFiles('packages/customs-data/scripts/fetch-tarrifs.mjs', 'packages/customs-data/scripts/trim-tarrifs.mjs') }}"
           if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_customs_cache == 'true' }}" = "true" ]; then
             SUFFIX="$HASH-bust-$GITHUB_RUN_ID"
@@ -94,7 +94,7 @@ jobs:
           fi
           echo "key=$BASE-$SUFFIX" >> $GITHUB_OUTPUT
           echo "restore-primary=$BASE-$HASH-" >> $GITHUB_OUTPUT
-          echo "restore-fallback=customs-data-" >> $GITHUB_OUTPUT
+          echo "restore-fallback=customs-codes-data-" >> $GITHUB_OUTPUT
 
       - name: Restore cached customs dataset
         id: cache-customs
