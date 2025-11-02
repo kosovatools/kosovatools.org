@@ -12,6 +12,8 @@ import {
   type FuelMetric,
   type StackPeriodGrouping,
   formatCount,
+  STACK_PERIOD_GROUPING_OPTIONS,
+  getStackPeriodFormatter,
 } from "@workspace/stats";
 
 import {
@@ -21,10 +23,6 @@ import {
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "./stacked-chart-helpers";
 import { useChartTooltipFormatters } from "./use-chart-tooltip-formatters";
-import {
-  STACKED_PERIOD_GROUPING_OPTIONS,
-  getStackedPeriodFormatter,
-} from "./stacked-period-utils";
 
 const DEFAULT_METRIC: FuelMetric = "ready_for_market";
 const DEFAULT_MONTHS = 36;
@@ -64,7 +62,7 @@ export function FuelBalanceChart({
       keys,
       labelMap,
       series,
-      periodFormatter: getStackedPeriodFormatter(periodGrouping),
+      periodFormatter: getStackPeriodFormatter(periodGrouping),
     });
   }, [balances, months, metric, periodGrouping]);
 
@@ -142,7 +140,7 @@ export function FuelBalanceChart({
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted-foreground">View</span>
           <div className="flex gap-2 text-xs">
-            {STACKED_PERIOD_GROUPING_OPTIONS.map((option) => {
+            {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
               const active = periodGrouping === option.id;
               return (
                 <button

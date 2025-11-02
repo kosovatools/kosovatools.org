@@ -10,5 +10,14 @@ export * from "./stacks/tourism";
 
 export * from "./formatters";
 
-export type { StackPeriodGrouping } from "./utils/stack";
-export { groupStackPeriod } from "./utils/stack";
+export type {
+  StackPeriodGrouping,
+  StackPeriodFormatter,
+  StackPeriodFormatterOptions,
+} from "./utils/stack";
+export {
+  groupStackPeriod,
+  STACK_PERIOD_GROUPING_OPTIONS,
+  formatStackPeriodLabel,
+  getStackPeriodFormatter,
+} from "./utils/stack";

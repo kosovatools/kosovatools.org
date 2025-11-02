@@ -39,6 +39,23 @@ export type StackSeriesRow<TKey extends string> = {
   values: Record<TKey | "Other", number>;
 };
 
+export type StackPeriodFormatter = (period: string) => string;
+
+export type StackPeriodFormatterOptions = {
+  locale?: string;
+  fallback?: string;
+};
+
+export const STACK_PERIOD_GROUPING_OPTIONS: ReadonlyArray<{
+  id: StackPeriodGrouping;
+  label: string;
+}> = [
+  { id: "monthly", label: "Monthly" },
+  { id: "quarterly", label: "Quarterly" },
+  { id: "yearly", label: "Yearly" },
+  { id: "seasonal", label: "Seasonal" },
+];
+
 type GovernmentPeriod = {
   name: string;
   start: string;
@@ -53,6 +70,8 @@ type GovernmentPeriodRange = {
 
 const DEFAULT_PERIOD_GROUPING: StackPeriodGrouping = "monthly";
 const UNKNOWN_GOVERNMENT_LABEL = "Unknown Government";
+const QUARTER_PATTERN = /^(\d{4})-Q([1-4])$/;
+const SEASONAL_LABEL_PATTERN = /^(\d{4})-(winter|spring|summer|autumn)$/;
 
 const GOVERNMENT_PERIOD_RANGES: GovernmentPeriodRange[] = (
   Array.isArray(governmentPeriodsJson)
@@ -151,6 +170,21 @@ function toSeasonalKey(period: string): string {
   }
 
   return `${seasonYear}-${season}`;
+}
+
+function parseYearMonth(
+  period: string,
+): { year: number; month: number } | null {
+  const [yearStr, monthStr] = period.split("-");
+  const year = Number.parseInt(yearStr ?? "", 10);
+  const month = Number.parseInt(monthStr ?? "", 10);
+  if (!Number.isFinite(year) || !Number.isFinite(month)) {
+    return null;
+  }
+  if (month < 1 || month > 12) {
+    return null;
+  }
+  return { year, month };
 }
 
 function toGovernmentKey(period: string): string {
@@ -423,4 +457,69 @@ export function buildStackSeries<TRecord, TKey extends string>(
     labelMap,
     totals: baseTotals,
   };
+}
+
+function formatSeasonalPeriodLabel(period: string): string {
+  const match = SEASONAL_LABEL_PATTERN.exec(period);
+  if (!match) {
+    return period;
+  }
+  const [, year, season] = match;
+  if (!season) {
+    return period;
+  }
+  const capitalized = `${season.charAt(0).toUpperCase()}${season.slice(1)}`;
+  return `${capitalized} ${year}`;
+}
+
+export function formatStackPeriodLabel(
+  period: string,
+  grouping: StackPeriodGrouping,
+  options: StackPeriodFormatterOptions = {},
+): string {
+  const { locale = "en-GB", fallback } = options;
+  if (!period) {
+    return fallback ?? "";
+  }
+  if (grouping === "seasonal") {
+    const formatted = formatSeasonalPeriodLabel(period);
+    return formatted.length ? formatted : (fallback ?? period);
+  }
+  if (grouping === "monthly") {
+    const parsed = parseYearMonth(period);
+    if (!parsed) {
+      return fallback ?? period;
+    }
+    const formatter = new Intl.DateTimeFormat(locale, {
+      month: "short",
+      year: "2-digit",
+    });
+    return formatter.format(
+      new Date(Date.UTC(parsed.year, parsed.month - 1, 1)),
+    );
+  }
+  if (grouping === "quarterly") {
+    const match = QUARTER_PATTERN.exec(period);
+    if (!match) {
+      return fallback ?? period;
+    }
+    const [, year, quarter] = match;
+    return `Q${quarter} ${year}`;
+  }
+  if (grouping === "yearly") {
+    const year = Number.parseInt(period, 10);
+    if (!Number.isFinite(year)) {
+      return fallback ?? period;
+    }
+    const formatter = new Intl.DateTimeFormat(locale, { year: "numeric" });
+    return formatter.format(new Date(Date.UTC(year, 0, 1)));
+  }
+  return period;
+}
+
+export function getStackPeriodFormatter(
+  grouping: StackPeriodGrouping,
+  options: StackPeriodFormatterOptions = {},
+): StackPeriodFormatter {
+  return (period: string) => formatStackPeriodLabel(period, grouping, options);
 }

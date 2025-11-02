@@ -10,6 +10,8 @@ import {
   formatEuro,
   formatEuroCompact,
   type StackPeriodGrouping,
+  STACK_PERIOD_GROUPING_OPTIONS,
+  getStackPeriodFormatter,
 } from "@workspace/stats";
 
 import {
@@ -20,10 +22,6 @@ import {
 import { buildStackedChartView } from "./stacked-chart-helpers";
 import { StackedKeySelector } from "./stacked-key-selector";
 import { useChartTooltipFormatters } from "./use-chart-tooltip-formatters";
-import {
-  STACKED_PERIOD_GROUPING_OPTIONS,
-  getStackedPeriodFormatter,
-} from "./stacked-period-utils";
 
 const DEFAULT_TOP_PARTNERS = 5;
 
@@ -104,7 +102,7 @@ export function ImportPartnersStackedChart({
       keys,
       labelMap,
       series,
-      periodFormatter: getStackedPeriodFormatter(periodGrouping),
+      periodFormatter: getStackPeriodFormatter(periodGrouping),
     });
   }, [
     data,
@@ -137,7 +135,7 @@ export function ImportPartnersStackedChart({
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm text-muted-foreground">View</span>
         <div className="flex gap-2 text-xs">
-          {STACKED_PERIOD_GROUPING_OPTIONS.map((option) => {
+          {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
             const active = periodGrouping === option.id;
             return (
               <button

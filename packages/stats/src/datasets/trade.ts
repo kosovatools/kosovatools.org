@@ -31,13 +31,21 @@ export type TradePartnerRecord = TradePartnerSourceRecord & {
   partnerLabel: string;
 };
 
-export const tradeImportsMonthly: TradeImportRecord[] = (
+const tradeImportsMonthlyRecords: TradeImportRecord[] = (
   tradeImports as Array<{ period: string; imports_th_eur: number | null }>
 ).map((record) => ({
   period: record.period,
   imports_eur:
     record.imports_th_eur != null ? record.imports_th_eur * 1_000 : null,
 }));
+
+tradeImportsMonthlyRecords.sort((a, b) => a.period.localeCompare(b.period));
+
+export const tradeImportsMonthly: TradeImportRecord[] =
+  tradeImportsMonthlyRecords;
+
+export const latestTradeImport: TradeImportRecord | undefined =
+  tradeImportsMonthlyRecords.at(-1);
 
 export const tradeImportsByPartner: TradePartnerRecord[] = (
   importsByPartner as TradePartnerSourceRecord[]
@@ -96,4 +104,23 @@ function formatPartnerName(partner: string): string {
     .split(",")[0];
 
   return transformed || partner;
+}
+
+export function formatTradePeriodLabel(
+  period: string,
+  locale = "en-GB",
+  fallback = "n/a",
+): string {
+  if (!period) {
+    return fallback;
+  }
+  const periodDate = new Date(`${period}-01T00:00:00Z`);
+  if (Number.isNaN(periodDate.getTime())) {
+    return fallback;
+  }
+
+  return periodDate.toLocaleDateString(locale, {
+    month: "long",
+    year: "numeric",
+  });
 }

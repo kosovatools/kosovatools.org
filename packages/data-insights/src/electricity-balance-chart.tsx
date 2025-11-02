@@ -16,6 +16,8 @@ import {
   type ElectricityRecord,
   type StackPeriodGrouping,
   groupStackPeriod,
+  STACK_PERIOD_GROUPING_OPTIONS,
+  getStackPeriodFormatter,
 } from "@workspace/stats";
 
 import {
@@ -26,10 +28,6 @@ import {
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "./stacked-chart-helpers";
 import { useChartTooltipFormatters } from "./use-chart-tooltip-formatters";
-import {
-  STACKED_PERIOD_GROUPING_OPTIONS,
-  getStackedPeriodFormatter,
-} from "./stacked-period-utils";
 
 const SERIES_KEYS = ["production_gwh", "import_gwh"] as const;
 const LABEL_MAP: Record<(typeof SERIES_KEYS)[number], string> = {
@@ -50,7 +48,7 @@ export function ElectricityBalanceChart({
     React.useState<StackPeriodGrouping>("seasonal");
 
   const { chartData, keyMap, config, latestSummary } = React.useMemo(() => {
-    const periodFormatter = getStackedPeriodFormatter(periodGrouping);
+    const periodFormatter = getStackPeriodFormatter(periodGrouping);
 
     const sorted = data
       .slice()
@@ -137,7 +135,7 @@ export function ElectricityBalanceChart({
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-xs text-muted-foreground">View</span>
           <div className="flex gap-2 text-xs">
-            {STACKED_PERIOD_GROUPING_OPTIONS.map((option) => {
+            {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
               const active = periodGrouping === option.id;
               return (
                 <button

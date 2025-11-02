@@ -1,14 +1,14 @@
-import { useMemo } from "react";
-
 import {
+  describeFuelSources,
   electricityMonthly,
+  energyMonthlySource,
+  formatKasGeneratedLabel,
   fuelBalances,
-  kasSources,
+  importsByPartnerSource,
   tradeImportsByPartner,
-  tradeImportsMonthly,
   tourismByCountry,
   tourismByRegion,
-  type TradeImportRecord,
+  tourismMonthlySource,
 } from "@workspace/stats";
 import {
   Card,
@@ -24,77 +24,14 @@ import {
   ImportPartnersStackedChart,
   TourismCountryStackedChart,
   TourismRegionCharts,
-  TradeImportsChart,
 } from "@workspace/data-insights";
 
 export default function DataInsightsPage() {
-  const tradeSource = kasSources.sources["trade_monthly"] as {
-    table: string;
-    unit: string;
-  };
-  const energySource = kasSources.sources["energy_monthly"] as {
-    table: string;
-    unit: string;
-  };
-  const fuelSource = kasSources.sources["fuel_monthly"] as Record<
-    string,
-    { table: string; label: string }
-  >;
-  const tourismSource = kasSources.sources["tourism_monthly"] as {
-    region: { table: string };
-    country: { table: string };
-  };
-  const tourismRegionSource = tourismSource.region;
-  const tourismCountrySource = tourismSource.country;
-  const importsPartnerSource = kasSources.sources["imports_by_partner"] as {
-    table: string;
-  };
+  const { region: tourismRegionSource, country: tourismCountrySource } =
+    tourismMonthlySource;
 
-  const generatedLabel = useMemo(() => {
-    const generatedAt = new Date(kasSources.generated_at);
-    if (Number.isNaN(generatedAt.getTime())) {
-      return "Unknown";
-    }
-    return generatedAt.toLocaleString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }, []);
-
-  const latestTrade = useMemo(() => {
-    return tradeImportsMonthly
-      .slice()
-      .sort((a: TradeImportRecord, b: TradeImportRecord) =>
-        a.period.localeCompare(b.period),
-      )
-      .at(-1);
-  }, []);
-
-  const latestTradeLabel = latestTrade
-    ? new Date(`${latestTrade.period}-01`).toLocaleDateString("en-GB", {
-        month: "long",
-        year: "numeric",
-      })
-    : "n/a";
-
-  const fuelSourceLabel = useMemo(() => {
-    const entries = Object.values(fuelSource ?? {});
-    const parts = entries
-      .map((entry) => {
-        if (!entry) {
-          return "";
-        }
-        if (entry.label && entry.table) {
-          return `${entry.label}: ${entry.table}`;
-        }
-        return entry.table ?? entry.label ?? "";
-      })
-      .filter((part) => part.length > 0);
-    return parts.length ? parts.join("; ") : "Unknown";
-  }, [fuelSource]);
+  const generatedLabel = formatKasGeneratedLabel();
+  const fuelSourceLabel = describeFuelSources();
 
   const chartContentClass = "px-2 sm:px-6";
 
@@ -133,7 +70,7 @@ export default function DataInsightsPage() {
             <ImportPartnersStackedChart data={tradeImportsByPartner} top={6} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Source: {importsPartnerSource.table}.
+            Source: {importsByPartnerSource.table}.
           </CardFooter>
         </Card>
       </section>
@@ -152,7 +89,7 @@ export default function DataInsightsPage() {
             <ElectricityBalanceChart data={electricityMonthly} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Source: {energySource.table} ({energySource.unit}).
+            Source: {energyMonthlySource.table} ({energyMonthlySource.unit}).
           </CardFooter>
         </Card>
 
