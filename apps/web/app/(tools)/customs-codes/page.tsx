@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import {
   Alert,
   AlertDescription,
@@ -11,6 +13,37 @@ import {
 } from "@workspace/ui/components/card";
 import { CustomsExplorer } from "@workspace/customs-codes";
 import { AlertTriangle } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Tarifat Doganore të Kosovës – Shfletues i kodeve HS",
+  description:
+    "Kërkoni kodet HS të Kosovës, konsultoni normat e doganës, akcizës dhe TVSH-së dhe llogaritni detyrimet e importit në kohë reale.",
+  keywords: [
+    "tarifa doganore kosovë",
+    "kodi hs kosova",
+    "dogana e kosovës",
+    "akciza importi",
+    "TVSH importi",
+  ],
+  alternates: {
+    canonical: "/customs-codes",
+  },
+  openGraph: {
+    type: "article",
+    url: "/customs-codes",
+    title: "Tarifat Doganore të Kosovës – Shfletues i kodeve HS",
+    description:
+      "Eksploroni tarifat doganore të Kosovës dhe llogaritni detyrimet e importit sipas kodit HS.",
+    siteName: "Kosova Tools",
+    locale: "sq_AL",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tarifat Doganore të Kosovës – Shfletues i kodeve HS",
+    description:
+      "Një shfletues interaktiv për të kontrolluar tarifat doganore, akcizën dhe TVSH-në në Kosovë.",
+  },
+};
 
 const buildTime = process.env.NEXT_PUBLIC_BUILD_TIME ?? "—";
 

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -17,6 +18,38 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
+
+export const metadata: Metadata = {
+  title: "Vegla qytetare për të dhëna, tregti dhe financa në Kosovë",
+  description:
+    "Kosova Tools mbledh kalkulatorë për doganat, pagat dhe vizualizime statistikore që përdorin të dhëna zyrtare të Republikës së Kosovës.",
+  keywords: [
+    "Kosova Tools",
+    "vegla qytetare",
+    "të dhëna të hapura",
+    "tarifa doganore",
+    "kalkulator pagash",
+    "statistika Kosovë",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    title: "Vegla qytetare për të dhëna, tregti dhe financa në Kosovë",
+    description:
+      "Kosova Tools ofron kalkulatorë doganorë, planifikues pagash dhe dashboardë vizualë nga Agjencia e Statistikave të Kosovës.",
+    siteName: "Kosova Tools",
+    locale: "sq_AL",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vegla qytetare për të dhëna, tregti dhe financa në Kosovë",
+    description:
+      "Kalkulatorë dhe pultë të dhënash në shqip që mbështeten në statistika zyrtare të Kosovës.",
+  },
+};
 
 type ToolCard = {
   name: string;

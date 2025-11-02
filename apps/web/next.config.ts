@@ -8,6 +8,9 @@ const buildTime = new Date()
 
 const nextConfig: NextConfig = {
   output: "export",
+  images: {
+    unoptimized: true,
+  },
   transpilePackages: ["@workspace/ui", "@workspace/car-import-taxes"],
   env: {
     NEXT_PUBLIC_BUILD_TIME: buildTime,

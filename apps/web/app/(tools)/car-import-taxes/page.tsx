@@ -13,6 +13,24 @@ export const metadata: Metadata = {
     "vetura të përdorura",
     "import makine",
   ],
+  alternates: {
+    canonical: "/car-import-taxes",
+  },
+  openGraph: {
+    type: "article",
+    url: "/car-import-taxes",
+    title: "Kalkulatori i taksave të importit të veturave në Kosovë",
+    description:
+      "Përllogarit TVSH-në, akcizën dhe detyrimet doganore për importin e veturave sipas legjislacionit të Kosovës.",
+    siteName: "Kosova Tools",
+    locale: "sq_AL",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kalkulatori i taksave të importit të veturave në Kosovë",
+    description:
+      "Një kalkulator i plotë për detyrimet doganore të veturave në Kosovë, përfshirë TVSH-në dhe akcizën.",
+  },
 };
 
 export default function Page() {
