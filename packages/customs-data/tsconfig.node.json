@@ -1,0 +1,15 @@
+{
+  "extends": "@workspace/typescript-config/tsconfig.node.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@workspace/customs-data/*": ["./src/*"],
+      "@data/*": ["./data/*"]
+    },
+    "allowImportingTsExtensions": false,
+    "allowJs": true,
+    "noEmit": true
+  },
+  "include": ["scripts/*.mjs"],
+  "exclude": ["dist", "node_modules", "src"]
+}

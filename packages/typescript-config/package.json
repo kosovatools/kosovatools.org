@@ -1,0 +1,19 @@
+{
+  "name": "@workspace/typescript-config",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "chroma-js": "^3.1.2",
+    "d3-scale": "^4.0.2",
+    "recharts": "2.15.4"
+  },
+  "devDependencies": {
+    "@types/chroma-js": "^3.1.1",
+    "@types/d3-scale": "^4.0.9",
+    "eslint": "^9.32.0"
+  }
+}

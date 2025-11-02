@@ -1,0 +1,7 @@
+{
+  "environmentalTax": 10,
+  "roadTax": {
+    "defaultPassenger": 40,
+    "heavyVehicle": 90
+  }
+}

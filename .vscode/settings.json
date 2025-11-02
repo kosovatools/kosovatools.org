@@ -1,0 +1,9 @@
+{
+  "tailwindCSS.experimental.configFile": "packages/ui/src/styles/globals.css",
+  "search.exclude": {
+    "**/*.tsbuildinfo": true
+  },
+  "files.watcherExclude": {
+    "**/*.tsbuildinfo": true
+  }
+}

@@ -1,0 +1,184 @@
+name: Build & Deploy Next.js Static (pnpm)
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+    inputs:
+      bust_stats_cache:
+        description: "Force a fresh KAS dataset refresh (skips cache)"
+        required: false
+        default: "false"
+      bust_customs_cache:
+        description: "Force a fresh customs dataset refresh (skips cache)"
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages-${{ github.ref }}"
+  cancel-in-progress: true
+
+env:
+  NEXT_PUBLIC_BASE_URL: https://kosovatools.org
+
+jobs:
+  fetch-stats-data:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.stats-key.outputs.key }}
+      restore-primary: ${{ steps.stats-key.outputs.restore-primary }}
+      restore-fallback: ${{ steps.stats-key.outputs.restore-fallback }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Compute stats dataset cache key
+        id: stats-key
+        run: |
+          BASE="stats-data-$(date -u +%G-W%V)"
+          HASH="${{ hashFiles('packages/stats/scripts/fetch_kas.mjs', 'pnpm-lock.yaml') }}"
+          if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_stats_cache == 'true' }}" = "true" ]; then
+            SUFFIX="$HASH-bust-$GITHUB_RUN_ID"
+          else
+            SUFFIX="$HASH"
+          fi
+          echo "key=$BASE-$SUFFIX" >> $GITHUB_OUTPUT
+          echo "restore-primary=$BASE-$HASH-" >> $GITHUB_OUTPUT
+          echo "restore-fallback=stats-data-" >> $GITHUB_OUTPUT
+
+      - name: Restore cached KAS datasets
+        id: cache-stats
+        uses: actions/cache@v4
+        with:
+          path: packages/stats/data
+          key: ${{ steps.stats-key.outputs.key }}
+          restore-keys: |
+            ${{ steps.stats-key.outputs.restore-primary }}
+            ${{ steps.stats-key.outputs.restore-fallback }}
+
+      - name: Refresh KAS datasets
+        if: steps.cache-stats.outputs.cache-hit != 'true'
+        run: node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data --months 36
+
+  fetch-customs-data:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.customs-key.outputs.key }}
+      restore-primary: ${{ steps.customs-key.outputs.restore-primary }}
+      restore-fallback: ${{ steps.customs-key.outputs.restore-fallback }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute customs dataset cache key
+        id: customs-key
+        run: |
+          BASE="customs-data-$(date -u +%G-W%V)"
+          HASH="${{ hashFiles('packages/customs-data/scripts/fetch-tarrifs.mjs', 'packages/customs-data/scripts/trim-tarrifs.mjs') }}"
+          if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_customs_cache == 'true' }}" = "true" ]; then
+            SUFFIX="$HASH-bust-$GITHUB_RUN_ID"
+          else
+            SUFFIX="$HASH"
+          fi
+          echo "key=$BASE-$SUFFIX" >> $GITHUB_OUTPUT
+          echo "restore-primary=$BASE-$HASH-" >> $GITHUB_OUTPUT
+          echo "restore-fallback=customs-data-" >> $GITHUB_OUTPUT
+
+      - name: Restore cached customs dataset
+        id: cache-customs
+        uses: actions/cache@v4
+        with:
+          path: packages/customs-data/data
+          key: ${{ steps.customs-key.outputs.key }}
+          restore-keys: |
+            ${{ steps.customs-key.outputs.restore-primary }}
+            ${{ steps.customs-key.outputs.restore-fallback }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Fetch and trim customs dataset
+        env:
+          CUSTOMS_DATA_SOURCE_URL: ${{ secrets.CUSTOMS_DATA_SOURCE_URL }}
+        run: node packages/customs-data/scripts/fetch-data.mjs
+
+  build:
+    needs:
+      - fetch-stats-data
+      - fetch-customs-data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Restore cached KAS datasets
+        uses: actions/cache/restore@v4
+        with:
+          path: packages/stats/data
+          key: ${{ needs.fetch-stats-data.outputs.cache-key }}
+          restore-keys: |
+            ${{ needs.fetch-stats-data.outputs.restore-primary }}
+            ${{ needs.fetch-stats-data.outputs.restore-fallback }}
+
+      - name: Restore cached customs dataset
+        uses: actions/cache/restore@v4
+        with:
+          path: packages/customs-data/data
+          key: ${{ needs.fetch-customs-data.outputs.cache-key }}
+          restore-keys: |
+            ${{ needs.fetch-customs-data.outputs.restore-primary }}
+            ${{ needs.fetch-customs-data.outputs.restore-fallback }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.4.1
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Turborepo packages
+        run: pnpm turbo run build --filter=web...
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          NEXT_PUBLIC_BASE_URL: ${{ env.NEXT_PUBLIC_BASE_URL }}
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

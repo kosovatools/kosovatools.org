@@ -1,0 +1,7 @@
+{
+  "extends": "@workspace/typescript-config/tsconfig.node.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["scripts/*.mjs"]
+}

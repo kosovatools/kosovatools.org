@@ -1,0 +1,30 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": [
+        "^build",
+        "@workspace/customs-data#fetch-data",
+        "@workspace/stats#fetch-data"
+      ],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "check-types": {
+      "dependsOn": ["^check-types"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "fetch-data": {
+      "outputs": ["data/**/*.json"],
+      "inputs": ["$TURBO_DEFAULT$", "scripts/**", "package.json"],
+      "env": ["CUSTOMS_DATA_SOURCE_URL", "DATA_SOURCE_URL"]
+    }
+  }
+}

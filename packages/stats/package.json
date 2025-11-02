@@ -1,0 +1,32 @@
+{
+  "name": "@workspace/stats",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "lint": "eslint src scripts --max-warnings 0",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "fetch-data": "node scripts/fetch_kas.mjs --out data --months 36"
+  },
+  "devDependencies": {
+    "@types/chroma-js": "^3.1.1",
+    "@types/d3-scale": "^4.0.9",
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "eslint": "^9.32.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "chroma-js": "^3.1.2",
+    "d3-scale": "^4.0.2",
+    "recharts": "2.15.4"
+  },
+  "license": "AGPL-3.0-only"
+}

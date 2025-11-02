@@ -1,0 +1,58 @@
+{
+  "brackets": [
+    {
+      "id": "up-to-2000",
+      "label": "Deri në 2000 cc",
+      "minCc": 0,
+      "maxCc": 2000,
+      "rates": [
+        { "maxAge": 8, "amount": 200, "label": "≤8 vjet" },
+        { "maxAge": 9, "amount": 300, "label": "9 vjet" },
+        { "maxAge": 10, "amount": 400, "label": "10 vjet" },
+        { "maxAge": 11, "amount": 500, "label": "11 vjet" },
+        { "maxAge": 12, "amount": 600, "label": "12 vjet" },
+        { "maxAge": 13, "amount": 700, "label": "13 vjet" },
+        { "maxAge": 14, "amount": 800, "label": "14 vjet" },
+        { "maxAge": 15, "amount": 900, "label": "15 vjet" },
+        { "maxAge": 16, "amount": 1000, "label": "16 vjet" },
+        { "maxAge": null, "amount": 1100, "label": "≥17 vjet" }
+      ]
+    },
+    {
+      "id": "2001-3000",
+      "label": "2001–3000 cc",
+      "minCc": 2001,
+      "maxCc": 3000,
+      "rates": [
+        { "maxAge": 8, "amount": 400, "label": "≤8 vjet" },
+        { "maxAge": 9, "amount": 600, "label": "9 vjet" },
+        { "maxAge": 10, "amount": 800, "label": "10 vjet" },
+        { "maxAge": 11, "amount": 1000, "label": "11 vjet" },
+        { "maxAge": 12, "amount": 1200, "label": "12 vjet" },
+        { "maxAge": 13, "amount": 1400, "label": "13 vjet" },
+        { "maxAge": 14, "amount": 1600, "label": "14 vjet" },
+        { "maxAge": 15, "amount": 1800, "label": "15 vjet" },
+        { "maxAge": 16, "amount": 2000, "label": "16 vjet" },
+        { "maxAge": null, "amount": 2200, "label": "≥17 vjet" }
+      ]
+    },
+    {
+      "id": "over-3000",
+      "label": "Mbi 3000 cc",
+      "minCc": 3001,
+      "maxCc": null,
+      "rates": [
+        { "maxAge": 8, "amount": 1000, "label": "≤8 vjet" },
+        { "maxAge": 9, "amount": 1500, "label": "9 vjet" },
+        { "maxAge": 10, "amount": 1800, "label": "10 vjet" },
+        { "maxAge": 11, "amount": 2100, "label": "11 vjet" },
+        { "maxAge": 12, "amount": 2400, "label": "12 vjet" },
+        { "maxAge": 13, "amount": 2700, "label": "13 vjet" },
+        { "maxAge": 14, "amount": 3000, "label": "14 vjet" },
+        { "maxAge": 15, "amount": 3300, "label": "15 vjet" },
+        { "maxAge": 16, "amount": 3600, "label": "16 vjet" },
+        { "maxAge": null, "amount": 3900, "label": "≥17 vjet" }
+      ]
+    }
+  ]
+}
