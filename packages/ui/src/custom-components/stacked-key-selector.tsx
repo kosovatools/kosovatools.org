@@ -166,7 +166,7 @@ export function StackedKeySelector({
   }, [otherDisabled, onExcludedKeysChange]);
 
   return (
-    <div className="flex flex-col gap-4 text-xs">
+    <div className="flex min-w-0 flex-col gap-4 text-xs">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-baseline gap-2">
           <span className="font-medium text-muted-foreground">
@@ -196,7 +196,7 @@ export function StackedKeySelector({
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2 md:items-stretch">
-        <section className="flex max-h-[260px] flex-col gap-3 rounded-md border border-border/50 bg-background/40 p-3">
+        <section className="flex max-h-[260px] min-w-0 flex-col gap-3 rounded-md border border-border/50 bg-background/40 p-3">
           <div className="flex flex-col gap-2">
             <Input
               type="search"
@@ -231,24 +231,24 @@ export function StackedKeySelector({
                     <label
                       htmlFor={checkboxId}
                       className={cn(
-                        "group flex cursor-pointer items-center justify-between gap-3 rounded-md border border-transparent px-2 py-1 transition-colors",
+                        "group flex w-full cursor-pointer items-center gap-3 overflow-hidden rounded-md border border-transparent px-2 py-1 transition-colors",
                         checked
                           ? "border-primary/40 bg-primary/10 text-primary"
                           : "hover:border-border hover:bg-muted",
                       )}
                     >
-                      <span className="flex items-center gap-2">
+                      <span className="flex min-w-0 flex-1 items-center gap-2">
                         <Checkbox
                           id={checkboxId}
                           checked={checked}
                           onCheckedChange={() => handleToggleKey(item.key)}
-                          className="size-3.5"
+                          className="size-3.5 flex-none"
                         />
                         <span className="truncate">{item.label}</span>
                       </span>
                       <span
                         className={cn(
-                          "rounded-full px-2 py-0.5 font-mono text-[11px]",
+                          "ml-auto flex-none rounded-full px-2 py-0.5 font-mono text-[11px]",
                           checked
                             ? "bg-primary/10 text-primary"
                             : "bg-muted text-muted-foreground",
@@ -265,7 +265,7 @@ export function StackedKeySelector({
         </section>
         <section
           className={cn(
-            "flex max-h-[260px] flex-col gap-3 rounded-md border border-border/50 bg-background/40 p-3 transition-opacity",
+            "flex max-h-[260px] min-w-0 flex-col gap-3 rounded-md border border-border/50 bg-background/40 p-3 transition-opacity",
             otherDisabled && "opacity-60",
           )}
         >
@@ -340,7 +340,7 @@ export function StackedKeySelector({
                     <label
                       htmlFor={checkboxId}
                       className={cn(
-                        "group flex cursor-pointer items-center justify-between gap-3 rounded-md border border-transparent px-2 py-1 transition-colors",
+                        "group flex w-full cursor-pointer items-center gap-3 overflow-hidden rounded-md border border-transparent px-2 py-1 transition-colors",
                         isExcluded
                           ? "border-primary/40 bg-primary/10 text-primary"
                           : "hover:border-border hover:bg-muted",
@@ -349,19 +349,19 @@ export function StackedKeySelector({
                       )}
                       aria-disabled={otherDisabled}
                     >
-                      <span className="flex items-center gap-2">
+                      <span className="flex min-w-0 flex-1 items-center gap-2">
                         <Checkbox
                           id={checkboxId}
                           checked={isExcluded}
                           disabled={otherDisabled}
                           onCheckedChange={() => handleToggleExcluded(item.key)}
-                          className="size-3.5"
+                          className="size-3.5 flex-none"
                         />
                         <span className="truncate">{item.label}</span>
                       </span>
                       <span
                         className={cn(
-                          "rounded-full px-2 py-0.5 font-mono text-[11px]",
+                          "ml-auto flex-none rounded-full px-2 py-0.5 font-mono text-[11px]",
                           isExcluded
                             ? "bg-primary/10 text-primary"
                             : "bg-muted text-muted-foreground",

@@ -444,37 +444,71 @@ function WageCalculatorResults({
             </p>
           </div>
           {hasTax ? (
-            <div className="overflow-hidden rounded-lg border">
-              <table className="min-w-full divide-y divide-border text-sm">
-                <thead className="bg-muted/40">
-                  <tr>
-                    <th className="px-3 py-2 text-left font-medium">
-                      Shkalla e tatimit
-                    </th>
-                    <th className="px-3 py-2 text-right font-medium">
-                      Shuma e tatueshme
-                    </th>
-                    <th className="px-3 py-2 text-right font-medium">Norma</th>
-                    <th className="px-3 py-2 text-right font-medium">Tatimi</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {result.incomeTaxBreakdown.map((entry) => (
-                    <tr key={entry.label}>
-                      <td className="px-3 py-2 text-left">{entry.label}</td>
-                      <td className="px-3 py-2 text-right">
-                        {formatCurrency(entry.appliedAmount)}
-                      </td>
-                      <td className="px-3 py-2 text-right">
-                        {formatPercentage(entry.rate)}
-                      </td>
-                      <td className="px-3 py-2 text-right">
-                        {formatCurrency(entry.taxAmount)}
-                      </td>
+            <div className="space-y-3">
+              <div className="hidden overflow-hidden rounded-lg border sm:block">
+                <table className="min-w-full divide-y divide-border text-sm">
+                  <thead className="bg-muted/40">
+                    <tr>
+                      <th className="px-3 py-2 text-left font-medium">
+                        Shkalla e tatimit
+                      </th>
+                      <th className="px-3 py-2 text-right font-medium">
+                        Shuma e tatueshme
+                      </th>
+                      <th className="px-3 py-2 text-right font-medium">
+                        Norma
+                      </th>
+                      <th className="px-3 py-2 text-right font-medium">
+                        Tatimi
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {result.incomeTaxBreakdown.map((entry) => (
+                      <tr key={entry.label}>
+                        <td className="px-3 py-2 text-left">{entry.label}</td>
+                        <td className="px-3 py-2 text-right">
+                          {formatCurrency(entry.appliedAmount)}
+                        </td>
+                        <td className="px-3 py-2 text-right">
+                          {formatPercentage(entry.rate)}
+                        </td>
+                        <td className="px-3 py-2 text-right">
+                          {formatCurrency(entry.taxAmount)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="space-y-2 sm:hidden">
+                {result.incomeTaxBreakdown.map((entry) => (
+                  <div
+                    key={entry.label}
+                    className="rounded-lg border bg-card p-3 text-card-foreground shadow-sm"
+                  >
+                    <div className="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                      <span>Shkalla e tatimit</span>
+                      <span>{formatPercentage(entry.rate)}</span>
+                    </div>
+                    <p className="mt-2 text-sm font-semibold text-foreground">
+                      {entry.label}
+                    </p>
+                    <dl className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] gap-y-1 text-sm">
+                      <dt className="text-muted-foreground">
+                        Shuma e tatueshme
+                      </dt>
+                      <dd className="text-right font-medium text-foreground">
+                        {formatCurrency(entry.appliedAmount)}
+                      </dd>
+                      <dt className="text-muted-foreground">Tatimi</dt>
+                      <dd className="text-right font-medium text-foreground">
+                        {formatCurrency(entry.taxAmount)}
+                      </dd>
+                    </dl>
+                  </div>
+                ))}
+              </div>
             </div>
           ) : (
             <p className="text-sm text-muted-foreground">

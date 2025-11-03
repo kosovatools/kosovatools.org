@@ -20,7 +20,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     throw new Error("Missing NEXT_PUBLIC_SITE_URL or metadata.metadataBase.");
   }
 
-  const normalizedBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+  const normalizedBaseUrl = baseUrl.endsWith("/")
+    ? baseUrl.slice(0, -1)
+    : baseUrl;
 
   return staticRoutes.map((route) => {
     const path = route ? `/${route}` : "";

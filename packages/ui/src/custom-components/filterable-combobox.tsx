@@ -121,7 +121,14 @@ export function FilterableCombobox({
           <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={cn("w-[320px] p-0", contentClassName)}>
+      <PopoverContent
+        sideOffset={4}
+        className={cn("overflow-hidden p-0", contentClassName)}
+        style={{
+          width:
+            "min(var(--radix-popover-trigger-width), 320px, calc(100vw - 24px))",
+        }}
+      >
         <Command shouldFilter={false}>
           <CommandInput
             placeholder={searchPlaceholder}
