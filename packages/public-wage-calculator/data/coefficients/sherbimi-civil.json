@@ -4,7 +4,7 @@
     "code": null,
     "coefficient": 12.4,
     "sector": "shërbimi_civil",
-    "institution": "Presidenca e Kosovës (SHTOJCA NR. 10.1)",
+    "institution": "Presidenca e Kosovës",
     "group": "LI",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Lartë",
@@ -24,7 +24,7 @@
     "code": null,
     "coefficient": 8.7,
     "sector": "shërbimi_civil",
-    "institution": "Presidenca e Kosovës (SHTOJCA NR. 10.1)",
+    "institution": "Presidenca e Kosovës",
     "group": "12",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Mesëm 1",
@@ -44,7 +44,7 @@
     "code": null,
     "coefficient": 8,
     "sector": "shërbimi_civil",
-    "institution": "Presidenca e Kosovës (SHTOJCA NR. 10.1)",
+    "institution": "Presidenca e Kosovës",
     "group": "13",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Mesëm 2",
@@ -64,7 +64,7 @@
     "code": null,
     "coefficient": 7.6,
     "sector": "shërbimi_civil",
-    "institution": "Presidenca e Kosovës (SHTOJCA NR. 10.1)",
+    "institution": "Presidenca e Kosovës",
     "group": "14",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Ulët",
@@ -84,7 +84,7 @@
     "code": null,
     "coefficient": 6,
     "sector": "shërbimi_civil",
-    "institution": "Presidenca e Kosovës (SHTOJCA NR. 10.1)",
+    "institution": "Presidenca e Kosovës",
     "group": "L5",
     "level": "Profesional",
     "title": "Profesional 1",
@@ -104,7 +104,7 @@
     "code": null,
     "coefficient": 5.4,
     "sector": "shërbimi_civil",
-    "institution": "Presidenca e Kosovës (SHTOJCA NR. 10.1)",
+    "institution": "Presidenca e Kosovës",
     "group": "16",
     "level": "Profesional",
     "title": "Profesional 2",
@@ -124,7 +124,7 @@
     "code": null,
     "coefficient": 4.4,
     "sector": "shërbimi_civil",
-    "institution": "Presidenca e Kosovës (SHTOJCA NR. 10.1)",
+    "institution": "Presidenca e Kosovës",
     "group": "L7",
     "level": "Profesional",
     "title": "Profesional 3",
@@ -144,7 +144,7 @@
     "code": null,
     "coefficient": 4,
     "sector": "shërbimi_civil",
-    "institution": "Presidenca e Kosovës (SHTOJCA NR. 10.1)",
+    "institution": "Presidenca e Kosovës",
     "group": "L8",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknik/e dhe mbështetës/e 1 (Udhëheqës/e)",
@@ -164,7 +164,7 @@
     "code": null,
     "coefficient": 3.9,
     "sector": "shërbimi_civil",
-    "institution": "Presidenca e Kosovës (SHTOJCA NR. 10.1)",
+    "institution": "Presidenca e Kosovës",
     "group": "19",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknik/e dhe mbështetës/e 2",
@@ -184,7 +184,7 @@
     "code": null,
     "coefficient": 3.8,
     "sector": "shërbimi_civil",
-    "institution": "Presidenca e Kosovës (SHTOJCA NR. 10.1)",
+    "institution": "Presidenca e Kosovës",
     "group": "L10",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknik/e dhe mbështetës/e 3",
@@ -204,7 +204,7 @@
     "code": null,
     "coefficient": 12.3,
     "sector": "shërbimi_civil",
-    "institution": "Kuvendi i Kosovës (SHTOJCA NR. 10.3)",
+    "institution": "Kuvendi i Kosovës",
     "group": "QI",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Lartë 1",
@@ -213,7 +213,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Kuvendin e Kosovës. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Kuvendin e Kosovës.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.3"
@@ -224,7 +224,7 @@
     "code": null,
     "coefficient": 10,
     "sector": "shërbimi_civil",
-    "institution": "Kuvendi i Kosovës (SHTOJCA NR. 10.3)",
+    "institution": "Kuvendi i Kosovës",
     "group": "Q2",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Lartë 2",
@@ -233,7 +233,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Kuvendin e Kosovës. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Kuvendin e Kosovës.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.3"
@@ -244,7 +244,7 @@
     "code": null,
     "coefficient": 8.6,
     "sector": "shërbimi_civil",
-    "institution": "Kuvendi i Kosovës (SHTOJCA NR. 10.3)",
+    "institution": "Kuvendi i Kosovës",
     "group": "Q3",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Mesëm",
@@ -253,7 +253,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Kuvendin e Kosovës. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Kuvendin e Kosovës.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.3"
@@ -264,7 +264,7 @@
     "code": null,
     "coefficient": 8,
     "sector": "shërbimi_civil",
-    "institution": "Kuvendi i Kosovës (SHTOJCA NR. 10.3)",
+    "institution": "Kuvendi i Kosovës",
     "group": "04",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Ulët",
@@ -273,7 +273,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Kuvendin e Kosovës. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Kuvendin e Kosovës.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.3"
@@ -284,7 +284,7 @@
     "code": null,
     "coefficient": 7.5,
     "sector": "shërbimi_civil",
-    "institution": "Kuvendi i Kosovës (SHTOJCA NR. 10.3)",
+    "institution": "Kuvendi i Kosovës",
     "group": "Q5",
     "level": "Profesional",
     "title": "Këshilltar Juridik në Kuvend",
@@ -293,7 +293,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Kuvendin e Kosovës. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Kuvendin e Kosovës.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.3"
@@ -304,7 +304,7 @@
     "code": null,
     "coefficient": 5.85,
     "sector": "shërbimi_civil",
-    "institution": "Kuvendi i Kosovës (SHTOJCA NR. 10.3)",
+    "institution": "Kuvendi i Kosovës",
     "group": "Q6",
     "level": "Profesional",
     "title": "Profesional 1",
@@ -313,7 +313,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Kuvendin e Kosovës. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Kuvendin e Kosovës.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.3"
@@ -324,7 +324,7 @@
     "code": null,
     "coefficient": 5.3,
     "sector": "shërbimi_civil",
-    "institution": "Kuvendi i Kosovës (SHTOJCA NR. 10.3)",
+    "institution": "Kuvendi i Kosovës",
     "group": "07",
     "level": "Profesional",
     "title": "Profesional 2",
@@ -333,7 +333,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Kuvendin e Kosovës. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Kuvendin e Kosovës.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.3"
@@ -344,7 +344,7 @@
     "code": null,
     "coefficient": 4.3,
     "sector": "shërbimi_civil",
-    "institution": "Kuvendi i Kosovës (SHTOJCA NR. 10.3)",
+    "institution": "Kuvendi i Kosovës",
     "group": "Q8",
     "level": "Profesional",
     "title": "Profesional 3",
@@ -353,7 +353,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Kuvendin e Kosovës. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Kuvendin e Kosovës.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.3"
@@ -364,7 +364,7 @@
     "code": null,
     "coefficient": 4,
     "sector": "shërbimi_civil",
-    "institution": "Kuvendi i Kosovës (SHTOJCA NR. 10.3)",
+    "institution": "Kuvendi i Kosovës",
     "group": "Q9",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknik/e dhe mbështetës/e 1 (Udhëheqës)",
@@ -373,7 +373,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Kuvendin e Kosovës. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Kuvendin e Kosovës.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.3"
@@ -384,7 +384,7 @@
     "code": null,
     "coefficient": 3.9,
     "sector": "shërbimi_civil",
-    "institution": "Kuvendi i Kosovës (SHTOJCA NR. 10.3)",
+    "institution": "Kuvendi i Kosovës",
     "group": "Q10",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknik/e dhe mbështetës/e 2",
@@ -393,7 +393,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Përfshin: vozitës, korrier, kuzhinier, sigurimi, mekanik, elektricist, zdrukthëtar, ujë instalues, farkëtar dhe pozita të ngjashme. Në Kuvendin e Kosovës. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Përfshin: vozitës, korrier, kuzhinier, sigurimi, mekanik, elektricist, zdrukthëtar, ujë instalues, farkëtar dhe pozita të ngjashme. Në Kuvendin e Kosovës.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.3"
@@ -404,7 +404,7 @@
     "code": null,
     "coefficient": 3.8,
     "sector": "shërbimi_civil",
-    "institution": "Kuvendi i Kosovës (SHTOJCA NR. 10.3)",
+    "institution": "Kuvendi i Kosovës",
     "group": "Q11",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknik/e dhe mbështetës/e 3",
@@ -413,7 +413,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Përfshin: roje, kopshtar, shtëpiak, autolarës, rrobalarës dhe pozita të ngjashme. Në Kuvendin e Kosovës. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Përfshin: roje, kopshtar, shtëpiak, autolarës, rrobalarës dhe pozita të ngjashme. Në Kuvendin e Kosovës.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.3"
@@ -424,7 +424,7 @@
     "code": null,
     "coefficient": 12.3,
     "sector": "shërbimi_civil",
-    "institution": "Zyre të Kryeministrit (SHTOJCA NR. 10.4)",
+    "institution": "Zyre të Kryeministrit",
     "group": "GI",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Lartë",
@@ -433,7 +433,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Zyre të Kryeministrit. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Zyre të Kryeministrit.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.4"
@@ -444,7 +444,7 @@
     "code": null,
     "coefficient": 8.6,
     "sector": "shërbimi_civil",
-    "institution": "Zyre të Kryeministrit (SHTOJCA NR. 10.4)",
+    "institution": "Zyre të Kryeministrit",
     "group": "G2",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Mesem",
@@ -453,7 +453,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Zyre të Kryeministrit. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Zyre të Kryeministrit.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.4"
@@ -464,7 +464,7 @@
     "code": null,
     "coefficient": 7.5,
     "sector": "shërbimi_civil",
-    "institution": "Zyre të Kryeministrit (SHTOJCA NR. 10.4)",
+    "institution": "Zyre të Kryeministrit",
     "group": "G3",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Ulët",
@@ -473,7 +473,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Zyre të Kryeministrit. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Zyre të Kryeministrit.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.4"
@@ -484,7 +484,7 @@
     "code": null,
     "coefficient": 5.85,
     "sector": "shërbimi_civil",
-    "institution": "Zyre të Kryeministrit (SHTOJCA NR. 10.4)",
+    "institution": "Zyre të Kryeministrit",
     "group": "G4",
     "level": "Profesional",
     "title": "Profesional 1",
@@ -493,7 +493,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Zyre të Kryeministrit. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Zyre të Kryeministrit.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.4"
@@ -504,7 +504,7 @@
     "code": null,
     "coefficient": 5.3,
     "sector": "shërbimi_civil",
-    "institution": "Zyre të Kryeministrit (SHTOJCA NR. 10.4)",
+    "institution": "Zyre të Kryeministrit",
     "group": "G5",
     "level": "Profesional",
     "title": "Profesional 2",
@@ -513,7 +513,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Zyre të Kryeministrit. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Zyre të Kryeministrit.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.4"
@@ -524,7 +524,7 @@
     "code": null,
     "coefficient": 4.3,
     "sector": "shërbimi_civil",
-    "institution": "Zyre të Kryeministrit (SHTOJCA NR. 10.4)",
+    "institution": "Zyre të Kryeministrit",
     "group": "G6",
     "level": "Profesional",
     "title": "Profesional 3",
@@ -533,7 +533,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Zyre të Kryeministrit. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Zyre të Kryeministrit.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.4"
@@ -544,7 +544,7 @@
     "code": null,
     "coefficient": 4,
     "sector": "shërbimi_civil",
-    "institution": "Zyre të Kryeministrit (SHTOJCA NR. 10.4)",
+    "institution": "Zyre të Kryeministrit",
     "group": "G7",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknike dhe mbështetës/e 1 (Udhëheqës/e)",
@@ -553,7 +553,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Zyre të Kryeministrit. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Zyre të Kryeministrit.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.4"
@@ -564,7 +564,7 @@
     "code": null,
     "coefficient": 3.9,
     "sector": "shërbimi_civil",
-    "institution": "Zyre të Kryeministrit (SHTOJCA NR. 10.4)",
+    "institution": "Zyre të Kryeministrit",
     "group": "G8",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknik/e dhe mbështetës/e 2",
@@ -573,7 +573,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Përfshin: vozitës, korrier, kuzhinier, sigurimi, mekanik, elektricist, zdrukthëtar, ujë instalues, farkëtar dhe pozita të ngjashme. Në Zyre të Kryeministrit. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Përfshin: vozitës, korrier, kuzhinier, sigurimi, mekanik, elektricist, zdrukthëtar, ujë instalues, farkëtar dhe pozita të ngjashme. Në Zyre të Kryeministrit.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.4"
@@ -584,7 +584,7 @@
     "code": null,
     "coefficient": 3.8,
     "sector": "shërbimi_civil",
-    "institution": "Zyre të Kryeministrit (SHTOJCA NR. 10.4)",
+    "institution": "Zyre të Kryeministrit",
     "group": "G9",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknik/e dhe mbështetës/e 3",
@@ -593,7 +593,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Përfshin: roje, kopshtar, shtëpiak, autolarës, rrobalarës dhe pozita të ngjashme. Në Zyre të Kryeministrit. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Përfshin: roje, kopshtar, shtëpiak, autolarës, rrobalarës dhe pozita të ngjashme. Në Zyre të Kryeministrit.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.4"
@@ -604,7 +604,7 @@
     "code": null,
     "coefficient": 9,
     "sector": "shërbimi_civil",
-    "institution": "Institucionet e Pavarura Kushtetuese (SHTOJCA NR. 10.5)",
+    "institution": "Institucionet e Pavarura Kushtetuese",
     "group": "XI",
     "level": "Profesional",
     "title": "Këshilltare i/e Juridik/e 1",
@@ -613,7 +613,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Institucione të Pavarura Kushtetuese. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Institucione të Pavarura Kushtetuese.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.5"
@@ -624,7 +624,7 @@
     "code": null,
     "coefficient": 8,
     "sector": "shërbimi_civil",
-    "institution": "Institucionet e Pavarura Kushtetuese (SHTOJCA NR. 10.5)",
+    "institution": "Institucionet e Pavarura Kushtetuese",
     "group": "X2",
     "level": "Profesional",
     "title": "Këshilltare i/e Juridike 2",
@@ -633,7 +633,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Institucione të Pavarura Kushtetuese. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Institucione të Pavarura Kushtetuese.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.5"
@@ -644,7 +644,7 @@
     "code": null,
     "coefficient": 12.2,
     "sector": "shërbimi_civil",
-    "institution": "Institucionet e Pavarura Kushtetuese (SHTOJCA NR. 10.5)",
+    "institution": "Institucionet e Pavarura Kushtetuese",
     "group": "X3",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Lartë",
@@ -653,7 +653,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Institucione të Pavarura Kushtetuese. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Institucione të Pavarura Kushtetuese.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.5"
@@ -664,7 +664,7 @@
     "code": null,
     "coefficient": 8.5,
     "sector": "shërbimi_civil",
-    "institution": "Institucionet e Pavarura Kushtetuese (SHTOJCA NR. 10.5)",
+    "institution": "Institucionet e Pavarura Kushtetuese",
     "group": "X4",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Mesëm",
@@ -673,7 +673,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Institucione të Pavarura Kushtetuese. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Institucione të Pavarura Kushtetuese.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.5"
@@ -684,7 +684,7 @@
     "code": null,
     "coefficient": 7.4,
     "sector": "shërbimi_civil",
-    "institution": "Institucionet e Pavarura Kushtetuese (SHTOJCA NR. 10.5)",
+    "institution": "Institucionet e Pavarura Kushtetuese",
     "group": "X5",
     "level": "Drejtues/e",
     "title": "Drejtues/e i/e Ulët",
@@ -693,7 +693,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Institucione të Pavarura Kushtetuese. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Institucione të Pavarura Kushtetuese.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.5"
@@ -704,7 +704,7 @@
     "code": null,
     "coefficient": 5.8,
     "sector": "shërbimi_civil",
-    "institution": "Institucionet e Pavarura Kushtetuese (SHTOJCA NR. 10.5)",
+    "institution": "Institucionet e Pavarura Kushtetuese",
     "group": "X6",
     "level": "Profesional",
     "title": "Profesional 1",
@@ -713,7 +713,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Institucione të Pavarura Kushtetuese. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Institucione të Pavarura Kushtetuese.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.5"
@@ -724,7 +724,7 @@
     "code": null,
     "coefficient": 5.25,
     "sector": "shërbimi_civil",
-    "institution": "Institucionet e Pavarura Kushtetuese (SHTOJCA NR. 10.5)",
+    "institution": "Institucionet e Pavarura Kushtetuese",
     "group": "X7",
     "level": "Profesional",
     "title": "Profesional 2",
@@ -733,7 +733,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Institucione të Pavarura Kushtetuese. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Institucione të Pavarura Kushtetuese.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.5"
@@ -744,7 +744,7 @@
     "code": null,
     "coefficient": 4.2,
     "sector": "shërbimi_civil",
-    "institution": "Institucionet e Pavarura Kushtetuese (SHTOJCA NR. 10.5)",
+    "institution": "Institucionet e Pavarura Kushtetuese",
     "group": "X8",
     "level": "Profesional",
     "title": "Profesional 3",
@@ -753,7 +753,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Institucione të Pavarura Kushtetuese. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Institucione të Pavarura Kushtetuese.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.5"
@@ -764,7 +764,7 @@
     "code": null,
     "coefficient": 3.98,
     "sector": "shërbimi_civil",
-    "institution": "Institucionet e Pavarura Kushtetuese (SHTOJCA NR. 10.5)",
+    "institution": "Institucionet e Pavarura Kushtetuese",
     "group": "X9",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknik/e dhe mbështetës/e 1 (Udhëheqës/e)",
@@ -773,7 +773,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Në Institucione të Pavarura Kushtetuese. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Në Institucione të Pavarura Kushtetuese.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.5"
@@ -784,7 +784,7 @@
     "code": null,
     "coefficient": 3.88,
     "sector": "shërbimi_civil",
-    "institution": "Institucionet e Pavarura Kushtetuese (SHTOJCA NR. 10.5)",
+    "institution": "Institucionet e Pavarura Kushtetuese",
     "group": "X10",
     "level": "Mbështetës/e",
     "title": "Nëpunëse teknik/e dhe mbështetës/e 2",
@@ -793,7 +793,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Përfshin: Vozitës, Korrier, elektricist, zdrukthëtar, ujë instalues, farkëtar. Në Institucione të Pavarura Kushtetuese. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Përfshin: Vozitës, Korrier, elektricist, zdrukthëtar, ujë instalues, farkëtar. Në Institucione të Pavarura Kushtetuese.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.5"
@@ -804,7 +804,7 @@
     "code": null,
     "coefficient": 3.78,
     "sector": "shërbimi_civil",
-    "institution": "Institucionet e Pavarura Kushtetuese (SHTOJCA NR. 10.5)",
+    "institution": "Institucionet e Pavarura Kushtetuese",
     "group": "X11",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknik/e dhe mbështetës/e 3",
@@ -813,7 +813,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Përfshin: roje, kopshtar, shtëpiak, autolarës, rrobalarës dhe pozita të ngjashme. Në Institucione të Pavarura Kushtetuese. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Përfshin: roje, kopshtar, shtëpiak, autolarës, rrobalarës dhe pozita të ngjashme. Në Institucione të Pavarura Kushtetuese.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.5"
@@ -824,7 +824,7 @@
     "code": null,
     "coefficient": 14,
     "sector": "shërbimi_civil",
-    "institution": "Ministri dhe Agjenci të Pavarura/Rregullatore (SHTOJCA NR. 10.6)",
+    "institution": "Ministri dhe Agjenci të Pavarura/Rregullatore",
     "group": "11",
     "level": "Drejtues/e i/e Lartë",
     "title": "Drejtore/i e/i Përgjithshëm i Administratës Tatimore të Kosovës",
@@ -833,7 +833,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -844,7 +844,7 @@
     "code": null,
     "coefficient": 12.5,
     "sector": "shërbimi_civil",
-    "institution": "Ministri dhe Agjenci të Pavarura/Rregullatore (SHTOJCA NR. 10.6)",
+    "institution": "Ministri dhe Agjenci të Pavarura/Rregullatore",
     "group": "12",
     "level": "Drejtues/e i/e Lartë",
     "title": "Zëvendës Drejtori i Përgjithshëm i Administratës Tatimore të Kosovës",
@@ -853,7 +853,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -864,7 +864,7 @@
     "code": null,
     "coefficient": 12.1,
     "sector": "shërbimi_civil",
-    "institution": "Ministri dhe Agjenci të Pavarura/Rregullatore (SHTOJCA NR. 10.6)",
+    "institution": "Ministri dhe Agjenci të Pavarura/Rregullatore",
     "group": "13",
     "level": "Drejtues/e i/e Lartë",
     "title": "Drejtues/e i/e Lartë 1 (Në Ministri dhe Agjenci të Pavarura dhe Rregullatore)",
@@ -873,7 +873,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -884,7 +884,7 @@
     "code": null,
     "coefficient": 12,
     "sector": "shërbimi_civil",
-    "institution": "Agjenci Ekzekutive dhe Administrata e Shërbimit Publik (SHTOJCA NR. 10.6)",
+    "institution": "Agjenci Ekzekutive dhe Administrata e Shërbimit Publik",
     "group": "14",
     "level": "Drejtues/e i/e Lartë",
     "title": "Drejtues/e i/e Lartë 2 (Në Agjenci Ekzekutive dhe Administrate të Shërbimit Publik)",
@@ -893,7 +893,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -904,7 +904,7 @@
     "code": null,
     "coefficient": 10.7,
     "sector": "shërbimi_civil",
-    "institution": "Agjenci të Pavarura dhe Rregullatore (SHTOJCA NR. 10.6)",
+    "institution": "Agjenci të Pavarura dhe Rregullatore",
     "group": "15",
     "level": "Drejtues/e i/e Lartë",
     "title": "Zëvendës Drejtore/i i/e Përgjithshëm në Agjenci të Pavarura dhe Rregullatore",
@@ -913,7 +913,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -924,7 +924,7 @@
     "code": null,
     "coefficient": 10.6,
     "sector": "shërbimi_civil",
-    "institution": "Agjenci Ekzekutive (SHTOJCA NR. 10.6)",
+    "institution": "Agjenci Ekzekutive",
     "group": "16",
     "level": "Drejtues/e i/e Lartë",
     "title": "Drejtues/e i/e Lartë 3 (Zëvendës Drejtore/i i/e Përgjithshëm në Agjenci Ekzekutive)",
@@ -933,7 +933,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Paraparë në ligje të themelimit. Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "Paraparë në ligje të themelimit.",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -944,7 +944,7 @@
     "code": null,
     "coefficient": 8.4,
     "sector": "shërbimi_civil",
-    "institution": "Ministri dhe Agjenci të Pavarura dhe Rregullatore (SHTOJCA NR. 10.6)",
+    "institution": "Ministri dhe Agjenci të Pavarura dhe Rregullatore",
     "group": "17",
     "level": "Drejtues/e i/e Mesëm",
     "title": "Drejtues/e i/e Mesëm (Në Ministri dhe Agjenci të Pavarura dhe Rregullatore)",
@@ -953,7 +953,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -964,7 +964,7 @@
     "code": null,
     "coefficient": 8.3,
     "sector": "shërbimi_civil",
-    "institution": "Agjenci Ekzekutive dhe Administrate e Shërbimit Publik (SHTOJCA NR. 10.6)",
+    "institution": "Agjenci Ekzekutive dhe Administrate e Shërbimit Publik",
     "group": "18",
     "level": "Drejtues/e i/e Mesëm",
     "title": "Drejtues/e i/e Mesëm (Në Agjenci Ekzekutive dhe Administrate të Shërbimit Publik)",
@@ -973,7 +973,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -984,7 +984,7 @@
     "code": null,
     "coefficient": 7.4,
     "sector": "shërbimi_civil",
-    "institution": "Ministri dhe Agjenci të Pavarura dhe Rregullatore (SHTOJCA NR. 10.6)",
+    "institution": "Ministri dhe Agjenci të Pavarura dhe Rregullatore",
     "group": "19",
     "level": "Drejtues/e i/e Ulët",
     "title": "Drejtues/e i/e Ulët (Në Ministri dhe Agjenci të Pavarura dhe Rregullatore)",
@@ -993,7 +993,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -1004,7 +1004,7 @@
     "code": null,
     "coefficient": 7.35,
     "sector": "shërbimi_civil",
-    "institution": "Agjenci Ekzekutive dhe Administratë e Shërbimit Publik (SHTOJCA NR. 10.6)",
+    "institution": "Agjenci Ekzekutive dhe Administratë e Shërbimit Publik",
     "group": "110",
     "level": "Drejtues/e i/e Ulët",
     "title": "Drejtues/e i/e Ulët (Në Agjenci Ekzekutive dhe Administratë të Shërbimit Publik)",
@@ -1013,7 +1013,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -1024,7 +1024,7 @@
     "code": null,
     "coefficient": 7,
     "sector": "shërbimi_civil",
-    "institution": "Në nivel qendror (SHTOJCA NR. 10.6)",
+    "institution": "Në nivel qendror",
     "group": "111",
     "level": "Specialist/e",
     "title": "Specialist/e",
@@ -1044,7 +1044,7 @@
     "code": null,
     "coefficient": 5.75,
     "sector": "shërbimi_civil",
-    "institution": "Ministri dhe Agjenci të Pavarura dhe Rregullatore (SHTOJCA NR. 10.6)",
+    "institution": "Ministri dhe Agjenci të Pavarura dhe Rregullatore",
     "group": "112",
     "level": "Profesional",
     "title": "Profesional 1 (Në Ministri dhe Agjenci të Pavarura dhe Rregullatore)",
@@ -1053,7 +1053,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -1064,7 +1064,7 @@
     "code": null,
     "coefficient": 5.7,
     "sector": "shërbimi_civil",
-    "institution": "Agjenci Ekzekutive dhe Administrate e Shërbimit Publik (SHTOJCA NR. 10.6)",
+    "institution": "Agjenci Ekzekutive dhe Administrate e Shërbimit Publik",
     "group": "113",
     "level": "Profesional",
     "title": "Profesional 1 (Në Agjenci Ekzekutive dhe Administrate të Shërbimit Publik)",
@@ -1073,7 +1073,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -1084,7 +1084,7 @@
     "code": null,
     "coefficient": 5.2,
     "sector": "shërbimi_civil",
-    "institution": "Ministri dhe Agjenci të Pavarura dhe Rregullatore (SHTOJCA NR. 10.6)",
+    "institution": "Ministri dhe Agjenci të Pavarura dhe Rregullatore",
     "group": "114",
     "level": "Profesional",
     "title": "Profesional 2 (Në Ministri dhe Agjenci të Pavarura dhe Rregullatore)",
@@ -1093,7 +1093,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -1104,7 +1104,7 @@
     "code": null,
     "coefficient": 5.1,
     "sector": "shërbimi_civil",
-    "institution": "Agjenci Ekzekutive dhe Administrate e Shërbimit Publik (SHTOJCA NR. 10.6)",
+    "institution": "Agjenci Ekzekutive dhe Administrate e Shërbimit Publik",
     "group": "115",
     "level": "Profesional",
     "title": "Profesional 2 (Në Agjenci Ekzekutive dhe Administrate të Shërbimit Publik)",
@@ -1113,7 +1113,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -1124,7 +1124,7 @@
     "code": null,
     "coefficient": 4.1,
     "sector": "shërbimi_civil",
-    "institution": "Ministri dhe Agjenci të Pavarura dhe Rregullatore (SHTOJCA NR. 10.6)",
+    "institution": "Ministri dhe Agjenci të Pavarura dhe Rregullatore",
     "group": "116",
     "level": "Profesional",
     "title": "Profesional 3 (Në Ministri dhe Agjenci të Pavarura dhe Rregullatore)",
@@ -1133,7 +1133,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -1144,7 +1144,7 @@
     "code": null,
     "coefficient": 4,
     "sector": "shërbimi_civil",
-    "institution": "Agjenci Ekzekutive dhe Administrate e Shërbimit Publik (SHTOJCA NR. 10.6)",
+    "institution": "Agjenci Ekzekutive dhe Administrate e Shërbimit Publik",
     "group": "117",
     "level": "Profesional",
     "title": "Profesional 3 (Në Agjenci Ekzekutive dhe Administrate të Shërbimit Publik)",
@@ -1153,7 +1153,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -1164,7 +1164,7 @@
     "code": null,
     "coefficient": 3.98,
     "sector": "shërbimi_civil",
-    "institution": "Ministri dhe Agjenci të Pavarura dhe Rregullatore (SHTOJCA NR. 10.6)",
+    "institution": "Ministri dhe Agjenci të Pavarura dhe Rregullatore",
     "group": "118",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknik/e dhe mbështetës/e 1 (Udhëheqës/e)",
@@ -1173,7 +1173,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"
@@ -1184,7 +1184,7 @@
     "code": null,
     "coefficient": 3.96,
     "sector": "shërbimi_civil",
-    "institution": "Agjenci Ekzekutive dhe Administrate e Shërbimit Publik (SHTOJCA NR. 10.6)",
+    "institution": "Agjenci Ekzekutive dhe Administrate e Shërbimit Publik",
     "group": "119",
     "level": "Mbështetës/e",
     "title": "Nëpunës/e teknik/e dhe mbështetës/e 1 (Udhëheqës/e)",
@@ -1193,7 +1193,7 @@
       "to": null,
       "is_active": true
     },
-    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "notes": "",
     "source": {
       "law_ref": "Ligji NR. 08/L-196",
       "annex": "SHTOJCA NR. 10.6"

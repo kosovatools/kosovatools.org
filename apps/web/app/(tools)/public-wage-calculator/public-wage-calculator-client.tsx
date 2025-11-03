@@ -62,13 +62,19 @@ function createEmptyAllowance(): AllowanceFormEntry {
 }
 
 export function PublicWageCalculatorClient() {
+  const defaultPosition = COEFFICIENT_CATALOG[0] ?? null;
+  const defaultSector = defaultPosition?.sector ?? null;
+  const defaultPositionId = defaultPosition?.id ?? null;
   const [coefficientValue, setCoefficientValue] = useState(
     DEFAULT_COEFFICIENT_VALUE,
   );
   const [mode, setMode] = useState<PublicWageCalculationMode>("catalog");
   const [yearsOfService, setYearsOfService] = useState(5);
+  const [selectedSector, setSelectedSector] = useState<string | null>(
+    defaultSector,
+  );
   const [selectedPositionId, setSelectedPositionId] = useState<string | null>(
-    COEFFICIENT_CATALOG[0]?.id ?? null,
+    defaultPositionId,
   );
   const [manualCoefficient, setManualCoefficient] = useState(5.6);
   const [hours, setHours] = useState<Record<PremiumKey, number>>(() =>
@@ -92,6 +98,13 @@ export function PublicWageCalculatorClient() {
 
   const { result, error } = useMemo(() => {
     try {
+      if (mode === "catalog" && !selectedPositionId) {
+        return {
+          result: null,
+          error: null,
+        };
+      }
+
       const allowanceInputs = allowances
         .filter((item) => item.label.trim().length > 0 || item.value > 0)
         .map((item) => ({
@@ -197,7 +210,7 @@ export function PublicWageCalculatorClient() {
       </header>
 
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-        <Card>
+        <Card className="min-w-0">
           <CardHeader>
             <CardTitle>Futni të dhënat</CardTitle>
             <CardDescription>
@@ -218,7 +231,31 @@ export function PublicWageCalculatorClient() {
               availablePositions={COEFFICIENT_CATALOG}
               onModeChange={setMode}
               onYearsOfServiceChange={setYearsOfService}
-              onPositionChange={(value) => setSelectedPositionId(value || null)}
+              selectedSector={selectedSector}
+              onSectorChange={(sector) => {
+                setSelectedSector(sector);
+                if (!sector) {
+                  setSelectedPositionId(null);
+                  return;
+                }
+
+                setSelectedPositionId((prev) => {
+                  if (!prev) {
+                    return prev;
+                  }
+
+                  const existing = COEFFICIENT_CATALOG.find(
+                    (entry) => entry.id === prev,
+                  );
+
+                  if (existing && existing.sector === sector) {
+                    return prev;
+                  }
+
+                  return null;
+                });
+              }}
+              onPositionChange={setSelectedPositionId}
               onManualCoefficientChange={setManualCoefficient}
               onCoefficientValueChange={setCoefficientValue}
               onHoursChange={handleHoursUpdate}

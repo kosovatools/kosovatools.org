@@ -16,7 +16,7 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { createChromaPalette } from "@workspace/ui/lib/chart-palette";
-import { useChartTooltipFormatters } from "@workspace/ui/components/use-chart-tooltip-formatters";
+import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 
 const [importsColor] = createChromaPalette(1);
 const importsPalette = {

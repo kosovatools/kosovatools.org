@@ -28,7 +28,7 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
-import { useChartTooltipFormatters } from "@workspace/ui/components/use-chart-tooltip-formatters";
+import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "./use-timeline-event-markers";
 
 const SERIES_KEYS = ["production_gwh", "import_gwh"] as const;

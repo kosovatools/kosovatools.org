@@ -4,6 +4,8 @@
 
 Kosova Tools uses pnpm and Turborepo to coordinate multiple packages. The Next.js customer surface lives in `apps/web`, with routes in `app/`, shared UI in `components/`, and utilities in `lib/`. Shared React primitives live in `packages/ui`; cross-tool data helpers start in `packages/stats`; workspace-wide linting and TypeScript baselines sit in `packages/eslint-config` and `packages/typescript-config`.
 
+**Important:** Leave the shadcn-generated files in `packages/ui/src/components` alone—they are regenerated periodically and any manual edits will be lost. Place bespoke UI in `packages/ui/src/custom-components` instead.
+
 ## Tool Package Workflow
 
 Each citizen tool should ship as its own workspace package (e.g., `packages/customs-codes`, `packages/payroll`). For a new tool: copy the `packages/stats` layout, update `package.json` name/exports, add a `tsconfig` extending `@workspace/typescript-config/react-library.json`, and seed `src/index.ts` with typed exports. Re-export any UI building blocks through `packages/ui/src/components/<tool>/index.ts`, then consume the package inside `apps/web` by importing from `@workspace/<tool>`.

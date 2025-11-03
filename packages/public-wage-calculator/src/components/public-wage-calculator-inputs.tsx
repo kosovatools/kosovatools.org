@@ -1,4 +1,4 @@
-import { useMemo, useState, type ChangeEvent } from "react";
+import { useMemo, type ChangeEvent } from "react";
 
 import {
   Field,
@@ -14,6 +14,7 @@ import {
   NativeSelectOption,
 } from "@workspace/ui/components/native-select";
 import { Button } from "@workspace/ui/components/button";
+import { FilterableCombobox } from "@workspace/ui/custom-components/filterable-combobox";
 import { Separator } from "@workspace/ui/components/separator";
 import { cn } from "@workspace/ui/lib/utils";
 
@@ -57,6 +58,7 @@ export interface PublicWageCalculatorInputsProps {
   yearsOfService: number;
   coefficientManual: number | "";
   selectedPositionId: string | null;
+  selectedSector: string | null;
   coefficientValue: number;
   hours: Record<PremiumKey, number>;
   allowances: AllowanceFormEntry[];
@@ -64,7 +66,8 @@ export interface PublicWageCalculatorInputsProps {
   availablePositions: PositionCoefficient[];
   onModeChange: (mode: CalculationMode) => void;
   onYearsOfServiceChange: (years: number) => void;
-  onPositionChange: (positionId: string) => void;
+  onSectorChange: (sector: string | null) => void;
+  onPositionChange: (positionId: string | null) => void;
   onManualCoefficientChange: (coefficient: number) => void;
   onCoefficientValueChange: (value: number) => void;
   onHoursChange: (key: PremiumKey, value: number) => void;
@@ -77,45 +80,55 @@ export interface PublicWageCalculatorInputsProps {
   onPolicyChange: (policy: PolicyFormState) => void;
 }
 
-function formatOptionLabel(position: PositionCoefficient) {
+function buildPositionOption(position: PositionCoefficient) {
   const pieces = [position.title, position.institution, position.code].filter(
     Boolean,
   );
 
   const baseLabel = pieces.join(" • ");
-  const notes = position.notes?.trim();
-  if (!notes) {
-    return baseLabel;
-  }
+  const rawNotes = position.notes?.trim() ?? "";
+  const condensedNotes = rawNotes.replace(/\s+/g, " ").trim();
 
-  const condensedNotes = notes.replace(/\s+/g, " ");
   const preview =
-    condensedNotes.length > 120
-      ? `${condensedNotes.slice(0, 117).trimEnd()}…`
+    condensedNotes.length > 160
+      ? `${condensedNotes.slice(0, 157).trimEnd()}…`
       : condensedNotes;
 
-  return baseLabel ? `${baseLabel} — ${preview}` : preview;
-}
-
-function filterPositions(
-  positions: PositionCoefficient[],
-  query: string,
-): PositionCoefficient[] {
-  if (!query.trim()) {
-    return positions.slice(0, 100);
+  if (baseLabel) {
+    return {
+      label: baseLabel,
+      notes: preview || undefined,
+    };
   }
 
-  const lower = query.toLowerCase();
-  return positions
-    .filter((position) => {
-      return (
-        position.title.toLowerCase().includes(lower) ||
-        position.institution?.toLowerCase().includes(lower) ||
-        position.code?.toLowerCase().includes(lower) ||
-        position.sector.toLowerCase().includes(lower)
-      );
-    })
-    .slice(0, 100);
+  if (preview) {
+    return {
+      label: preview,
+      notes: undefined,
+    };
+  }
+
+  return {
+    label:
+      position.title ??
+      position.institution ??
+      position.code ??
+      position.sector ??
+      position.id,
+    notes: undefined,
+  };
+}
+
+function formatSectorLabel(value: string) {
+  const normalized = value.replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
+  if (!normalized) {
+    return value;
+  }
+
+  return normalized
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 function parseNumber(value: string, fallback = 0) {
@@ -128,6 +141,7 @@ export function PublicWageCalculatorInputs({
   yearsOfService,
   coefficientManual,
   selectedPositionId,
+  selectedSector,
   coefficientValue,
   hours,
   allowances,
@@ -135,6 +149,7 @@ export function PublicWageCalculatorInputs({
   availablePositions,
   onModeChange,
   onYearsOfServiceChange,
+  onSectorChange,
   onPositionChange,
   onManualCoefficientChange,
   onCoefficientValueChange,
@@ -144,12 +159,69 @@ export function PublicWageCalculatorInputs({
   onAllowanceRemove,
   onPolicyChange,
 }: PublicWageCalculatorInputsProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const filteredPositions = useMemo(
-    () => filterPositions(availablePositions, searchQuery),
-    [availablePositions, searchQuery],
+  const selectedPosition = useMemo(
+    () =>
+      availablePositions.find(
+        (position) => position.id === selectedPositionId,
+      ) ?? null,
+    [availablePositions, selectedPositionId],
   );
+
+  const sectorFilteredPositions = useMemo(() => {
+    if (!selectedSector) {
+      return [];
+    }
+
+    return availablePositions.filter(
+      (position) => position.sector === selectedSector,
+    );
+  }, [availablePositions, selectedSector]);
+
+  const comboboxOptions = useMemo(
+    () =>
+      sectorFilteredPositions.map((position) => ({
+        value: position.id,
+        ...buildPositionOption(position),
+        keywords: [
+          position.title,
+          position.institution ?? "",
+          position.code ?? "",
+          position.sector,
+          position.notes ?? "",
+        ].filter(Boolean),
+      })),
+    [sectorFilteredPositions],
+  );
+
+  const selectedOptionDetails = useMemo(() => {
+    if (!selectedPosition) {
+      return null;
+    }
+
+    return buildPositionOption(selectedPosition);
+  }, [selectedPosition]);
+
+  const formattedSelectedCoefficient = useMemo(() => {
+    if (!selectedPosition) {
+      return null;
+    }
+
+    return new Intl.NumberFormat("sq-AL", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 3,
+    }).format(selectedPosition.coefficient);
+  }, [selectedPosition]);
+
+  const sectorOptions = useMemo(() => {
+    const sectors = new Set<string>();
+    for (const position of availablePositions) {
+      if (position.sector) {
+        sectors.add(position.sector);
+      }
+    }
+
+    return Array.from(sectors).sort((a, b) => a.localeCompare(b, "sq"));
+  }, [availablePositions]);
 
   const handleHoursChange = (key: PremiumKey) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
@@ -263,50 +335,99 @@ export function PublicWageCalculatorInputs({
       </FieldSet>
 
       {mode === "catalog" ? (
-        <div className="space-y-4">
+        <div className="space-y-4 min-w-0">
           <Field>
-            <FieldLabel htmlFor="public-wage-position">
-              Zgjidh pozitën
+            <FieldLabel htmlFor="public-wage-sector">
+              Zgjidh sektorin
             </FieldLabel>
             <FieldContent>
               <NativeSelect
-                id="public-wage-position"
-                value={selectedPositionId ?? ""}
-                onChange={(event: ChangeEvent<HTMLSelectElement>) =>
-                  onPositionChange(event.target.value)
-                }
+                id="public-wage-sector"
+                value={selectedSector ?? ""}
+                onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+                  const rawValue = event.target.value;
+                  const nextSector = rawValue === "" ? null : rawValue;
+
+                  if (!nextSector || selectedPosition?.sector !== nextSector) {
+                    onPositionChange(null);
+                  }
+
+                  onSectorChange(nextSector);
+                }}
               >
-                <NativeSelectOption value="">Zgjidh pozitën</NativeSelectOption>
-                {filteredPositions.map((position) => (
-                  <NativeSelectOption value={position.id} key={position.id}>
-                    {formatOptionLabel(position)}
+                <NativeSelectOption value="">
+                  Zgjidhni sektorin
+                </NativeSelectOption>
+                {sectorOptions.map((sector) => (
+                  <NativeSelectOption value={sector} key={sector}>
+                    {formatSectorLabel(sector)}
                   </NativeSelectOption>
                 ))}
               </NativeSelect>
             </FieldContent>
             <FieldDescription className="text-xs text-muted-foreground">
-              Koeficienti C merret automatikisht nga katalogu.
+              Zgjidhni sektorin për të ngushtuar listën e pozitave në katalog.
             </FieldDescription>
           </Field>
           <Field>
-            <FieldLabel htmlFor="public-wage-position-search">
-              Kërko pozitën
+            <FieldLabel htmlFor="public-wage-position">
+              Zgjidh pozitën
             </FieldLabel>
-            <FieldContent>
-              <Input
-                id="public-wage-position-search"
-                placeholder="Filtroni sipas titullit, institucionit ose kodit..."
-                value={searchQuery}
-                onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                  setSearchQuery(event.target.value)
+            <FieldContent className="min-w-0">
+              <FilterableCombobox
+                value={selectedPositionId}
+                onValueChange={onPositionChange}
+                options={comboboxOptions}
+                placeholder={
+                  selectedSector
+                    ? "Zgjidh pozitën..."
+                    : "Së pari zgjidhni sektorin"
                 }
+                searchPlaceholder="Kërkoni sipas titullit, institucionit ose kodit..."
+                emptyMessage={
+                  selectedSector
+                    ? "Asnjë pozitë nuk u gjet."
+                    : "Zgjidhni sektorin për të parë listën."
+                }
+                maxResults={100}
+                contentClassName="w-[480px]"
+                disabled={!selectedSector || comboboxOptions.length === 0}
               />
             </FieldContent>
             <FieldDescription className="text-xs text-muted-foreground">
-              Lista kufizohet në 100 rezultate për performancë. Rafinoni
-              kërkimin nëse nuk e shihni pozitën.
+              Koeficienti C merret automatikisht nga katalogu. Lista kufizohet
+              në 100 rezultate për performancë.
             </FieldDescription>
           </Field>
+          {selectedPosition && selectedOptionDetails ? (
+            <div className="rounded-lg border border-primary/40 bg-primary/5 p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                    Pozita e zgjedhur
+                  </p>
+                  <p className="mt-1 text-sm font-medium leading-5 text-foreground">
+                    {selectedOptionDetails.label}
+                  </p>
+                  {selectedOptionDetails.notes ? (
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                      {selectedOptionDetails.notes}
+                    </p>
+                  ) : null}
+                </div>
+                {formattedSelectedCoefficient ? (
+                  <div className="flex flex-col text-right sm:items-end">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      Koeficienti C
+                    </span>
+                    <span className="text-2xl font-semibold text-primary">
+                      {formattedSelectedCoefficient}
+                    </span>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
         </div>
       ) : (
         <Field>
