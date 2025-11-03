@@ -1,0 +1,1302 @@
+[
+  {
+    "id": "0f907881-a875-5393-b100-e1f07ff519f1",
+    "code": null,
+    "coefficient": 18,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "Al",
+    "title": "Presidentei e/i Kosovës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "040e64af-4660-5bab-b31b-2c84c40ef5d5",
+    "code": null,
+    "coefficient": 17.5,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A2",
+    "title": "Kryetarjali e/i Gjykatës Kushtetuese",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "5ce7209b-5779-57ac-873e-2c90071a4a76",
+    "code": null,
+    "coefficient": 17,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A3",
+    "title": "Kryetarja/i i Kuvendit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "18c2fe63-1e2b-55a4-9e9f-2573cb2e38fa",
+    "code": null,
+    "coefficient": 17,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A3",
+    "title": "Kryeministre/ër",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "6577220b-de59-50e6-aed3-bb196974f5fe",
+    "code": null,
+    "coefficient": 16.5,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A4",
+    "title": "Zëvendës Kryetarja/i e/i Gjykatës Kushtetuese",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "f56e0ad0-e5a8-581e-991c-2bd1093935da",
+    "code": null,
+    "coefficient": 16.5,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A4",
+    "title": "Nënkryetarja/i e/i Kuvendit të Kosovës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "c6bc21e7-23c2-5558-8052-8abe86ce4f25",
+    "code": null,
+    "coefficient": 16.5,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A4",
+    "title": "Zëvendëskryeministre/ër e/i Kosovës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "2cf8b7b3-4f69-55f0-814e-8efc62ec2f1c",
+    "code": null,
+    "coefficient": 16.5,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A4",
+    "title": "Gjyqtare/i e/i Gjykatës Kushtetuese",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "40d9fe51-84bd-5353-a909-3e246352079d",
+    "code": null,
+    "coefficient": 16.4,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A5",
+    "title": "Deputete",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "1e2c1ee6-2b63-5d12-a2a6-47f6c9c65e02",
+    "code": null,
+    "coefficient": 16.4,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A5",
+    "title": "Ministre/i",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "3f457034-f33e-5c95-9047-1e50a8989c3b",
+    "code": null,
+    "coefficient": 16.4,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A5",
+    "title": "Avokatei e/i Popullit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "425cd980-8080-5a88-8746-b99cb0528cf5",
+    "code": null,
+    "coefficient": 16.4,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A5",
+    "title": "Kryetarja/i e/i Komisionit Qendror të Zgjedhjeve",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "72a39581-765b-59d2-9f3a-9af8ec31f800",
+    "code": null,
+    "coefficient": 16.2,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A6",
+    "title": "Kryetarja/i e/i Komisionit të Pavarur për Media",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "7979bf80-bf32-5d51-9d5b-d67a26105a47",
+    "code": null,
+    "coefficient": 16.2,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A6",
+    "title": "Auditorei ei Përgjithshme/em e/i Kosovës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "aca44065-693f-5d26-9157-06427b2890a0",
+    "code": null,
+    "coefficient": 14.8,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A7",
+    "title": "Zëvendësministre/i",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "f2d5f400-6244-5e58-8fc7-da49e4a628ff",
+    "code": null,
+    "coefficient": 14.8,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A7",
+    "title": "Drejtore/i e/i Agjencisë Kundër Korrupsionit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "1a191aa2-61e3-5d59-bf48-03a56d40aa7a",
+    "code": null,
+    "coefficient": 14.4,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A8",
+    "title": "Komisionere/i për Privatësi dhe Informim",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "d8451d18-2a14-589f-b41e-3c25a6813f7f",
+    "code": null,
+    "coefficient": 14.4,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A8",
+    "title": "Zëvendës Avokatei e/i Popullit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "718b7c1a-1fca-5eaa-b1f5-b8a8793050cd",
+    "code": null,
+    "coefficient": 13.8,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A9",
+    "title": "Zëvendës Auditore/i e/i Përgjithshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "3222e07e-25a4-5df3-a568-747d908603d8",
+    "code": null,
+    "coefficient": 13.8,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A9",
+    "title": "Nënkryetarja/i e/i Komisionit të Pavarur për Media",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "d32a86d9-14f3-52cf-b320-4e8f88754edb",
+    "code": null,
+    "coefficient": 13.2,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Qendror",
+    "group": "A",
+    "level": "A10",
+    "title": "Ndihmës Auditore/i e/i Përgjithshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "6142cdae-15b2-5f92-9deb-fc62f6d9f356",
+    "code": null,
+    "coefficient": 13,
+    "sector": "Funksionarët Publik",
+    "institution": "Institucione të pavarura kushtetuese",
+    "group": "A",
+    "level": null,
+    "title": "Anëtare i/e Organit Kolegjial",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "4abb14d3-3e48-5b96-8c23-d913b96876f5",
+    "code": null,
+    "coefficient": 13,
+    "sector": "Funksionarët Publik",
+    "institution": "Agjenci të pavarura dhe/ose rregullatore (Kuvend/Qeveri)",
+    "group": "A",
+    "level": "A11",
+    "title": "Kryetarja/i e/i Organit Kolegjial",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "996ea81f-668f-5e2a-ba6b-e7b888b2af4e",
+    "code": null,
+    "coefficient": 12.7,
+    "sector": "Funksionarët Publik",
+    "institution": "Agjenci të pavarura dhe/ose rregullatore (Kuvend/Qeveri)",
+    "group": "A",
+    "level": "A12",
+    "title": "Zëvendës Kryetarja/i e/i Organit Kolegjial",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "bfb47f95-fce1-5063-bbcc-f3a9531dc9ff",
+    "code": null,
+    "coefficient": 12.5,
+    "sector": "Funksionarët Publik",
+    "institution": "Agjenci të pavarura dhe/ose rregullatore (Kuvend/Qeveri)",
+    "group": "A",
+    "level": "A13",
+    "title": "Anëtare i/e Organit Kolegjial",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR.1.1"
+    }
+  },
+  {
+    "id": "80703083-89b3-5d30-ac57-d50e5eb145ce",
+    "code": null,
+    "coefficient": 15,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Kryeqyteti)",
+    "group": "Y",
+    "level": "Y1",
+    "title": "Kryetarja/i e/i Kryeqytetit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "4a18160a-d7f9-5cb8-a001-a479055e9149",
+    "code": null,
+    "coefficient": 13,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna mbi 100.000 qytetarë)",
+    "group": "Y",
+    "level": "Y2",
+    "title": "Kryetarja/i e/i Komunës 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "b399a716-6de6-510c-931b-008b6776e27f",
+    "code": null,
+    "coefficient": 12.8,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 70.001-100.000 qytetarë)",
+    "group": "Y",
+    "level": "Y3",
+    "title": "Kryetarja/i e/i Komunës 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "7003472c-d3f3-5392-a9aa-b8889d9e1132",
+    "code": null,
+    "coefficient": 12.6,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 50.001-70.000 qytetarë)",
+    "group": "Y",
+    "level": "Y4",
+    "title": "Kryetarja/i e/i Komunës 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "a86ddfb9-5942-5b53-bfda-66afe5e93bbb",
+    "code": null,
+    "coefficient": 12.4,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 30.001-50.000 qytetarë)",
+    "group": "Y",
+    "level": "Y5",
+    "title": "Kryetarja/i e/i Komunës 4",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "4acf15f0-affe-5d18-9a1f-3a2b08b1e3db",
+    "code": null,
+    "coefficient": 12.2,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 20.001-30.000 qytetarë)",
+    "group": "Y",
+    "level": "Y6",
+    "title": "Kryetarja/i e/i Komunës 5",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "b34efacd-b284-561f-9569-007aba349172",
+    "code": null,
+    "coefficient": 12,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 10.001-20.000 qytetarë)",
+    "group": "Y",
+    "level": "Y7",
+    "title": "Kryetarja/i e/i Komunës 6",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "a5d21332-dd31-569f-bcff-6484de8109ab",
+    "code": null,
+    "coefficient": 11.8,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna deri në 10.000 qytetarë)",
+    "group": "Y",
+    "level": "Y8",
+    "title": "Kryetarja/i e/i Komunës 7",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "4adc8de5-0d47-5b9e-94ee-445a093d47d3",
+    "code": null,
+    "coefficient": 11,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Kryeqyteti)",
+    "group": "Y",
+    "level": "Y9",
+    "title": "Nënkryetarja i e/i Kryeqytetit & Kryesuese/i efi Kuvendit Komunal në Kryeqytet",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "70b7352c-47f8-5f1f-a6cb-9cb13bbe4715",
+    "code": null,
+    "coefficient": 10.6,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna mbi 100.000 qytetarë)",
+    "group": "Y",
+    "level": "Y10",
+    "title": "Nënkryetarja i e/i Komunës & Kryesuese/i e/i Kuvendit Komunal 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "d76fddf6-c5f0-501e-8999-6fa3c10808c1",
+    "code": null,
+    "coefficient": 10.2,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 70.001-100.000 qytetarë)",
+    "group": "Y",
+    "level": "Y11",
+    "title": "Nënkryetarja/i e/i Komunës & Kryesueseli e/i Kuvendit Kommal 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "95fa3d37-e422-5382-8a0c-dbcf9c878358",
+    "code": null,
+    "coefficient": 9.8,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 50.001-70.000 qytetarë)",
+    "group": "Y",
+    "level": "Y12",
+    "title": "Nënkryetarja/i e/i Komunës & Kryesuese/ie/i Kuvendit Komunal 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "bce49c97-dcbc-56d8-8e7b-b13ab33360bf",
+    "code": null,
+    "coefficient": 9.4,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 30.001-50.000 qytetarë)",
+    "group": "Y",
+    "level": "Y13",
+    "title": "Nënkryetarja/i e/i Komunës & Kryesuese/i e'i Kuvendit Komunal 4",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "26ec090c-7b85-59ab-ba8e-ff674054a64b",
+    "code": null,
+    "coefficient": 9.2,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 20.001-30.000 qytetarë)",
+    "group": "Y",
+    "level": "Y14",
+    "title": "Nënkryetarja/i e/i Komunës & Kryesuese/ie/i Kuvendit Komunal 5",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "6cb8a1a5-bddd-5925-9ee5-f82866ff904c",
+    "code": null,
+    "coefficient": 9,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 10.001-20.000 qytetarë)",
+    "group": "Y",
+    "level": "Y15",
+    "title": "Nënkryetarja/i e/i Komunës & Kryesuese/ie/i Kuvendit Komunal 6",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "25b7b2a6-564f-575b-ab97-7309be1754c7",
+    "code": null,
+    "coefficient": 8.4,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna deri në 10.000 qytetarë)",
+    "group": "Y",
+    "level": "Y16",
+    "title": "Nënkryetarja/i e/i Komunës & Kryesuese/i e/i Kuvendit Komunal 7",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "f922d8e7-3d87-513f-809e-160f6d1ba0bf",
+    "code": null,
+    "coefficient": 8.4,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Kryeqyteti)",
+    "group": "Y",
+    "level": "Y16",
+    "title": "Drejtore/i e/i Drejtorisë Komunale në Kryeqytet",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "551ee629-f12f-5b8d-939c-ca80cbfff32e",
+    "code": null,
+    "coefficient": 8.3,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna mbi 100.000 qytetarë)",
+    "group": "Y",
+    "level": "Y17",
+    "title": "Drejtore/i e/i Drejtorisë Komunale i Komunës 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "25a9a947-7e68-5c61-a96b-92651f494422",
+    "code": null,
+    "coefficient": 8.2,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 70.001-100.000 qytetarë)",
+    "group": "Y",
+    "level": "Y18",
+    "title": "Drejtore/i e/i Drejtorisë Komunale i Komunës 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "1816aec0-2d75-5282-8af3-0a8a09ec0634",
+    "code": null,
+    "coefficient": 8.1,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 50.001-70.000 qytetarë)",
+    "group": "Y",
+    "level": "Y19",
+    "title": "Drejtore/i efi Drejtorisë Komunale i Komunës 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "e9af2e7e-fcf6-52f2-ad09-c97d545aaf16",
+    "code": null,
+    "coefficient": 8,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 30.001-50.000 qytetarë)",
+    "group": "Y",
+    "level": "Y20",
+    "title": "Drejtore/i e/i Drejtorisë Komunale i Komunës 4",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "bb2628ca-32bd-5e3e-b7c7-c6a0dfee78f9",
+    "code": null,
+    "coefficient": 7.9,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 20.001-30.000 qytetarë)",
+    "group": "Y",
+    "level": "Y21",
+    "title": "Drejtore/i e/i Drejtorisë Komunale i Komunës 5",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "60ad54f3-02be-5a6b-a658-c41501d54444",
+    "code": null,
+    "coefficient": 7.8,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 10.001-20.000 qytetarë)",
+    "group": "Y",
+    "level": "Y22",
+    "title": "Drejtore/i e i Drejtorisë Komunale i Komunës 16",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "e233636e-ef2c-5761-b62c-ec6c6fd3b24b",
+    "code": null,
+    "coefficient": 7.7,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna deri në 10.000 qytetarë)",
+    "group": "Y",
+    "level": "Y23",
+    "title": "Drejtore/i e/i Drejtorisë Komunale i Komunës 7",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "a18ba696-7201-58ca-b82b-88c7f0a40b3e",
+    "code": null,
+    "coefficient": 7,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Kryeqyteti)",
+    "group": "Y",
+    "level": "Y24",
+    "title": "zv. Kryesuese/i e/i Kuvendit Komunal në Kryeqytet",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "d9b0cfcf-c532-5eec-b51e-28df5cc9c500",
+    "code": null,
+    "coefficient": 6.9,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna mbi 100.000 qytetarë)",
+    "group": "Y",
+    "level": "Y25",
+    "title": "zv. Kryesueseli en Kuvendit Komunal i Komunës 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "09b11f58-71e6-5bd8-af1a-3d8eb2f6c473",
+    "code": null,
+    "coefficient": 6.8,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 70.001-100.000 qytetarë)",
+    "group": "Y",
+    "level": "Y26",
+    "title": "zv. Kryesuese eli Kuvendit Komunal i Komunës 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "0665dfc1-1c96-56c1-960f-9a3660d1b1b6",
+    "code": null,
+    "coefficient": 6.7,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 50.001-70.000 qytetarë)",
+    "group": "Y",
+    "level": "Y27",
+    "title": "zv. Kryesuese/i e i Kuvendit Komunal i Komunës 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "9448b6f6-688d-597a-a9f3-d21c394964b3",
+    "code": null,
+    "coefficient": 6.6,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 30.001-50.000 qytetarë)",
+    "group": "Y",
+    "level": "Y28",
+    "title": "zv. Kryesuese/i e/i Kuvendit Komunal i Komunës 4",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "312f5bf8-2637-5873-ac7c-2221917fda86",
+    "code": null,
+    "coefficient": 6.5,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 20.001-30.000 qytetarë)",
+    "group": "Y",
+    "level": "Y29",
+    "title": "zv. Kryesuese ei Kuvendit Komunal i Komunës 5",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "ce4f6a95-edfc-5fd3-b27a-72a279bbb2d8",
+    "code": null,
+    "coefficient": 6.4,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 10.001-20.000 qytetarë)",
+    "group": "Y",
+    "level": "Y30",
+    "title": "zv. Kryesuesen e/i Kuvendit Komunali Komunës 6",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "f9e6d62e-7052-5071-aed3-8e28c9188798",
+    "code": null,
+    "coefficient": 6.3,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna deri në 10.000 qytetarë)",
+    "group": "Y",
+    "level": "Y31",
+    "title": "zv. Kryesuese eli Kuvendit Komunal i Komunës 7",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "307a5c0c-460d-58c0-9b9e-9ad95170ecd7",
+    "code": null,
+    "coefficient": 6,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Kryeqyteti)",
+    "group": "Y",
+    "level": "Y32",
+    "title": "Anëtar/e i/e Kuvendit Komunal në Kryeqytet",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "aa74ad3e-33f4-5dc2-a3bf-db31e35fe4d4",
+    "code": null,
+    "coefficient": 5.9,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna mbi 100.000 qytetarë)",
+    "group": "Y",
+    "level": "Y33",
+    "title": "Anëtare i/e Kuvendit Komunal i Komunës 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "ffc30b6f-4d40-59b2-9120-e541ef30765c",
+    "code": null,
+    "coefficient": 5.8,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 70.001-100.000 qytetarë)",
+    "group": "Y",
+    "level": "Y34",
+    "title": "Anëtare ile Kuvendit Kormunal i Komunës 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "0677b7d7-9119-5fa1-9507-e0268369e931",
+    "code": null,
+    "coefficient": 5.7,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 50.001-70.000 qytetarë)",
+    "group": "Y",
+    "level": "Y35",
+    "title": "Anëtare i e Kuvendit Komunal i Komunës 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "b36be5f3-8b55-5f05-86fc-24ed9554f14c",
+    "code": null,
+    "coefficient": 5.6,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 30.001-50.000 qytetarë)",
+    "group": "Y",
+    "level": "Y36",
+    "title": "Anëtare e Kuvendit Komunal i Komunës 4",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "3b436f43-e44c-5f13-b8a4-a27ff7d910f6",
+    "code": null,
+    "coefficient": 5.5,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 20.001-30.000 qytetarë)",
+    "group": "Y",
+    "level": "Y37",
+    "title": "Anëtare i e Kuvendit Komunal i Komunës 5",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "76360422-d32f-5981-af72-505ae8e2d643",
+    "code": null,
+    "coefficient": 5.4,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna 10.001-20.000 qytetarë)",
+    "group": "Y",
+    "level": "Y38",
+    "title": "Anëtare i/e Kuvendit Komunal i Komunës 6",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  },
+  {
+    "id": "e3cfa174-a0da-5433-9e03-fb4223046ea3",
+    "code": null,
+    "coefficient": 5.3,
+    "sector": "Funksionarët Publik",
+    "institution": "Niveli Lokal (Komuna deri në 10.000 qytetarë)",
+    "group": "Y",
+    "level": "Y39",
+    "title": "Anëtare i/e Kuvendit Komunal i Komunës 7",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 1.2"
+    }
+  }
+]

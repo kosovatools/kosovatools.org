@@ -1,0 +1,462 @@
+[
+  {
+    "id": "a68e714a-db18-54ed-ba0d-566bcb526444",
+    "code": null,
+    "coefficient": 14,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H1",
+    "level": "Drejtues/e i/e Lartë",
+    "title": "Drejtore/i e/i ShSKUK-së",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "046e4671-65c4-5f77-8368-3ff00757e272",
+    "code": null,
+    "coefficient": 13.4,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H2",
+    "level": "Drejtues/e",
+    "title": "Shëndetësia e nivelit tretesor/Drejtore/i e/i Institucionit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "c0f7fce3-22a5-5fb3-844c-7d875f6c4784",
+    "code": null,
+    "coefficient": 13,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H3",
+    "level": "Drejtues/e",
+    "title": "Drejtues-Shëndetësia e nivelit tretesor/Drejtor/e Mjekësor",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "5cea6a25-374d-5795-94cb-3ce19c68c614",
+    "code": null,
+    "coefficient": 13,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H3",
+    "level": "Drejtues/e",
+    "title": "Shëndetësia e nivelit dytësor/Drejtore/i e/i institucionit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "5783ce24-bb39-580f-967b-6e1aa9ede7e5",
+    "code": null,
+    "coefficient": 12.5,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H4",
+    "level": "Drejtues/e",
+    "title": "Shëndetësia e nivelit tretesor/Drejtore/i e/i Klinikës dhe/apo Shërbimit Klinik",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "2c06e326-1997-59b9-b626-90ab1721d9d5",
+    "code": null,
+    "coefficient": 12.5,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H4",
+    "level": "Drejtues/e",
+    "title": "Shëndetësia e nivelit dytësor Drejtor/e Mjekësor",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "e1032bc4-7875-58cc-971e-535aa92ad7b2",
+    "code": null,
+    "coefficient": 12.3,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H5",
+    "level": "Shef/e",
+    "title": "Shëndetësia e nivelit tretesor/Shefe Reparti",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "81559b61-01ce-5dd9-95e0-12fab2b646e5",
+    "code": null,
+    "coefficient": 12.2,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H6",
+    "level": "Shef/e",
+    "title": "Shëndetësia e nivelit dytësor/Shefe Reparti",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "2cee0343-bc30-5e47-a1ba-f56e7b4b839e",
+    "code": null,
+    "coefficient": 12,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H7",
+    "level": "Shef/e",
+    "title": "Shëndetësia e nivelit parësor/Shef/e në Mjekësi i Mjekësisë Familjare",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "85d6155a-4269-5875-b16c-9a354c8775ad",
+    "code": null,
+    "coefficient": 12,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H8",
+    "level": "Specialist/e",
+    "title": "Mjek specialist, Mjek specialist i Mjekësisë Familjare, Stomatolog Specialist, Farmacist specialist, Farmacist Klinik, Psikolog Klinik Specialist",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Mjeku Specialist i cili ushtron detyrën si personel akademik në arsimin universitar, kur këtë e lejon ligji përfiton një shtesë në vlerë prej tridhjetë përqind (30%) të pagës bazë për pozitën me orar të plotë të punës në arsimin universitar, sipas nenit 33 të Ligjit",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "be8b0d79-fda5-5f9b-bc0e-9e886f625bd4",
+    "code": null,
+    "coefficient": 8,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H9",
+    "level": "Specialist/e në Specializim",
+    "title": "Mjek në Specializim, Ekspert i Fizikës Mjekësore, Psikolog Klinik në Specializim",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "4f9a9494-b27c-5977-adb4-9f029a7976e0",
+    "code": null,
+    "coefficient": 7.4,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H10",
+    "level": "Profesional",
+    "title": "Mjek i përgjithshëm, Stomatolog, Farmacist, Mjek Veterinar/Fizikan Mjekësor në Specializim Inspektorë shëndetësor dhe farmaceutik",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "fa7cb615-1aec-5782-8760-16b8bcc6c1cb",
+    "code": null,
+    "coefficient": 7,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H11",
+    "level": "Profesional",
+    "title": "Psikolog Klinik",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Niveli tretësor i shëndetësisë",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "cfe93a43-41b3-507a-8619-ebd07a032151",
+    "code": null,
+    "coefficient": 6.4,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H12",
+    "level": "Infermier/e Drejtues/e",
+    "title": "Kryeinfermier 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "431bf2a6-1c7a-55a6-8e63-9e316202835a",
+    "code": null,
+    "coefficient": 6.2,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H13",
+    "level": "Infermier/e Drejtues/e",
+    "title": "Kryeinfermier 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Niveli sekundar i shëndetësisë",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "30fa87c0-0b5b-505e-aa13-ca8a846903e3",
+    "code": null,
+    "coefficient": 6,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H14",
+    "level": "Infermier/e Drejtues/e",
+    "title": "Kryeinfermier 3 dhe Kryeinfermierë në Edukim të Vazhdueshëm Profesional",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Niveli parësor i shëndetësisë",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "656d37a4-9f06-5c77-975e-27ab25c8192d",
+    "code": null,
+    "coefficient": 5.6,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H15",
+    "level": "Profesional (Bachelor)",
+    "title": "Infermier, Fizioterapeut, Logoped, Teknik i Radiologjisë diagnostike, Teknik I Radioterapisë, Mjekësi sanitare, Laborant, Mami. Teknik",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Niveli tretësor i shëndetësisë -Bachelor",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "d0ce8603-1fc3-5551-8d6a-af32e3906946",
+    "code": null,
+    "coefficient": 5.5,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H16",
+    "level": "Profesional (Bachelor)",
+    "title": "Infermier, Fizioterapeut, Logoped. Teknik i Radiologjisë diagnostike. Teknik i Radioterapisë, Mjekësi sanitare, Laborant, Mami. Teknik mjekësor, Teknik farmacist 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Niveli sekondar i shëndetësisë -Bachelor",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "8bb57b09-1e8a-5f8d-80d9-87c7ff69811f",
+    "code": null,
+    "coefficient": 5.4,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H17",
+    "level": "Profesional (Bachelor)",
+    "title": "Infermier, Infermier në edukim të vazhdueshëm, Fizioterapeut, Logoped, Teknik i Radiologjisë diagnostike. Mjekësi sanitare, Laborant. Mami, Teknik mjekësor, Teknik Veterinar, Teknik farmacist 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Niveli parësor i shëndetësisë -Bachelor",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "068604b8-2b12-547a-a3ed-4cf8d9ec3d7b",
+    "code": null,
+    "coefficient": 5.3,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H18",
+    "level": "Profesional (Shkollë e Mesme)",
+    "title": "Infermier, Laborant, Mami, Teknik mjekësor. Teknik farmacist 4",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Niveli tretësor i shëndetësisë-Shkollë e mesme",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "e7fab54f-8e25-559e-b097-84d6699049b6",
+    "code": null,
+    "coefficient": 5.2,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H19",
+    "level": "Profesional (Shkollë e Mesme)",
+    "title": "Infermier, Laborant, Mami, Teknik mjekësor, Teknik farmacist 5",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Niveli sekondar i shëndetësisë-Shkollë e mesme",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "48aae98d-566e-5dc4-9bb8-2b2459710464",
+    "code": null,
+    "coefficient": 5.1,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H20",
+    "level": "Profesional (Shkollë e Mesme)",
+    "title": "Infermier, Laborant, Mami, Teknik mjekësor, Teknik farmacis 6",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Niveli parësor i shëndetësisë -Shkollë e mesme",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  },
+  {
+    "id": "ff0542f8-891f-5e9a-9f62-4073c7bbe960",
+    "code": null,
+    "coefficient": 4.5,
+    "sector": "shëndetësi",
+    "institution": "Sistemi Shëndetësor (SHTOJCA NR.9)",
+    "group": "H21",
+    "level": "Ndihmës",
+    "title": "Ndihmës Infermier",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 9"
+    }
+  }
+]

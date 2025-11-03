@@ -1,0 +1,222 @@
+[
+  {
+    "id": "3abe1706-b34b-5cfb-98c9-543e17fb09a1",
+    "code": null,
+    "coefficient": 8,
+    "sector": "Zjarrëfikësit",
+    "institution": "Zjarrëfikësit",
+    "group": "R",
+    "level": "R1",
+    "title": "Komandanti i Brigadës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.3"
+    }
+  },
+  {
+    "id": "72c2c85b-3cc8-5835-a3a0-7d4771ef9c9f",
+    "code": null,
+    "coefficient": 7.2,
+    "sector": "Zjarrëfikësit",
+    "institution": "Zjarrëfikësit",
+    "group": "R",
+    "level": "R2",
+    "title": "Zëvendës komandanti i Brigadës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.3"
+    }
+  },
+  {
+    "id": "c6972320-6ef2-5851-b276-3f831cb60ddc",
+    "code": null,
+    "coefficient": 6.5,
+    "sector": "Zjarrëfikësit",
+    "institution": "Zjarrëfikësit",
+    "group": "R",
+    "level": "R5",
+    "title": "Komandanti i Batalionit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.3"
+    }
+  },
+  {
+    "id": "db9af87e-b390-59be-b446-db3c8b0d2ea3",
+    "code": null,
+    "coefficient": 6.3,
+    "sector": "Zjarrëfikësit",
+    "institution": "Zjarrëfikësit",
+    "group": "R",
+    "level": "R6",
+    "title": "Zëvendës komandanti i Batalionit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.3"
+    }
+  },
+  {
+    "id": "13a96740-98cc-5ec6-bd19-7257145f7633",
+    "code": null,
+    "coefficient": 6,
+    "sector": "Zjarrëfikësit",
+    "institution": "Zjarrëfikësit",
+    "group": "R",
+    "level": "R7",
+    "title": "Udhëheqës Togu",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.3"
+    }
+  },
+  {
+    "id": "af81f28a-6fae-5582-8e73-0df655dfc546",
+    "code": null,
+    "coefficient": 5.9,
+    "sector": "Zjarrëfikësit",
+    "institution": "Zjarrëfikësit",
+    "group": "R",
+    "level": "R8",
+    "title": "Zëvendës Udhëheqës Togu",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.3"
+    }
+  },
+  {
+    "id": "2331fe60-3500-5695-a3ab-c7c669181638",
+    "code": null,
+    "coefficient": 5.7,
+    "sector": "Zjarrëfikësit",
+    "institution": "Zjarrëfikësit",
+    "group": "R",
+    "level": "R9",
+    "title": "Udhëheqës Skuadre",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.3"
+    }
+  },
+  {
+    "id": "ea3fe0c0-efd8-54f6-b080-10fc2f40b97e",
+    "code": null,
+    "coefficient": 5.5,
+    "sector": "Zjarrëfikësit",
+    "institution": "Zjarrëfikësit",
+    "group": "R",
+    "level": "R10",
+    "title": "Zv. Udhëheqës Skuadre",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.3"
+    }
+  },
+  {
+    "id": "441fc66b-fd61-5716-a771-e02f28b47065",
+    "code": null,
+    "coefficient": 5.2,
+    "sector": "Zjarrëfikësit",
+    "institution": "Zjarrëfikësit",
+    "group": "R",
+    "level": "R11",
+    "title": "Udhëheqës Grupi",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.3"
+    }
+  },
+  {
+    "id": "287ad5d4-016e-5572-b7e1-2122ba207274",
+    "code": null,
+    "coefficient": 5,
+    "sector": "Zjarrëfikësit",
+    "institution": "Zjarrëfikësit",
+    "group": "R",
+    "level": "R12",
+    "title": "Zjarrfikës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.3"
+    }
+  },
+  {
+    "id": "3dab8376-3ef2-54b9-8223-5a19a80ec7f7",
+    "code": null,
+    "coefficient": 4,
+    "sector": "Zjarrëfikësit",
+    "institution": "Zjarrëfikësit",
+    "group": "R",
+    "level": "R13",
+    "title": "Zjarrfikës praktikant",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.3"
+    }
+  }
+]

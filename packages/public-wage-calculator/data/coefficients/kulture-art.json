@@ -1,0 +1,162 @@
+[
+  {
+    "id": "K-1",
+    "code": "K1",
+    "coefficient": 13,
+    "sector": "kulturë_art",
+    "institution": null,
+    "group": "K",
+    "level": "Drejtues/e i/e Lartë 1",
+    "title": "Drejtoret/ët e përgjithshëm te institucimeve te kulturës dhe trashëgimisë kulturore",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Krijues/e dhe performues/e i/e artit dhe kulturës - Drejtues/e i/e Lartë 1.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.12 - KRIJUESIT DHE PERFORMUESIT E KULTURËS DHE ARTIT"
+    }
+  },
+  {
+    "id": "K-2",
+    "code": "K2",
+    "coefficient": 12.5,
+    "sector": "kulturë_art",
+    "institution": null,
+    "group": "K",
+    "level": "Drejtues/e i/e Lartë 2",
+    "title": "Krijues/e dhe performues/e i e artit dhe kulturës. Drejtues/e i/e Lartë 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Bazuar në Ligjin për Pagat në Sektorin Publik, Shtojca Nr. 12",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.12 - KRIJUESIT DHE PERFORMUESIT E KULTURËS DHE ARTIT"
+    }
+  },
+  {
+    "id": "K-3",
+    "code": "K3",
+    "coefficient": 11,
+    "sector": "kulturë_art",
+    "institution": null,
+    "group": "K",
+    "level": "Drejtues/e i e Lartë 3",
+    "title": "Krijues/e dhe performues/e i e artit dhe kulturës - Drejtues/e i e Lartë 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Drejtoret/ët artistik të institucioneve të kulturës. Drejtuesit e lartë të instituteve profesionale dhe shkencore të trashëgimisë kulturore.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.12 - KRIJUESIT DHE PERFORMUESIT E KULTURËS DHE ARTIT"
+    }
+  },
+  {
+    "id": "K-4",
+    "code": "K4",
+    "coefficient": 9,
+    "sector": "kulturë_art",
+    "institution": null,
+    "group": "K",
+    "level": "Drejtues/e i/e Mesëm",
+    "title": "Krijues/e dhe performues/e i/e artit dhe kulturës - Drejtues/e i/e Mesëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Koreografèt, korepetitoret, dhe pozitat që kanë funksione të shtrira në të gjitha institucionet e kulturës. Udhëheqëset it e mësive brenda mstitucioneve die instituteve, QRTK-ve dhe Drejtoretët e Përgjithshëm të Institucioneve të Kulturës dhe Trashëgimisë Kulturore.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.12 - KRIJUESIT DHE PERFORMUESIT E KULTURËS DHE ARTIT"
+    }
+  },
+  {
+    "id": "K-5",
+    "code": "K5",
+    "coefficient": 8.5,
+    "sector": "kulturë_art",
+    "institution": null,
+    "group": "K",
+    "level": "Drejtues/e i e Ulët",
+    "title": "Krijues/e dhe performues/e i e artit dhe kulturës. Drejtues/e i e Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Udhëheqëset/it e komponentit themelor strukturor, pjesë e një njësie brenda institucionit publik.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.12 - KRIJUESIT DHE PERFORMUESIT E KULTURËS DHE ARTIT"
+    }
+  },
+  {
+    "id": "K-6",
+    "code": "K6",
+    "coefficient": 7.5,
+    "sector": "kulturë_art",
+    "institution": null,
+    "group": "K",
+    "level": "Profesional 1",
+    "title": "Krijues/e dhe performues/e i/e artit dhe kulturës - Profesional 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Bazuar në Ligjin për Pagat në Sektorin Publik, Shtojca Nr. 12",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.12 - KRIJUESIT DHE PERFORMUESIT E KULTURËS DHE ARTIT"
+    }
+  },
+  {
+    "id": "K-7",
+    "code": "K7",
+    "coefficient": 7.5,
+    "sector": "kulturë_art",
+    "institution": null,
+    "group": "K",
+    "level": "Profesional 2",
+    "title": "Krijues/e dhe performues/e i/e artit dhe kulturës - Profesional 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Bazuar në Ligjin për Pagat në Sektorin Publik, Shtojca Nr. 12",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.12 - KRIJUESIT DHE PERFORMUESIT E KULTURËS DHE ARTIT"
+    }
+  },
+  {
+    "id": "K-8",
+    "code": "K8",
+    "coefficient": 6.5,
+    "sector": "kulturë_art",
+    "institution": null,
+    "group": "K",
+    "level": "Profesional 3",
+    "title": "Krijuese dhe performues/e i e artit dhe kulturës - Profesional 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Bazuar në Ligjin për Pagat në Sektorin Publik, Shtojca Nr. 12",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.12 - KRIJUESIT DHE PERFORMUESIT E KULTURËS DHE ARTIT"
+    }
+  }
+]

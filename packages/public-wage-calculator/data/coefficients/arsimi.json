@@ -1,0 +1,502 @@
+[
+  {
+    "id": "1167b26d-8312-50c0-a0ee-501061f7fadb",
+    "code": null,
+    "coefficient": 14.2,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "El",
+    "level": "Universitar",
+    "title": "Rektor",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "75091a59-ee6f-561c-b862-add8a1620e50",
+    "code": null,
+    "coefficient": 13,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E2",
+    "level": "Universitar",
+    "title": "Pro-Rektor",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në rast se nuk pezullohet puna si staf akademik, aplikohet shtesa funksionale e përcaktuar në nenin 32 të Ligjit",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "edce0b37-1b91-549d-a507-9043e743dcef",
+    "code": null,
+    "coefficient": 12.8,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E3",
+    "level": "Universitar",
+    "title": "Dekan",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në rast se nuk pezullohet puna si staf akademik, aplikohet shtesa funksionale e përcaktuar në nenin 32 të Ligjit",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "94da8fc0-10ae-5ae1-bbcf-1aa8ec1c4e54",
+    "code": null,
+    "coefficient": 12.6,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E4",
+    "level": "Universitar",
+    "title": "Pro-Dekan",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "f9e280eb-b73c-598d-b4cc-3f95bf07399d",
+    "code": null,
+    "coefficient": 12.4,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "ES",
+    "level": "Universitar",
+    "title": "Profesor i rregullt",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "b95bfcfd-f793-57d6-bebb-b05f37ab357e",
+    "code": null,
+    "coefficient": 11.4,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E6",
+    "level": "Universitar",
+    "title": "Profesor i asocuar",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "e2017bd1-3de6-58e8-a7fb-c16c67c653ff",
+    "code": null,
+    "coefficient": 10.4,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E7",
+    "level": "Universitar",
+    "title": "Profesor asistent",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "4fecc821-04ff-5188-976b-b623e79d8693",
+    "code": null,
+    "coefficient": 8.6,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E8",
+    "level": "Universitar",
+    "title": "Ligjërues",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "d22be943-c2be-5e9d-abc3-d2a4605e5f65",
+    "code": null,
+    "coefficient": 7.5,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E9",
+    "level": "Universitar",
+    "title": "Lektor/korepetitor",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "d646aea0-ea2c-5cfb-94ef-b402b85a32ec",
+    "code": null,
+    "coefficient": 7.2,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E10",
+    "level": "Universitar",
+    "title": "Asistent/Hulumtues i Pavarur",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "8cdfea65-a3ac-5e8c-9e6c-9d08fa53bc19",
+    "code": null,
+    "coefficient": 6.6,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "ELl",
+    "level": "Universitar",
+    "title": "Asistent i ri/Hulumtues",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "f4351112-ed33-5020-a0fe-538f8f324b4d",
+    "code": null,
+    "coefficient": 6.4,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E12",
+    "level": "Universitar",
+    "title": "Laboranti në Universitet",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "bf58677e-38bf-53ea-9777-2635e6680233",
+    "code": null,
+    "coefficient": 6.3,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E13",
+    "level": "Parauniversitar",
+    "title": "Drejtore/i e/i Shkollës Speciale (Qendra Burimore)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "2daad68c-d1cb-5891-8bf8-1afd5d25c88f",
+    "code": null,
+    "coefficient": 6.3,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E13",
+    "level": "Parauniversitar",
+    "title": "Drejtore/i e/i Shkollës Fillore dhe të Mesme të Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "e91c1226-27cb-550f-a4c0-a39577138554",
+    "code": null,
+    "coefficient": 6.2,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E14",
+    "level": "Parauniversitar",
+    "title": "Zëvendës Drejtore/i e/i Shkollës Mesme të Lartë",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "00dbc4b0-21b0-59fd-95ad-0506ab816178",
+    "code": null,
+    "coefficient": 6,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E15",
+    "level": "Parauniversitar",
+    "title": "Zëvendës Drejtore/i e/i Shkollës Fillore dhe të Mesme të Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "585f6e0a-8d63-5dc3-98dc-ce111f6574c2",
+    "code": null,
+    "coefficient": 5.9,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E16",
+    "level": "Parauniversitar",
+    "title": "Drejtore/i e/i institucioneve Parashkollore",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "c120e468-3c07-52da-838d-abe500dcfb5e",
+    "code": null,
+    "coefficient": 5.8,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E17",
+    "level": "Parauniversitar",
+    "title": "Mësimdhënëse në Shkollës Speciale (Qendra Burimore)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "17297451-addd-5e34-a9e7-c867bc732565",
+    "code": null,
+    "coefficient": 5.8,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E17",
+    "level": "Parauniversitar",
+    "title": "Këshilltare i/e karrierës në shkollë të mesme të lartë",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "c536aa6d-9748-54f9-a1c4-a270d84547c4",
+    "code": null,
+    "coefficient": 5.7,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E18",
+    "level": "Parauniversitar",
+    "title": "Pedagog/e dhe/apo Psikolog/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "9d2de92b-60c9-5293-91a9-4ced682c7c2c",
+    "code": null,
+    "coefficient": 5.6,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E19",
+    "level": "Parauniversitar",
+    "title": "Mësimdhënësve në Shkollë fillore dhe të Mesme të Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "162f028e-235a-57d9-9f16-ee8a2540b81d",
+    "code": null,
+    "coefficient": 5.2,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "E20",
+    "level": "Parauniversitar",
+    "title": "Edukator/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "42dbd37a-1b19-5c88-a54b-00f345e73c31",
+    "code": null,
+    "coefficient": 5.1,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "F21",
+    "level": "Parauniversitar",
+    "title": "Edukator e mbështetës/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "d2b690ff-99ae-5f6a-a351-d9fba5c57ada",
+    "code": null,
+    "coefficient": 5,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "F22",
+    "level": "Parauniversitar",
+    "title": "Asistent/e në arsim special",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  },
+  {
+    "id": "a273c788-9bc2-56bf-ae90-fd5feb1712fa",
+    "code": null,
+    "coefficient": 4.9,
+    "sector": "arsimi",
+    "institution": "Arsimi Universitar dhe Parauniversitar",
+    "group": "F23",
+    "level": "Parauniversitar",
+    "title": "Biblotekist/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Ligji NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 8"
+    }
+  }
+]

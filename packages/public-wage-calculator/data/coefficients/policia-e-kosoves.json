@@ -1,0 +1,262 @@
+[
+  {
+    "id": "a56041fc-0ffe-5586-844b-627bca41fa1c",
+    "code": null,
+    "coefficient": 14.5,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S1",
+    "title": "Drejtor/e i/e Përgjithshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Paguhet në bazë të funksionit dhe jo gradës",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  },
+  {
+    "id": "93c258ab-080f-5679-8e4a-50a5a534f6fe",
+    "code": null,
+    "coefficient": 12.8,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S2",
+    "title": "Zëvendës Drejtor/e i e Përgjithshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Paguhet në bazë të funksionit dhe jo gradës",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  },
+  {
+    "id": "2bad4a79-ad4f-5aa2-b7cc-d60e89a5ce1a",
+    "code": null,
+    "coefficient": 11.2,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S3",
+    "title": "Drejtor/e i/e Departamentit në Polici",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Paguhet në bazë të funksionit dhe jo gradës",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  },
+  {
+    "id": "a31c27d4-3833-55d6-8ddb-519a5fa51437",
+    "code": null,
+    "coefficient": 10.2,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S4",
+    "title": "Kolonel",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  },
+  {
+    "id": "5457fa74-e75b-5004-9cd4-ba06da2a37ad",
+    "code": null,
+    "coefficient": 9.2,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S5",
+    "title": "Nënkolonel",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  },
+  {
+    "id": "59a7511f-4412-52e8-9b21-fa14b736c01d",
+    "code": null,
+    "coefficient": 8.2,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S6",
+    "title": "Major",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  },
+  {
+    "id": "7922a100-830d-5529-93bb-e38c5fd9c691",
+    "code": null,
+    "coefficient": 7.4,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S7",
+    "title": "Kapiten",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  },
+  {
+    "id": "99823803-96bb-594f-92cd-12cc620299f1",
+    "code": null,
+    "coefficient": 7,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S8",
+    "title": "Toger",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  },
+  {
+    "id": "4594ab0a-6f73-5061-897d-d09552d73156",
+    "code": null,
+    "coefficient": 6.4,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S9",
+    "title": "Rreshter",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  },
+  {
+    "id": "6bc9421f-9504-5d2d-9cda-cb49e5f12024",
+    "code": null,
+    "coefficient": 5.9,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S10",
+    "title": "Polic i Lartë",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  },
+  {
+    "id": "aad0fac8-c506-5dd7-be2b-2f904a92c623",
+    "code": null,
+    "coefficient": 5,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S11",
+    "title": "Polic",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  },
+  {
+    "id": "752354e4-dd15-5f97-aa7c-b0993e5b6ddd",
+    "code": null,
+    "coefficient": 4.5,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S12",
+    "title": "Polici Ri",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  },
+  {
+    "id": "c0d415ce-976a-515e-a7f7-35aac5df1376",
+    "code": null,
+    "coefficient": 2,
+    "sector": "Policia e Kosovës",
+    "institution": "Policia e Kosovës",
+    "group": "S",
+    "level": "S13",
+    "title": "Kadet Policor",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.1"
+    }
+  }
+]

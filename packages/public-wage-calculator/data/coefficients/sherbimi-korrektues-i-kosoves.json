@@ -1,0 +1,102 @@
+[
+  {
+    "id": "24825f9c-0f39-56e5-af19-591ec06a8100",
+    "code": null,
+    "coefficient": 7,
+    "sector": "Shërbimi Korrektues i Kosovës",
+    "institution": "Shërbimi Korrektues i Kosovës",
+    "group": "T",
+    "level": "T1",
+    "title": "Udhëheqës i Pavionit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 7"
+    }
+  },
+  {
+    "id": "fc4684eb-f598-5264-a6db-f6240e619344",
+    "code": null,
+    "coefficient": 6.5,
+    "sector": "Shërbimi Korrektues i Kosovës",
+    "institution": "Shërbimi Korrektues i Kosovës",
+    "group": "T",
+    "level": "T2",
+    "title": "Mbikëqyrës i lartë",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 7"
+    }
+  },
+  {
+    "id": "00c1f755-afb7-5754-9cff-4f4e725ba405",
+    "code": null,
+    "coefficient": 6,
+    "sector": "Shërbimi Korrektues i Kosovës",
+    "institution": "Shërbimi Korrektues i Kosovës",
+    "group": "T",
+    "level": "T3",
+    "title": "Mbikëqyrës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 7"
+    }
+  },
+  {
+    "id": "85baf44c-f7c1-5b22-b4ed-b33c4c510aff",
+    "code": null,
+    "coefficient": 5.5,
+    "sector": "Shërbimi Korrektues i Kosovës",
+    "institution": "Shërbimi Korrektues i Kosovës",
+    "group": "T",
+    "level": "T4",
+    "title": "Zyrtar Korrektues",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 7"
+    }
+  },
+  {
+    "id": "4d66f7f5-57d2-57da-8b0e-171191940e21",
+    "code": null,
+    "coefficient": 2,
+    "sector": "Shërbimi Korrektues i Kosovës",
+    "institution": "Shërbimi Korrektues i Kosovës",
+    "group": "T",
+    "level": "T5",
+    "title": "Kadet Korrektues",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 7"
+    }
+  }
+]

@@ -4,6 +4,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
   BarChart3,
+  Building2,
   Car,
   HandCoins,
   PackageSearch,
@@ -87,6 +88,15 @@ const tools: ToolCard[] = [
     cta: "Llogarit kostot",
     icon: Car,
     category: "Transport",
+  },
+  {
+    name: "Pagat e shërbyesve civilë",
+    href: "/public-wage-calculator",
+    description:
+      "Llogarit pagën mujore bruto sipas koeficientit C, vlerës Z, përvojës dhe orëve shtesë në sektorin publik.",
+    cta: "Llogarit pagat publike",
+    icon: Building2,
+    category: "Administrata publike",
   },
   {
     name: "Kalkulatori i pagave",

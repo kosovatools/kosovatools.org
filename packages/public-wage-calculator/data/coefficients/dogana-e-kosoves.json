@@ -1,0 +1,182 @@
+[
+  {
+    "id": "abbde020-0552-5969-a06c-8539cc1f9d15",
+    "code": null,
+    "coefficient": 14.5,
+    "sector": "Dogana e Kosovës",
+    "institution": "Dogana e Kosovës",
+    "group": "N",
+    "level": "N1",
+    "title": "Drejtore/i e/i Përgjithshëm i Doganës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.1"
+    }
+  },
+  {
+    "id": "bab5cecf-ad98-5770-bed4-40b2f66fc0bb",
+    "code": null,
+    "coefficient": 12,
+    "sector": "Dogana e Kosovës",
+    "institution": "Dogana e Kosovës",
+    "group": "N",
+    "level": "N2",
+    "title": "Drejtues 1 (Niveli i gjashtë Doganor)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.1"
+    }
+  },
+  {
+    "id": "6a868a83-c157-5fa2-a957-8132092e409a",
+    "code": null,
+    "coefficient": 10.4,
+    "sector": "Dogana e Kosovës",
+    "institution": "Dogana e Kosovës",
+    "group": "N",
+    "level": "N3",
+    "title": "Drejtues 2 (Niveli i pestë Doganor)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.1"
+    }
+  },
+  {
+    "id": "7b697a07-8b81-534a-a9d5-1693085b1d9d",
+    "code": null,
+    "coefficient": 9.4,
+    "sector": "Dogana e Kosovës",
+    "institution": "Dogana e Kosovës",
+    "group": "N",
+    "level": "N4",
+    "title": "Zyrtar Doganor 1 (Niveli i katërt Doganor)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.1"
+    }
+  },
+  {
+    "id": "5201490e-46d9-5702-9cdd-3bfdadd13887",
+    "code": null,
+    "coefficient": 7.8,
+    "sector": "Dogana e Kosovës",
+    "institution": "Dogana e Kosovës",
+    "group": "N",
+    "level": "N5",
+    "title": "Zyrtar Doganor 2 (Niveli i tretë Doganor)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.1"
+    }
+  },
+  {
+    "id": "45f6a3e5-9e48-5a1b-90e8-cdd6e199bc66",
+    "code": null,
+    "coefficient": 7.3,
+    "sector": "Dogana e Kosovës",
+    "institution": "Dogana e Kosovës",
+    "group": "N",
+    "level": "N6",
+    "title": "Zyrtar Doganor 3 (Niveli i dytë Doganor)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.1"
+    }
+  },
+  {
+    "id": "3cd784d7-a602-5c7c-b051-db51f441abeb",
+    "code": null,
+    "coefficient": 6.5,
+    "sector": "Dogana e Kosovës",
+    "institution": "Dogana e Kosovës",
+    "group": "N",
+    "level": "N7",
+    "title": "Zyrtar Doganor 3 (Niveli i parë Doganor)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.1"
+    }
+  },
+  {
+    "id": "2f43422a-6855-541a-85c8-f43c0d6c28d7",
+    "code": null,
+    "coefficient": 4.5,
+    "sector": "Dogana e Kosovës",
+    "institution": "Dogana e Kosovës",
+    "group": "N",
+    "level": "N8",
+    "title": "Asistent Doganor",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.1"
+    }
+  },
+  {
+    "id": "4f8a26fb-0dfa-5de5-96a4-203493520467",
+    "code": null,
+    "coefficient": 2,
+    "sector": "Dogana e Kosovës",
+    "institution": "Dogana e Kosovës",
+    "group": "N",
+    "level": "N9",
+    "title": "Kadet Doganor",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.1"
+    }
+  }
+]

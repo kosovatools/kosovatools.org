@@ -1,0 +1,302 @@
+[
+  {
+    "id": "AB-1",
+    "code": "W1",
+    "coefficient": 9,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Njësia Qendrore Harmonizuese",
+    "group": "W",
+    "level": null,
+    "title": "Drejtore/i e/t Njësisë Qendrore Harmonizuese",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-2",
+    "code": "W2",
+    "coefficient": 8.3,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Njësia Qendrore Harmonizuese (MFK/AB)",
+    "group": "W",
+    "level": null,
+    "title": "Udhëheqës Divizioni NjQH MFK/AB",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-3",
+    "code": "W3",
+    "coefficient": 7,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Njësia Qendrore Harmonizuese (MFK/AB)",
+    "group": "W",
+    "level": null,
+    "title": "Ekspert/e për MFK/AB",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-4",
+    "code": "W4",
+    "coefficient": 8.9,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Presidenca",
+    "group": "W",
+    "level": null,
+    "title": "Udhëheqëse ve Auditimit të Brendshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në Presidencë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-5",
+    "code": "W5",
+    "coefficient": 8.8,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Gjykata Kushtetuese",
+    "group": "W",
+    "level": null,
+    "title": "Udhëheqëse ve Auditimit të Brendshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në Gjykatë Kushtetuese.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-6",
+    "code": "W6",
+    "coefficient": 8.7,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Zyre e Kryeministrit, Kuvendi i Kosovës, Gjykata dhe Prokurori",
+    "group": "W",
+    "level": null,
+    "title": "Udhëheqëse ve Auditimit të Brendshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në Zyre të Kryeministrit. Kuvend të Kosovës dhe Gjykatë dhe Prokurori.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-7",
+    "code": "W7",
+    "coefficient": 8.5,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Institucione të Pavarura Kushtetuese dhe Agjenci të Pavarura dhe Rregullatore",
+    "group": "W",
+    "level": null,
+    "title": "Udhëheqëse ve Auditimit të Brendshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në Institucione të Pavarura Kushtetuese dhe Agjenci të Pavarura dhe Rregullatore.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-8",
+    "code": "W8",
+    "coefficient": 8.4,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Ministri",
+    "group": "W",
+    "level": null,
+    "title": "Udhëheqëse ve Auditimit të Brendshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në Ministri.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-9",
+    "code": "W9",
+    "coefficient": 8.3,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Agjenci Ekzekutive, Komuna dhe Administratë e Shërbimit Publik",
+    "group": "W",
+    "level": null,
+    "title": "Udhëheqëse ve Auditimit të Brendshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në Agjenci Ekzekutive, Komuna dhe Administratë të Shërbimit Publik.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-10",
+    "code": "W10",
+    "coefficient": 6.8,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Presidenca",
+    "group": "W",
+    "level": null,
+    "title": "Auditor i Brendshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në Presidence.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-11",
+    "code": "W11",
+    "coefficient": 6.7,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Gjykata Kushtetuese",
+    "group": "W",
+    "level": null,
+    "title": "Auditor i Brendshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në Gjykatë Kushtetuese.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-12",
+    "code": "W12",
+    "coefficient": 6.6,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Zyre e Kryeministrit, Kuvendi i Kosovës, Gjykata dhe Prokurori",
+    "group": "W",
+    "level": null,
+    "title": "Auditor i Brendshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në Zyre të Kryeministrit, Kuvend të Kosovës dhe Gjykatë dhe Prokurori.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-13",
+    "code": "W13",
+    "coefficient": 6.4,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Institucione të Pavarura Kushtetuese dhe Agjenci të Pavarura dhe Rregullatore",
+    "group": "W",
+    "level": null,
+    "title": "Auditor i Brendshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në Institucione të Pavarura Kushtetuese dhe Agjenci të Pavarura dhe Rregullatore.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-14",
+    "code": "W14",
+    "coefficient": 6.2,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Ministri",
+    "group": "W",
+    "level": null,
+    "title": "Auditor i Brendshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në Ministri.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  },
+  {
+    "id": "AB-15",
+    "code": "W15",
+    "coefficient": 6,
+    "sector": "auditimi_i_brendshëm",
+    "institution": "Agjenci Ekzekutive, Komuna dhe Administratë e Shërbimit Publik",
+    "group": "W",
+    "level": null,
+    "title": "Auditor i Brendshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në Agjenci Ekzekutive, Komuna dhe Administratë të Shërbimit Publik.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA14.2.-AUDITIMI I BRENDSHËM"
+    }
+  }
+]

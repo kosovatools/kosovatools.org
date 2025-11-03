@@ -1,0 +1,82 @@
+[
+  {
+    "id": "ZKA-1",
+    "code": "Z1",
+    "coefficient": 10,
+    "sector": "auditimi",
+    "institution": "Zyra Kombëtare e Auditimit",
+    "group": "Z",
+    "level": null,
+    "title": "Auditor/e Specialist",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA 14.1. ZYRA KOMBËTARE E AUDITIMIT"
+    }
+  },
+  {
+    "id": "ZKA-2",
+    "code": "Z2",
+    "coefficient": 9,
+    "sector": "auditimi",
+    "institution": "Zyra Kombëtare e Auditimit",
+    "group": "Z",
+    "level": null,
+    "title": "Auditor/e i/e Lartë",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA 14.1. ZYRA KOMBËTARE E AUDITIMIT"
+    }
+  },
+  {
+    "id": "ZKA-3",
+    "code": "Z3",
+    "coefficient": 8,
+    "sector": "auditimi",
+    "institution": "Zyra Kombëtare e Auditimit",
+    "group": "Z",
+    "level": null,
+    "title": "Auditor/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA 14.1. ZYRA KOMBËTARE E AUDITIMIT"
+    }
+  },
+  {
+    "id": "ZKA-4",
+    "code": "Z4",
+    "coefficient": 7,
+    "sector": "auditimi",
+    "institution": "Zyra Kombëtare e Auditimit",
+    "group": "Z",
+    "level": null,
+    "title": "Auditor/e i/e ri/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.14-POZITAT E TJERA, SHTOJCA 14.1. ZYRA KOMBËTARE E AUDITIMIT"
+    }
+  }
+]

@@ -1,0 +1,142 @@
+[
+  {
+    "id": "D-1",
+    "code": "D1",
+    "coefficient": 12.8,
+    "sector": "shërbimi_i_jashtëm",
+    "institution": null,
+    "group": "D",
+    "level": "D1",
+    "title": "Ambasador",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.11 - ANËTARËT E SHËRBIMIT TË JASHTËM"
+    }
+  },
+  {
+    "id": "D-2",
+    "code": "D2",
+    "coefficient": 10.4,
+    "sector": "shërbimi_i_jashtëm",
+    "institution": null,
+    "group": "D",
+    "level": "D2",
+    "title": "Ministër në Mision Diplomatik",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.11 - ANËTARËT E SHËRBIMIT TË JASHTËM"
+    }
+  },
+  {
+    "id": "D-3",
+    "code": "D3",
+    "coefficient": 9.8,
+    "sector": "shërbimi_i_jashtëm",
+    "institution": null,
+    "group": "D",
+    "level": "D3",
+    "title": "Ministër këshilltar në Mision Diplomatik",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.11 - ANËTARËT E SHËRBIMIT TË JASHTËM"
+    }
+  },
+  {
+    "id": "D-5",
+    "code": "D4",
+    "coefficient": 8.4,
+    "sector": "shërbimi_i_jashtëm",
+    "institution": null,
+    "group": "D",
+    "level": "D4",
+    "title": "Konsull i Përgjithshëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.11 - ANËTARËT E SHËRBIMIT TË JASHTËM"
+    }
+  },
+  {
+    "id": "D-6",
+    "code": "D5",
+    "coefficient": 7.6,
+    "sector": "shërbimi_i_jashtëm",
+    "institution": null,
+    "group": "D",
+    "level": "D5",
+    "title": "Këshilltar",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.11 - ANËTARËT E SHËRBIMIT TË JASHTËM"
+    }
+  },
+  {
+    "id": "D-7",
+    "code": "D6",
+    "coefficient": 7.2,
+    "sector": "shërbimi_i_jashtëm",
+    "institution": null,
+    "group": "D",
+    "level": "D6",
+    "title": "Sekretar 1 në Mision Diplomatik",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.11 - ANËTARËT E SHËRBIMIT TË JASHTËM"
+    }
+  },
+  {
+    "id": "D-8",
+    "code": "D7",
+    "coefficient": 5.8,
+    "sector": "shërbimi_i_jashtëm",
+    "institution": null,
+    "group": "D",
+    "level": "D7",
+    "title": "Konsull",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Sekretar II në Mision Diplomatik, Zv. Konsull, Sekretar III në Mision Diplomatik, Agjent Konsullor, Atashe. ",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.11 - ANËTARËT E SHËRBIMIT TË JASHTËM"
+    }
+  }
+]

@@ -1,0 +1,382 @@
+[
+  {
+    "id": "11125661-599a-54a6-90a2-4dfee376a912",
+    "code": null,
+    "coefficient": 15,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": null,
+    "title": "Komandant i FSK-së",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Koeficient i ndryshëm nga Gjenerallejtënanti, për shkak të funksionit shtesë",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "e0b2bbe4-ae1b-5e0c-855f-5a4555f342ad",
+    "code": null,
+    "coefficient": 14.5,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U2",
+    "title": "Gjenerallejtënant",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "1e18636d-3bdc-580d-a5cc-b5b24b4249f4",
+    "code": null,
+    "coefficient": 14,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U3",
+    "title": "Gjeneralmajor",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "6d517a35-9efe-59c2-9d9a-651adf11143a",
+    "code": null,
+    "coefficient": 13,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U4",
+    "title": "Gjeneral brigade",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "78b73a73-89d7-517a-b6af-8cc84dc3d69d",
+    "code": null,
+    "coefficient": 12,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U5",
+    "title": "Kolonel",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "4d06a264-77e7-5b9f-b2d1-10093cbd0de1",
+    "code": null,
+    "coefficient": 11,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U6",
+    "title": "Nënkolonel",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "9b21f7e3-bc0f-5e1a-b5ea-a286003e30b9",
+    "code": null,
+    "coefficient": 10,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U7",
+    "title": "Major",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "0ed3039d-5d7c-58ce-b03b-94d4c969ea1d",
+    "code": null,
+    "coefficient": 9,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U8",
+    "title": "Kapiten",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "51e3da94-5a44-5ddd-94c8-76a205b81bd7",
+    "code": null,
+    "coefficient": 9,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U8",
+    "title": "Rreshter Major, Rreshter Major i Komandës ose Rreshter Major 1 Forcës së Sigurisë së Kosovës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "dea3188c-a8b6-5289-8e6c-9e84827d8eb4",
+    "code": null,
+    "coefficient": 8.2,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U9",
+    "title": "Toger",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "803013e0-2bc0-5201-ae9e-4a005fd9e5b0",
+    "code": null,
+    "coefficient": 8.2,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U9",
+    "title": "Rreshter i Parë ose Rreshter Master",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "508d0f74-553c-5bfd-8a14-a46930af7fcf",
+    "code": null,
+    "coefficient": 7.4,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U10",
+    "title": "Nëntoger",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "463fe4ea-d7ea-5179-afef-5bdd5feee5c2",
+    "code": null,
+    "coefficient": 7.4,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U10",
+    "title": "Rreshter i Klasit të Parë",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "1913dd6e-0927-5bf9-ad79-eab99317ee59",
+    "code": null,
+    "coefficient": 7,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U11",
+    "title": "Rreshter Shtabor",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "84040996-6f42-5814-b651-2687986915d8",
+    "code": null,
+    "coefficient": 6.6,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U12",
+    "title": "Rreshter",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "e7562ec4-12e0-59f3-8801-43c41728d775",
+    "code": null,
+    "coefficient": 6.1,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U13",
+    "title": "Tetar/Specialist",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "545cf034-ddcd-5d37-884b-deeb74f4a2fb",
+    "code": null,
+    "coefficient": 5.8,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U14",
+    "title": "Ushtar i Klasit të Parë",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "f7f57901-a513-572d-9dc1-bfa2359a97f2",
+    "code": null,
+    "coefficient": 5.6,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U15",
+    "title": "Ushtar",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  },
+  {
+    "id": "f1fec602-d6aa-5073-ba1a-32a4172028c1",
+    "code": null,
+    "coefficient": 2,
+    "sector": "Forca e Sigurisë së Kosovës",
+    "institution": "FSK",
+    "group": "U",
+    "level": "U16",
+    "title": "Rekrut Kadet i FSK-së",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 4"
+    }
+  }
+]

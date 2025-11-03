@@ -1,0 +1,542 @@
+[
+  {
+    "id": "c36de5b3-a1de-531e-bf1b-92d8f6d98977",
+    "code": null,
+    "coefficient": 17,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J1",
+    "title": "Kryetarja/i e/i Gjykatës Supreme",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "2febc4b9-2fd8-5cd4-b25c-ad96f536dfa8",
+    "code": null,
+    "coefficient": 16.5,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J2",
+    "title": "Kryesueseli e i Këshillit Gjyqësor të Kosovës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "bc4929e3-abd1-5b2c-85ef-bd0baf198d1e",
+    "code": null,
+    "coefficient": 15.5,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J3",
+    "title": "Gjyqtarei e/i Gjykatës Supreme",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "cd0988f6-9abd-5a55-a94b-ae8874d45b6c",
+    "code": null,
+    "coefficient": 15.5,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J3",
+    "title": "Gjyqtare/i Mbikëqyrës/e e/i Dhomës së Posaçme të Gjykatës Supreme",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "9d52d0ec-540a-54e4-9fbf-56897a28044b",
+    "code": null,
+    "coefficient": 15.5,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J3",
+    "title": "Zëvendës Kryesuese/i e/i Këshillit Gjyqësor të Kosovës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "b3037d62-a73e-5072-8821-08b522461b86",
+    "code": null,
+    "coefficient": 14,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J4",
+    "title": "Kryetarja/i e/i Gjykatës së Apelit dhe Kryetarja/ii Gjykatës Komerciale",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "252f518d-e0c2-5e84-9a39-da03297e07dc",
+    "code": null,
+    "coefficient": 13.3,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J5",
+    "title": "Gjyqtare11 Gjykatës së Apelit/Gjyqtare ie/1 dhomës së shkallës së dytë të Gjykatës Komericale",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "ab2a28dc-dbf1-5500-9a12-792ac27c2809",
+    "code": null,
+    "coefficient": 13.3,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J5",
+    "title": "Kryetarjai e/i Gjykatës Themelore",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "03404874-c725-54be-a4eb-3cfce224ef9b",
+    "code": null,
+    "coefficient": 13.3,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J5",
+    "title": "Gjyqtare/i e/i Departamentit Special në Gjykatën Themelore",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "e156dea7-ff1f-5f28-bf5e-e0b267f74b45",
+    "code": null,
+    "coefficient": 13.3,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J5",
+    "title": "Gjyqtare/ Mbikëqyrës Degës së Gjykatës Themelore",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "8b82989e-490a-532a-bb69-432dbb70d4ac",
+    "code": null,
+    "coefficient": 12.8,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J6",
+    "title": "Gjyqtarei e/i Gjykatës Themelore - Departamenti për Krime të Rënda dhe Departamenti për të Mitur",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "58c8dc69-ee86-534b-80c3-0914e70fbfde",
+    "code": null,
+    "coefficient": 12.55,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J7",
+    "title": "Gjyqtare/i e/i Gjykatës Themelore - Departamentit Ekonomik",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "8137cb19-f257-56fd-9a4f-8ddb66746c77",
+    "code": null,
+    "coefficient": 12.55,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J7",
+    "title": "Gjyqtare/i e/i Gjykatës Themelore -Departamentit Administrativ",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "7962eae3-1196-53d6-bad6-8e5ad8f75833",
+    "code": null,
+    "coefficient": 12,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J8",
+    "title": "Gjyqtarei e/i Gjykatës Themelore dhe Gjyqtare/i eli dhomës së shkallës së parë të Gjykatës Komericale",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "69453bec-620d-5119-b158-c5b0470f1121",
+    "code": null,
+    "coefficient": 9.4,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjyqësori",
+    "group": "J",
+    "level": "J9",
+    "title": "Inspektor/e dhe Ekspert/e Gjyqësore",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "c0a12584-a44a-5768-8756-c6f9e9a85f37",
+    "code": null,
+    "coefficient": 8.5,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjykata Supreme",
+    "group": "J",
+    "level": "J10",
+    "title": "Bashkëpunëtorie Profesional/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "e3ce8c5e-547f-5d87-b095-83af24d0f55b",
+    "code": null,
+    "coefficient": 8.5,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjykata e Apelit dhe Gjykata Komerciale",
+    "group": "J",
+    "level": "J10",
+    "title": "Bashkëpunëtorie Profesional/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "331f8eb8-c14c-5618-9cb8-231e4149d0da",
+    "code": null,
+    "coefficient": 7.14,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Gjykata Themelore",
+    "group": "J",
+    "level": null,
+    "title": "Bashkëpunëtorie Profesional/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.1"
+    }
+  },
+  {
+    "id": "99d85f8d-be7e-5c98-a2b1-cb18eeb3cd2c",
+    "code": null,
+    "coefficient": 12.3,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Administrata e Gjyqësorit",
+    "group": "J",
+    "level": "J12",
+    "title": "Drejtues/e i e Lartë",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.2"
+    }
+  },
+  {
+    "id": "f1ed9545-7bf0-5f23-8d2b-3a93f190abe2",
+    "code": null,
+    "coefficient": 8.6,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Administrata e Gjyqësorit",
+    "group": "J",
+    "level": "J13",
+    "title": "Drejtues/e i/e Mesëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.2"
+    }
+  },
+  {
+    "id": "540efcf1-3f8f-5502-9e95-6d7e2a2f1180",
+    "code": null,
+    "coefficient": 7.5,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Administrata e Gjyqësorit (Në Gjykatë)",
+    "group": "J",
+    "level": "J14",
+    "title": "Drejtuese e Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.2"
+    }
+  },
+  {
+    "id": "001a69d5-3cde-5cde-902c-e251ed14feaf",
+    "code": null,
+    "coefficient": 5.85,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Administrata e Gjyqësorit (Në Gjykatë)",
+    "group": "J",
+    "level": "J15",
+    "title": "Profesional 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.2"
+    }
+  },
+  {
+    "id": "22955020-5f1a-58ab-af78-6db7517869aa",
+    "code": null,
+    "coefficient": 5.3,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Administrata e Gjyqësorit",
+    "group": "J",
+    "level": "J16",
+    "title": "Profesional 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.2"
+    }
+  },
+  {
+    "id": "cd2ffd31-2c5a-50fa-8b5b-1e7269564308",
+    "code": null,
+    "coefficient": 4.3,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Administrata e Gjyqësorit",
+    "group": "J",
+    "level": "J17",
+    "title": "Profesional 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.2"
+    }
+  },
+  {
+    "id": "1ecf9e87-cd14-5d73-a016-86e2974f5831",
+    "code": null,
+    "coefficient": 4,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Administrata e Gjyqësorit",
+    "group": "J",
+    "level": "J18",
+    "title": "Nëpunës/e teknik/e dhe mbështetës/e 1 (Udhëheqës/e)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.2"
+    }
+  },
+  {
+    "id": "f0183efd-d8ab-5a22-8b15-0e284b315081",
+    "code": null,
+    "coefficient": 3.9,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Administrata e Gjyqësorit",
+    "group": "J",
+    "level": "J19",
+    "title": "Nëpunës e teknik/e dhe mbështetës/e 2 (vozitës, korrier, kuzhinier, sigurimi, mekanik, elektricist, zdrukthëtar, ujë instalues, farkëtar dhe pozita të ngjashme)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.2"
+    }
+  },
+  {
+    "id": "0894184c-8aac-5fd6-8f63-3cf26f0b89ad",
+    "code": null,
+    "coefficient": 3.8,
+    "sector": "Sistemi Gjyqësor",
+    "institution": "Administrata e Gjyqësorit",
+    "group": "J",
+    "level": "J20",
+    "title": "Nëpunës/e teknik/e dhe mbështetës/e 3 (roje, kopshtar, shtëpiak, autolarës, rrobalarës dhe pozita të ngjashme)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 2.2"
+    }
+  }
+]

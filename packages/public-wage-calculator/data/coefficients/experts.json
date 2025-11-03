@@ -1,0 +1,162 @@
+[
+  {
+    "id": "e1x2p3t4-0001-4000-8000-000000000001",
+    "code": "EKS-001",
+    "coefficient": 16.0,
+    "sector": "experts",
+    "institution": "Agjenci/Sisteme Shtetërore",
+    "group": "B",
+    "level": "B1",
+    "title": "Ekspert/e 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Drejtues i/e lartë në fushën e aviacionit civil dhe navigimit ajror; Drejtues/e i/e lartë profesional i kualifikuar që udhëheq një agjenci kyçe në fushën e sistemeve shtetërore të informacionit...",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.4"
+    }
+  },
+  {
+    "id": "e1x2p3t4-0002-4000-8000-000000000002",
+    "code": "EKS-002",
+    "coefficient": 15.5,
+    "sector": "experts",
+    "institution": "Agjenci/Sisteme Shtetërore",
+    "group": "B",
+    "level": "B2",
+    "title": "Ekspert/e 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Drejtues/e i/e mesëm që udhëheq një departament funksional apo operativ për shërbimet në fushën e aviacionit civil dhe navigimit ajror...",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.4"
+    }
+  },
+  {
+    "id": "e1x2p3t4-0003-4000-8000-000000000003",
+    "code": "EKS-003",
+    "coefficient": 15.0,
+    "sector": "experts",
+    "institution": "Agjenci/Sisteme Shtetërore",
+    "group": "B",
+    "level": "B3",
+    "title": "Ekspert/e 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Drejtues/e i/e ulët që udhëheq një divizion funksional apo operativ në fushën e aviacionit civil dhe navigimit ajror...",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.4"
+    }
+  },
+  {
+    "id": "e1x2p3t4-0004-4000-8000-000000000004",
+    "code": "EKS-004",
+    "coefficient": 14.0,
+    "sector": "experts",
+    "institution": "Agjenci/Sisteme Shtetërore",
+    "group": "B",
+    "level": "B4",
+    "title": "Ekspert/e 4",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Inspektor Hetues në fushën e aviacionit civil/ushtarak dhe mbikëqyrës në fushën e navigimit ajror; Ekspert kyç i kualifikuar si zhvillues i lartë i aplikacioneve, ekspert i forenzikës së TI-së...",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.4"
+    }
+  },
+  {
+    "id": "e1x2p3t4-0005-4000-8000-000000000005",
+    "code": "EKS-005",
+    "coefficient": 12.0,
+    "sector": "experts",
+    "institution": "AKK/Aviacion Civil/Sisteme Shtetërore",
+    "group": "B",
+    "level": "B5",
+    "title": "Ekspert/e 5",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Drejtore e një departamenti hetues/operativ në AKK, Zyrtar në departamente të shërbimeve operative në fushën e aviacionit civil dhe kontrollor i trafikut ajror...",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.4"
+    }
+  },
+  {
+    "id": "e1x2p3t4-0006-4000-8000-000000000006",
+    "code": "EKS-006",
+    "coefficient": 11.0,
+    "sector": "experts",
+    "institution": "Forenzikë/AKK/Aviacion Civil",
+    "group": "B",
+    "level": "B6",
+    "title": "Ekspert/e 6",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Drejtues/e i/e Mesëm në Forenzikë, Udhëheqës i një divizioni hetues/operativ në AKK, Ekspert në fushën e aviacionit civil dhe navigimit ajror; Ekspert kyç në agjenci rregullatore...",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.4"
+    }
+  },
+  {
+    "id": "e1x2p3t4-0007-4000-8000-000000000007",
+    "code": "EKS-007",
+    "coefficient": 10.0,
+    "sector": "experts",
+    "institution": "Aviacion Civil/Agjenci Rregullatore",
+    "group": "B",
+    "level": "B7",
+    "title": "Ekspert/e 7",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Specialist në fushën e aviacionit civil dhe navigimit ajror, Ekspert kyç në agjenci rregullatore, Ekspert kyç i kualifikuar si Specialist i Sistemeve...",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.4"
+    }
+  },
+  {
+    "id": "e1x2p3t4-0008-4000-8000-000000000008",
+    "code": "EKS-008",
+    "coefficient": 9.4,
+    "sector": "experts",
+    "institution": "AKK/Forenzikë",
+    "group": "B",
+    "level": "B8",
+    "title": "Ekspert/e 8",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Zyrtar Profesional në një divizion hetues/operativ në AKK, Ekspert Forenzikë dhe pozitat e përcaktuara në akt nënligjor",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.4"
+    }
+  }
+]

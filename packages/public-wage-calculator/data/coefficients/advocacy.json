@@ -1,0 +1,162 @@
+[
+  {
+    "id": "a1b2c3d4-0001-4000-8000-000000000001",
+    "code": "AVO-001",
+    "coefficient": 9.5,
+    "sector": "advocacy",
+    "institution": "Avokatura Shtetërore",
+    "group": "VI",
+    "level": "V2",
+    "title": "Avokat Shtetëror",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Fusha e zbatimit: Në Avokaturën Shtetërore",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.3"
+    }
+  },
+  {
+    "id": "a1b2c3d4-0002-4000-8000-000000000002",
+    "code": "AVO-002",
+    "coefficient": 9.0,
+    "sector": "advocacy",
+    "institution": "Kryeqyteti",
+    "group": "VI",
+    "level": "V3",
+    "title": "Avokat Shtetëror",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Fusha e zbatimit: Kryeqyteti",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.3"
+    }
+  },
+  {
+    "id": "a1b2c3d4-0003-4000-8000-000000000003",
+    "code": "AVO-003",
+    "coefficient": 8.5,
+    "sector": "advocacy",
+    "institution": "Komuna",
+    "group": "VI",
+    "level": "V4",
+    "title": "Avokat Shtetëror",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Fusha e zbatimit: Komuna që ka mbi 100.000 qytetar",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.3"
+    }
+  },
+  {
+    "id": "a1b2c3d4-0004-4000-8000-000000000004",
+    "code": "AVO-004",
+    "coefficient": 8.0,
+    "sector": "advocacy",
+    "institution": "Komuna",
+    "group": "V",
+    "level": "V5",
+    "title": "Avokat Komunal",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Fusha e zbatimit: Komuna që ka 50.001 deri ne 70.000 qytetar",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.3"
+    }
+  },
+  {
+    "id": "a1b2c3d4-0005-4000-8000-000000000005",
+    "code": "AVO-005",
+    "coefficient": 7.5,
+    "sector": "advocacy",
+    "institution": "Komuna",
+    "group": "V",
+    "level": "V6",
+    "title": "Avokat Komunal",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Fusha e zbatimit: Komuna që ka 30.001 deri ne 50.000 qytetar",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.3"
+    }
+  },
+  {
+    "id": "a1b2c3d4-0006-4000-8000-000000000006",
+    "code": "AVO-006",
+    "coefficient": 7.4,
+    "sector": "advocacy",
+    "institution": "Komuna",
+    "group": "V",
+    "level": "V7",
+    "title": "Avokat Komunal",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Fusha e zbatimit: Komuna që ka 20.001 deri ne 30.000 qytetar",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.3"
+    }
+  },
+  {
+    "id": "a1b2c3d4-0007-4000-8000-000000000007",
+    "code": "AVO-007",
+    "coefficient": 7.3,
+    "sector": "advocacy",
+    "institution": "Komuna",
+    "group": "V",
+    "level": "V8",
+    "title": "Avokat Komunal",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Fusha e zbatimit: Komuna që ka 10.001 deri 20.000 qytetar",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.3"
+    }
+  },
+  {
+    "id": "a1b2c3d4-0008-4000-8000-000000000008",
+    "code": "AVO-008",
+    "coefficient": 7.2,
+    "sector": "advocacy",
+    "institution": "Komuna",
+    "group": "V",
+    "level": "V9",
+    "title": "Avokat Komunal",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Fusha e zbatimit: Komuna që ka deri ne 10.000 qytetar",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "Shtojca 14.3"
+    }
+  }
+]

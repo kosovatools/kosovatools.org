@@ -1,0 +1,522 @@
+[
+  {
+    "id": "fd7085f7-c630-58b4-a201-01ee10be1c86",
+    "code": null,
+    "coefficient": 17,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokuroria",
+    "group": "P",
+    "level": "P1",
+    "title": "Kryeprokuror/e e Shtetit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "7f5b2dc9-c141-54e7-95de-9e8eec86ebac",
+    "code": null,
+    "coefficient": 16.5,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokuroria",
+    "group": "P",
+    "level": "P2",
+    "title": "Kryesueseli e/i Këshillit Prokurorial të Kosovës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "111c4f27-a6fa-5f3a-aa16-cf72b1ceabc4",
+    "code": null,
+    "coefficient": 15.5,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokuroria",
+    "group": "P",
+    "level": "P3",
+    "title": "Zëvendës Kryepokuror/e i/e Shtetit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "59dd0f68-24c5-54e9-94eb-ec6a6d87498b",
+    "code": null,
+    "coefficient": 15.5,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokuroria",
+    "group": "P",
+    "level": "P3",
+    "title": "Zëvendës Kryesueseft 0/1 Këshillit Prokurorial të Kosovës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "cd26d595-b14d-5de5-b66a-bb188fded72b",
+    "code": null,
+    "coefficient": 15.5,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokuroria",
+    "group": "P",
+    "level": "P3",
+    "title": "Kryeprokurore ive Prokurorisë Speciale të Republikës së Kosovës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "c6b1ea32-8110-5c05-9ff5-2902e1d665ba",
+    "code": null,
+    "coefficient": 15.5,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokuroria",
+    "group": "P",
+    "level": "P3",
+    "title": "Kryeprokurore ile Prokurorisë së Apelit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "f17432ea-fc07-552b-8a75-89b9b53f4c3a",
+    "code": null,
+    "coefficient": 15.5,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokuroria",
+    "group": "P",
+    "level": "P3",
+    "title": "Prokurorle ve Zyrës së Kryeprokuror/e it të Shtetit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "16c6d8a3-bbab-5da6-a917-9d453c1c4533",
+    "code": null,
+    "coefficient": 14,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokuroria",
+    "group": "P",
+    "level": "P4",
+    "title": "Prokuror/e i e Prokurorisë Speciale",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "a4a7c46e-7a0f-5f5b-b63a-c3aa4c7f6c3f",
+    "code": null,
+    "coefficient": 14,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokuroria",
+    "group": "P",
+    "level": "P4",
+    "title": "Prokurore i/e Prokurorisë së Apelit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "8db716d6-d78a-5958-a7e1-032146790185",
+    "code": null,
+    "coefficient": 14,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokuroria",
+    "group": "P",
+    "level": "P4",
+    "title": "KryProkuror/e i/e Prokurorisë Themelore",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "f2a391b8-0b2d-5dd8-8356-1194632773bc",
+    "code": null,
+    "coefficient": 12.8,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokuroria",
+    "group": "P",
+    "level": "P5",
+    "title": "Prokuror/e i/e Departamentit për Krime të Rënda dhe Departamentit për të Mitur",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "a59c4540-f9f9-5bf5-b136-cc17f87e1973",
+    "code": null,
+    "coefficient": 12,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokuroria",
+    "group": "P",
+    "level": "P6",
+    "title": "Prokuror/e i/e Departamentit të Përgjithshëm të Prokurorisë Themelore",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "18fd503a-8f7f-51b0-9550-c1aa1e595495",
+    "code": null,
+    "coefficient": 9.4,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokurori Speciale",
+    "group": "P",
+    "level": "P7",
+    "title": "Ekspert/e në Prokurori Speciale",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "3bf253ef-1492-5712-8312-9ea8d0e9c4d1",
+    "code": null,
+    "coefficient": 8.7,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Zyra e Kryeprokurore it të Shtetit",
+    "group": "P",
+    "level": "P8",
+    "title": "Ekspert/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "57e1670f-c85c-54b7-94bb-726793cc757d",
+    "code": null,
+    "coefficient": 8.5,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokurori Speciale",
+    "group": "P",
+    "level": "P9",
+    "title": "Bashkëpunëtor/e Profesional/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "168e66d1-75e7-57dc-bf79-dd82d576f095",
+    "code": null,
+    "coefficient": 8.5,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokurori të Apelit",
+    "group": "P",
+    "level": "P9",
+    "title": "Bashkëpunëtor/e Profesional/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "f32ec220-c3a5-53d0-b051-ed20b663e8f6",
+    "code": null,
+    "coefficient": 7.14,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Prokurori Themelore",
+    "group": "P",
+    "level": "P10",
+    "title": "Bashkëpunëtor/e Profesional/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.1"
+    }
+  },
+  {
+    "id": "155207de-a877-56c4-b78c-0aefee7f6101",
+    "code": null,
+    "coefficient": 12.3,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Administrata e Prokurorisë",
+    "group": "P",
+    "level": "P11",
+    "title": "Drejtues/e i e Lartë",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.2"
+    }
+  },
+  {
+    "id": "90ed5caf-3c37-536e-9b6b-2b3b600ae73b",
+    "code": null,
+    "coefficient": 8.6,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Administrata e Prokurorisë",
+    "group": "P",
+    "level": "P12",
+    "title": "Drejtues/e i/e Mesëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.2"
+    }
+  },
+  {
+    "id": "73ddcca8-47da-51c1-9128-21f8bd090df8",
+    "code": null,
+    "coefficient": 7.5,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Administrata e Prokurorisë (Në Prokurori)",
+    "group": "P",
+    "level": "P13",
+    "title": "Drejtues/e i/e Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.2"
+    }
+  },
+  {
+    "id": "17788f80-3218-5216-a4fd-2e8aee12698d",
+    "code": null,
+    "coefficient": 5.85,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Administrata e Prokurorisë (Në Prokurori)",
+    "group": "P",
+    "level": "P14",
+    "title": "Profesional 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.2"
+    }
+  },
+  {
+    "id": "56075ffb-f372-528c-9671-017cdf297769",
+    "code": null,
+    "coefficient": 5.3,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Administrata e Prokurorisë",
+    "group": "P",
+    "level": "P15",
+    "title": "Profesional 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.2"
+    }
+  },
+  {
+    "id": "0dff61a3-5092-5ce8-8629-b20a86edcc05",
+    "code": null,
+    "coefficient": 4.3,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Administrata e Prokurorisë",
+    "group": "P",
+    "level": "P16",
+    "title": "Profesional 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.2"
+    }
+  },
+  {
+    "id": "525b6c58-7195-5a61-a10e-f780adcce63a",
+    "code": null,
+    "coefficient": 4,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Administrata e Prokurorisë",
+    "group": "P",
+    "level": "P17",
+    "title": "Nëpunës/e teknik/e dhe mbështetës/e (Udhëheqës)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.2"
+    }
+  },
+  {
+    "id": "9c885a78-5701-5187-9afb-c3b3069a985d",
+    "code": null,
+    "coefficient": 3.9,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Administrata e Prokurorisë",
+    "group": "P",
+    "level": "P18",
+    "title": "Nëpunës/e teknik/e dhe mbështetës/e 2 (vozitës, korrier, kuzhinier, sigurimi, mekanik, elektricist, zdrukthëtar, ujë instalues, farkëtar dhe pozita të ngjashme)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.2"
+    }
+  },
+  {
+    "id": "81fdb79f-ddbe-5fea-8c2b-23130c05f2a7",
+    "code": null,
+    "coefficient": 3.8,
+    "sector": "Sistemi Prokurorial",
+    "institution": "Administrata e Prokurorisë",
+    "group": "P",
+    "level": "P19",
+    "title": "Nëpunës e teknik/e dhe mbështetës/e 3 (roje, kopshtar, shtëpiak, autolarës, rrobalarës dhe pozita të ngjashme)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 3.2"
+    }
+  }
+]

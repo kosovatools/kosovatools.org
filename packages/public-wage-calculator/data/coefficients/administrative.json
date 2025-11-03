@@ -1,0 +1,1022 @@
+[
+  {
+    "id": "1d98d8c2-263a-4402-be5a-a38f4d92a061",
+    "code": "KOM-001",
+    "coefficient": 7.3,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Drejtues/e i e Ulët",
+    "level": "GJI",
+    "title": "Drejtues/e i e Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Kryeqyteti.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "e932c02f-b485-48b4-934c-687f872d8883",
+    "code": "KOM-002",
+    "coefficient": 7.28,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Drejtues/e i e Ulët",
+    "level": "GJ2",
+    "title": "Drejtues/e i e Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka mbi 100.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "78749a0d-327e-4028-a89c-a1c29e712a7a",
+    "code": "KOM-003",
+    "coefficient": 7.26,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Drejtues/e i e Ulët",
+    "level": "G13",
+    "title": "Drejtues/e i e Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 70.001 deri ne 100.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "5140b904-469b-449e-b159-f8c5b9f71c13",
+    "code": "KOM-004",
+    "coefficient": 7.24,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Drejtues/e i e Ulët",
+    "level": "GJ4",
+    "title": "Drejtues/e i e Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 50.001 deri ne 70.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "70b3b9f3-80f0-466d-a162-811c79c8820c",
+    "code": "KOM-005",
+    "coefficient": 7.22,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Drejtues/e i e Ulët",
+    "level": "GJ5",
+    "title": "Drejtues/e i e Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 30.001 deri ne 50.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "d04a60b9-56d1-4475-b44d-1786522c0692",
+    "code": "KOM-006",
+    "coefficient": 7.2,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Drejtues/e i e Ulët",
+    "level": "GJ6",
+    "title": "Drejtues/e i e Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 20.001 deri ne 30.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "517e4768-4541-4c12-921c-a1d821323321",
+    "code": "KOM-007",
+    "coefficient": 7.18,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Drejtues/e i e Ulët",
+    "level": "GJ7",
+    "title": "Drejtues/e i e Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 10.001 deri 20.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "fa2176b9-4171-4604-958a-3e758e579308",
+    "code": "KOM-008",
+    "coefficient": 7.16,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Drejtues/e i e Ulët",
+    "level": "GJ8",
+    "title": "Drejtues/e i e Ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka deri ne 10.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "787c2b3e-e673-450f-a035-e6a8d6e98711",
+    "code": "KOM-009",
+    "coefficient": 6.6,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Specialist/e",
+    "level": "GJ9",
+    "title": "Specialist/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Kryeqyteti.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "e4f8e6e5-430c-4573-95c0-11756e4c7333",
+    "code": "KOM-010",
+    "coefficient": 6.58,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Specialist/e",
+    "level": "GJ10",
+    "title": "Specialist/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka mbi 100.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "c6a2c27c-3676-46b0-9512-876a43d937a0",
+    "code": "KOM-011",
+    "coefficient": 6.56,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Specialist/e",
+    "level": "GJH",
+    "title": "Specialist/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 70.001 deri ne 100.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "97973c9c-501f-40e1-b924-d2e82f7c6883",
+    "code": "KOM-012",
+    "coefficient": 6.54,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Specialist/e",
+    "level": "GJ12",
+    "title": "Specialist/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 50.001 deri ne 70.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "70d10d65-4f4c-4734-97c1-799d123e4453",
+    "code": "KOM-013",
+    "coefficient": 6.52,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Specialist/e",
+    "level": "GJ13",
+    "title": "Specialist/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 30.001 deri ne 50.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "84223963-356c-48c0-8192-3c81e9d1a388",
+    "code": "KOM-014",
+    "coefficient": 6.5,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Specialist/e",
+    "level": "GJ14",
+    "title": "Specialist/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 20.001 deri ne 30.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "270b9910-c4ce-4d40-8f96-512c5b369c9b",
+    "code": "KOM-015",
+    "coefficient": 6.48,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Specialist/e",
+    "level": "GJ15",
+    "title": "Specialist/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 10.001 deri 20.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "fa295240-a352-47d9-aa32-237c7678f13e",
+    "code": "KOM-016",
+    "coefficient": 6.46,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Specialist/e",
+    "level": "GJ16",
+    "title": "Specialist/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka deri ne 10.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "cc074092-be20-41be-9f93-02f5a60e0ccb",
+    "code": "KOM-017",
+    "coefficient": 6.6,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Inspektor/e",
+    "level": "GJ17",
+    "title": "Inspektor/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Kryeqyteti.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "e9314480-1a13-401d-b6a6-f25091c0683a",
+    "code": "KOM-018",
+    "coefficient": 6.58,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Inspektor/e",
+    "level": "GJ18",
+    "title": "Inspektor/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka mbi 100.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "2d8f9468-1510-4493-b649-0d195d226c0e",
+    "code": "KOM-019",
+    "coefficient": 6.56,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Inspektor/e",
+    "level": "GJ19",
+    "title": "Inspektor/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 70.001 deri ne 100.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "e305e554-b51f-4f6c-85a0-53b342417743",
+    "code": "KOM-020",
+    "coefficient": 6.54,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Inspektor/e",
+    "level": "GJ20",
+    "title": "Inspektor/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 50.001 deri ne 70.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "95a5f7e7-8898-4444-a0fa-a25e24a8726e",
+    "code": "KOM-021",
+    "coefficient": 6.52,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Inspektor/e",
+    "level": "GJ21",
+    "title": "Inspektor/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 30.001 deri ne 50.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "5146c9a3-559d-4786-8dfc-0f9c21b2f901",
+    "code": "KOM-022",
+    "coefficient": 6.5,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Inspektor/e",
+    "level": "GJ22",
+    "title": "Inspektor/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 20.001 deri ne 30.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "d76d0d97-b648-4363-8a9d-b7d603a11598",
+    "code": "KOM-023",
+    "coefficient": 6.48,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Inspektor/e",
+    "level": "GJ23",
+    "title": "Inspektor/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 10.001 deri 20.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "9f0273c5-f761-482a-a95e-146311656b2c",
+    "code": "KOM-024",
+    "coefficient": 6.46,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Inspektor/e",
+    "level": "GJ24",
+    "title": "Inspektor/e",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka deri ne 10.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "27684074-9f4c-4384-95cc-813c9e99c89e",
+    "code": "KOM-025",
+    "coefficient": 5.7,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 1",
+    "level": "GJ25",
+    "title": "Profesional 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Kryeqyteti.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "89b92375-4c07-4e94-8463-c7e6c0f862fe",
+    "code": "KOM-026",
+    "coefficient": 5.68,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 1",
+    "level": "GJ26",
+    "title": "Profesional 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka mbi 100.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "18f7734a-9993-4e4b-b384-8846c4f8d684",
+    "code": "KOM-027",
+    "coefficient": 5.66,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 1",
+    "level": "GJ27",
+    "title": "Profesional 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 70.001 deri ne 100.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "76652438-6677-44c1-9d93-18122f72535a",
+    "code": "KOM-028",
+    "coefficient": 5.64,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 1",
+    "level": "GJ28",
+    "title": "Profesional 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 50.001 deri ne 70.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "31b2c453-61a9-4089-a35c-44e261951052",
+    "code": "KOM-029",
+    "coefficient": 5.62,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 1",
+    "level": "GJ29",
+    "title": "Profesional 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 30.001 deri ne 50.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "1d76d34e-862d-42ac-9c4c-2646c19c5c2a",
+    "code": "KOM-030",
+    "coefficient": 5.6,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 1",
+    "level": "GJ30",
+    "title": "Profesional 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 20.001 deri ne 30.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "4b684074-1234-4061-8869-216a8c43026e",
+    "code": "KOM-031",
+    "coefficient": 5.58,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 1",
+    "level": "GJ31",
+    "title": "Profesional 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 10.001 deri 20.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "934c9d82-e070-466d-8867-0c6530a62d4f",
+    "code": "KOM-032",
+    "coefficient": 5.56,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 1",
+    "level": "GJ32",
+    "title": "Profesional 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka deri ne 10.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "934c9d82-e070-466d-8867-0c6531a68d4f",
+    "code": "KOM-033",
+    "coefficient": 5.1,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 2",
+    "level": "GJ33",
+    "title": "Profesional 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Kryeqyteti.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "416e8851-9669-450f-a42e-13c54d1d935f",
+    "code": "KOM-034",
+    "coefficient": 5.05,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 2",
+    "level": "GJ34",
+    "title": "Profesional 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka mbi 100.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "31b2c453-61a9-4089-a35c-43e268951052",
+    "code": "KOM-035",
+    "coefficient": 5.0,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 2",
+    "level": "GJ35",
+    "title": "Profesional 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 70.001 deri ne 100.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "629d8919-4874-42f8-b328-9842a59f5188",
+    "code": "KOM-036",
+    "coefficient": 4.95,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 2",
+    "level": "GJ36",
+    "title": "Profesional 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 50.001 deri ne 70.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "91a8c3d4-b778-4a5f-86f2-1a4c9b9a674e",
+    "code": "KOM-037",
+    "coefficient": 4.9,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 2",
+    "level": "GJ37",
+    "title": "Profesional 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 30.001 deri ne 50.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "2d8f9468-1510-4493-b649-0d195d2c6c0e",
+    "code": "KOM-038",
+    "coefficient": 4.85,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 2",
+    "level": "GJ38",
+    "title": "Profesional 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 20.001 deri ne 30.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "c76d0d97-b648-4363-8a9d-b7d603a11598",
+    "code": "KOM-039",
+    "coefficient": 4.8,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 2",
+    "level": "GJ39",
+    "title": "Profesional 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 10.001 deri 20.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "9f0273c5-f761-482a-a95e-146311626b2c",
+    "code": "KOM-040",
+    "coefficient": 4.75,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 2",
+    "level": "GJ40",
+    "title": "Profesional 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka deri ne 10.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "27684074-9f4c-5384-95cc-813c9e99c89e",
+    "code": "KOM-041",
+    "coefficient": 4.0,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 3",
+    "level": "GJ41",
+    "title": "Profesional 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Kryeqyteti.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "89b9d375-4c07-4e94-8463-c7e6c0f862fe",
+    "code": "KOM-042",
+    "coefficient": 3.98,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 3",
+    "level": "GJ42",
+    "title": "Profesional 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka mbi 100.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "28f7734a-9993-4e4b-b384-8846c4f8d684",
+    "code": "KOM-043",
+    "coefficient": 3.96,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 3",
+    "level": "GJ43",
+    "title": "Profesional 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 70.001 deri ne 100.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "76652438-6677-44c1-9d93-18182f72535a",
+    "code": "KOM-044",
+    "coefficient": 3.94,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 3",
+    "level": "GJ44",
+    "title": "Profesional 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 50.001 deri ne 70.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "31b2c453-61a9-4089-a35c-44e268951052",
+    "code": "KOM-045",
+    "coefficient": 3.92,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 3",
+    "level": "GJ45",
+    "title": "Profesional 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 30.001 deri ne 50.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "1d86d34e-862d-42ac-9c4c-2646c19c5c2a",
+    "code": "KOM-046",
+    "coefficient": 3.9,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 3",
+    "level": "GJ46",
+    "title": "Profesional 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 20.001 deri ne 30.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "4b684074-1234-4021-8869-216a8c43026e",
+    "code": "KOM-047",
+    "coefficient": 3.88,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 3",
+    "level": "GJ47",
+    "title": "Profesional 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka 10.001 deri 20.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "934c9d82-e070-466d-8867-0c6530a68d4f",
+    "code": "KOM-048",
+    "coefficient": 3.86,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Profesional 3",
+    "level": "GJ48",
+    "title": "Profesional 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Komuna: Ka deri ne 10.000 qytetarë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "7585b0a3-324d-4467-893c-2831d16a6932",
+    "code": "KOM-049",
+    "coefficient": 3.96,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Nëpunës/e teknik/e dhe mbështetës/e 1",
+    "level": "GJ49",
+    "title": "Nëpunës/e teknik/e dhe mbështetës/e 1 (Udhëheqës/e)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Bazuar në SHTOJCA NR. 10.7. KOMUNAT, LIGJI NR. 08/L-196 PËR PAGAT NË SEKTORIN PUBLIK.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "9382f6e5-4f40-420a-995c-9c02d184a51e",
+    "code": "KOM-050",
+    "coefficient": 3.8,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Nëpunës/e teknik/e dhe mbështetës/e 2",
+    "level": "GJ50",
+    "title": "Nëpunës/e teknik/e dhe mbështetës/e 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Përfshin: vozitës, korrier, kuzhinier, sigurimi, mekanik, elektricist, zdrukthëtar, ujë instalues, farkëtar dhe pozita të ngjashme.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  },
+  {
+    "id": "55c4d232-2612-4021-9e8c-843d4c82c611",
+    "code": "KOM-051",
+    "coefficient": 3.76,
+    "sector": "administrative",
+    "institution": "Komuna",
+    "group": "Nëpunës/e teknik/e dhe mbështetës/e 3",
+    "level": "GJ51",
+    "title": "Nëpunës/e teknik/e dhe mbështetës/e 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Përfshin: roje, kopshtar, shtëpiak, autolarës, rrobalarës dhe pozita të ngjashme.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.7"
+    }
+  }
+]

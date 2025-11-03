@@ -1,0 +1,262 @@
+[
+  {
+    "id": "d3788ff1-9df1-5f72-a7cd-c787c7419017",
+    "code": null,
+    "coefficient": 15,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "01",
+    "level": "Këshilltar/e",
+    "title": "Këshilltar Kushtetues/e 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  },
+  {
+    "id": "e9ea3d33-a022-5b92-97af-c234d7de6a5a",
+    "code": null,
+    "coefficient": 14.5,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "02",
+    "level": "Këshilltar/e",
+    "title": "Këshilltare Kushtetues/e 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  },
+  {
+    "id": "4231c67e-b182-5c4e-ae69-127c3066eac7",
+    "code": null,
+    "coefficient": 14,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "03",
+    "level": "Këshilltar/e",
+    "title": "Këshilltare Kushtetues/e 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  },
+  {
+    "id": "0955013a-69ab-57de-a885-ad402f8630f4",
+    "code": null,
+    "coefficient": 8,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "04",
+    "level": "Këshilltar/e",
+    "title": "Këshilltare Kushtetues/e 4",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  },
+  {
+    "id": "b6075861-146d-5399-9dc9-90017b498fd2",
+    "code": null,
+    "coefficient": 12.35,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "05",
+    "level": "Drejtues/e",
+    "title": "Drejtues/e i/e Lartë",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  },
+  {
+    "id": "5b9fccd2-09cd-5bf1-a2b4-0e7e7a447cd1",
+    "code": null,
+    "coefficient": 8.65,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "06",
+    "level": "Drejtues/e",
+    "title": "Drejtuese /i/e Mesëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  },
+  {
+    "id": "df0076ec-d57a-5ca2-9328-a57f0394434f",
+    "code": null,
+    "coefficient": 7.55,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "07",
+    "level": "Drejtues/e",
+    "title": "Drejtues/e i/e Ulet",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  },
+  {
+    "id": "4c3b0d2e-4669-5e82-9937-e7c3c2bbd23e",
+    "code": null,
+    "coefficient": 5.9,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "08",
+    "level": "Profesional",
+    "title": "Profesional 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  },
+  {
+    "id": "e399dc85-ae9d-5eec-af5a-8d4961e2bfc0",
+    "code": null,
+    "coefficient": 5.35,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "09",
+    "level": "Profesional",
+    "title": "Profesional 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  },
+  {
+    "id": "fbc926ce-418f-524e-8427-66ada2d73077",
+    "code": null,
+    "coefficient": 4.35,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "010",
+    "level": "Profesional",
+    "title": "Profesional 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  },
+  {
+    "id": "8bdbeada-6558-581d-a554-322881c7c03a",
+    "code": null,
+    "coefficient": 4,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "011",
+    "level": "Mbështetës/e",
+    "title": "Nëpunës/e teknik/e dhe mbështetës/e 1 (Udhëheqës/e)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  },
+  {
+    "id": "a67620d7-6e49-5f21-9fd0-18b6124c2e96",
+    "code": null,
+    "coefficient": 3.9,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "012",
+    "level": "Mbështetës/e",
+    "title": "Nëpunës/e teknik/e dhe mbështetës/e 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Përfshin: vozitës, korrier, kuzhinier, sigurimi, mekanik, elektricist, zdrukthëtar, ujë instalues, farkëtar dhe pozita të ngjashme.",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  },
+  {
+    "id": "8e1d32ee-1b88-593f-a5d2-0d7a222aecc9",
+    "code": null,
+    "coefficient": 3.8,
+    "sector": "gjyqësor",
+    "institution": "Gjykata Kushtetuese (SHTOJCA NR. 10.2)",
+    "group": "013",
+    "level": "Mbështetës/e",
+    "title": "Nëpunës/e teknik/e dhe mbështetës/e 3",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Përfshin: roje, kopshtar, shtëpiak, autolarës, rrobalarës dhe pozita të ngjashme.",
+    "source": {
+      "law_ref": "Ligji NR. 08/L-196",
+      "annex": "SHTOJCA NR. 10.2"
+    }
+  }
+]

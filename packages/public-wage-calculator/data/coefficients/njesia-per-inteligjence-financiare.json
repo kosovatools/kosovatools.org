@@ -1,0 +1,122 @@
+[
+  {
+    "id": "d564e36d-b33d-5b0f-9fd5-f1d5708cc50b",
+    "code": null,
+    "coefficient": 14,
+    "sector": "Njësia për Inteligjencë Financiare",
+    "institution": "NJIF-K",
+    "group": "M",
+    "level": "M1",
+    "title": "Drejtues/e i e Lartë 1 (Drejtore/i e/i NJIF-K)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.2"
+    }
+  },
+  {
+    "id": "272f3770-735d-5947-a38c-0ae5190622e4",
+    "code": null,
+    "coefficient": 12.5,
+    "sector": "Njësia për Inteligjencë Financiare",
+    "institution": "NJIF-K",
+    "group": "M",
+    "level": "M2",
+    "title": "Drejtues/e i/e Lartë 2 (Zëvendës drejtore/i e/i NJIF-K)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.2"
+    }
+  },
+  {
+    "id": "33c1d7d5-884f-559c-aa8c-fb6e8329ce9e",
+    "code": null,
+    "coefficient": 10.5,
+    "sector": "Njësia për Inteligjencë Financiare",
+    "institution": "NJIF-K",
+    "group": "M",
+    "level": "M3",
+    "title": "Drejtues/e i/e Mesëm (Udhëheqës/e Departamenti ose ekuivalent)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.2"
+    }
+  },
+  {
+    "id": "3118f031-9fc7-55a7-8a07-37340ca710cd",
+    "code": null,
+    "coefficient": 9.5,
+    "sector": "Njësia për Inteligjencë Financiare",
+    "institution": "NJIF-K",
+    "group": "M",
+    "level": "M4",
+    "title": "Drejtues/e i/e Ulet (Udhëheqës Divizioni ose ekuivalent)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.2"
+    }
+  },
+  {
+    "id": "860256a1-96dc-59dc-8779-2c305a062f75",
+    "code": null,
+    "coefficient": 9,
+    "sector": "Njësia për Inteligjencë Financiare",
+    "institution": "NJIF-K",
+    "group": "M",
+    "level": "M5",
+    "title": "Profesional 1 (Analiste/i e/i Inteligjencës)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.2"
+    }
+  },
+  {
+    "id": "eaed93fd-3667-518e-817a-49c360379fa8",
+    "code": null,
+    "coefficient": 7.2,
+    "sector": "Njësia për Inteligjencë Financiare",
+    "institution": "NJIF-K",
+    "group": "M",
+    "level": "M6",
+    "title": "Profesional 2 (Analiste i e/i Inteligjencës i ri)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 6.2"
+    }
+  }
+]

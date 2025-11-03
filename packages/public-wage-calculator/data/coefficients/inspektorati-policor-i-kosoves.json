@@ -1,0 +1,82 @@
+[
+  {
+    "id": "08bb952e-e27f-5b07-b56b-2657d3a11dbf",
+    "code": null,
+    "coefficient": 12,
+    "sector": "Inspektorati Policor i Kosovës",
+    "institution": "Inspektorati Policor i Kosovës",
+    "group": "F",
+    "level": "F1",
+    "title": "Drejtues/e i/e lartë",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.2"
+    }
+  },
+  {
+    "id": "611a7caf-1807-5ee8-bcb5-e8c7ba5ac99b",
+    "code": null,
+    "coefficient": 8.5,
+    "sector": "Inspektorati Policor i Kosovës",
+    "institution": "Inspektorati Policor i Kosovës",
+    "group": "F",
+    "level": "F2",
+    "title": "Drejtues/e i/e mesëm",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.2"
+    }
+  },
+  {
+    "id": "362a29f1-4279-5854-a870-7e8c29316290",
+    "code": null,
+    "coefficient": 8,
+    "sector": "Inspektorati Policor i Kosovës",
+    "institution": "Inspektorati Policor i Kosovës",
+    "group": "F",
+    "level": "F3",
+    "title": "Drejtues/e i/e ulët",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.2"
+    }
+  },
+  {
+    "id": "8795fac2-a303-5372-a217-5b05747d7c22",
+    "code": null,
+    "coefficient": 7.5,
+    "sector": "Inspektorati Policor i Kosovës",
+    "institution": "Inspektorati Policor i Kosovës",
+    "group": "F",
+    "level": "F4",
+    "title": "Hetues/Inspektor",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "",
+    "source": {
+      "law_ref": "Ligji Nr. 08/L-196",
+      "annex": "SHTOJCA NR. 5.2"
+    }
+  }
+]

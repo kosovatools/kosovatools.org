@@ -1,0 +1,482 @@
+[
+  {
+    "id": "C-1",
+    "code": "C1",
+    "coefficient": 13,
+    "sector": "kabinet",
+    "institution": "Presidenca dhe Gjykata Kushtetuese",
+    "group": "C",
+    "level": null,
+    "title": "Shefi dhe zëvendës Shefi i Stafit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Shefi dhe zëvendës Shefi: Stafit në Presidencë dhe Shef Stafi në Gjykatë Kushtetuese.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-2",
+    "code": "C2",
+    "coefficient": 12.4,
+    "sector": "kabinet",
+    "institution": "Zyra e Kryeministrit dhe Kuvendi i Kosovës",
+    "group": "C",
+    "level": null,
+    "title": "Këshilltare i/e Lartë Parë Politik (Shef Stafi)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Shefi i Stafit në Zyre të Kryeministrit dhe Kuvendin e Kosovës.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-3",
+    "code": "C3",
+    "coefficient": 11,
+    "sector": "kabinet",
+    "institution": "Zyra e zëvendës Kryeministrit",
+    "group": "C",
+    "level": null,
+    "title": "Shefi i Stafit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Shefi i Stafit Në Zyre të zëvendës Kryeministrit. Nuk ka emërtim pozite të specifikuar përpos Koeficientit.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-4",
+    "code": "C4",
+    "coefficient": 10.8,
+    "sector": "kabinet",
+    "institution": "Ministri dhe Institucione të Pavarura Kushtetuese",
+    "group": "C",
+    "level": null,
+    "title": "Shefi i Stafit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Shefi i Stafit në Ministri dhe dhe Institucione të Pavarura Kushtetuese. Nuk ka emërtim pozite të specifikuar përpos Koeficientit.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-5",
+    "code": "C5",
+    "coefficient": 10.7,
+    "sector": "kabinet",
+    "institution": "Presidenca",
+    "group": "C",
+    "level": null,
+    "title": "Shef i Kabinetit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Shef i Kabinetit në Presidencë. Nuk ka emërtim pozite të specifikuar përpos Koeficientit.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-6",
+    "code": "C6",
+    "coefficient": 10.6,
+    "sector": "kabinet",
+    "institution": "Zyra e Kryeministrit dhe Kuvendi i Kosovës",
+    "group": "C",
+    "level": null,
+    "title": "Shef i Kabinetit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Shef i Kabineti në Zyre të Kryeministrit dhe Kuvendin e Kosovës. Nuk ka emërtim pozite të specifikuar përpos Koeficientit.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-7",
+    "code": "C7",
+    "coefficient": 10.2,
+    "sector": "kabinet",
+    "institution": "Zyra e zëvendës Kryeministrit",
+    "group": "C",
+    "level": null,
+    "title": "Këshilltare Politik 1 (Shef Kabineti)",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Shefi i Kabinetit Në Zyre të zëvendës Kryeministrit.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-8",
+    "code": "C8",
+    "coefficient": 10,
+    "sector": "kabinet",
+    "institution": "Ministri dhe Institucione të Pavarura Kushtetuese",
+    "group": "C",
+    "level": null,
+    "title": "Shefi i Kabinetit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Shefi i Kabinetit në Ministri dhe dhe Institucione të Pavarura Kushtetuese. Nuk ka emërtim pozite të specifikuar përpos Koeficientit.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-9",
+    "code": "C&A",
+    "coefficient": 9.8,
+    "sector": "kabinet",
+    "institution": "Komuna",
+    "group": "C",
+    "level": null,
+    "title": "Shefi i Kabinetit",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Në komunë. Nuk ka emërtim pozite të specifikuar përpos Koeficientit.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-10",
+    "code": "C9",
+    "coefficient": 9.7,
+    "sector": "kabinet",
+    "institution": "Presidenca",
+    "group": "C",
+    "level": null,
+    "title": "Këshilltar/e politik 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Këshilltar në Presidencë.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-11",
+    "code": "C10",
+    "coefficient": 9.4,
+    "sector": "kabinet",
+    "institution": "Zyra e Kryeministrit, Kuvendi i Kosovës dhe Gjykata Kushtetuese",
+    "group": "C",
+    "level": null,
+    "title": "Këshilltar/e politik 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Këshilltar në Zyre të Kryeministrit, Kuvendin e Kosovës dhe Gjykatë Kushtetuese.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-12",
+    "code": "C11",
+    "coefficient": 9.2,
+    "sector": "kabinet",
+    "institution": "Zyra e zëvendës Kryeministrit",
+    "group": "C",
+    "level": null,
+    "title": "Këshilltar/e politik 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Këshilltar në Zyre të zëvendës Kryeministrit.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-13",
+    "code": "C12",
+    "coefficient": 9,
+    "sector": "kabinet",
+    "institution": "Ministri dhe Institucione të Pavarura Kushtetuese",
+    "group": "C",
+    "level": null,
+    "title": "Këshilltar/e politik 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Këshilltar në dhe dhe Institucione të Pavarura Kushtetuese.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-14",
+    "code": "C13",
+    "coefficient": 8.4,
+    "sector": "kabinet",
+    "institution": "Komuna",
+    "group": "C",
+    "level": null,
+    "title": "Këshilltar/e politik 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Këshilltar në Komme.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-15",
+    "code": "C14",
+    "coefficient": 6,
+    "sector": "kabinet",
+    "institution": "Presidenca",
+    "group": "C",
+    "level": null,
+    "title": "Asistent ekzekutiv, zyrtar ekzekutiv",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Asistent ekzekutiv, zyrtar ekzekutiv dhe pozita të ngjashme në Presidencë. Emërtimi i Pozitës (14) nuk përmendet.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-16",
+    "code": "C15",
+    "coefficient": 5.8,
+    "sector": "kabinet",
+    "institution": "Zyra e Kryeministrit, Kuvendi i Kosovës dhe Gjykata Kushtetuese",
+    "group": "C",
+    "level": null,
+    "title": "Asistent ekzekutiv, zyrtar ekzekutiv",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Asistent ekzekutiv, zyrtar ekzekutiv dhe pozita të ngjashme në Zyre të Kryeministrit, Kuvendin e Kosovës dhe Gjykatë Kushtetuese. Nuk ka emërtim pozite të specifikuar përpos Koeficientit.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-17",
+    "code": "C16",
+    "coefficient": 5.6,
+    "sector": "kabinet",
+    "institution": "Zyra e zëvendës Kryeministrit",
+    "group": "C",
+    "level": null,
+    "title": "Nëpunës/e Kabineti 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Asistent ekzekutiv, zyrtar ekzekutiv dhe pozita të ngjashme në Zyre të zëvendës Kryeministrit.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-18",
+    "code": "C17",
+    "coefficient": 5.4,
+    "sector": "kabinet",
+    "institution": "Ministri dhe Institucione të Pavarura Kushtetuese",
+    "group": "C",
+    "level": null,
+    "title": "Nëpunës/e Kabineti 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Asistent ekzekutiv, zyrtar ekzekutiv dhe pozita të ngjashme në Ministri dhe Institucione të Pavarura Kushtetuese.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-19",
+    "code": "C18",
+    "coefficient": 5,
+    "sector": "kabinet",
+    "institution": "Komuna",
+    "group": "C",
+    "level": null,
+    "title": "Nëpunës/e Kabineti 1",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Asistent ekzekutiv, zyrtar ekzekutiv dhe pozita të ngjashme në Komama.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-20",
+    "code": "C19",
+    "coefficient": 4.9,
+    "sector": "kabinet",
+    "institution": "Presidenca",
+    "group": "C",
+    "level": null,
+    "title": "Staf mbështetës",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Staf mbështetës në Presidencë. Nuk ka emërtim pozite të specifikuar përpos Koeficientit.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-21",
+    "code": "C20",
+    "coefficient": 4.7,
+    "sector": "kabinet",
+    "institution": "Zyra e Kryeministrit, Kuvendi i Kosovës dhe Gjykata Kushtetuese",
+    "group": "C",
+    "level": null,
+    "title": "Nëpunës/e Kabineti 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Staf mbështetës në Zyre të Kryeministrit, Kuvendin e Kosovës dhe Gjykatë Kushtetuese.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-22",
+    "code": "C21",
+    "coefficient": 4.5,
+    "sector": "kabinet",
+    "institution": "Zyra e zëvendës Kryeministrit",
+    "group": "C",
+    "level": null,
+    "title": "Nëpunës/e Kabineti 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Staf mbështetës në Zyre të zëvendës Kryeministrit.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-23",
+    "code": "C22",
+    "coefficient": 4.3,
+    "sector": "kabinet",
+    "institution": "Ministri dhe Institucione të Pavarura Kushtetuese",
+    "group": "C",
+    "level": null,
+    "title": "Nëpunës/e Kabineti 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Staf mbështetës në Ministri dhe Institucione të Pavarura Kushtetuese.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  },
+  {
+    "id": "C-24",
+    "code": "C23",
+    "coefficient": 4,
+    "sector": "kabinet",
+    "institution": "Komuna",
+    "group": "C",
+    "level": null,
+    "title": "Nëpunës/e Kabineti 2",
+    "effective": {
+      "from": "2023-01-05",
+      "to": null,
+      "is_active": true
+    },
+    "notes": "Staf mbështetës në Komunma.",
+    "source": {
+      "law_ref": "LIGJI NR. 08/L-196",
+      "annex": "SHTOJCA NR.13- ZYRTARËT DHE NËPUNËSIT E KABINETIT"
+    }
+  }
+]
