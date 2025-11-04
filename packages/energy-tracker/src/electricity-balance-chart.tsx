@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   Area,
   AreaChart,
@@ -13,16 +12,20 @@ import {
 } from "recharts";
 
 import {
+  type ElectricityRecord,
+  electricityMeta,
+  timelineEvents,
+} from "@workspace/kas-data";
+import {
   DEFAULT_TIME_RANGE,
   DEFAULT_TIME_RANGE_OPTIONS,
   STACK_PERIOD_GROUPING_OPTIONS,
   getStackPeriodFormatter,
   groupStackPeriod,
   monthsFromRange,
-  type ElectricityRecord,
   type StackPeriodGrouping,
   type TimeRangeOption,
-} from "@workspace/stats";
+} from "@workspace/chart-utils";
 
 import {
   ChartContainer,
@@ -31,52 +34,65 @@ import {
   type ChartConfig,
 } from "@workspace/ui/components/chart";
 import { Card, CardContent } from "@workspace/ui/components/card";
-import { TimeRangeSelector } from "@workspace/ui/custom-components/time-range-selector";
+import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 
-import { formatAuto, percentFormatter } from "./utils/number-format";
+import { formatAuto } from "./utils/number-format";
+import { Fragment, useMemo, useState } from "react";
 
 const SERIES_KEYS = ["production_gwh", "import_gwh"] as const;
+const FIELD_LABELS: Partial<Record<keyof ElectricityRecord, string>> = {};
+for (const field of electricityMeta.fields ?? []) {
+  FIELD_LABELS[field.key] = field.label;
+}
+
+function getFieldLabel<Key extends keyof ElectricityRecord>(
+  key: Key,
+  fallback: string,
+): string {
+  const label = FIELD_LABELS[key];
+  return typeof label === "string" && label.trim().length > 0
+    ? label
+    : fallback;
+}
+
 const LABEL_MAP: Record<(typeof SERIES_KEYS)[number], string> = {
-  production_gwh: "Prodhimi",
-  import_gwh: "Importi",
+  production_gwh: getFieldLabel("production_gwh", "Prodhimi bruto"),
+  import_gwh: getFieldLabel("import_gwh", "Importi"),
 };
+
+const EXPORT_LABEL = getFieldLabel("export_gwh", "Eksporti");
+const GROSS_AVAILABLE_LABEL = getFieldLabel(
+  "gross_available_gwh",
+  "Furnizimi neto",
+);
+const NET_IMPORT_LABEL = "Import neto";
+const NET_EXPORT_LABEL = "Eksport neto";
+
+type ElectricityUnit = "GWh" | "MWh";
+const ENERGY_UNIT: ElectricityUnit =
+  electricityMeta.unit === "MWh" ? "MWh" : "GWh";
 
 type ElectricityBalanceChartProps = {
   data: ElectricityRecord[];
-  months?: number;
 };
 
 export function ElectricityBalanceChart({
   data,
-  months,
 }: ElectricityBalanceChartProps) {
   const chartClassName = "w-full aspect-[4/3] sm:aspect-video";
   const chartMargin = { top: 56, right: 24, left: 8, bottom: 0 };
 
   const [periodGrouping, setPeriodGrouping] =
-    React.useState<StackPeriodGrouping>("seasonal");
+    useState<StackPeriodGrouping>("seasonal");
 
-  const controlledMonths =
-    typeof months === "number" && Number.isFinite(months) && months > 0
-      ? months
-      : undefined;
+  const [range, setRange] = useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
-  const [range, setRange] = React.useState<TimeRangeOption>(
-    controlledMonths ?? DEFAULT_TIME_RANGE,
-  );
+  const monthsLimit = monthsFromRange(range);
 
-  React.useEffect(() => {
-    if (controlledMonths != null) {
-      setRange(controlledMonths);
-    }
-  }, [controlledMonths]);
-
-  const monthsLimit = controlledMonths ?? monthsFromRange(range);
-
-  const { chartData, keyMap, config, latestSummary } = React.useMemo(() => {
+  const { chartData, keyMap, config, latestSummary } = useMemo(() => {
     const periodFormatter = getStackPeriodFormatter(periodGrouping);
 
     const sorted = data
@@ -115,14 +131,76 @@ export function ElectricityBalanceChart({
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => formatAuto(value, { inputUnit: "GWh" }),
-    formatTotal: (value) => formatAuto(value, { inputUnit: "GWh" }),
+    formatValue: (value) => formatAuto(value, { inputUnit: ENERGY_UNIT }),
+    formatTotal: (value) => formatAuto(value, { inputUnit: ENERGY_UNIT }),
   });
 
   const eventMarkers = useTimelineEventMarkers(
     chartData as Array<{ period: string; periodLabel: string }>,
     periodGrouping,
+    timelineEvents,
   );
+
+  const summaryMetrics = useMemo(() => {
+    if (!latestSummary) {
+      return [];
+    }
+
+    const metrics: Array<{ key: string; label: string; value: number }> = [
+      {
+        key: "production_total",
+        label: LABEL_MAP.production_gwh,
+        value: latestSummary.productionTotal,
+      },
+      {
+        key: "import_total",
+        label: LABEL_MAP.import_gwh,
+        value: latestSummary.importTotal,
+      },
+      {
+        key: "export_total",
+        label: EXPORT_LABEL,
+        value: latestSummary.exportTotal,
+      },
+    ];
+
+    if (latestSummary.grossAvailable != null) {
+      metrics.push({
+        key: "gross_available",
+        label: GROSS_AVAILABLE_LABEL,
+        value: latestSummary.grossAvailable,
+      });
+    }
+
+    if (latestSummary.netImport != null) {
+      metrics.push({
+        key: "net_value",
+        label:
+          latestSummary.netImport >= 0 ? NET_IMPORT_LABEL : NET_EXPORT_LABEL,
+        value: Math.abs(latestSummary.netImport),
+      });
+    }
+
+    return metrics.filter((metric) => Number.isFinite(metric.value));
+  }, [latestSummary]);
+
+  const summaryContent = useMemo(() => {
+    if (!summaryMetrics.length) {
+      return (
+        <span className="font-medium text-foreground">Të dhënat mungojnë</span>
+      );
+    }
+
+    return summaryMetrics.map((metric, index) => (
+      <Fragment key={metric.key}>
+        {index > 0 ? " · " : null}
+        {metric.label}:{" "}
+        <span className="font-medium text-foreground">
+          {formatAuto(metric.value, { inputUnit: ENERGY_UNIT })}
+        </span>
+      </Fragment>
+    ));
+  }, [summaryMetrics]);
 
   if (!chartData.length || !keyMap.length) {
     return (
@@ -137,67 +215,31 @@ export function ElectricityBalanceChart({
       </Card>
     );
   }
-
-  const importShare =
-    latestSummary?.importShare != null
-      ? percentFormatter.format(latestSummary.importShare)
-      : "—";
-
   return (
     <Card>
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-sm text-muted-foreground">
-            Periudha e fundit{" "}
-            {latestSummary?.periodLabel ? (
-              <>
-                ({latestSummary.periodLabel}):{" "}
-                <span className="font-medium text-foreground">
-                  {importShare}
-                </span>{" "}
-                pjesë importi
-              </>
-            ) : (
-              <>
-                pjesë importi:{" "}
-                <span className="font-medium text-foreground">
-                  {importShare}
-                </span>
-              </>
-            )}
+            {`Periudha e fundit${
+              latestSummary?.periodLabel
+                ? ` (${latestSummary.periodLabel})`
+                : ""
+            }:`}{" "}
+            {summaryContent}
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-muted-foreground">Perioda</span>
-              <div className="flex gap-2 text-xs">
-                {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
-                  const active = periodGrouping === option.id;
-                  return (
-                    <button
-                      key={option.id}
-                      type="button"
-                      onClick={() => setPeriodGrouping(option.id)}
-                      className={
-                        "rounded-full border px-3 py-1 transition-colors " +
-                        (active
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border bg-background hover:bg-muted")
-                      }
-                    >
-                      {option.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            {controlledMonths == null ? (
-              <TimeRangeSelector
-                value={range}
-                onChange={setRange}
-                options={DEFAULT_TIME_RANGE_OPTIONS}
-                label="Intervali"
-              />
-            ) : null}
+            <OptionSelector
+              value={periodGrouping}
+              onChange={(value) => setPeriodGrouping(value)}
+              options={STACK_PERIOD_GROUPING_OPTIONS}
+              label="Perioda"
+            />
+            <OptionSelector
+              value={range}
+              onChange={setRange}
+              options={DEFAULT_TIME_RANGE_OPTIONS}
+              label="Intervali"
+            />
           </div>
         </div>
         <ChartContainer config={config} className={chartClassName}>
@@ -211,7 +253,7 @@ export function ElectricityBalanceChart({
             />
             <YAxis
               tickFormatter={(value) =>
-                formatAuto(Number(value), { inputUnit: "GWh" })
+                formatAuto(Number(value), { inputUnit: ENERGY_UNIT })
               }
               axisLine={false}
             />
@@ -251,8 +293,7 @@ export function ElectricityBalanceChart({
                 stroke={`var(--color-${entry.id})`}
                 strokeWidth={2}
                 fill={`var(--color-${entry.id})`}
-                fillOpacity={0.85}
-                stackId="electricity-balance"
+                fillOpacity={0.6}
                 name={entry.label}
               />
             ))}
@@ -269,19 +310,41 @@ function aggregateByGrouping(
 ) {
   const buckets = new Map<
     string,
-    { importTotal: number; productionTotal: number }
+    {
+      importTotal: number;
+      exportTotal: number;
+      productionTotal: number;
+      grossAvailableTotal: number;
+    }
   >();
   const order: string[] = [];
 
   for (const record of records) {
     const period = groupStackPeriod(record.period, grouping);
     if (!buckets.has(period)) {
-      buckets.set(period, { importTotal: 0, productionTotal: 0 });
+      buckets.set(period, {
+        importTotal: 0,
+        exportTotal: 0,
+        productionTotal: 0,
+        grossAvailableTotal: 0,
+      });
       order.push(period);
     }
     const bucket = buckets.get(period)!;
-    bucket.importTotal += toNumber(record.import_gwh);
-    bucket.productionTotal += toNumber(record.production_gwh);
+    const importValue = toNumber(record.import_gwh);
+    const exportValue = toNumber(record.export_gwh);
+    const productionValue = toNumber(record.production_gwh);
+
+    bucket.importTotal += importValue;
+    bucket.exportTotal += exportValue;
+    bucket.productionTotal += productionValue;
+
+    const grossAvailable =
+      record.gross_available_gwh != null
+        ? toNumber(record.gross_available_gwh)
+        : productionValue + importValue - exportValue;
+
+    bucket.grossAvailableTotal += grossAvailable;
   }
 
   return order.map((period) => {
@@ -289,7 +352,9 @@ function aggregateByGrouping(
     return {
       period,
       importTotal: bucket.importTotal,
+      exportTotal: bucket.exportTotal,
       productionTotal: bucket.productionTotal,
+      grossAvailableTotal: bucket.grossAvailableTotal,
     };
   });
 }
@@ -302,7 +367,9 @@ function buildLatestSummary(
   aggregated: Array<{
     period: string;
     importTotal: number;
+    exportTotal: number;
     productionTotal: number;
+    grossAvailableTotal: number;
   }>,
   formatter: (period: string) => string,
 ) {
@@ -311,13 +378,18 @@ function buildLatestSummary(
     return null;
   }
 
-  const importShare =
-    latest.productionTotal > 0
-      ? latest.importTotal / latest.productionTotal
-      : null;
+  const netImport = latest.importTotal - latest.exportTotal;
+  const grossAvailable =
+    latest.grossAvailableTotal !== 0
+      ? latest.grossAvailableTotal
+      : latest.productionTotal + netImport;
 
   return {
     periodLabel: formatter(latest.period),
-    importShare,
+    importTotal: latest.importTotal,
+    exportTotal: latest.exportTotal,
+    productionTotal: latest.productionTotal,
+    grossAvailable,
+    netImport,
   };
 }

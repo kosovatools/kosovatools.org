@@ -11,7 +11,7 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 import { Skeleton } from "@workspace/ui/components/skeleton";
-import type { CustomsTreeNode } from "@workspace/customs-data";
+import type { CustomsTreeNode } from "./types";
 
 type VirtualizedTreeTableProps = {
   columns: ColumnDef<CustomsTreeNode, unknown>[];

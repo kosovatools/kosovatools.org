@@ -1,0 +1,11 @@
+{
+  "extends": "@workspace/typescript-config/tsconfig.node.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "allowImportingTsExtensions": false,
+    "allowJs": true,
+    "noEmit": true
+  },
+  "include": [],
+  "exclude": ["dist", "node_modules", "src"]
+}

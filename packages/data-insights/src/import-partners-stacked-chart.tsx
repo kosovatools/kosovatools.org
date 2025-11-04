@@ -16,6 +16,9 @@ import {
   buildPartnerStackSeries,
   summarizePartnerTotals,
   type TradePartnerRecord,
+  timelineEvents,
+} from "@workspace/kas-data";
+import {
   formatEuro,
   formatEuroCompact,
   type StackPeriodGrouping,
@@ -25,7 +28,7 @@ import {
   DEFAULT_TIME_RANGE_OPTIONS,
   DEFAULT_TIME_RANGE,
   monthsFromRange,
-} from "@workspace/stats";
+} from "@workspace/chart-utils";
 
 import {
   ChartContainer,
@@ -34,7 +37,7 @@ import {
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
-import { TimeRangeSelector } from "@workspace/ui/custom-components/time-range-selector";
+import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 
@@ -155,6 +158,7 @@ export function ImportPartnersStackedChart({
   const eventMarkers = useTimelineEventMarkers(
     chartData as Array<{ period: string; periodLabel: string }>,
     periodGrouping,
+    timelineEvents,
   );
 
   if (!chartData.length || !keyMap.length) {
@@ -169,31 +173,14 @@ export function ImportPartnersStackedChart({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm text-muted-foreground">Perioda</span>
-        <div className="flex gap-2 text-xs">
-          {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
-            const active = periodGrouping === option.id;
-            return (
-              <button
-                key={option.id}
-                type="button"
-                onClick={() => setPeriodGrouping(option.id)}
-                className={
-                  "rounded-full border px-3 py-1 transition-colors " +
-                  (active
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border bg-background hover:bg-muted")
-                }
-              >
-                {option.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      <OptionSelector
+        value={periodGrouping}
+        onChange={(value) => setPeriodGrouping(value)}
+        options={STACK_PERIOD_GROUPING_OPTIONS}
+        label="Perioda"
+      />
       {controlledMonths == null ? (
-        <TimeRangeSelector
+        <OptionSelector
           value={range}
           onChange={setRange}
           options={DEFAULT_TIME_RANGE_OPTIONS}

@@ -1,13 +1,15 @@
 import {
   describeFuelSources,
-  formatKasGeneratedLabel,
+  formatGeneratedAt,
   fuelBalances,
-  importsByPartnerSource,
+  fuelMeta,
+  importsByPartnerMeta,
   tradeImportsByPartner,
   tourismByCountry,
   tourismByRegion,
-  tourismMonthlySource,
-} from "@workspace/stats";
+  tourismCountryMeta,
+  tourismRegionMeta,
+} from "@workspace/kas-data";
 import {
   Card,
   CardContent,
@@ -23,11 +25,8 @@ import { TourismCountryStackedChart } from "./tourism-country-stacked-chart";
 import { TourismRegionCharts } from "./tourism-region-stacked-chart";
 
 export function DataInsightsDashboard() {
-  const { region: tourismRegionSource, country: tourismCountrySource } =
-    tourismMonthlySource;
-
-  const generatedLabel = formatKasGeneratedLabel();
-  const fuelSourceLabel = describeFuelSources();
+  const generatedLabel = formatGeneratedAt(importsByPartnerMeta.generated_at);
+  const fuelSourceLabel = describeFuelSources(fuelMeta);
 
   const chartContentClass = "px-2 sm:px-6";
 
@@ -47,7 +46,7 @@ export function DataInsightsDashboard() {
           Kosova Tools. Çdo vizualizim pasqyron kopjen më të fundit të ruajtur
           në
           <code className="mx-1 rounded bg-muted px-1 py-0.5 text-xs">
-            packages/stats
+            packages/kas-data
           </code>
           .
         </p>
@@ -68,7 +67,7 @@ export function DataInsightsDashboard() {
             <ImportPartnersStackedChart data={tradeImportsByPartner} top={6} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Burimi: {importsByPartnerSource.table}.
+            Burimi: {importsByPartnerMeta.table ?? "E panjohur"}.
           </CardFooter>
         </Card>
       </section>
@@ -108,7 +107,7 @@ export function DataInsightsDashboard() {
             <TourismCountryStackedChart data={tourismByCountry} top={5} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Burimi: {tourismCountrySource.table}.
+            Burimi: {tourismCountryMeta.table ?? "E panjohur"}.
           </CardFooter>
         </Card>
 
@@ -124,7 +123,7 @@ export function DataInsightsDashboard() {
             <TourismRegionCharts data={tourismByRegion} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Burimi: {tourismRegionSource.table}.
+            Burimi: {tourismRegionMeta.table ?? "E panjohur"}.
           </CardFooter>
         </Card>
       </section>

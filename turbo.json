@@ -19,8 +19,7 @@
     },
     "fetch-data": {
       "outputs": ["data/**/*.json"],
-      "inputs": ["$TURBO_DEFAULT$", "scripts/**", "package.json"],
-      "env": ["CUSTOMS_DATA_SOURCE_URL", "DATA_SOURCE_URL"]
+      "inputs": ["$TURBO_DEFAULT$", "scripts/**", "package.json"]
     }
   }
 }

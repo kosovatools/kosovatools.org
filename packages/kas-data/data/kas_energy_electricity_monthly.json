@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "table": "",
+    "path": "",
+    "generated_at": "1970-01-01T00:00:00.000Z",
+    "updated_at": null,
+    "unit": "GWh",
+    "fields": [
+      {
+        "key": "production_thermal_gwh",
+        "label": "Gross Production from Power Plants",
+        "unit": "GWh"
+      },
+      {
+        "key": "production_hydro_gwh",
+        "label": "Gross Production from Hydropower Plants",
+        "unit": "GWh"
+      },
+      {
+        "key": "production_wind_solar_gwh",
+        "label": "Gross Production from Wind and Solar",
+        "unit": "GWh"
+      },
+      {
+        "key": "import_gwh",
+        "label": "Import",
+        "unit": "GWh"
+      },
+      {
+        "key": "export_gwh",
+        "label": "Export",
+        "unit": "GWh"
+      },
+      {
+        "key": "gross_available_gwh",
+        "label": "Gross Electricity Available",
+        "unit": "GWh"
+      },
+      {
+        "key": "household_consumption_gwh",
+        "label": "Households",
+        "unit": "GWh"
+      },
+      {
+        "key": "commercial_consumption_gwh",
+        "label": "Commercial",
+        "unit": "GWh"
+      },
+      {
+        "key": "industry_consumption_gwh",
+        "label": "Industry",
+        "unit": "GWh"
+      },
+      {
+        "key": "public_lighting_consumption_gwh",
+        "label": "Public lighting & others",
+        "unit": "GWh"
+      },
+      {
+        "key": "high_voltage_consumption_gwh",
+        "label": "Consumers 220-110kV",
+        "unit": "GWh"
+      },
+      {
+        "key": "mining_consumption_gwh",
+        "label": "Mining",
+        "unit": "GWh"
+      },
+      {
+        "key": "consumption_total_gwh",
+        "label": "Electricity consumption",
+        "unit": "GWh"
+      },
+      {
+        "key": "production_gwh",
+        "label": "Gross Production (total)",
+        "unit": "GWh"
+      }
+    ],
+    "periods": 0
+  },
+  "records": []
+}

@@ -17,11 +17,8 @@ import {
 } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
 import { Progress } from "@workspace/ui/components/progress";
-import {
-  CustomsDataService,
-  type CustomsTreeNode,
-  type InitializationProgress,
-} from "@workspace/customs-data";
+import { CustomsDataService } from "./database";
+import type { CustomsTreeNode, InitializationProgress } from "./types";
 
 import { createCustomsColumns } from "./customs-table/columns";
 import { VirtualizedTreeTable } from "./virtualized-tree-table";

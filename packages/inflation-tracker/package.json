@@ -15,8 +15,9 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@workspace/chart-utils": "workspace:*",
     "@workspace/eslint-config": "workspace:*",
-    "@workspace/stats": "workspace:*",
+    "@workspace/kas-data": "workspace:*",
     "@workspace/ui": "workspace:*",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -27,7 +28,7 @@
     "@types/react-dom": "19.2.2",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
-    "eslint": "^9.39.0",
+    "eslint": "^9.39.1",
     "typescript": "^5.9.3"
   },
   "license": "AGPL-3.0-only"

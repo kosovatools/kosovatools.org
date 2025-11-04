@@ -14,6 +14,6 @@
   "devDependencies": {
     "@types/chroma-js": "^3.1.2",
     "@types/d3-scale": "^4.0.9",
-    "eslint": "^9.39.0"
+    "eslint": "^9.39.1"
   }
 }

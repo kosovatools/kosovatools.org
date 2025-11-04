@@ -17,9 +17,10 @@
   "dependencies": {
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.12",
-    "@workspace/customs-data": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "dexie": "^4.2.1",
     "lucide-react": "^0.475.0",
+    "minisearch": "^7.2.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
@@ -28,7 +29,7 @@
     "@types/react-dom": "19.2.2",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
-    "eslint": "^9.39.0",
+    "eslint": "^9.39.1",
     "typescript": "^5.9.3"
   },
   "license": "AGPL-3.0-only"

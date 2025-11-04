@@ -3,11 +3,8 @@
 import * as React from "react";
 import { CartesianGrid, Legend, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import {
-  formatEuro,
-  formatEuroCompact,
-  type TradeImportRecord,
-} from "@workspace/stats";
+import { type TradeImportRecord } from "@workspace/kas-data";
+import { formatEuro, formatEuroCompact } from "@workspace/chart-utils";
 
 import {
   ChartConfig,

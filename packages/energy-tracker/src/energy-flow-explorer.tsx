@@ -2,11 +2,7 @@
 
 import * as React from "react";
 import { Info } from "lucide-react";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { DailyFlowChart, MonthlyFlowTrendChart } from "./energy-flow-chart";
 import {
@@ -44,8 +40,6 @@ import { Skeleton } from "@workspace/ui/components/skeleton";
 import { Separator } from "@workspace/ui/components/separator";
 import { cn } from "@workspace/ui/lib/utils";
 import { formatAuto, percentFormatter } from "./utils/number-format";
-
-const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 
 type NeighborRow = EnergyFlowSnapshot["neighbors"][number];
 type DailyRow = EnergyFlowDailyLatest["days"][number];
@@ -213,36 +207,11 @@ function buildExplorerView({
 }
 
 export function EnergyFlowExplorer() {
-  const queryClientRef = React.useRef<QueryClient | null>(null);
-
-  if (!queryClientRef.current) {
-    queryClientRef.current = new QueryClient({
-      defaultOptions: {
-        queries: {
-          staleTime: FIVE_MINUTES_IN_MS,
-          refetchOnWindowFocus: false,
-          retry: 1,
-        },
-      },
-    });
-  }
-
-  return (
-    <QueryClientProvider client={queryClientRef.current}>
-      <EnergyFlowExplorerContent />
-    </QueryClientProvider>
-  );
-}
-
-function EnergyFlowExplorerContent() {
   const [selectedId, setSelectedId] = React.useState("");
 
   const indexQuery = useQuery<EnergyFlowIndex>({
     queryKey: ["energy-flow", "index"],
     queryFn: loadIndex,
-    onError: (error) => {
-      console.error(error);
-    },
   });
 
   const dailyLatestQuery = useQuery<EnergyFlowDailyLatest | null>({
@@ -286,10 +255,7 @@ function EnergyFlowExplorerContent() {
     queryKey: ["energy-flow", "monthly", selectedId],
     queryFn: () => loadMonthly(selectedId),
     enabled: Boolean(selectedId),
-    keepPreviousData: true,
-    onError: (error) => {
-      console.error(error);
-    },
+    placeholderData: keepPreviousData,
   });
 
   const snapshot = monthlyQuery.data ?? null;

@@ -5,8 +5,10 @@
     "paths": {
       "@workspace/ui": ["../ui/src/index.ts"],
       "@workspace/ui/*": ["../ui/src/*"],
-      "@workspace/stats": ["../stats/src/index.ts"],
-      "@workspace/stats/*": ["../stats/src/*"]
+      "@workspace/chart-utils": ["../stats/src/index.ts"],
+      "@workspace/chart-utils/*": ["../stats/src/*"],
+      "@workspace/kas-data": ["../kas-data/src/index.ts"],
+      "@workspace/kas-data/*": ["../kas-data/src/*"]
     }
   },
   "include": ["src"],

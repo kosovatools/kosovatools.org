@@ -1,19 +1,10 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
-
 import {
   ElectricityBalanceChart,
-  EnergyFlowExplorerSkeleton,
+  EnergyFlowExplorer,
 } from "@workspace/energy-tracker";
-import { electricityMonthly, energyMonthlySource } from "@workspace/stats";
-
-const EnergyFlowExplorer = dynamic(
-  () =>
-    import("@workspace/energy-tracker").then((mod) => mod.EnergyFlowExplorer),
-  {
-    loading: () => <EnergyFlowExplorerSkeleton />,
-  },
-);
+import { electricityMeta, electricityMonthly } from "@workspace/kas-data";
+import ReactQueryProvider from "@/components/react-query-provider";
 
 export const metadata: Metadata = {
   title: "Gjurmuesi i rrjedhës së energjisë – Flukset kufitare të Kosovës",
@@ -60,12 +51,15 @@ export default function EnergyFlowsPage() {
             periudha të shkurtra ose të zgjatura.
           </p>
           <span className="text-xs text-muted-foreground">
-            Burimi: {energyMonthlySource.table} ({energyMonthlySource.unit}).
+            Burimi: {electricityMeta.table ?? "E panjohur"}
+            {electricityMeta.unit ? ` (${electricityMeta.unit})` : ""}.
           </span>
         </div>
         <ElectricityBalanceChart data={electricityMonthly} />
       </section>
-      <EnergyFlowExplorer />
+      <ReactQueryProvider>
+        <EnergyFlowExplorer />
+      </ReactQueryProvider>
     </div>
   );
 }

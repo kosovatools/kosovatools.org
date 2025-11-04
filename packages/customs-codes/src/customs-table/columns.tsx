@@ -3,8 +3,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@workspace/ui/components/button";
-import { formatDate, formatPercent } from "@workspace/customs-data/formatters";
-import type { CustomsTreeNode } from "@workspace/customs-data";
+import { formatDate, formatPercent } from "../formatters";
+import type { CustomsTreeNode } from "../types";
 
 import { ExpandIcon } from "../expand-icon";
 import { highlightPrefix } from "../highlighting";

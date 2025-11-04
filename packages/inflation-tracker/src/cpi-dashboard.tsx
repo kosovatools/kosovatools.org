@@ -19,14 +19,16 @@ import {
   computeCpiRangeChange,
   getCpiSeriesForMetric,
   limitCpiMonthlySeries,
-  sortGroupedPeriods,
-  getPeriodFormatter,
-  PERIOD_GROUPING_OPTIONS,
   type CpiGroupNode,
   type CpiMetric,
   type CpiSeriesPoint,
+} from "@workspace/kas-data";
+import {
+  sortGroupedPeriods,
+  getPeriodFormatter,
+  PERIOD_GROUPING_OPTIONS,
   type PeriodGrouping,
-} from "@workspace/stats";
+} from "@workspace/chart-utils";
 import {
   Alert,
   AlertDescription,

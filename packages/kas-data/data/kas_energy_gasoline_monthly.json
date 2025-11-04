@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "table": "",
+    "path": "",
+    "generated_at": "1970-01-01T00:00:00.000Z",
+    "updated_at": null,
+    "unit": "tonnes",
+    "fields": [
+      {
+        "key": "production",
+        "label": "Production",
+        "unit": "tonnes"
+      },
+      {
+        "key": "import",
+        "label": "Import",
+        "unit": "tonnes"
+      },
+      {
+        "key": "export",
+        "label": "Export",
+        "unit": "tonnes"
+      },
+      {
+        "key": "stock",
+        "label": "Stock",
+        "unit": "tonnes"
+      },
+      {
+        "key": "ready_for_market",
+        "label": "Ready for market",
+        "unit": "tonnes"
+      }
+    ],
+    "periods": 0,
+    "label": "Gasoline"
+  },
+  "records": []
+}

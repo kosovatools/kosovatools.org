@@ -50,7 +50,7 @@ jobs:
         id: turbo-key
         run: |
           BASE="turbo-data-$(date -u +%G-W%V)"
-          HASH="${{ hashFiles('turbo.json', 'pnpm-lock.yaml', 'packages/stats/scripts/**', 'packages/customs-data/scripts/**') }}"
+          HASH="${{ hashFiles('turbo.json', 'pnpm-lock.yaml', 'packages/stats/scripts/**') }}"
           BUST="${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true' }}"
           if [ "$BUST" = "true" ]; then
             SUFFIX="$HASH-bust-$GITHUB_RUN_ID"
@@ -75,21 +75,10 @@ jobs:
       - name: Fetch KAS datasets (Turbo)
         run: |
           if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true' }}" = "true" ]; then
-            pnpm turbo run fetch-data --filter=@workspace/stats --force
+            pnpm turbo run fetch-data --filter=@workspace/kas-data --force
           else
-            pnpm turbo run fetch-data --filter=@workspace/stats
+            pnpm turbo run fetch-data --filter=@workspace/kas-data
           fi
-
-      - name: Fetch and trim customs dataset (Turbo)
-        env:
-          CUSTOMS_DATA_SOURCE_URL: ${{ secrets.CUSTOMS_DATA_SOURCE_URL }}
-        run: |
-          if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true' }}" = "true" ]; then
-            pnpm turbo run fetch-data --filter=@workspace/customs-data --force
-          else
-            pnpm turbo run fetch-data --filter=@workspace/customs-data
-          fi
-
       - name: Build Turborepo packages
         run: pnpm turbo run build --filter=web...
         env:

@@ -20,13 +20,12 @@ apps/
 packages/
   car-import-taxes/   # Car import tax calculator domain logic and exports
   customs-codes/      # TARIC & customs code search experience
-  customs-data/       # Customs datasets, loaders, and trimming scripts
   data-insights/      # Cross-tool data visualisations and dashboard wiring
   energy-tracker/     # ENTSO-E client, chart state, and UI for energy flows
   inflation-tracker/  # CPI chart state + React components
   payroll/            # Net wage calculator domain logic
   public-wage-calculator/  # Public-sector salary engine and UI helpers
-  stats/              # Cross-tool statistics/data helpers and formatters
+  chart-utils/              # Cross-tool statistics/data helpers and formatters
   ui/                 # shadcn/ui + bespoke primitives shared across tools
   eslint-config/      # Workspace ESLint presets
   typescript-config/  # Shared tsconfig bases
@@ -45,17 +44,20 @@ Generated documentation for contributors lives in `AGENTS.md`. Components, hooks
 
 Run `pnpm --filter web dev` for app-only development, `pnpm --filter web lint` to target web linting, and `pnpm --filter web typecheck` for strict TypeScript validation. Shared UI primitives should be added inside `packages/ui/src/components` and re-exported through the package index; tool-specific components belong in their respective package directories.
 
-### Working with Stats Data
+### Working with KAS Data
 
-The `@workspace/stats` package centralizes Kosovo Agency of Statistics assets:
+The `@workspace/kas-data` package hosts Kosovo Agency of Statistics assets:
 
-- `packages/stats/scripts/` — Run `pnpm --filter @workspace/stats fetch-data` (or `node scripts/fetch_kas.mjs --out data `) to refresh local JSON snapshots.
-- `packages/stats/data/` — Checked-in datasets for offline development and testing.
-- `packages/stats/docs/` — Chart specifications and notes to maintain parity between data and UI.
+- `packages/kas-data/scripts/` — Run `pnpm --filter @workspace/kas-data fetch-data` (or `node packages/kas-data/scripts/fetch_kas.mjs --out packages/kas-data/data `) to refresh local JSON snapshots.
+- `packages/kas-data/data/` — Checked-in datasets for offline development and testing.
+- `packages/kas-data/docs/` — Chart specifications and notes to keep data exports aligned with UI needs.
+- Every JSON snapshot stores a `{ meta, records }` (or `{ meta, groups }`) payload so
+  downstream code can surface table names, units, and update timestamps without a
+  separate manifest.
 
-For project-wide data refresh, run `pnpm fetch-data` to execute every package’s `fetch-data` target.
+Use `@workspace/chart-utils` for shared formatters, period helpers, and stack primitives. For project-wide data refresh, run `pnpm fetch-data` to execute every package’s `fetch-data` target.
 
-Scheduled pipelines now live in the `data.kosovatools.org` repository within the Kosova Tools GitHub org. That project ingests upstream sources, publishes JSON to https://data.kosovatools.org, and powers production consumers such as `@workspace/energy-tracker`.
+Scheduled pipelines now live in the `data.kosovatools.org` repository within the Kosova Tools GitHub org. That project ingests upstream sources, publishes JSON to https://data.kosovatools.org, and powers production consumers such as `@workspace/energy-tracker` and `@workspace/kas-data`.
 
 ## Contributing
 

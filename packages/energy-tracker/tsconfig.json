@@ -1,7 +1,11 @@
 {
   "extends": "@workspace/typescript-config/react-library.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "paths": {
+      "@workspace/kas-data": ["../kas-data/src/index.ts"],
+      "@workspace/kas-data/*": ["../kas-data/src/*"]
+    }
   },
   "include": ["src", "data"]
 }

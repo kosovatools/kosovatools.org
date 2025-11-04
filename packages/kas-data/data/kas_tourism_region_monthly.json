@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "table": "",
+    "path": "",
+    "generated_at": "1970-01-01T00:00:00.000Z",
+    "updated_at": null,
+    "unit": "people",
+    "fields": [
+      {
+        "key": "visitors",
+        "label": "Visitors",
+        "unit": "people"
+      },
+      {
+        "key": "nights",
+        "label": "Nights",
+        "unit": "overnights"
+      }
+    ],
+    "periods": 0,
+    "regions": [],
+    "visitor_groups": [],
+    "metrics": []
+  },
+  "records": []
+}

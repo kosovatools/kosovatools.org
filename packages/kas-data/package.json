@@ -1,0 +1,28 @@
+{
+  "name": "@workspace/kas-data",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "lint": "eslint src scripts --max-warnings 0",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "fetch-data": "node scripts/fetch_kas.mjs --out data "
+  },
+  "dependencies": {
+    "@workspace/chart-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "eslint": "^9.39.1",
+    "typescript": "^5.9.3"
+  },
+  "license": "AGPL-3.0-only"
+}

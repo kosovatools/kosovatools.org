@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "table": "",
+    "path": "",
+    "generated_at": "1970-01-01T00:00:00.000Z",
+    "updated_at": null,
+    "unit": "%",
+    "fields": [
+      {
+        "key": "value",
+        "label": "Value",
+        "unit": "%"
+      }
+    ],
+    "periods": 0,
+    "title": "",
+    "group_count": 0,
+    "dimensions": {
+      "time": {
+        "code": "Viti/muaji",
+        "label": "Viti/muaji"
+      },
+      "group": {
+        "code": "Grupet",
+        "label": "Grupet"
+      }
+    }
+  },
+  "groups": []
+}
