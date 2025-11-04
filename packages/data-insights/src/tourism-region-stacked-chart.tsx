@@ -45,35 +45,16 @@ const groups = [
 ] as const;
 const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
 
-export function TourismRegionCharts({
-  data,
-  months,
-}: {
-  data: TourismRegionRecord[];
-  months?: number;
-}) {
+export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
   const [group, setGroup] =
     React.useState<(typeof groups)[number]["id"]>("total");
 
   const [periodGrouping, setPeriodGrouping] =
     React.useState<StackPeriodGrouping>("yearly");
 
-  const controlledMonths =
-    typeof months === "number" && Number.isFinite(months) && months > 0
-      ? months
-      : undefined;
+  const [range, setRange] = React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
-  const [range, setRange] = React.useState<TimeRangeOption>(
-    controlledMonths ?? DEFAULT_TIME_RANGE,
-  );
-
-  React.useEffect(() => {
-    if (controlledMonths != null) {
-      setRange(controlledMonths);
-    }
-  }, [controlledMonths]);
-
-  const monthsLimit = controlledMonths ?? monthsFromRange(range);
+  const monthsLimit = monthsFromRange(range);
 
   const { chartData, keyMap, config } = React.useMemo(() => {
     const { keys, series, labelMap } = buildRegionStackSeries(data, {
@@ -176,14 +157,12 @@ export function TourismRegionCharts({
           options={STACK_PERIOD_GROUPING_OPTIONS}
           label="Perioda"
         />
-        {controlledMonths == null ? (
-          <OptionSelector
-            value={range}
-            onChange={setRange}
-            options={DEFAULT_TIME_RANGE_OPTIONS}
-            label="Intervali"
-          />
-        ) : null}
+        <OptionSelector
+          value={range}
+          onChange={setRange}
+          options={DEFAULT_TIME_RANGE_OPTIONS}
+          label="Intervali"
+        />
       </div>
 
       {latestSummary ? (

@@ -46,32 +46,17 @@ const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
 
 export function ImportPartnersStackedChart({
   data,
-  months,
   top = DEFAULT_TOP_PARTNERS,
 }: {
   data: TradePartnerRecord[];
-  months?: number;
   top?: number;
 }) {
   const [periodGrouping, setPeriodGrouping] =
     React.useState<StackPeriodGrouping>("yearly");
 
-  const controlledMonths =
-    typeof months === "number" && Number.isFinite(months) && months > 0
-      ? months
-      : undefined;
+  const [range, setRange] = React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
-  const [range, setRange] = React.useState<TimeRangeOption>(
-    controlledMonths ?? DEFAULT_TIME_RANGE,
-  );
-
-  React.useEffect(() => {
-    if (controlledMonths != null) {
-      setRange(controlledMonths);
-    }
-  }, [controlledMonths]);
-
-  const monthsLimit = controlledMonths ?? monthsFromRange(range);
+  const monthsLimit = monthsFromRange(range);
 
   const totals = React.useMemo(
     () =>
@@ -173,20 +158,20 @@ export function ImportPartnersStackedChart({
 
   return (
     <div className="flex flex-col gap-4">
-      <OptionSelector
-        value={periodGrouping}
-        onChange={(value) => setPeriodGrouping(value)}
-        options={STACK_PERIOD_GROUPING_OPTIONS}
-        label="Perioda"
-      />
-      {controlledMonths == null ? (
+      <div className="flex flex-wrap gap-4">
+        <OptionSelector
+          value={periodGrouping}
+          onChange={(value) => setPeriodGrouping(value)}
+          options={STACK_PERIOD_GROUPING_OPTIONS}
+          label="Perioda"
+        />
         <OptionSelector
           value={range}
           onChange={setRange}
           options={DEFAULT_TIME_RANGE_OPTIONS}
           label="Intervali"
         />
-      ) : null}
+      </div>
       <StackedKeySelector
         totals={totals}
         selectedKeys={selectedKeys}
