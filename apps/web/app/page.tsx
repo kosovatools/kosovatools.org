@@ -9,6 +9,7 @@ import {
   HandCoins,
   PackageSearch,
   TrendingUp,
+  Zap,
 } from "lucide-react";
 
 import { Button } from "@workspace/ui/components/button";
@@ -35,6 +36,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+
   openGraph: {
     type: "website",
     url: "/",
@@ -115,6 +117,15 @@ const tools: ToolCard[] = [
     cta: "Planifiko pagën",
     icon: HandCoins,
     category: "Financa",
+  },
+  {
+    name: "Gjurmuesi i energjisë",
+    href: "/energy-flows",
+    description:
+      "Shfleto snapshot-e mujore nga ENTSO-E për të parë importet, eksportet dhe bilancin neto të energjisë së Kosovës me vendet fqinje.",
+    cta: "Analizo rrjedhat e energjisë",
+    icon: Zap,
+    category: "Energjia",
   },
 ];
 

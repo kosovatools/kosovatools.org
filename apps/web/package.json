@@ -15,6 +15,7 @@
     "@workspace/car-import-taxes": "workspace:*",
     "@workspace/customs-codes": "workspace:*",
     "@workspace/data-insights": "workspace:*",
+    "@workspace/energy-tracker": "workspace:*",
     "@workspace/inflation-tracker": "workspace:*",
     "@workspace/payroll": "workspace:*",
     "@workspace/public-wage-calculator": "workspace:*",

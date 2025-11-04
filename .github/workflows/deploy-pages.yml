@@ -7,12 +7,8 @@ on:
     - cron: "0 3 * * 1"
   workflow_dispatch:
     inputs:
-      bust_stats_cache:
-        description: "Force a fresh KAS dataset refresh (skips cache)"
-        required: false
-        default: "false"
-      bust_customs_cache:
-        description: "Force a fresh customs dataset refresh (skips cache)"
+      bust_data_cache:
+        description: "Force a fresh dataset refresh (skips cache)"
         required: false
         default: "false"
 
@@ -29,97 +25,7 @@ env:
   NEXT_PUBLIC_BASE_URL: https://kosovatools.org
 
 jobs:
-  fetch-stats-data:
-    runs-on: ubuntu-latest
-    outputs:
-      cache-key: ${{ steps.stats-key.outputs.key }}
-      restore-primary: ${{ steps.stats-key.outputs.restore-primary }}
-      restore-fallback: ${{ steps.stats-key.outputs.restore-fallback }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Compute stats dataset cache key
-        id: stats-key
-        run: |
-          BASE="stats-data-120-$(date -u +%G-W%V)"
-          HASH="${{ hashFiles('packages/stats/scripts/fetch_kas.mjs', 'pnpm-lock.yaml') }}"
-          if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_stats_cache == 'true' }}" = "true" ]; then
-            SUFFIX="$HASH-bust-$GITHUB_RUN_ID"
-          else
-            SUFFIX="$HASH"
-          fi
-          echo "key=$BASE-$SUFFIX" >> $GITHUB_OUTPUT
-          echo "restore-primary=$BASE-$HASH-" >> $GITHUB_OUTPUT
-          echo "restore-fallback=stats-data-120-" >> $GITHUB_OUTPUT
-
-      - name: Restore cached KAS datasets
-        id: cache-stats
-        uses: actions/cache@v4
-        with:
-          path: packages/stats/data
-          key: ${{ steps.stats-key.outputs.key }}
-          restore-keys: |
-            ${{ steps.stats-key.outputs.restore-primary }}
-            ${{ steps.stats-key.outputs.restore-fallback }}
-
-      - name: Refresh KAS datasets
-        if: steps.cache-stats.outputs.cache-hit != 'true'
-        run: node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data 
-
-  fetch-customs-data:
-    runs-on: ubuntu-latest
-    outputs:
-      cache-key: ${{ steps.customs-key.outputs.key }}
-      restore-primary: ${{ steps.customs-key.outputs.restore-primary }}
-      restore-fallback: ${{ steps.customs-key.outputs.restore-fallback }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Compute customs dataset cache key
-        id: customs-key
-        run: |
-          BASE="customs-codes-data-$(date -u +%G-W%V)"
-          HASH="${{ hashFiles('packages/customs-data/scripts/fetch-tarrifs.mjs', 'packages/customs-data/scripts/trim-tarrifs.mjs') }}"
-          if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_customs_cache == 'true' }}" = "true" ]; then
-            SUFFIX="$HASH-bust-$GITHUB_RUN_ID"
-          else
-            SUFFIX="$HASH"
-          fi
-          echo "key=$BASE-$SUFFIX" >> $GITHUB_OUTPUT
-          echo "restore-primary=$BASE-$HASH-" >> $GITHUB_OUTPUT
-          echo "restore-fallback=customs-codes-data-" >> $GITHUB_OUTPUT
-
-      - name: Restore cached customs dataset
-        id: cache-customs
-        uses: actions/cache@v4
-        with:
-          path: packages/customs-data/data
-          key: ${{ steps.customs-key.outputs.key }}
-          restore-keys: |
-            ${{ steps.customs-key.outputs.restore-primary }}
-            ${{ steps.customs-key.outputs.restore-fallback }}
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Fetch and trim customs dataset
-        env:
-          CUSTOMS_DATA_SOURCE_URL: ${{ secrets.CUSTOMS_DATA_SOURCE_URL }}
-        run: node packages/customs-data/scripts/fetch-data.mjs
-
   build:
-    needs:
-      - fetch-stats-data
-      - fetch-customs-data
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -127,24 +33,6 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
-
-      - name: Restore cached KAS datasets
-        uses: actions/cache/restore@v4
-        with:
-          path: packages/stats/data
-          key: ${{ needs.fetch-stats-data.outputs.cache-key }}
-          restore-keys: |
-            ${{ needs.fetch-stats-data.outputs.restore-primary }}
-            ${{ needs.fetch-stats-data.outputs.restore-fallback }}
-
-      - name: Restore cached customs dataset
-        uses: actions/cache/restore@v4
-        with:
-          path: packages/customs-data/data
-          key: ${{ needs.fetch-customs-data.outputs.cache-key }}
-          restore-keys: |
-            ${{ needs.fetch-customs-data.outputs.restore-primary }}
-            ${{ needs.fetch-customs-data.outputs.restore-fallback }}
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -158,8 +46,49 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
+      - name: Compute Turbo cache key
+        id: turbo-key
+        run: |
+          BASE="turbo-data-$(date -u +%G-W%V)"
+          HASH="${{ hashFiles('turbo.json', 'pnpm-lock.yaml', 'packages/stats/scripts/**', 'packages/customs-data/scripts/**') }}"
+          BUST="${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true' }}"
+          if [ "$BUST" = "true" ]; then
+            SUFFIX="$HASH-bust-$GITHUB_RUN_ID"
+          else
+            SUFFIX="$HASH"
+          fi
+          echo "key=$BASE-$SUFFIX" >> "$GITHUB_OUTPUT"
+          echo "restore=$BASE-" >> "$GITHUB_OUTPUT"
+
+      - name: Restore Turbo cache
+        id: turbo-cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ steps.turbo-key.outputs.key }}
+          restore-keys: |
+            ${{ steps.turbo-key.outputs.restore }}
+
       - name: Install dependencies
         run: pnpm install
+
+      - name: Fetch KAS datasets (Turbo)
+        run: |
+          if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true' }}" = "true" ]; then
+            pnpm turbo run fetch-data --filter=@workspace/stats --force
+          else
+            pnpm turbo run fetch-data --filter=@workspace/stats
+          fi
+
+      - name: Fetch and trim customs dataset (Turbo)
+        env:
+          CUSTOMS_DATA_SOURCE_URL: ${{ secrets.CUSTOMS_DATA_SOURCE_URL }}
+        run: |
+          if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true' }}" = "true" ]; then
+            pnpm turbo run fetch-data --filter=@workspace/customs-data --force
+          else
+            pnpm turbo run fetch-data --filter=@workspace/customs-data
+          fi
 
       - name: Build Turborepo packages
         run: pnpm turbo run build --filter=web...

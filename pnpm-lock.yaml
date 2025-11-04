@@ -42,6 +42,9 @@ importers:
       '@workspace/data-insights':
         specifier: workspace:*
         version: link:../../packages/data-insights
+      '@workspace/energy-tracker':
+        specifier: workspace:*
+        version: link:../../packages/energy-tracker
       '@workspace/inflation-tracker':
         specifier: workspace:*
         version: link:../../packages/inflation-tracker
@@ -244,6 +247,43 @@ importers:
         version: 9.39.0(jiti@2.6.1)
       typescript:
         specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/energy-tracker:
+    dependencies:
+      '@workspace/ui':
+        specifier: workspace:*
+        version: link:../ui
+      lucide-react:
+        specifier: ^0.475.0
+        version: 0.475.0(react@19.2.0)
+      react:
+        specifier: ^19.1.1
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.1.1
+        version: 19.2.0(react@19.2.0)
+      recharts:
+        specifier: 2.15.4
+        version: 2.15.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      '@workspace/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^9.32.0
+        version: 9.39.0(jiti@2.6.1)
+      typescript:
+        specifier: ^5.9.2
         version: 5.9.3
 
   packages/eslint-config:
@@ -1960,7 +2000,6 @@ packages:
 
   fast-levenshtein@2.0.6:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
-
   fastq@1.19.1:
     resolution: {integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==}
 
@@ -3018,7 +3057,6 @@ packages:
   strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
-
   styled-jsx@5.1.6:
     resolution: {integrity: sha512-qSVyDTeMotdvQYoHWLNGwRFJHC+i+ZvdBRYosOFgC+Wg1vx4frN2/RG/NA7SYqqvKNLf39P2LSRA2pu6n0XYZA==}
     engines: {node: '>= 12.0.0'}
@@ -4799,7 +4837,6 @@ snapshots:
   fast-json-stable-stringify@2.1.0: {}
 
   fast-levenshtein@2.0.6: {}
-
   fastq@1.19.1:
     dependencies:
       reusify: 1.1.0
@@ -5992,7 +6029,6 @@ snapshots:
   strip-json-comments@2.0.1: {}
 
   strip-json-comments@3.1.1: {}
-
   styled-jsx@5.1.6(react@19.2.0):
     dependencies:
       client-only: 0.0.1
