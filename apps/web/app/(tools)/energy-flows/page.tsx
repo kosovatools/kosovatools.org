@@ -1,6 +1,19 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 
-import { EnergyFlowExplorer } from "@workspace/energy-tracker";
+import {
+  ElectricityBalanceChart,
+  EnergyFlowExplorerSkeleton,
+} from "@workspace/energy-tracker";
+import { electricityMonthly, energyMonthlySource } from "@workspace/stats";
+
+const EnergyFlowExplorer = dynamic(
+  () =>
+    import("@workspace/energy-tracker").then((mod) => mod.EnergyFlowExplorer),
+  {
+    loading: () => <EnergyFlowExplorerSkeleton />,
+  },
+);
 
 export const metadata: Metadata = {
   title: "Gjurmuesi i rrjedhës së energjisë – Flukset kufitare të Kosovës",
@@ -34,5 +47,25 @@ export const metadata: Metadata = {
 };
 
 export default function EnergyFlowsPage() {
-  return <EnergyFlowExplorer />;
+  return (
+    <div className="space-y-12">
+      <section className="space-y-4">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-2xl font-semibold">
+            Importet kundrejt prodhimit vendas
+          </h2>
+          <p className="max-w-2xl text-sm text-muted-foreground">
+            Krahaso importet mujore të energjisë elektrike me prodhimin vendor
+            për të parë se si ndryshon varësia nga energjia e importuar në
+            periudha të shkurtra ose të zgjatura.
+          </p>
+          <span className="text-xs text-muted-foreground">
+            Burimi: {energyMonthlySource.table} ({energyMonthlySource.unit}).
+          </span>
+        </div>
+        <ElectricityBalanceChart data={electricityMonthly} />
+      </section>
+      <EnergyFlowExplorer />
+    </div>
+  );
 }

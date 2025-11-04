@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-Kosova Tools uses pnpm and Turborepo to coordinate multiple packages. The Next.js customer surface lives in `apps/web`, with routes in `app/`, shared UI in `components/`, and utilities in `lib/`. Shared React primitives live in `packages/ui`; cross-tool data helpers start in `packages/stats`; workspace-wide linting and TypeScript baselines sit in `packages/eslint-config` and `packages/typescript-config`.
+Kosova Tools uses pnpm and Turborepo to coordinate multiple packages. The Next.js customer surface lives in `apps/web`, with routes in `app/`, shared UI in `components/`, and utilities in `lib/`. Tool-specific React packages (e.g., `packages/customs-codes`, `packages/car-import-taxes`, `packages/energy-tracker`, `packages/inflation-tracker`, `packages/public-wage-calculator`, `packages/data-insights`) own their UI and domain logic. Shared React primitives live in `packages/ui`, data loaders and formatters stay in `packages/customs-data` and `packages/stats`, and workspace-wide linting plus TypeScript baselines sit in `packages/eslint-config` and `packages/typescript-config`.
 
 **Important:** Leave the shadcn-generated files in `packages/ui/src/components` alone—they are regenerated periodically and any manual edits will be lost. Place bespoke UI in `packages/ui/src/custom-components` instead.
 
@@ -12,9 +12,11 @@ Each citizen tool should ship as its own workspace package (e.g., `packages/cust
 
 ## Stats Data Lifecycle
 
-- Refresh Kosovo Agency of Statistics (KAS) sources by running `node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data `. Scripts require Node.js 18+.
+- Refresh Kosovo Agency of Statistics (KAS) sources by running `pnpm --filter @workspace/stats fetch-data` (or `node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data `). Scripts require Node.js 18+.
 - Document visualization requirements in `packages/stats/docs/` (e.g., `kas_chart_specs.md`) so UI work aligns with dataset schemas.
 - Keep JSON snapshots in `packages/stats/data/` up to date; note retrieval dates inside `docs/data/README.md`.
+- Run `pnpm fetch-data` at the workspace root to execute every package-level `fetch-data` task when you need fresh local datasets across tools.
+- Scheduled production fetches run from the `data.kosovatools.org` repository in the Kosova Tools GitHub organization, which publishes JSON snapshots to https://data.kosovatools.org for packages like `@workspace/energy-tracker` and `@workspace/stats`.
 
 ## Build, Test, and Development Commands
 

@@ -36,7 +36,7 @@ import {
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
-import { useTimelineEventMarkers } from "./use-timeline-event-markers";
+import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 import { TimeRangeSelector } from "@workspace/ui/custom-components/time-range-selector";
 
 const DEFAULT_METRIC: FuelMetric = "ready_for_market";

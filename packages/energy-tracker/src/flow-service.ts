@@ -241,7 +241,7 @@ function normaliseIndex(dataset: unknown): EnergyFlowIndex {
 
   const generatedAt =
     typeof entry.generatedAt === "string" &&
-      !Number.isNaN(new Date(entry.generatedAt).getTime())
+    !Number.isNaN(new Date(entry.generatedAt).getTime())
       ? entry.generatedAt
       : new Date(0).toISOString();
 

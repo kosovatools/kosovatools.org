@@ -1,7 +1,5 @@
 import {
   describeFuelSources,
-  electricityMonthly,
-  energyMonthlySource,
   formatKasGeneratedLabel,
   fuelBalances,
   importsByPartnerSource,
@@ -19,7 +17,6 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 
-import { ElectricityBalanceChart } from "./electricity-balance-chart";
 import { FuelBalanceChart } from "./fuel-balance-chart";
 import { ImportPartnersStackedChart } from "./import-partners-stacked-chart";
 import { TourismCountryStackedChart } from "./tourism-country-stacked-chart";
@@ -77,23 +74,7 @@ export function DataInsightsDashboard() {
       </section>
 
       <section className="space-y-6">
-        <h2 className="text-2xl font-semibold">Energjia & Karburantet</h2>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Importet e energjisë kundrejt prodhimit</CardTitle>
-            <CardDescription>
-              Importet mujore të energjisë elektrike dhe prodhimi vendor (GWh).
-            </CardDescription>
-          </CardHeader>
-          <CardContent className={chartContentClass}>
-            <ElectricityBalanceChart data={electricityMonthly} />
-          </CardContent>
-          <CardFooter className="text-xs text-muted-foreground">
-            Burimi: {energyMonthlySource.table} ({energyMonthlySource.unit}).
-          </CardFooter>
-        </Card>
-
+        <h2 className="text-2xl font-semibold">Karburantet</h2>
         <Card>
           <CardHeader>
             <CardTitle>Bilanci i furnizimit me karburante</CardTitle>

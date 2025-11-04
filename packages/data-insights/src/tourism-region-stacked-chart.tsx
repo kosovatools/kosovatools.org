@@ -33,7 +33,7 @@ import {
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { TimeRangeSelector } from "@workspace/ui/custom-components/time-range-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
-import { useTimelineEventMarkers } from "./use-timeline-event-markers";
+import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 
 const groups = [
   { id: "total", label: "Totali" },

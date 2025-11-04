@@ -2,11 +2,15 @@
 
 Kosova Tools is a web platform that helps Kosovo residents discover and use practical public-service tools—customs tariff lookups, wage calculators, and interactive insights from Republic of Kosovo (RKS) open data—all in one place. The project is built with Next.js, shadcn/ui, and a shared component library so we can deliver a cohesive experience quickly.
 
-## Roadmap Highlights
+## Current Tools
 
 - Customs code explorer: searchable HS and TARIC information with localized guidance.
+- Data insights dashboards: interactive KAS charts for demographics, labor, energy, and trade.
+- Inflation tracker: CPI visualisations with COICOP category comparisons.
+- Car import tax estimator: VAT, excise, and customs calculations for imported vehicles.
+- Public wage calculator: coefficient-based salary planner for civil servants.
 - Net wage calculator: gross-to-net conversions for employees and contractors.
-- Data insights: visual explorations for demographics, labor, and trade statistics sourced from RKS open datasets.
+- Energy flow tracker: ENTSO-E import/export snapshots with neighbor comparisons.
 
 ## Project Layout
 
@@ -16,10 +20,13 @@ apps/
 packages/
   car-import-taxes/   # Car import tax calculator domain logic and exports
   customs-codes/      # TARIC & customs code search experience
-  customs-data/       # Customs datasets and loaders
-  data-insights/      # Shared data visualizations and dashboards
+  customs-data/       # Customs datasets, loaders, and trimming scripts
+  data-insights/      # Cross-tool data visualisations and dashboard wiring
+  energy-tracker/     # ENTSO-E client, chart state, and UI for energy flows
+  inflation-tracker/  # CPI chart state + React components
   payroll/            # Net wage calculator domain logic
-  stats/              # Cross-tool statistics/data helpers
+  public-wage-calculator/  # Public-sector salary engine and UI helpers
+  stats/              # Cross-tool statistics/data helpers and formatters
   ui/                 # shadcn/ui + bespoke primitives shared across tools
   eslint-config/      # Workspace ESLint presets
   typescript-config/  # Shared tsconfig bases
@@ -42,9 +49,13 @@ Run `pnpm --filter web dev` for app-only development, `pnpm --filter web lint` t
 
 The `@workspace/stats` package centralizes Kosovo Agency of Statistics assets:
 
-- `packages/stats/scripts/` — Run `node scripts/fetch_kas.mjs --out data ` to refresh local JSON snapshots (Node.js 18+).
+- `packages/stats/scripts/` — Run `pnpm --filter @workspace/stats fetch-data` (or `node scripts/fetch_kas.mjs --out data `) to refresh local JSON snapshots.
 - `packages/stats/data/` — Checked-in datasets for offline development and testing.
 - `packages/stats/docs/` — Chart specifications and notes to maintain parity between data and UI.
+
+For project-wide data refresh, run `pnpm fetch-data` to execute every package’s `fetch-data` target.
+
+Scheduled pipelines now live in the `data.kosovatools.org` repository within the Kosova Tools GitHub org. That project ingests upstream sources, publishes JSON to https://data.kosovatools.org, and powers production consumers such as `@workspace/energy-tracker`.
 
 ## Contributing
 

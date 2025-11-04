@@ -1,4 +1,5 @@
 export { EnergyFlowExplorer } from "./energy-flow-explorer";
+export { EnergyFlowExplorerSkeleton } from "./energy-flow-explorer-skeleton";
 export {
   formatPeriodLabel,
   formatMonthLabel,
@@ -19,3 +20,4 @@ export type {
   EnergyFlowTotals,
   EnergyFlowHourlyEntry,
 } from "./types";
+export { ElectricityBalanceChart } from "./electricity-balance-chart";

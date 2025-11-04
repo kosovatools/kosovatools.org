@@ -2,12 +2,13 @@
 
 import * as React from "react";
 import { Info } from "lucide-react";
-
 import {
-  DailyFlowChart,
-  MonthlyFlowTrendChart,
-  NeighborNetBalanceChart,
-} from "./energy-flow-chart";
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
+
+import { DailyFlowChart, MonthlyFlowTrendChart } from "./energy-flow-chart";
 import {
   formatDayLabel,
   formatMonthLabel,
@@ -24,6 +25,7 @@ import type {
   EnergyFlowMonthlyPoint,
   EnergyFlowSnapshot,
 } from "./types";
+import { EnergyFlowExplorerSkeleton } from "./energy-flow-explorer-skeleton";
 
 import {
   Alert,
@@ -38,49 +40,46 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { Label } from "@workspace/ui/components/label";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 import { Separator } from "@workspace/ui/components/separator";
 import { cn } from "@workspace/ui/lib/utils";
+import { formatAuto, percentFormatter } from "./utils/number-format";
 
-const mwhFormatter = new Intl.NumberFormat("sq-AL", {
-  maximumFractionDigits: 0,
-});
+const FIVE_MINUTES_IN_MS = 5 * 60 * 1000;
 
-const signedMwhFormatter = new Intl.NumberFormat("sq-AL", {
-  maximumFractionDigits: 0,
-  signDisplay: "always",
-});
+type NeighborRow = EnergyFlowSnapshot["neighbors"][number];
+type DailyRow = EnergyFlowDailyLatest["days"][number];
 
-const gwhFormatter = new Intl.NumberFormat("sq-AL", {
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 1,
-});
+type FlowTotals = {
+  importMWh: number;
+  exportMWh: number;
+  netMWh: number;
+};
 
-const signedGwhFormatter = new Intl.NumberFormat("sq-AL", {
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 1,
-  signDisplay: "always",
-});
-
-const percentFormatter = new Intl.NumberFormat("sq-AL", {
-  style: "percent",
-  maximumFractionDigits: 1,
-});
-
-function formatMWh(value: number): string {
-  return `${mwhFormatter.format(value)} MWh`;
-}
-
-function formatGWh(value: number): string {
-  return `${gwhFormatter.format(value / 1_000)} GWh`;
-}
-
-function formatSignedMWh(value: number): string {
-  return `${signedMwhFormatter.format(value)} MWh`;
-}
-
-function formatSignedGWh(value: number): string {
-  return `${signedGwhFormatter.format(value / 1_000)} GWh`;
-}
+type ExplorerView = {
+  snapshot: EnergyFlowSnapshot | null;
+  availableMonths: EnergyFlowIndex["months"];
+  selectedMonth: EnergyFlowIndex["months"][number] | null;
+  generatedLabel: string | null;
+  monthlyPoints: EnergyFlowMonthlyPoint[];
+  periodLabel: string | null;
+  totals: FlowTotals;
+  neighbors: NeighborRow[];
+  dailyData: DailyRow[];
+  totalImports: number;
+  totalExports: number;
+  netBalance: number;
+  peakImportDay: DailyRow | null;
+  peakExportDay: DailyRow | null;
+  strongestNetImportDay: DailyRow | null;
+  strongestNetExportDay: DailyRow | null;
+  topImport: NeighborRow | null;
+  topExport: NeighborRow | null;
+  topNetImport: NeighborRow | null;
+  topNetExport: NeighborRow | null;
+  topImportShare: number;
+  topExportShare: number;
+};
 
 function selectTop<T>(
   entries: T[],
@@ -99,194 +98,63 @@ function selectTop<T>(
   return best;
 }
 
-export function EnergyFlowExplorer() {
-  const [index, setIndex] = React.useState<EnergyFlowIndex | null>(null);
-  const [dailyLatest, setDailyLatest] =
-    React.useState<EnergyFlowDailyLatest | null>(null);
-  const [monthly, setMonthly] = React.useState<EnergyFlowSnapshot | null>(null);
-  const [selectedId, setSelectedId] = React.useState("");
-  const lastLoadedSnapshotId = React.useRef<string>("");
-  const [isIndexLoading, setIsIndexLoading] = React.useState(true);
-  const [isMonthlyLoading, setIsMonthlyLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const [monthlyError, setMonthlyError] = React.useState<string | null>(null);
+function buildExplorerView({
+  index,
+  snapshot,
+  dailyLatest,
+  selectedId,
+}: {
+  index: EnergyFlowIndex | null;
+  snapshot: EnergyFlowSnapshot | null;
+  dailyLatest: EnergyFlowDailyLatest | null;
+  selectedId: string;
+}): ExplorerView | null {
+  if (!index) {
+    return null;
+  }
 
-  React.useEffect(() => {
-    let cancelled = false;
+  const availableMonths = index.months ?? [];
+  const selectedMonth =
+    availableMonths.find((month) => month.id === selectedId) ?? null;
+  const generatedLabel = formatTimestamp(index.generatedAt);
+  const monthlyPoints = indexToMonthlyPoints(index);
 
-    async function bootstrap() {
-      setIsIndexLoading(true);
-      setError(null);
-      try {
-        const [indexData, latestDaily] = await Promise.all([
-          loadIndex(),
-          loadLatestDaily().catch(() => null),
-        ]);
-        if (cancelled) return;
-        setIndex(indexData);
-        if (latestDaily) {
-          setDailyLatest(latestDaily);
-        }
-        const lastId = indexData.months.at(-1)?.id ?? "";
-        if (lastId) {
-          setSelectedId((current) => current || lastId);
-        }
-      } catch (err) {
-        console.error(err);
-        if (!cancelled) {
-          setError(
-            "Nuk arritëm të marrim indeksin e fluksit të energjisë nga ENTSO-E.",
-          );
-        }
-      } finally {
-        if (!cancelled) {
-          setIsIndexLoading(false);
-        }
-      }
-    }
-
-    bootstrap();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (!selectedId || lastLoadedSnapshotId.current === selectedId) {
-      return;
-    }
-
-    let cancelled = false;
-    setIsMonthlyLoading(true);
-    setMonthlyError(null);
-    setMonthly(null);
-
-    loadMonthly(selectedId)
-      .then((snapshot) => {
-        if (!cancelled) {
-          setMonthly(snapshot);
-          lastLoadedSnapshotId.current = snapshot.id;
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        if (!cancelled) {
-          setMonthly(null);
-          setMonthlyError(
-            "Periudha e përzgjedhur mujore nuk u ngarkua. Provoni një muaj tjetër.",
-          );
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setIsMonthlyLoading(false);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [selectedId]);
-
-  const monthlyPoints = React.useMemo<EnergyFlowMonthlyPoint[]>(() => {
-    if (!index) {
-      return [];
-    }
-    return indexToMonthlyPoints(index);
-  }, [index]);
-
-  const snapshot = monthly;
-  const neighbors = snapshot?.neighbors ?? [];
-  const totals = snapshot?.totals ?? { importMWh: 0, exportMWh: 0, netMWh: 0 };
-  const totalImports = totals.importMWh;
-  const totalExports = totals.exportMWh;
-  const netBalance = totals.netMWh;
+  const totals: FlowTotals = snapshot?.totals ?? {
+    importMWh: 0,
+    exportMWh: 0,
+    netMWh: 0,
+  };
+  const neighbors: NeighborRow[] = snapshot?.neighbors ?? [];
 
   const periodLabel = snapshot
     ? formatPeriodLabel(snapshot.periodStart, snapshot.periodEnd)
     : null;
 
-  const dailyData = React.useMemo(() => {
-    if (!snapshot || !dailyLatest || dailyLatest.snapshotId !== snapshot.id) {
-      return [];
-    }
-    return dailyLatest.days;
-  }, [snapshot, dailyLatest]);
+  const dailyData: DailyRow[] =
+    snapshot && dailyLatest && dailyLatest.snapshotId === snapshot.id
+      ? dailyLatest.days
+      : [];
 
-  const peakImportDay = React.useMemo(
-    () =>
-      selectTop(
-        dailyData,
-        (day) => day.imports,
-        (candidate, current) => candidate > current,
-      ),
-    [dailyData],
+  const peakImportDay = selectTop(
+    dailyData,
+    (day) => day.imports,
+    (candidate, current) => candidate > current,
   );
-  const peakExportDay = React.useMemo(
-    () =>
-      selectTop(
-        dailyData,
-        (day) => day.exports,
-        (candidate, current) => candidate > current,
-      ),
-    [dailyData],
+  const peakExportDay = selectTop(
+    dailyData,
+    (day) => day.exports,
+    (candidate, current) => candidate > current,
   );
-  const strongestNetImportDay = React.useMemo(
-    () =>
-      selectTop(
-        dailyData,
-        (day) => day.net,
-        (candidate, current) => candidate > current,
-      ),
-    [dailyData],
+  const strongestNetImportDay = selectTop(
+    dailyData,
+    (day) => day.net,
+    (candidate, current) => candidate > current,
   );
-  const strongestNetExportDay = React.useMemo(
-    () =>
-      selectTop(
-        dailyData,
-        (day) => day.net,
-        (candidate, current) => candidate < current,
-      ),
-    [dailyData],
+  const strongestNetExportDay = selectTop(
+    dailyData,
+    (day) => day.net,
+    (candidate, current) => candidate < current,
   );
-
-  const availableMonths = index?.months ?? [];
-  const generatedLabel = index ? formatTimestamp(index.generatedAt) : null;
-
-  if (isIndexLoading) {
-    return (
-      <Alert variant="default">
-        <Info className="h-4 w-4" />
-        <AlertTitle>Duke ngarkuar periudhat nga ENTSO-E</AlertTitle>
-        <AlertDescription>
-          Duke marrë indeksin më të fundit të fluksit ndërkufitar të energjisë…
-        </AlertDescription>
-      </Alert>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <Info className="h-4 w-4" />
-        <AlertTitle>Të dhënat nuk u ngarkuan</AlertTitle>
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    );
-  }
-
-  if (!availableMonths.length) {
-    return (
-      <Alert variant="default">
-        <Info className="h-4 w-4" />
-        <AlertTitle>Në pritje të të dhënave ENTSO-E</AlertTitle>
-        <AlertDescription>
-          Ende nuk ka periudha të flukseve ndërkufitare. Rikthehuni pas
-          përfundimit të procesit mujor të përditësimit.
-        </AlertDescription>
-      </Alert>
-    );
-  }
 
   const topImport = selectTop(
     neighbors,
@@ -309,22 +177,209 @@ export function EnergyFlowExplorer() {
     (candidate, current) => candidate < current,
   );
 
+  const totalImports = totals.importMWh;
+  const totalExports = totals.exportMWh;
+  const netBalance = totals.netMWh;
+
   const topImportShare =
-    snapshot && topImport && totalImports > 0
-      ? topImport.importMWh / totalImports
-      : 0;
+    topImport && totalImports > 0 ? topImport.importMWh / totalImports : 0;
   const topExportShare =
-    snapshot && topExport && totalExports > 0
-      ? topExport.exportMWh / totalExports
-      : 0;
+    topExport && totalExports > 0 ? topExport.exportMWh / totalExports : 0;
+
+  return {
+    snapshot,
+    availableMonths,
+    selectedMonth,
+    generatedLabel,
+    monthlyPoints,
+    periodLabel,
+    totals,
+    neighbors,
+    dailyData,
+    totalImports,
+    totalExports,
+    netBalance,
+    peakImportDay,
+    peakExportDay,
+    strongestNetImportDay,
+    strongestNetExportDay,
+    topImport,
+    topExport,
+    topNetImport,
+    topNetExport,
+    topImportShare,
+    topExportShare,
+  };
+}
+
+export function EnergyFlowExplorer() {
+  const queryClientRef = React.useRef<QueryClient | null>(null);
+
+  if (!queryClientRef.current) {
+    queryClientRef.current = new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: FIVE_MINUTES_IN_MS,
+          refetchOnWindowFocus: false,
+          retry: 1,
+        },
+      },
+    });
+  }
+
+  return (
+    <QueryClientProvider client={queryClientRef.current}>
+      <EnergyFlowExplorerContent />
+    </QueryClientProvider>
+  );
+}
+
+function EnergyFlowExplorerContent() {
+  const [selectedId, setSelectedId] = React.useState("");
+
+  const indexQuery = useQuery<EnergyFlowIndex>({
+    queryKey: ["energy-flow", "index"],
+    queryFn: loadIndex,
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const dailyLatestQuery = useQuery<EnergyFlowDailyLatest | null>({
+    queryKey: ["energy-flow", "daily-latest"],
+    queryFn: async () => {
+      try {
+        return await loadLatestDaily();
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    },
+  });
+
+  const index = indexQuery.data ?? null;
+  const dailyLatest = dailyLatestQuery.data ?? null;
+
+  React.useEffect(() => {
+    if (!index?.months?.length) {
+      setSelectedId("");
+      return;
+    }
+
+    const mostRecentId = index.months[index.months.length - 1]?.id ?? "";
+
+    if (!mostRecentId) {
+      setSelectedId("");
+      return;
+    }
+
+    setSelectedId((current) => {
+      if (!current) {
+        return mostRecentId;
+      }
+      const hasCurrent = index.months.some((month) => month.id === current);
+      return hasCurrent ? current : mostRecentId;
+    });
+  }, [index]);
+
+  const monthlyQuery = useQuery<EnergyFlowSnapshot>({
+    queryKey: ["energy-flow", "monthly", selectedId],
+    queryFn: () => loadMonthly(selectedId),
+    enabled: Boolean(selectedId),
+    keepPreviousData: true,
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const snapshot = monthlyQuery.data ?? null;
+
+  const derived = React.useMemo(
+    () =>
+      buildExplorerView({
+        index,
+        snapshot,
+        dailyLatest,
+        selectedId,
+      }),
+    [index, snapshot, dailyLatest, selectedId],
+  );
+
+  if (indexQuery.isError) {
+    return (
+      <Alert variant="destructive">
+        <Info className="h-4 w-4" />
+        <AlertTitle>Të dhënat nuk u ngarkuan</AlertTitle>
+        <AlertDescription>
+          Nuk arritëm të marrim indeksin e fluksit të energjisë nga ENTSO-E.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (!derived) {
+    return <EnergyFlowExplorerSkeleton />;
+  }
+
+  const {
+    availableMonths,
+    selectedMonth,
+    generatedLabel,
+    monthlyPoints,
+    periodLabel,
+    dailyData,
+    totalImports,
+    totalExports,
+    netBalance,
+    peakImportDay,
+    peakExportDay,
+    strongestNetImportDay,
+    strongestNetExportDay,
+    topImport,
+    topExport,
+    topNetImport,
+    topNetExport,
+    topImportShare,
+    topExportShare,
+    neighbors,
+  } = derived;
+
+  if (!availableMonths.length) {
+    return (
+      <Alert variant="default">
+        <Info className="h-4 w-4" />
+        <AlertTitle>Në pritje të të dhënave ENTSO-E</AlertTitle>
+        <AlertDescription>
+          Ende nuk ka periudha të flukseve ndërkufitare. Rikthehuni pas
+          përfundimit të procesit mujor të përditësimit.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  const monthlyStatusLabel =
+    monthlyQuery.isLoading && !snapshot
+      ? "Duke ngarkuar periudhën…"
+      : monthlyQuery.isFetching && snapshot
+        ? "Duke rifreskuar periudhën…"
+        : null;
+
+  const showSnapshotSkeleton =
+    !snapshot && (monthlyQuery.isLoading || monthlyQuery.isFetching);
+
+  const monthlyErrorMessage = monthlyQuery.isError
+    ? selectedMonth
+      ? `Të dhënat për ${formatMonthLabel(selectedMonth.periodStart)} nuk u ngarkuan. Provoni një muaj tjetër.`
+      : "Periudha e përzgjedhur mujore nuk u ngarkua. Provoni një muaj tjetër."
+    : null;
 
   return (
     <article className="space-y-8">
-      {monthlyError ? (
+      {monthlyErrorMessage ? (
         <Alert variant="destructive">
           <Info className="h-4 w-4" />
           <AlertTitle>Periudha nuk është e disponueshme</AlertTitle>
-          <AlertDescription>{monthlyError}</AlertDescription>
+          <AlertDescription>{monthlyErrorMessage}</AlertDescription>
         </Alert>
       ) : null}
 
@@ -353,7 +408,7 @@ export function EnergyFlowExplorer() {
                     </p>
                     <p className="mt-1 text-sm text-foreground">
                       {formatDayLabel(peakImportDay.date)} —{" "}
-                      {formatMWh(peakImportDay.imports)}
+                      {formatAuto(peakImportDay.imports)}
                     </p>
                   </div>
                 ) : null}
@@ -364,7 +419,7 @@ export function EnergyFlowExplorer() {
                     </p>
                     <p className="mt-1 text-sm text-foreground">
                       {formatDayLabel(peakExportDay.date)} —{" "}
-                      {formatMWh(peakExportDay.exports)}
+                      {formatAuto(peakExportDay.exports)}
                     </p>
                   </div>
                 ) : null}
@@ -375,7 +430,7 @@ export function EnergyFlowExplorer() {
                     </p>
                     <p className="mt-1 text-sm text-foreground">
                       {formatDayLabel(strongestNetImportDay.date)} —{" "}
-                      {formatSignedMWh(strongestNetImportDay.net)}
+                      {formatAuto(strongestNetImportDay.net, { signed: true })}
                     </p>
                   </div>
                 ) : null}
@@ -386,7 +441,7 @@ export function EnergyFlowExplorer() {
                     </p>
                     <p className="mt-1 text-sm text-foreground">
                       {formatDayLabel(strongestNetExportDay.date)} —{" "}
-                      {formatSignedMWh(strongestNetExportDay.net)}
+                      {formatAuto(strongestNetExportDay.net, { signed: true })}
                     </p>
                   </div>
                 ) : null}
@@ -456,7 +511,7 @@ export function EnergyFlowExplorer() {
                 {generatedLabel ? (
                   <p>Indeksi i përditësuar më {generatedLabel}</p>
                 ) : null}
-                {isMonthlyLoading ? <p>Duke ngarkuar periudhën…</p> : null}
+                {monthlyStatusLabel ? <p>{monthlyStatusLabel}</p> : null}
               </div>
             </div>
           </div>
@@ -466,29 +521,35 @@ export function EnergyFlowExplorer() {
               <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 Importet
               </p>
-              <p className="mt-2 text-2xl font-semibold">
-                {snapshot ? formatGWh(totalImports) : "Pa të dhëna"}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {snapshot ? formatMWh(totalImports) : "Në pritje të periudhës"}
-              </p>
+              <div className="mt-2 text-2xl font-semibold">
+                {snapshot ? (
+                  formatAuto(totalImports)
+                ) : showSnapshotSkeleton ? (
+                  <Skeleton className="h-7 w-24" />
+                ) : (
+                  "Pa të dhëna"
+                )}
+              </div>
             </div>
             <div className="rounded-lg border border-border/60 p-4">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 Eksportet
               </p>
-              <p className="mt-2 text-2xl font-semibold">
-                {snapshot ? formatGWh(totalExports) : "Pa të dhëna"}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {snapshot ? formatMWh(totalExports) : "Në pritje të periudhës"}
-              </p>
+              <div className="mt-2 text-2xl font-semibold">
+                {snapshot ? (
+                  formatAuto(totalExports)
+                ) : showSnapshotSkeleton ? (
+                  <Skeleton className="h-7 w-24" />
+                ) : (
+                  "Pa të dhëna"
+                )}
+              </div>
             </div>
             <div className="rounded-lg border border-border/60 p-4">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 Bilanci neto i importeve
               </p>
-              <p
+              <div
                 className={cn(
                   "mt-2 text-2xl font-semibold",
                   snapshot
@@ -498,13 +559,14 @@ export function EnergyFlowExplorer() {
                     : "text-muted-foreground",
                 )}
               >
-                {snapshot ? formatSignedGWh(netBalance) : "Pa të dhëna"}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {snapshot
-                  ? formatSignedMWh(netBalance)
-                  : "Në pritje të periudhës"}
-              </p>
+                {snapshot ? (
+                  formatAuto(netBalance, { signed: true })
+                ) : showSnapshotSkeleton ? (
+                  <Skeleton className="h-7 w-28" />
+                ) : (
+                  "Pa të dhëna"
+                )}
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -514,31 +576,47 @@ export function EnergyFlowExplorer() {
               <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 Partneri më i madh i importit
               </p>
-              <p className="mt-1 text-sm text-foreground">
-                {snapshot && topImport
-                  ? `${topImport.country} (${formatMWh(topImport.importMWh)}) · ${percentFormatter.format(topImportShare || 0)} e importeve`
-                  : "Nuk ka të dhëna për importet."}
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {snapshot && topNetImport
-                  ? `Importuesi neto më i madh: ${topNetImport.country} (${formatSignedMWh(topNetImport.netMWh)}).`
-                  : "Të dhënat neto për importin mungojnë."}
-              </p>
+              <div className="mt-1 text-sm text-foreground">
+                {snapshot && topImport ? (
+                  `${topImport.country} (${formatAuto(topImport.importMWh)}) · ${percentFormatter.format(topImportShare || 0)} e importeve`
+                ) : showSnapshotSkeleton ? (
+                  <Skeleton className="h-4 w-56" />
+                ) : (
+                  "Nuk ka të dhëna për importet."
+                )}
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {snapshot && topNetImport ? (
+                  `Importuesi neto më i madh: ${topNetImport.country} (${formatAuto(topNetImport.netMWh, { signed: true })}).`
+                ) : showSnapshotSkeleton ? (
+                  <Skeleton className="h-3 w-44" />
+                ) : (
+                  "Të dhënat neto për importin mungojnë."
+                )}
+              </div>
             </div>
             <div className="rounded-lg border border-border/60 p-4">
               <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 Destinacioni më i madh i eksportit
               </p>
-              <p className="mt-1 text-sm text-foreground">
-                {snapshot && topExport
-                  ? `${topExport.country} (${formatMWh(topExport.exportMWh)}) · ${percentFormatter.format(topExportShare || 0)} e eksporteve`
-                  : "Nuk ka të dhëna për eksportet."}
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {snapshot && topNetExport
-                  ? `Eksportuesi neto më i fortë: ${topNetExport.country} (${formatSignedMWh(topNetExport.netMWh)}).`
-                  : "Të dhënat neto për eksportin mungojnë."}
-              </p>
+              <div className="mt-1 text-sm text-foreground">
+                {snapshot && topExport ? (
+                  `${topExport.country} (${formatAuto(topExport.exportMWh)}) · ${percentFormatter.format(topExportShare || 0)} e eksporteve`
+                ) : showSnapshotSkeleton ? (
+                  <Skeleton className="h-4 w-56" />
+                ) : (
+                  "Nuk ka të dhëna për eksportet."
+                )}
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                {snapshot && topNetExport ? (
+                  `Eksportuesi neto më i fortë: ${topNetExport.country} (${formatAuto(topNetExport.netMWh, { signed: true })}).`
+                ) : showSnapshotSkeleton ? (
+                  <Skeleton className="h-3 w-44" />
+                ) : (
+                  "Të dhënat neto për eksportin mungojnë."
+                )}
+              </div>
             </div>
           </div>
           <p className="text-xs">
@@ -557,8 +635,6 @@ export function EnergyFlowExplorer() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <NeighborNetBalanceChart data={neighbors} />
-          <Separator />
           <div className="overflow-x-auto text-sm">
             <table className="w-full min-w-[560px] border-collapse">
               <thead>
@@ -570,41 +646,66 @@ export function EnergyFlowExplorer() {
                 </tr>
               </thead>
               <tbody>
-                {neighbors.map((row) => (
-                  <tr
-                    key={row.code}
-                    className="border-b border-border/40 last:border-0"
-                  >
-                    <td className="py-2 pr-4">
-                      <div className="font-medium text-foreground">
-                        {row.country}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {row.code}
-                      </div>
-                    </td>
-                    <td className="py-2 pr-4 text-right">
-                      {row.hasData ? formatMWh(row.importMWh) : "Pa të dhëna"}
-                    </td>
-                    <td className="py-2 pr-4 text-right">
-                      {row.hasData ? formatMWh(row.exportMWh) : "Pa të dhëna"}
-                    </td>
-                    <td
-                      className={cn(
-                        "py-2 text-right font-semibold",
-                        row.hasData
-                          ? row.netMWh >= 0
-                            ? "text-destructive"
-                            : "text-emerald-600 dark:text-emerald-400"
-                          : "text-muted-foreground",
-                      )}
-                    >
-                      {row.hasData
-                        ? formatSignedMWh(row.netMWh)
-                        : "Pa të dhëna"}
-                    </td>
-                  </tr>
-                ))}
+                {showSnapshotSkeleton
+                  ? Array.from({ length: 4 }).map((_, index) => (
+                      <tr
+                        key={`skeleton-${index}`}
+                        className="border-b border-border/40 last:border-0"
+                      >
+                        <td className="py-2 pr-4">
+                          <Skeleton className="h-4 w-40" />
+                          <Skeleton className="mt-2 h-3 w-16" />
+                        </td>
+                        <td className="py-2 pr-4 text-right">
+                          <Skeleton className="ml-auto h-4 w-24" />
+                        </td>
+                        <td className="py-2 pr-4 text-right">
+                          <Skeleton className="ml-auto h-4 w-24" />
+                        </td>
+                        <td className="py-2 text-right">
+                          <Skeleton className="ml-auto h-4 w-24" />
+                        </td>
+                      </tr>
+                    ))
+                  : neighbors.map((row) => (
+                      <tr
+                        key={row.code}
+                        className="border-b border-border/40 last:border-0"
+                      >
+                        <td className="py-2 pr-4">
+                          <div className="font-medium text-foreground">
+                            {row.country}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {row.code}
+                          </div>
+                        </td>
+                        <td className="py-2 pr-4 text-right">
+                          {row.hasData
+                            ? formatAuto(row.importMWh)
+                            : "Pa të dhëna"}
+                        </td>
+                        <td className="py-2 pr-4 text-right">
+                          {row.hasData
+                            ? formatAuto(row.exportMWh)
+                            : "Pa të dhëna"}
+                        </td>
+                        <td
+                          className={cn(
+                            "py-2 text-right font-semibold",
+                            row.hasData
+                              ? row.netMWh >= 0
+                                ? "text-destructive"
+                                : "text-emerald-600 dark:text-emerald-400"
+                              : "text-muted-foreground",
+                          )}
+                        >
+                          {row.hasData
+                            ? formatAuto(row.netMWh, { signed: true })
+                            : "Pa të dhëna"}
+                        </td>
+                      </tr>
+                    ))}
               </tbody>
             </table>
           </div>
