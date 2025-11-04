@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { Github, LayoutGrid } from "lucide-react";
 import { Geist } from "next/font/google";
+import Script from "next/script";
 
 import "@workspace/ui/globals.css";
 
@@ -44,6 +45,11 @@ export default function RootLayout({
   return (
     <html lang="sq" className={geist.className} suppressHydrationWarning>
       <body className="font-sans antialiased">
+        <Script
+          src="https://cloud.umami.is/script.js"
+          data-website-id="8ce63f83-6b4d-4169-b878-fde943cea543"
+          strategy="afterInteractive"
+        />
         <Providers>
           <div className="flex min-h-svh flex-col bg-background">
             <header className="border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
