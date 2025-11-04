@@ -485,8 +485,8 @@ export function InflationDashboard({
                   selectedIds={selectedCodes}
                   onSelectionChange={handleSelectionChange}
                   defaultExpandedIds={defaultExpandedIds}
-                  maxHeight={360}
                   className="max-w-full px-1 py-2"
+                  scrollContainerClassName="max-h-[300px] sm:max-h-[500px]"
                 />
               </div>
               <div className="rounded-lg border border-border/50 bg-muted/20 p-3 text-xs leading-relaxed text-muted-foreground">
@@ -557,7 +557,6 @@ export function InflationDashboard({
                       axisLine={false}
                     />
                     <YAxis
-                      width={80}
                       axisLine={false}
                       tickFormatter={(value) =>
                         metric === "index"
@@ -605,24 +604,6 @@ export function InflationDashboard({
                   </div>
                 )}
               </ChartContainer>
-
-              <Alert className="border-border/70 bg-muted/25">
-                <AlertTitle>Shembull i thjeshtë për IHÇK 130</AlertTitle>
-                <AlertDescription className="space-y-2 text-sm">
-                  <p>
-                    Nëse një bukë kushtonte 0.30 € në 2015 (viti bazë kur
-                    indeksi është 100), një indeks aktual 130 tregon se çmimi
-                    është rritur me afërsisht 30%. Llogaritja bëhet duke
-                    shumëzuar çmimin bazë me indeksin e ri:{" "}
-                    <strong>0.30 € × (130 ÷ 100) ≈ 0.39 €</strong>, pra rreth 9
-                    cent më shumë.
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Në përgjithësi përdor rregullin: çmimi i ri ≈ çmimi bazë ×
-                    (indeksi aktual ÷ 100).
-                  </p>
-                </AlertDescription>
-              </Alert>
 
               <div className="grid gap-3 rounded-lg border border-border/70 bg-muted/20 p-3 text-sm">
                 {summaryRows.map((row) => {
@@ -690,6 +671,26 @@ export function InflationDashboard({
               </div>
             </div>
           </div>
+
+          <Alert className="border-border/70 bg-muted/25">
+            <AlertTitle>
+              Shembull i thjeshtë për IHÇK (Indeksi i Harmonizuar i Çmimeve për
+              Konsumatorin)
+            </AlertTitle>
+            <AlertDescription className="space-y-2 text-sm">
+              <p>
+                Nëse një bukë kushtonte 0.30 € në 2015 (viti bazë kur indeksi
+                është 100), një indeks aktual 130 tregon se çmimi është rritur
+                me afërsisht 30%. Llogaritja bëhet duke shumëzuar çmimin bazë me
+                indeksin e ri: <strong>0.30 € × (130 ÷ 100) ≈ 0.39 €</strong>,
+                pra rreth 9 cent më shumë.
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Në përgjithësi përdor rregullin: çmimi i ri ≈ çmimi bazë ×
+                (indeksi aktual ÷ 100).
+              </p>
+            </AlertDescription>
+          </Alert>
 
           <Alert className="border-border/80 bg-muted/30">
             <AlertTitle>Si lexohen këto vizualizime</AlertTitle>

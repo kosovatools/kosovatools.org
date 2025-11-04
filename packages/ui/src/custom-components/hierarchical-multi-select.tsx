@@ -33,7 +33,7 @@ export type HierarchicalMultiSelectProps = {
   className?: string;
   nodeClassName?: string;
   emptyMessage?: string;
-  maxHeight?: number;
+  scrollContainerClassName?: string;
   showCollapseAllButton?: boolean;
 };
 
@@ -101,7 +101,7 @@ export function HierarchicalMultiSelect({
   className,
   nodeClassName,
   emptyMessage = "Nuk ka elemente të disponueshme.",
-  maxHeight = 420,
+  scrollContainerClassName = "max-h-[420px]",
   showCollapseAllButton = true,
 }: HierarchicalMultiSelectProps) {
   const {
@@ -299,7 +299,9 @@ export function HierarchicalMultiSelect({
           ) : null}
         </div>
       </div>
-      <div className="overflow-y-auto" style={{ maxHeight: `${maxHeight}px` }}>
+      <div
+        className={cn("overflow-y-auto", scrollContainerClassName)}
+      >
         {normalizedNodes.length ? (
           <ul className="flex max-w-full flex-col gap-1 p-1">
             {renderNodes(normalizedNodes, 0)}

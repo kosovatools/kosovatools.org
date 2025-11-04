@@ -323,12 +323,9 @@ function tableLookupFromValueCube(cube, dimOrder = null) {
   if (!dimensionOrder?.length) return null;
   const dimDetails = dimensionOrder.map((code) => {
     const dimension = cube.dimension?.[code];
-    const indexEntries = Object.entries(
-      dimension?.category?.index ?? {},
-    ).map(([valueCode, ordinal]) => [
-      String(valueCode),
-      Number(ordinal),
-    ]);
+    const indexEntries = Object.entries(dimension?.category?.index ?? {}).map(
+      ([valueCode, ordinal]) => [String(valueCode), Number(ordinal)],
+    );
     if (!indexEntries.length) return null;
     indexEntries.sort((a, b) => a[1] - b[1]);
     const ordToValue = indexEntries.map(([valueCode]) => valueCode);
