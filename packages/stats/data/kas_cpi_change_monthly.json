@@ -1,0 +1,15 @@
+{
+  "title": "Ndryshimet mujore të IÇK-IHÇK sipas grupeve dhe nëngrupeve, 2002M06 - 2025M09",
+  "updated": null,
+  "dimensions": {
+    "time": {
+      "code": "Viti/muaji",
+      "label": "Viti/muaji"
+    },
+    "group": {
+      "code": "Grupet dhe nëngrupet",
+      "label": "Grupet dhe nëngrupet"
+    }
+  },
+  "groups": []
+}

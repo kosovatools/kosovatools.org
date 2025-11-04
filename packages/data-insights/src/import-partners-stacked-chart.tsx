@@ -21,6 +21,10 @@ import {
   type StackPeriodGrouping,
   STACK_PERIOD_GROUPING_OPTIONS,
   getStackPeriodFormatter,
+  type TimeRangeOption,
+  DEFAULT_TIME_RANGE_OPTIONS,
+  DEFAULT_TIME_RANGE,
+  monthsFromRange,
 } from "@workspace/stats";
 
 import {
@@ -30,6 +34,7 @@ import {
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
+import { TimeRangeSelector } from "@workspace/ui/custom-components/time-range-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "./use-timeline-event-markers";
 
@@ -48,13 +53,30 @@ export function ImportPartnersStackedChart({
   const [periodGrouping, setPeriodGrouping] =
     React.useState<StackPeriodGrouping>("yearly");
 
+  const controlledMonths =
+    typeof months === "number" && Number.isFinite(months) && months > 0
+      ? months
+      : undefined;
+
+  const [range, setRange] = React.useState<TimeRangeOption>(
+    controlledMonths ?? DEFAULT_TIME_RANGE,
+  );
+
+  React.useEffect(() => {
+    if (controlledMonths != null) {
+      setRange(controlledMonths);
+    }
+  }, [controlledMonths]);
+
+  const monthsLimit = controlledMonths ?? monthsFromRange(range);
+
   const totals = React.useMemo(
     () =>
       summarizePartnerTotals(data, {
-        months,
+        months: monthsLimit,
         periodGrouping,
       }),
-    [data, months, periodGrouping],
+    [data, monthsLimit, periodGrouping],
   );
 
   const defaultKeys = React.useMemo(
@@ -101,7 +123,7 @@ export function ImportPartnersStackedChart({
 
   const { chartData, keyMap, config } = React.useMemo(() => {
     const { keys, series, labelMap } = buildPartnerStackSeries(data, {
-      months,
+      months: monthsLimit,
       top,
       includeOther,
       selectedKeys,
@@ -117,7 +139,7 @@ export function ImportPartnersStackedChart({
     });
   }, [
     data,
-    months,
+    monthsLimit,
     top,
     includeOther,
     selectedKeys,
@@ -170,6 +192,14 @@ export function ImportPartnersStackedChart({
           })}
         </div>
       </div>
+      {controlledMonths == null ? (
+        <TimeRangeSelector
+          value={range}
+          onChange={setRange}
+          options={DEFAULT_TIME_RANGE_OPTIONS}
+          label="Intervali"
+        />
+      ) : null}
       <StackedKeySelector
         totals={totals}
         selectedKeys={selectedKeys}

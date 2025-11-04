@@ -7,6 +7,7 @@ import type { PaletteColor } from "@workspace/ui/lib/chart-palette";
 type TooltipKeyEntry = {
   id: string;
   palette: PaletteColor;
+  label?: string;
 };
 
 type TooltipFormatterOptions = {
@@ -43,6 +44,17 @@ export function useChartTooltipFormatters({
     () =>
       keys.reduce<Record<string, PaletteColor>>((acc, entry) => {
         acc[entry.id] = entry.palette;
+        return acc;
+      }, {}),
+    [keys],
+  );
+
+  const labelByKey = React.useMemo(
+    () =>
+      keys.reduce<Record<string, string>>((acc, entry) => {
+        if (entry.label) {
+          acc[entry.id] = entry.label;
+        }
         return acc;
       }, {}),
     [keys],
@@ -114,6 +126,12 @@ export function useChartTooltipFormatters({
 
       const indicatorColor = cssVarColor ?? fallbackColor;
 
+      const displayName = key
+        ? (labelByKey[key] ?? (typeof name === "string" ? name : entry?.name))
+        : typeof name === "string"
+          ? name
+          : entry?.name;
+
       return (
         <div className="flex w-full items-center gap-2">
           <span
@@ -121,9 +139,7 @@ export function useChartTooltipFormatters({
             style={{ backgroundColor: indicatorColor }}
           />
           <div className="flex flex-1 items-center justify-between gap-2">
-            <span className="text-muted-foreground">
-              {typeof name === "string" ? name : entry?.name}
-            </span>
+            <span className="text-muted-foreground">{displayName}</span>
             <span className="text-foreground font-mono font-medium tabular-nums">
               {displayValue}
             </span>
@@ -131,7 +147,7 @@ export function useChartTooltipFormatters({
         </div>
       );
     },
-    [formatValue, missingValueLabel, paletteByKey],
+    [formatValue, labelByKey, missingValueLabel, paletteByKey],
   );
 
   return { formatter, labelFormatter };

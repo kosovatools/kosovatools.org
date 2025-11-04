@@ -42,6 +42,9 @@ importers:
       '@workspace/data-insights':
         specifier: workspace:*
         version: link:../../packages/data-insights
+      '@workspace/inflation-tracker':
+        specifier: workspace:*
+        version: link:../../packages/inflation-tracker
       '@workspace/payroll':
         specifier: workspace:*
         version: link:../../packages/payroll
@@ -300,6 +303,43 @@ importers:
       typescript-eslint:
         specifier: ^8.46.2
         version: 8.46.2(eslint@9.39.0(jiti@2.6.1))(typescript@5.9.3)
+
+  packages/inflation-tracker:
+    dependencies:
+      '@workspace/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@workspace/stats':
+        specifier: workspace:*
+        version: link:../stats
+      '@workspace/ui':
+        specifier: workspace:*
+        version: link:../ui
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
+      recharts:
+        specifier: 2.15.4
+        version: 2.15.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^9.39.0
+        version: 9.39.0(jiti@2.6.1)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
 
   packages/payroll:
     dependencies:

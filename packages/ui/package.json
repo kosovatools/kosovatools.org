@@ -47,7 +47,7 @@
     "./lib/*": "./src/lib/*.ts",
     "./components/*": "./src/components/*.tsx",
     "./custom-components/*": "./src/custom-components/*.tsx",
-    "./hooks/*": "./src/hooks/*.ts"
+    "./hooks/*": "./src/hooks/*.tsx"
   },
   "license": "AGPL-3.0-only"
 }

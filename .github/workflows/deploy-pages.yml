@@ -70,7 +70,7 @@ jobs:
 
       - name: Refresh KAS datasets
         if: steps.cache-stats.outputs.cache-hit != 'true'
-        run: node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data --months 120
+        run: node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data 
 
   fetch-customs-data:
     runs-on: ubuntu-latest

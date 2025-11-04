@@ -1,10 +1,17 @@
+import {
+  PERIOD_GROUPING_OPTIONS,
+  buildGroupedPeriodList,
+  formatPeriodLabel,
+  getPeriodFormatter,
+  groupPeriod,
+  type PeriodFormatter,
+  type PeriodFormatterOptions,
+  type PeriodGrouping,
+} from "./period";
+
 type MaybeNumber = number | null | undefined;
 
-export type StackPeriodGrouping =
-  | "monthly"
-  | "quarterly"
-  | "yearly"
-  | "seasonal";
+export type StackPeriodGrouping = PeriodGrouping;
 
 export type StackAccessors<TRecord, TKey extends string> = {
   period: (record: TRecord) => string;
@@ -36,130 +43,17 @@ export type StackSeriesRow<TKey extends string> = {
   values: Record<TKey | "Other", number>;
 };
 
-export type StackPeriodFormatter = (period: string) => string;
+export type StackPeriodFormatter = PeriodFormatter;
 
-export type StackPeriodFormatterOptions = {
-  locale?: string;
-  fallback?: string;
-};
+export type StackPeriodFormatterOptions = PeriodFormatterOptions;
 
-export const STACK_PERIOD_GROUPING_OPTIONS: ReadonlyArray<{
-  id: StackPeriodGrouping;
-  label: string;
-}> = [
-  { id: "monthly", label: "Mujor" },
-  { id: "quarterly", label: "Tremujor" },
-  { id: "yearly", label: "Vjetor" },
-  { id: "seasonal", label: "Sezonal" },
-];
-
-const DEFAULT_PERIOD_GROUPING: StackPeriodGrouping = "monthly";
-const QUARTER_PATTERN = /^(\d{4})-Q([1-4])$/;
-const SEASONAL_LABEL_PATTERN = /^(\d{4})-(winter|spring|summer|autumn)$/;
-const SEASON_LABEL_MAP: Record<
-  "winter" | "spring" | "summer" | "autumn",
-  string
-> = {
-  winter: "Dimër",
-  spring: "Pranverë",
-  summer: "Verë",
-  autumn: "Vjeshtë",
-};
-
-function stringifyQuarter(year: string, month: number) {
-  const safeMonth = Number.isFinite(month) ? month : NaN;
-  if (!Number.isFinite(Number(year)) || !Number.isFinite(safeMonth)) {
-    return year;
-  }
-  const quarter = Math.min(4, Math.max(1, Math.floor((safeMonth - 1) / 3) + 1));
-  return `${year}-Q${quarter}`;
-}
+export const STACK_PERIOD_GROUPING_OPTIONS = PERIOD_GROUPING_OPTIONS;
 
 export function groupStackPeriod(
   period: string,
-  grouping: StackPeriodGrouping = DEFAULT_PERIOD_GROUPING,
+  grouping: StackPeriodGrouping = "monthly",
 ): string {
-  if (grouping === "seasonal") {
-    return toSeasonalKey(period);
-  }
-
-  if (grouping === "yearly") {
-    const [year] = period.split("-");
-    return year ?? period;
-  }
-
-  if (grouping === "quarterly") {
-    const [year, month] = period.split("-");
-    const numericMonth = month ? Number.parseInt(month, 10) : NaN;
-    return stringifyQuarter(year ?? period, numericMonth);
-  }
-
-  return period;
-}
-
-function toSeasonalKey(period: string): string {
-  const [yearStr, monthStr] = period.split("-");
-  const year = Number.parseInt(yearStr ?? "", 10);
-  const month = Number.parseInt(monthStr ?? "", 10);
-  if (!Number.isFinite(year) || !Number.isFinite(month)) {
-    return period;
-  }
-
-  let season: "winter" | "spring" | "summer" | "autumn";
-  let seasonYear = year;
-
-  if (month === 12) {
-    season = "winter";
-    seasonYear = year + 1;
-  } else if (month <= 2) {
-    season = "winter";
-  } else if (month <= 5) {
-    season = "spring";
-  } else if (month <= 8) {
-    season = "summer";
-  } else {
-    season = "autumn";
-  }
-
-  return `${seasonYear}-${season}`;
-}
-
-function parseYearMonth(
-  period: string,
-): { year: number; month: number } | null {
-  const [yearStr, monthStr] = period.split("-");
-  const year = Number.parseInt(yearStr ?? "", 10);
-  const month = Number.parseInt(monthStr ?? "", 10);
-  if (!Number.isFinite(year) || !Number.isFinite(month)) {
-    return null;
-  }
-  if (month < 1 || month > 12) {
-    return null;
-  }
-  return { year, month };
-}
-
-function buildGroupedPeriodList(
-  periods: string[],
-  grouping: StackPeriodGrouping,
-): string[] {
-  if (grouping === "monthly") {
-    return periods;
-  }
-
-  const seen = new Set<string>();
-  const grouped: string[] = [];
-
-  for (const period of periods) {
-    const normalized = groupStackPeriod(period, grouping);
-    if (seen.has(normalized)) {
-      continue;
-    }
-    seen.add(normalized);
-    grouped.push(normalized);
-  }
-
-  return grouped;
+  return groupPeriod(period, grouping);
 }
 
 export type StackBuildResult<TKey extends string> = {
@@ -282,7 +176,7 @@ export function buildStackSeries<TRecord, TKey extends string>(
   }
   const periodSet = new Set(rawPeriods);
 
-  const grouping = options.periodGrouping ?? DEFAULT_PERIOD_GROUPING;
+  const grouping = options.periodGrouping ?? "monthly";
   const groupedPeriods = buildGroupedPeriodList(rawPeriods, grouping);
   if (!groupedPeriods.length) {
     return {
@@ -385,68 +279,17 @@ export function buildStackSeries<TRecord, TKey extends string>(
   };
 }
 
-function formatSeasonalPeriodLabel(period: string): string {
-  const match = SEASONAL_LABEL_PATTERN.exec(period);
-  if (!match) {
-    return period;
-  }
-  const [, year, season] = match;
-  if (!season) {
-    return period;
-  }
-  const label =
-    SEASON_LABEL_MAP[season as keyof typeof SEASON_LABEL_MAP] ?? season;
-  return `${label} ${year}`;
-}
-
 export function formatStackPeriodLabel(
   period: string,
   grouping: StackPeriodGrouping,
   options: StackPeriodFormatterOptions = {},
 ): string {
-  const { locale = "sq", fallback } = options;
-  if (!period) {
-    return fallback ?? "";
-  }
-  if (grouping === "seasonal") {
-    const formatted = formatSeasonalPeriodLabel(period);
-    return formatted.length ? formatted : (fallback ?? period);
-  }
-  if (grouping === "monthly") {
-    const parsed = parseYearMonth(period);
-    if (!parsed) {
-      return fallback ?? period;
-    }
-    const formatter = new Intl.DateTimeFormat(locale, {
-      month: "short",
-      year: "2-digit",
-    });
-    return formatter.format(
-      new Date(Date.UTC(parsed.year, parsed.month - 1, 1)),
-    );
-  }
-  if (grouping === "quarterly") {
-    const match = QUARTER_PATTERN.exec(period);
-    if (!match) {
-      return fallback ?? period;
-    }
-    const [, year, quarter] = match;
-    return `T${quarter} ${year}`;
-  }
-  if (grouping === "yearly") {
-    const year = Number.parseInt(period, 10);
-    if (!Number.isFinite(year)) {
-      return fallback ?? period;
-    }
-    const formatter = new Intl.DateTimeFormat(locale, { year: "numeric" });
-    return formatter.format(new Date(Date.UTC(year, 0, 1)));
-  }
-  return period;
+  return formatPeriodLabel(period, grouping, options);
 }
 
 export function getStackPeriodFormatter(
   grouping: StackPeriodGrouping,
   options: StackPeriodFormatterOptions = {},
 ): StackPeriodFormatter {
-  return (period: string) => formatStackPeriodLabel(period, grouping, options);
+  return getPeriodFormatter(grouping, options);
 }

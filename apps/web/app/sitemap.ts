@@ -10,6 +10,7 @@ const staticRoutes = [
   "customs-codes",
   "car-import-taxes",
   "data-insights",
+  "inflation-tracker",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

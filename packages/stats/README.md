@@ -18,7 +18,7 @@ fully typed so UI surfaces can remain stateless and predictable.
 - `src/formatters/` — Reusable number/currency/energy formatters for charts and
   tables.
 - `data/` — Checked-in JSON snapshots (refresh via
-  `node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data --months 36`).
+  `node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data `).
 - `docs/` — Spec documents that describe how a dataset maps onto charting
   requirements (e.g., `docs/kas_chart_specs.md`).
 - `scripts/` — Node.js utilities for fetching and inspecting KAS data.
@@ -122,7 +122,7 @@ formatEuro(null); // -> "—"
 
 1. Refresh data snapshots when inputs change:
    ```bash
-   node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data --months 36
+   node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data
    ```
    The fetch script marks refreshed JSON files with `git update-index --skip-worktree`
    so local data updates do not appear in `git status`. To commit stub updates

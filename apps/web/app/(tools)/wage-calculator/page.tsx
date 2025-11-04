@@ -6,7 +6,15 @@ export const metadata: Metadata = {
   title: "Paga dhe Rroga – Neto në Bruto, Tatimet & Trusti",
   description:
     "Kalkulator i pagave në Kosovë për të llogaritur pagën neto dhe bruto duke marrë parasysh tatimin progresiv dhe kontributet në Trust.",
-  keywords: ["paga", "rroga", "neto në bruto", "tatimet", "trusti", "Kosovë"],
+  keywords: [
+    "paga",
+    "rroga",
+    "neto në bruto",
+    "tatimet",
+    "trusti",
+    "Kosovë",
+    "kalkulatori",
+  ],
   alternates: {
     canonical: "/wage-calculator",
   },

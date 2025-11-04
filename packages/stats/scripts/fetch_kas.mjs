@@ -44,6 +44,20 @@ export const PATHS = {
     "Treguesit mujorë",
     "tab02.px",
   ],
+  cpi_change: [
+    "ASKdata",
+    "Prices",
+    "Consumer Price Index",
+    "Monthly indicators",
+    "cpi05.px",
+  ],
+  cpi_index: [
+    "ASKdata",
+    "Prices",
+    "Consumer Price Index",
+    "Monthly indicators",
+    "cpi09.px",
+  ],
 };
 
 const FUEL_SPECS = {
@@ -301,7 +315,7 @@ async function writeJson(outDir, name, data) {
   console.log(`✔ wrote ${filePath}`);
 }
 
-async function fetchTradeMonthly(outDir, months) {
+async function fetchTradeMonthly(outDir) {
   const parts = PATHS.trade_monthly;
   const meta = await pxGetMeta(parts);
 
@@ -346,12 +360,11 @@ async function fetchTradeMonthly(outDir, months) {
   if (!impCode) impCode = "3";
 
   const allMonths = metaTimeCodes(meta, dimTime) ?? [];
-  const pick = months ? allMonths.slice(-months) : allMonths;
 
   const body = {
     query: [
       { code: dimVar, selection: { filter: "item", values: [impCode] } },
-      { code: dimTime, selection: { filter: "item", values: pick } },
+      { code: dimTime, selection: { filter: "item", values: allMonths } },
     ],
   };
 
@@ -364,7 +377,7 @@ async function fetchTradeMonthly(outDir, months) {
     const table = tableLookup(data, [dimTime, dimVar]);
     if (table) {
       const { dimCodes, lookup } = table;
-      coerced = pick.map((code) =>
+      coerced = allMonths.map((code) =>
         lookupTableValue(dimCodes, lookup, {
           [dimTime]: code,
           [dimVar]: impCode,
@@ -372,7 +385,7 @@ async function fetchTradeMonthly(outDir, months) {
       );
     }
   }
-  const series = pick.map((code, idx) => ({
+  const series = allMonths.map((code, idx) => ({
     period: normalizeYM(code),
     imports_th_eur: tidyNumber(coerced[idx] ?? null),
   }));
@@ -380,7 +393,7 @@ async function fetchTradeMonthly(outDir, months) {
   return { periods: series.length };
 }
 
-async function fetchEnergyMonthly(outDir, months) {
+async function fetchEnergyMonthly(outDir) {
   const parts = PATHS.energy_monthly;
   const meta = await pxGetMeta(parts);
 
@@ -435,14 +448,13 @@ async function fetchEnergyMonthly(outDir, months) {
   }
 
   const allMonths = metaTimeCodes(meta, dimTime) ?? [];
-  const pick = months ? allMonths.slice(-months) : allMonths;
   const body = {
     query: [
       {
         code: dimInd,
         selection: { filter: "item", values: [importCode, prodCode] },
       },
-      { code: dimTime, selection: { filter: "item", values: pick } },
+      { code: dimTime, selection: { filter: "item", values: allMonths } },
     ],
   };
   const cube = await pxPostData(parts, body);
@@ -460,7 +472,7 @@ async function fetchEnergyMonthly(outDir, months) {
     const prodOrd = idxInd[prodCode];
     const pos = (coords) =>
       coords.reduce((sum, c, idx) => sum + c * strides[idx], 0);
-    for (const code of pick) {
+    for (const code of allMonths) {
       const timeOrd = idxTime[code];
       const coords = order.map((key) => {
         if (key === dimInd) return impOrd;
@@ -484,7 +496,7 @@ async function fetchEnergyMonthly(outDir, months) {
     const table = tableLookup(cube, [dimInd, dimTime]);
     if (!table) throw new PxError("Energy table: unexpected response format");
     const { dimCodes, lookup } = table;
-    for (const code of pick) {
+    for (const code of allMonths) {
       const importVal = lookupTableValue(dimCodes, lookup, {
         [dimInd]: importCode,
         [dimTime]: code,
@@ -504,7 +516,7 @@ async function fetchEnergyMonthly(outDir, months) {
   return { periods: series.length };
 }
 
-async function fetchFuelTable(outDir, months, name, spec) {
+async function fetchFuelTable(outDir, name, spec) {
   const parts = PATHS[spec.path_key];
   const label = spec.label ?? name;
   const meta = await pxGetMeta(parts);
@@ -531,11 +543,10 @@ async function fetchFuelTable(outDir, months, name, spec) {
     measurePairs.map(([code, text]) => [code, normalizeFuelField(text)]),
   );
   const allMonths = metaTimeCodes(meta, dimTime) ?? [];
-  const pick = months ? allMonths.slice(-months) : allMonths;
   const body = {
     query: [
       { code: measureDim, selection: { filter: "item", values: measureCodes } },
-      { code: dimTime, selection: { filter: "item", values: pick } },
+      { code: dimTime, selection: { filter: "item", values: allMonths } },
     ],
   };
   const cube = await pxPostData(parts, body);
@@ -543,7 +554,7 @@ async function fetchFuelTable(outDir, months, name, spec) {
   if (!table) throw new PxError(`${label}: unexpected response format`);
   const { dimCodes, lookup } = table;
   const series = [];
-  for (const code of pick) {
+  for (const code of allMonths) {
     const row = { period: normalizeYM(code) };
     for (const measure of measureCodes) {
       const value = lookupTableValue(dimCodes, lookup, {
@@ -567,7 +578,7 @@ async function fetchFuelTable(outDir, months, name, spec) {
   };
 }
 
-async function fetchTourismRegion(outDir, months) {
+async function fetchTourismRegion(outDir) {
   const parts = PATHS.tourism_region;
   const meta = await pxGetMeta(parts);
   const dimTime =
@@ -604,7 +615,6 @@ async function fetchTourismRegion(outDir, months) {
     metricCodes[normalizeTourismMetric(text)] = code;
   }
   const allMonths = metaTimeCodes(meta, dimTime) ?? [];
-  const pick = months ? allMonths.slice(-months) : allMonths;
   const query = [
     {
       code: dimRegion,
@@ -618,14 +628,14 @@ async function fetchTourismRegion(outDir, months) {
       code: dimVar,
       selection: { filter: "item", values: Object.values(metricCodes) },
     },
-    { code: dimTime, selection: { filter: "item", values: pick } },
+    { code: dimTime, selection: { filter: "item", values: allMonths } },
   ];
   const cube = await pxPostData(parts, { query, response: { format: "JSON" } });
   const table = tableLookup(cube, [dimTime, dimRegion, dimOrigin, dimVar]);
   if (!table) throw new PxError("Tourism region: unexpected response format");
   const { dimCodes, lookup } = table;
   const records = [];
-  for (const timeCode of pick) {
+  for (const timeCode of allMonths) {
     const period = normalizeYM(timeCode);
     for (const [regionCode, regionLabel] of regionPairs) {
       for (const [originCode, originLabel] of originPairs) {
@@ -650,7 +660,7 @@ async function fetchTourismRegion(outDir, months) {
   }
   await writeJson(outDir, "kas_tourism_region_monthly.json", records);
   return {
-    periods: pick.length,
+    periods: allMonths.length,
     regions: regionPairs.length,
     visitor_groups: originPairs.map(([, label]) => normalizeGroupLabel(label)),
     metrics: Object.keys(metricCodes),
@@ -659,7 +669,7 @@ async function fetchTourismRegion(outDir, months) {
   };
 }
 
-async function fetchTourismCountry(outDir, months) {
+async function fetchTourismCountry(outDir) {
   const parts = PATHS.tourism_country;
   const meta = await pxGetMeta(parts);
   const dimTime =
@@ -687,7 +697,6 @@ async function fetchTourismCountry(outDir, months) {
   }
   const countryPairs = metaValueMap(meta, dimCountry);
   const allMonths = metaTimeCodes(meta, dimTime) ?? [];
-  const pick = months ? allMonths.slice(-months) : allMonths;
   const query = [
     {
       code: dimVar,
@@ -697,14 +706,14 @@ async function fetchTourismCountry(outDir, months) {
       code: dimCountry,
       selection: { filter: "item", values: countryPairs.map(([code]) => code) },
     },
-    { code: dimTime, selection: { filter: "item", values: pick } },
+    { code: dimTime, selection: { filter: "item", values: allMonths } },
   ];
   const cube = await pxPostData(parts, { query, response: { format: "JSON" } });
   const table = tableLookup(cube, [dimTime, dimVar, dimCountry]);
   if (!table) throw new PxError("Tourism country: unexpected response format");
   const { dimCodes, lookup } = table;
   const records = [];
-  for (const timeCode of pick) {
+  for (const timeCode of allMonths) {
     const period = normalizeYM(timeCode);
     for (const [countryCode, countryLabel] of countryPairs) {
       if (countryLabel.toLowerCase() === "external") continue;
@@ -722,7 +731,7 @@ async function fetchTourismCountry(outDir, months) {
   }
   await writeJson(outDir, "kas_tourism_country_monthly.json", records);
   return {
-    periods: pick.length,
+    periods: allMonths.length,
     countries: countryPairs.length,
     metrics: Object.keys(metricCodes),
     table: parts[parts.length - 1],
@@ -730,7 +739,7 @@ async function fetchTourismCountry(outDir, months) {
   };
 }
 
-async function fetchImportsByPartner(outDir, months, partners) {
+async function fetchImportsByPartner(outDir, partners) {
   const parts = PATHS.imports_by_partner;
   const meta = await pxGetMeta(parts);
   const dimTime =
@@ -754,7 +763,6 @@ async function fetchImportsByPartner(outDir, months, partners) {
   if (!dimTime || !dimPartner)
     throw new PxError("Partner table: missing Year/month or Partner dimension");
   const allMonths = metaTimeCodes(meta, dimTime);
-  const pick = months ? allMonths.slice(-months) : allMonths;
   const partnerPairs = metaValueMap(meta, dimPartner);
   let partnerCodes;
   let labelLookup = Object.fromEntries(partnerPairs);
@@ -780,7 +788,7 @@ async function fetchImportsByPartner(outDir, months, partners) {
   }
   const query = [
     { code: dimPartner, selection: { filter: "item", values: partnerCodes } },
-    { code: dimTime, selection: { filter: "item", values: pick } },
+    { code: dimTime, selection: { filter: "item", values: allMonths } },
   ];
   if (dimUnit) {
     const unitPairs = metaValueMap(meta, dimUnit);
@@ -812,7 +820,7 @@ async function fetchImportsByPartner(outDir, months, partners) {
     for (const partnerCode of partnerCodes) {
       const partnerLabel = labelLookup[partnerCode] ?? partnerCode;
       const partnerOrd = idxPartner[partnerCode];
-      for (const timeCode of pick) {
+      for (const timeCode of allMonths) {
         const timeOrd = idxTime[timeCode];
         const coords = order.map((key) => {
           if (key === dimPartner) return partnerOrd;
@@ -833,7 +841,7 @@ async function fetchImportsByPartner(outDir, months, partners) {
     const { dimCodes, lookup } = table;
     for (const partnerCode of partnerCodes) {
       const partnerLabel = labelLookup[partnerCode] ?? partnerCode;
-      for (const timeCode of pick) {
+      for (const timeCode of allMonths) {
         const value = lookupTableValue(dimCodes, lookup, {
           [dimPartner]: partnerCode,
           [dimTime]: timeCode,
@@ -847,15 +855,93 @@ async function fetchImportsByPartner(outDir, months, partners) {
     }
   }
   await writeJson(outDir, "kas_imports_by_partner.json", rows);
-  return { partners: partnerCodes.length, periods: pick.length };
+  return { partners: partnerCodes.length, periods: allMonths.length };
+}
+
+async function fetchCpiDataset(outDir, months, { path_key, filename }) {
+  const parts = PATHS[path_key];
+  const meta = await pxGetMeta(parts);
+
+  const dimTime =
+    metaFindVarCode(
+      meta,
+      (text, code, v) =>
+        v.time === true ||
+        (text.toLowerCase().includes("year") &&
+          text.toLowerCase().includes("month")),
+    ) || "Viti/muaji";
+  const dimGroup =
+    metaFindVarCode(meta, (text) => text.toLowerCase().includes("grupet")) ||
+    "Grupet dhe nëngrupet";
+
+  const allMonths = metaTimeCodes(meta, dimTime) ?? [];
+  const groupPairs = metaValueMap(meta, dimGroup);
+
+  const query = [
+    {
+      code: dimGroup,
+      selection: {
+        filter: "item",
+        values: groupPairs.map(([code]) => code),
+      },
+    },
+    { code: dimTime, selection: { filter: "item", values: allMonths } },
+  ];
+
+  const cube = await pxPostData(parts, { query, response: { format: "JSON" } });
+  const table = tableLookup(cube, [dimTime, dimGroup]);
+  if (!table) throw new PxError("CPI dataset: unexpected response format");
+  const { dimCodes, lookup } = table;
+
+  const groups = groupPairs.map(([code, label]) => ({
+    code,
+    label,
+    values: allMonths.map((timeCode) => ({
+      period: normalizeYM(timeCode),
+      value: tidyNumber(
+        lookupTableValue(dimCodes, lookup, {
+          [dimTime]: timeCode,
+          [dimGroup]: code,
+        }),
+      ),
+    })),
+  }));
+
+  const payload = {
+    title: cube?.metadata?.title ?? meta?.title ?? "",
+    updated: cube?.metadata?.updated ?? null,
+    dimensions: {
+      time: {
+        code: dimTime,
+        label:
+          metaVariables(meta).find((v) => v.code === dimTime)?.text ??
+          "Viti/muaji",
+      },
+      group: {
+        code: dimGroup,
+        label:
+          metaVariables(meta).find((v) => v.code === dimGroup)?.text ??
+          "Grupet dhe nëngrupet",
+      },
+    },
+    groups,
+  };
+
+  await writeJson(outDir, filename, payload);
+
+  return {
+    periods: allMonths.length,
+    groups: groups.length,
+    table: parts[parts.length - 1],
+    path: parts.join("/"),
+    title: payload.title,
+  };
 }
 
 export async function main() {
   const argv = process.argv.slice(2);
   const args = {
-    months: null,
     out: null,
-    all: false,
     partners: null,
     noPartners: false,
   };
@@ -864,13 +950,6 @@ export async function main() {
     switch (arg) {
       case "--out":
         args.out = argv[++i] ?? null;
-        break;
-      case "--months":
-        args.months = Number.parseInt(argv[++i] ?? "", 10);
-        if (Number.isNaN(args.months)) args.months = null;
-        break;
-      case "--all":
-        args.all = true;
         break;
       case "--partners":
         args.partners = (argv[++i] ?? "")
@@ -891,7 +970,6 @@ export async function main() {
   const outDir = args.out
     ? path.resolve(process.cwd(), args.out)
     : path.resolve(process.cwd(), "data");
-  const months = args.all ? null : (args.months ?? 24);
   let partners = null;
   if (!args.noPartners) {
     partners = args.partners?.length ? args.partners : ["ALL"];
@@ -899,22 +977,16 @@ export async function main() {
 
   console.log("ASKdata PxWeb consolidator");
   console.log("  out     :", outDir);
-  console.log("  months  :", months ?? "ALL");
   console.log("  partners:", partners ? partners.join(",") : "(none)");
 
   await fs.mkdir(outDir, { recursive: true });
   const started = new Date().toISOString();
-  const tradeInfo = await fetchTradeMonthly(outDir, months ?? undefined);
-  const energyInfo = await fetchEnergyMonthly(outDir, months ?? undefined);
+  const tradeInfo = await fetchTradeMonthly(outDir);
+  const energyInfo = await fetchEnergyMonthly(outDir);
   const fuelInfos = {};
   for (const [fuelName, spec] of Object.entries(FUEL_SPECS)) {
     try {
-      fuelInfos[fuelName] = await fetchFuelTable(
-        outDir,
-        months ?? undefined,
-        fuelName,
-        spec,
-      );
+      fuelInfos[fuelName] = await fetchFuelTable(outDir, fuelName, spec);
     } catch (error) {
       console.warn(
         `! Fuel ${fuelName} download failed:`,
@@ -925,23 +997,37 @@ export async function main() {
   let tourismRegionInfo = null;
   let tourismCountryInfo = null;
   try {
-    tourismRegionInfo = await fetchTourismRegion(outDir, months ?? undefined);
+    tourismRegionInfo = await fetchTourismRegion(outDir);
   } catch (error) {
     console.warn("! Tourism region download failed:", error.message ?? error);
   }
   try {
-    tourismCountryInfo = await fetchTourismCountry(outDir, months ?? undefined);
+    tourismCountryInfo = await fetchTourismCountry(outDir);
   } catch (error) {
     console.warn("! Tourism country download failed:", error.message ?? error);
+  }
+  let cpiChangeInfo = null;
+  let cpiIndexInfo = null;
+  try {
+    cpiChangeInfo = await fetchCpiDataset(outDir, undefined, {
+      path_key: "cpi_change",
+      filename: "kas_cpi_change_monthly.json",
+    });
+  } catch (error) {
+    console.warn("! CPI change download failed:", error.message ?? error);
+  }
+  try {
+    cpiIndexInfo = await fetchCpiDataset(outDir, undefined, {
+      path_key: "cpi_index",
+      filename: "kas_cpi_index_monthly.json",
+    });
+  } catch (error) {
+    console.warn("! CPI index download failed:", error.message ?? error);
   }
   let partnerInfo = null;
   if (partners) {
     try {
-      partnerInfo = await fetchImportsByPartner(
-        outDir,
-        months ?? undefined,
-        partners,
-      );
+      partnerInfo = await fetchImportsByPartner(outDir, partners);
     } catch (error) {
       console.warn("! Partner download failed:", error.message ?? error);
     }
@@ -970,6 +1056,13 @@ export async function main() {
       tourism_monthly: Object.keys(tourismManifest).length
         ? tourismManifest
         : null,
+      cpi:
+        cpiChangeInfo || cpiIndexInfo
+          ? {
+              change: cpiChangeInfo,
+              index: cpiIndexInfo,
+            }
+          : null,
       imports_by_partner: partners
         ? {
             table: "07_imp_country.px",

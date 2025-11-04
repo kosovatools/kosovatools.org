@@ -13,6 +13,12 @@
       "@workspace/car-import-taxes/*": [
         "../../packages/car-import-taxes/src/*"
       ],
+      "@workspace/inflation-tracker": [
+        "../../packages/inflation-tracker/src/index.ts"
+      ],
+      "@workspace/inflation-tracker/*": [
+        "../../packages/inflation-tracker/src/*"
+      ],
       "@workspace/data-insights": ["../../packages/data-insights/src/index.ts"],
       "@workspace/data-insights/*": ["../../packages/data-insights/src/*"],
       "@workspace/payroll": ["../../packages/payroll/src/index.ts"],

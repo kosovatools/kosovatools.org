@@ -104,7 +104,7 @@ export function DataInsightsDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
-            <FuelBalanceChart balances={fuelBalances} months={36} />
+            <FuelBalanceChart balances={fuelBalances} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
             Burimet: {fuelSourceLabel}.

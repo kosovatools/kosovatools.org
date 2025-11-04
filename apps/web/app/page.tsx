@@ -9,6 +9,7 @@ import {
   HandCoins,
   PackageSearch,
   Sparkles,
+  TrendingUp,
 } from "lucide-react";
 
 import { Button } from "@workspace/ui/components/button";
@@ -78,6 +79,15 @@ const tools: ToolCard[] = [
       "Pultë vizuale nga të dhënat e ASK për të kuptuar demografinë, punësimin dhe çmimet.",
     cta: "Shiko grafet",
     icon: BarChart3,
+    category: "Statistika",
+  },
+  {
+    name: "Indeksi i çmimeve",
+    href: "/inflation-tracker",
+    description:
+      "Monitoro inflacionin e Kosovës sipas klasifikimit COICOP dhe krahaso grupet kryesore të shpenzimeve.",
+    cta: "Analizo çmimet",
+    icon: TrendingUp,
     category: "Statistika",
   },
   {

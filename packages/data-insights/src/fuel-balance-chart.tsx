@@ -23,6 +23,10 @@ import {
   formatCount,
   STACK_PERIOD_GROUPING_OPTIONS,
   getStackPeriodFormatter,
+  type TimeRangeOption,
+  DEFAULT_TIME_RANGE_OPTIONS,
+  DEFAULT_TIME_RANGE,
+  monthsFromRange,
 } from "@workspace/stats";
 
 import {
@@ -33,9 +37,9 @@ import {
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "./use-timeline-event-markers";
+import { TimeRangeSelector } from "@workspace/ui/custom-components/time-range-selector";
 
 const DEFAULT_METRIC: FuelMetric = "ready_for_market";
-const DEFAULT_MONTHS = 36;
 const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";
 const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
 
@@ -52,17 +56,31 @@ function toMetricOptions(): Array<{ id: FuelMetric; label: string }> {
 
 const METRIC_OPTIONS = toMetricOptions();
 
-export function FuelBalanceChart({
-  balances,
-  months = DEFAULT_MONTHS,
-}: FuelBalanceChartProps) {
+export function FuelBalanceChart({ balances, months }: FuelBalanceChartProps) {
   const [metric, setMetric] = React.useState<FuelMetric>(DEFAULT_METRIC);
   const [periodGrouping, setPeriodGrouping] =
     React.useState<StackPeriodGrouping>("monthly");
 
+  const controlledMonths =
+    typeof months === "number" && Number.isFinite(months) && months > 0
+      ? months
+      : undefined;
+
+  const [range, setRange] = React.useState<TimeRangeOption>(
+    controlledMonths ?? DEFAULT_TIME_RANGE,
+  );
+
+  React.useEffect(() => {
+    if (controlledMonths != null) {
+      setRange(controlledMonths);
+    }
+  }, [controlledMonths]);
+
+  const monthsLimit = controlledMonths ?? monthsFromRange(range);
+
   const { chartData, keyMap, config } = React.useMemo(() => {
     const { keys, series, labelMap } = buildFuelTypeStackSeries(balances, {
-      months,
+      months: monthsLimit,
       metric,
       selectedKeys: fuelKeys,
       includeOther: false,
@@ -75,7 +93,7 @@ export function FuelBalanceChart({
       series,
       periodFormatter: getStackPeriodFormatter(periodGrouping),
     });
-  }, [balances, months, metric, periodGrouping]);
+  }, [balances, metric, monthsLimit, periodGrouping]);
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
@@ -175,6 +193,14 @@ export function FuelBalanceChart({
             })}
           </div>
         </div>
+        {controlledMonths == null ? (
+          <TimeRangeSelector
+            value={range}
+            onChange={setRange}
+            options={DEFAULT_TIME_RANGE_OPTIONS}
+            label="Intervali"
+          />
+        ) : null}
       </div>
       <div className="text-sm text-muted-foreground">
         Periudha e fundit{" "}

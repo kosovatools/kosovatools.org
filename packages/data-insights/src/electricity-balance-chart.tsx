@@ -19,6 +19,10 @@ import {
   groupStackPeriod,
   STACK_PERIOD_GROUPING_OPTIONS,
   getStackPeriodFormatter,
+  type TimeRangeOption,
+  DEFAULT_TIME_RANGE_OPTIONS,
+  DEFAULT_TIME_RANGE,
+  monthsFromRange,
 } from "@workspace/stats";
 
 import {
@@ -28,6 +32,7 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
+import { TimeRangeSelector } from "@workspace/ui/custom-components/time-range-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "./use-timeline-event-markers";
 
@@ -50,6 +55,23 @@ export function ElectricityBalanceChart({
   const [periodGrouping, setPeriodGrouping] =
     React.useState<StackPeriodGrouping>("seasonal");
 
+  const controlledMonths =
+    typeof months === "number" && Number.isFinite(months) && months > 0
+      ? months
+      : undefined;
+
+  const [range, setRange] = React.useState<TimeRangeOption>(
+    controlledMonths ?? DEFAULT_TIME_RANGE,
+  );
+
+  React.useEffect(() => {
+    if (controlledMonths != null) {
+      setRange(controlledMonths);
+    }
+  }, [controlledMonths]);
+
+  const monthsLimit = controlledMonths ?? monthsFromRange(range);
+
   const { chartData, keyMap, config, latestSummary } = React.useMemo(() => {
     const periodFormatter = getStackPeriodFormatter(periodGrouping);
 
@@ -57,9 +79,7 @@ export function ElectricityBalanceChart({
       .slice()
       .sort((a, b) => a.period.localeCompare(b.period));
     const limitedRecords =
-      typeof months === "number" && Number.isFinite(months) && months > 0
-        ? sorted.slice(-months)
-        : sorted;
+      typeof monthsLimit === "number" ? sorted.slice(-monthsLimit) : sorted;
 
     const aggregated = aggregateByGrouping(limitedRecords, periodGrouping);
 
@@ -87,7 +107,7 @@ export function ElectricityBalanceChart({
       config: view.config,
       latestSummary: buildLatestSummary(aggregated, periodFormatter),
     };
-  }, [data, months, periodGrouping]);
+  }, [data, monthsLimit, periodGrouping]);
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
@@ -139,28 +159,38 @@ export function ElectricityBalanceChart({
             </>
           )}
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground">Perioda</span>
-          <div className="flex gap-2 text-xs">
-            {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
-              const active = periodGrouping === option.id;
-              return (
-                <button
-                  key={option.id}
-                  type="button"
-                  onClick={() => setPeriodGrouping(option.id)}
-                  className={
-                    "rounded-full border px-3 py-1 transition-colors " +
-                    (active
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border bg-background hover:bg-muted")
-                  }
-                >
-                  {option.label}
-                </button>
-              );
-            })}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs text-muted-foreground">Perioda</span>
+            <div className="flex gap-2 text-xs">
+              {STACK_PERIOD_GROUPING_OPTIONS.map((option) => {
+                const active = periodGrouping === option.id;
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => setPeriodGrouping(option.id)}
+                    className={
+                      "rounded-full border px-3 py-1 transition-colors " +
+                      (active
+                        ? "border-primary bg-primary/10 text-primary"
+                        : "border-border bg-background hover:bg-muted")
+                    }
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
+          {controlledMonths == null ? (
+            <TimeRangeSelector
+              value={range}
+              onChange={setRange}
+              options={DEFAULT_TIME_RANGE_OPTIONS}
+              label="Intervali"
+            />
+          ) : null}
         </div>
       </div>
       <ChartContainer config={config} className={chartClassName}>

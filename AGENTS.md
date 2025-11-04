@@ -12,7 +12,7 @@ Each citizen tool should ship as its own workspace package (e.g., `packages/cust
 
 ## Stats Data Lifecycle
 
-- Refresh Kosovo Agency of Statistics (KAS) sources by running `node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data --months 36`. Scripts require Node.js 18+.
+- Refresh Kosovo Agency of Statistics (KAS) sources by running `node packages/stats/scripts/fetch_kas.mjs --out packages/stats/data `. Scripts require Node.js 18+.
 - Document visualization requirements in `packages/stats/docs/` (e.g., `kas_chart_specs.md`) so UI work aligns with dataset schemas.
 - Keep JSON snapshots in `packages/stats/data/` up to date; note retrieval dates inside `docs/data/README.md`.
 

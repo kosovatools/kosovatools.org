@@ -19,6 +19,10 @@ import {
   type TourismRegionRecord,
   STACK_PERIOD_GROUPING_OPTIONS,
   getStackPeriodFormatter,
+  type TimeRangeOption,
+  DEFAULT_TIME_RANGE_OPTIONS,
+  DEFAULT_TIME_RANGE,
+  monthsFromRange,
 } from "@workspace/stats";
 
 import {
@@ -27,6 +31,7 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
+import { TimeRangeSelector } from "@workspace/ui/custom-components/time-range-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "./use-timeline-event-markers";
 
@@ -50,9 +55,26 @@ export function TourismRegionCharts({
   const [periodGrouping, setPeriodGrouping] =
     React.useState<StackPeriodGrouping>("yearly");
 
+  const controlledMonths =
+    typeof months === "number" && Number.isFinite(months) && months > 0
+      ? months
+      : undefined;
+
+  const [range, setRange] = React.useState<TimeRangeOption>(
+    controlledMonths ?? DEFAULT_TIME_RANGE,
+  );
+
+  React.useEffect(() => {
+    if (controlledMonths != null) {
+      setRange(controlledMonths);
+    }
+  }, [controlledMonths]);
+
+  const monthsLimit = controlledMonths ?? monthsFromRange(range);
+
   const { chartData, keyMap, config } = React.useMemo(() => {
     const { keys, series, labelMap } = buildRegionStackSeries(data, {
-      months,
+      months: monthsLimit,
       group,
       periodGrouping,
     });
@@ -63,7 +85,7 @@ export function TourismRegionCharts({
       series,
       periodFormatter: getStackPeriodFormatter(periodGrouping),
     });
-  }, [data, group, months, periodGrouping]);
+  }, [data, group, monthsLimit, periodGrouping]);
 
   const latestSummary = React.useMemo<{
     periodLabel: string;
@@ -167,6 +189,14 @@ export function TourismRegionCharts({
             })}
           </div>
         </div>
+        {controlledMonths == null ? (
+          <TimeRangeSelector
+            value={range}
+            onChange={setRange}
+            options={DEFAULT_TIME_RANGE_OPTIONS}
+            label="Intervali"
+          />
+        ) : null}
       </div>
 
       {latestSummary ? (
