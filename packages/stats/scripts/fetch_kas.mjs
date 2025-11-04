@@ -137,6 +137,18 @@ export function normalizeYM(code) {
   return code;
 }
 
+function findTimeDimension(meta, fallback = "Viti/muaji") {
+  return (
+    metaFindVarCode(
+      meta,
+      (text, _code, variable) =>
+        variable.time === true ||
+        (text.toLowerCase().includes("year") &&
+          text.toLowerCase().includes("month")),
+    ) || fallback
+  );
+}
+
 function apiJoin(base, parts, lang = "en") {
   const segs = [
     base.replace(/\/+$/, ""),
@@ -270,32 +282,79 @@ export function metaTimeCodes(meta, timeCode) {
 
 function tableLookup(cube, dimOrder = null) {
   const dataRows = Array.isArray(cube?.data) ? cube.data : null;
-  if (!dataRows?.length) return null;
-  let dimCodes;
-  if (Array.isArray(cube?.columns)) {
-    const dimCols = cube.columns.filter((col) => col?.type !== "c");
-    dimCodes = dimCols.map((col) => String(col?.code ?? ""));
-  } else if (Array.isArray(dimOrder) && dimOrder.length) {
-    dimCodes = dimOrder.map((c) => String(c));
-  } else {
-    return null;
+  if (dataRows?.length) {
+    let dimCodes;
+    if (Array.isArray(cube?.columns)) {
+      const dimCols = cube.columns.filter((col) => col?.type !== "c");
+      dimCodes = dimCols.map((col) => String(col?.code ?? ""));
+    } else if (Array.isArray(dimOrder) && dimOrder.length) {
+      dimCodes = dimOrder.map((c) => String(c));
+    } else {
+      return null;
+    }
+    const lookup = new Map();
+    for (const row of dataRows) {
+      const keyVals = Array.isArray(row?.key)
+        ? row.key.map((v) => String(v))
+        : [];
+      if (keyVals.length !== dimCodes.length) continue;
+      let value = null;
+      if (Array.isArray(row?.values)) {
+        const vals = row.values.length ? row.values : [null];
+        value = vals[0];
+      } else if (Object.prototype.hasOwnProperty.call(row ?? {}, "value")) {
+        value = row.value;
+      }
+      lookup.set(JSON.stringify(keyVals), coerceNumber(value));
+    }
+    return { dimCodes, lookup };
+  }
+  return tableLookupFromValueCube(cube, dimOrder);
+}
+
+function tableLookupFromValueCube(cube, dimOrder = null) {
+  if (!Array.isArray(cube?.value) || !cube?.dimension) return null;
+  const dimensionOrder =
+    Array.isArray(dimOrder) && dimOrder.length
+      ? dimOrder.map((code) => String(code))
+      : Array.isArray(cube.id) && cube.id.length
+        ? cube.id.map((code) => String(code))
+        : null;
+  if (!dimensionOrder?.length) return null;
+  const dimDetails = dimensionOrder.map((code) => {
+    const dimension = cube.dimension?.[code];
+    const indexEntries = Object.entries(
+      dimension?.category?.index ?? {},
+    ).map(([valueCode, ordinal]) => [
+      String(valueCode),
+      Number(ordinal),
+    ]);
+    if (!indexEntries.length) return null;
+    indexEntries.sort((a, b) => a[1] - b[1]);
+    const ordToValue = indexEntries.map(([valueCode]) => valueCode);
+    return { code, ordToValue };
+  });
+  if (dimDetails.some((detail) => !detail)) return null;
+  const sizes = dimDetails.map((detail) => detail.ordToValue.length);
+  if (!sizes.every((size) => Number.isInteger(size) && size > 0)) return null;
+  const strides = Array(sizes.length).fill(1);
+  for (let i = sizes.length - 2; i >= 0; i -= 1) {
+    strides[i] = strides[i + 1] * sizes[i + 1];
   }
   const lookup = new Map();
-  for (const row of dataRows) {
-    const keyVals = Array.isArray(row?.key)
-      ? row.key.map((v) => String(v))
-      : [];
-    if (keyVals.length !== dimCodes.length) continue;
-    let value = null;
-    if (Array.isArray(row?.values)) {
-      const vals = row.values.length ? row.values : [null];
-      value = vals[0];
-    } else if (Object.prototype.hasOwnProperty.call(row ?? {}, "value")) {
-      value = row.value;
-    }
-    lookup.set(JSON.stringify(keyVals), coerceNumber(value));
+  for (let idx = 0; idx < cube.value.length; idx += 1) {
+    const coords = strides.map((stride, dimIdx) => {
+      const size = sizes[dimIdx] || 1;
+      return stride ? Math.floor(idx / stride) % size : 0;
+    });
+    const keyVals = coords.map((ord, dimIdx) => {
+      const valueCode = dimDetails[dimIdx].ordToValue[ord];
+      return valueCode === undefined ? null : String(valueCode);
+    });
+    if (keyVals.some((value) => value === null)) continue;
+    lookup.set(JSON.stringify(keyVals), coerceNumber(cube.value[idx]));
   }
-  return { dimCodes, lookup };
+  return { dimCodes: dimensionOrder, lookup };
 }
 
 function lookupTableValue(dimCodes, lookup, assignments) {
@@ -319,14 +378,7 @@ async function fetchTradeMonthly(outDir) {
   const parts = PATHS.trade_monthly;
   const meta = await pxGetMeta(parts);
 
-  const dimTime =
-    metaFindVarCode(
-      meta,
-      (text, code, v) =>
-        v.time === true ||
-        (text.toLowerCase().includes("year") &&
-          text.toLowerCase().includes("month")),
-    ) || "Viti/muaji";
+  const dimTime = findTimeDimension(meta);
   const dimVar =
     metaFindVarCode(
       meta,
@@ -369,25 +421,17 @@ async function fetchTradeMonthly(outDir) {
   };
 
   const data = await pxPostData(parts, body);
-  const values = Array.isArray(data?.value) ? data.value : [];
-  let coerced = [];
-  if (values.length) {
-    coerced = values.map((v) => coerceNumber(v));
-  } else {
-    const table = tableLookup(data, [dimTime, dimVar]);
-    if (table) {
-      const { dimCodes, lookup } = table;
-      coerced = allMonths.map((code) =>
-        lookupTableValue(dimCodes, lookup, {
-          [dimTime]: code,
-          [dimVar]: impCode,
-        }),
-      );
-    }
-  }
-  const series = allMonths.map((code, idx) => ({
+  const table = tableLookup(data, [dimTime, dimVar]);
+  if (!table) throw new PxError("Trade table: unexpected response format");
+  const { dimCodes, lookup } = table;
+  const series = allMonths.map((code) => ({
     period: normalizeYM(code),
-    imports_th_eur: tidyNumber(coerced[idx] ?? null),
+    imports_th_eur: tidyNumber(
+      lookupTableValue(dimCodes, lookup, {
+        [dimTime]: code,
+        [dimVar]: impCode,
+      }),
+    ),
   }));
   await writeJson(outDir, "kas_imports_monthly.json", series);
   return { periods: series.length };
@@ -397,14 +441,7 @@ async function fetchEnergyMonthly(outDir) {
   const parts = PATHS.energy_monthly;
   const meta = await pxGetMeta(parts);
 
-  const dimTime =
-    metaFindVarCode(
-      meta,
-      (text, code, v) =>
-        v.time === true ||
-        (text.toLowerCase().includes("year") &&
-          text.toLowerCase().includes("month")),
-    ) || "Viti/muaji";
+  const dimTime = findTimeDimension(meta);
   const dimInd =
     metaFindVarCode(
       meta,
@@ -458,60 +495,24 @@ async function fetchEnergyMonthly(outDir) {
     ],
   };
   const cube = await pxPostData(parts, body);
-  const series = [];
-  if (Array.isArray(cube?.value) && cube?.dimension) {
-    const order = cube.id;
-    const sizes = cube.size;
-    const strides = Array(order.length).fill(1);
-    for (let i = sizes.length - 2; i >= 0; i -= 1) {
-      strides[i] = strides[i + 1] * sizes[i + 1];
-    }
-    const idxTime = cube.dimension[dimTime].category.index;
-    const idxInd = cube.dimension[dimInd].category.index;
-    const impOrd = idxInd[importCode];
-    const prodOrd = idxInd[prodCode];
-    const pos = (coords) =>
-      coords.reduce((sum, c, idx) => sum + c * strides[idx], 0);
-    for (const code of allMonths) {
-      const timeOrd = idxTime[code];
-      const coords = order.map((key) => {
-        if (key === dimInd) return impOrd;
-        if (key === dimTime) return timeOrd;
-        return 0;
-      });
-      const coordsProd = order.map((key) => {
-        if (key === dimInd) return prodOrd;
-        if (key === dimTime) return timeOrd;
-        return 0;
-      });
-      const importVal = coerceNumber(cube.value[pos(coords)]);
-      const prodVal = coerceNumber(cube.value[pos(coordsProd)]);
-      series.push({
-        period: normalizeYM(code),
-        import_gwh: tidyNumber(importVal),
-        production_gwh: tidyNumber(prodVal),
-      });
-    }
-  } else {
-    const table = tableLookup(cube, [dimInd, dimTime]);
-    if (!table) throw new PxError("Energy table: unexpected response format");
-    const { dimCodes, lookup } = table;
-    for (const code of allMonths) {
-      const importVal = lookupTableValue(dimCodes, lookup, {
-        [dimInd]: importCode,
-        [dimTime]: code,
-      });
-      const prodVal = lookupTableValue(dimCodes, lookup, {
-        [dimInd]: prodCode,
-        [dimTime]: code,
-      });
-      series.push({
-        period: normalizeYM(code),
-        import_gwh: tidyNumber(importVal),
-        production_gwh: tidyNumber(prodVal),
-      });
-    }
-  }
+  const table = tableLookup(cube, [dimInd, dimTime]);
+  if (!table) throw new PxError("Energy table: unexpected response format");
+  const { dimCodes, lookup } = table;
+  const series = allMonths.map((code) => {
+    const importVal = lookupTableValue(dimCodes, lookup, {
+      [dimInd]: importCode,
+      [dimTime]: code,
+    });
+    const prodVal = lookupTableValue(dimCodes, lookup, {
+      [dimInd]: prodCode,
+      [dimTime]: code,
+    });
+    return {
+      period: normalizeYM(code),
+      import_gwh: tidyNumber(importVal),
+      production_gwh: tidyNumber(prodVal),
+    };
+  });
   await writeJson(outDir, "kas_energy_electricity_monthly.json", series);
   return { periods: series.length };
 }
@@ -520,14 +521,7 @@ async function fetchFuelTable(outDir, name, spec) {
   const parts = PATHS[spec.path_key];
   const label = spec.label ?? name;
   const meta = await pxGetMeta(parts);
-  const dimTime =
-    metaFindVarCode(
-      meta,
-      (text, code, v) =>
-        v.time === true ||
-        (text.toLowerCase().includes("year") &&
-          text.toLowerCase().includes("month")),
-    ) || "Viti/muaji";
+  const dimTime = findTimeDimension(meta);
   let measureDim = null;
   for (const variable of metaVariables(meta)) {
     const code = String(variable?.code ?? "");
@@ -581,14 +575,7 @@ async function fetchFuelTable(outDir, name, spec) {
 async function fetchTourismRegion(outDir) {
   const parts = PATHS.tourism_region;
   const meta = await pxGetMeta(parts);
-  const dimTime =
-    metaFindVarCode(
-      meta,
-      (text, code, v) =>
-        v.time === true ||
-        (text.toLowerCase().includes("year") &&
-          text.toLowerCase().includes("month")),
-    ) || "Viti/muaji";
+  const dimTime = findTimeDimension(meta);
   const dimRegion =
     metaFindVarCode(
       meta,
@@ -672,14 +659,7 @@ async function fetchTourismRegion(outDir) {
 async function fetchTourismCountry(outDir) {
   const parts = PATHS.tourism_country;
   const meta = await pxGetMeta(parts);
-  const dimTime =
-    metaFindVarCode(
-      meta,
-      (text, code, v) =>
-        v.time === true ||
-        (text.toLowerCase().includes("year") &&
-          text.toLowerCase().includes("month")),
-    ) || "Viti/muaji";
+  const dimTime = findTimeDimension(meta);
   const dimVar =
     metaFindVarCode(meta, (text) => text.toLowerCase().includes("variable")) ||
     "Variabla";
@@ -742,14 +722,7 @@ async function fetchTourismCountry(outDir) {
 async function fetchImportsByPartner(outDir, partners) {
   const parts = PATHS.imports_by_partner;
   const meta = await pxGetMeta(parts);
-  const dimTime =
-    metaFindVarCode(
-      meta,
-      (text, code, v) =>
-        v.time === true ||
-        (text.toLowerCase().includes("year") &&
-          text.toLowerCase().includes("month")),
-    ) || "Viti/muaji";
+  const dimTime = findTimeDimension(meta);
   const dimPartner =
     metaFindVarCode(
       meta,
@@ -805,53 +778,22 @@ async function fetchImportsByPartner(outDir, partners) {
     }
   }
   const cube = await pxPostData(parts, { query });
+  const table = tableLookup(cube, [dimPartner, dimTime]);
+  if (!table) throw new PxError("Partner table: unexpected response format");
+  const { dimCodes, lookup } = table;
   const rows = [];
-  if (Array.isArray(cube?.value) && cube?.dimension) {
-    const order = cube.id;
-    const sizes = cube.size;
-    const strides = Array(order.length).fill(1);
-    for (let i = sizes.length - 2; i >= 0; i -= 1) {
-      strides[i] = strides[i + 1] * sizes[i + 1];
-    }
-    const idxTime = cube.dimension[dimTime].category.index;
-    const idxPartner = cube.dimension[dimPartner].category.index;
-    const pos = (coords) =>
-      coords.reduce((sum, c, idx) => sum + c * strides[idx], 0);
-    for (const partnerCode of partnerCodes) {
-      const partnerLabel = labelLookup[partnerCode] ?? partnerCode;
-      const partnerOrd = idxPartner[partnerCode];
-      for (const timeCode of allMonths) {
-        const timeOrd = idxTime[timeCode];
-        const coords = order.map((key) => {
-          if (key === dimPartner) return partnerOrd;
-          if (key === dimTime) return timeOrd;
-          return 0;
-        });
-        const value = coerceNumber(cube.value[pos(coords)]);
-        rows.push({
-          period: normalizeYM(timeCode),
-          partner: partnerLabel,
-          imports_th_eur: tidyNumber(value),
-        });
-      }
-    }
-  } else {
-    const table = tableLookup(cube, [dimPartner, dimTime]);
-    if (!table) throw new PxError("Partner table: unexpected response format");
-    const { dimCodes, lookup } = table;
-    for (const partnerCode of partnerCodes) {
-      const partnerLabel = labelLookup[partnerCode] ?? partnerCode;
-      for (const timeCode of allMonths) {
-        const value = lookupTableValue(dimCodes, lookup, {
-          [dimPartner]: partnerCode,
-          [dimTime]: timeCode,
-        });
-        rows.push({
-          period: normalizeYM(timeCode),
-          partner: partnerLabel,
-          imports_th_eur: tidyNumber(value),
-        });
-      }
+  for (const partnerCode of partnerCodes) {
+    const partnerLabel = labelLookup[partnerCode] ?? partnerCode;
+    for (const timeCode of allMonths) {
+      const value = lookupTableValue(dimCodes, lookup, {
+        [dimPartner]: partnerCode,
+        [dimTime]: timeCode,
+      });
+      rows.push({
+        period: normalizeYM(timeCode),
+        partner: partnerLabel,
+        imports_th_eur: tidyNumber(value),
+      });
     }
   }
   await writeJson(outDir, "kas_imports_by_partner.json", rows);
@@ -860,16 +802,9 @@ async function fetchImportsByPartner(outDir, partners) {
 
 async function fetchCpiDataset(outDir, months, { path_key, filename }) {
   const parts = PATHS[path_key];
-  const meta = await pxGetMeta(parts);
+  const meta = await pxGetMeta(parts, "sq");
 
-  const dimTime =
-    metaFindVarCode(
-      meta,
-      (text, code, v) =>
-        v.time === true ||
-        (text.toLowerCase().includes("year") &&
-          text.toLowerCase().includes("month")),
-    ) || "Viti/muaji";
+  const dimTime = findTimeDimension(meta);
   const dimGroup =
     metaFindVarCode(meta, (text) => text.toLowerCase().includes("grupet")) ||
     "Grupet dhe nëngrupet";
@@ -888,7 +823,11 @@ async function fetchCpiDataset(outDir, months, { path_key, filename }) {
     { code: dimTime, selection: { filter: "item", values: allMonths } },
   ];
 
-  const cube = await pxPostData(parts, { query, response: { format: "JSON" } });
+  const cube = await pxPostData(
+    parts,
+    { query, response: { format: "JSON" } },
+    "sq",
+  );
   const table = tableLookup(cube, [dimTime, dimGroup]);
   if (!table) throw new PxError("CPI dataset: unexpected response format");
   const { dimCodes, lookup } = table;
