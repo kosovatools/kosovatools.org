@@ -47,8 +47,8 @@ export default function RootLayout({
         <Providers>
           <div className="flex min-h-svh flex-col bg-background">
             <header className="border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-              <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-6 py-3 sm:py-4">
-                <div className="flex flex-1 items-center justify-between gap-4">
+              <div className="mx-auto flex w-full max-w-[1500px] items-center justify-between gap-4 px-6 py-3 sm:py-4">
+                <div className="flex items-center gap-6">
                   <Link
                     href="/"
                     className="flex items-center gap-2 text-sm font-semibold tracking-tight transition hover:text-primary sm:text-base"
@@ -56,40 +56,33 @@ export default function RootLayout({
                     <LayoutGrid aria-hidden className="h-4 w-4" />
                     Kosova Tools
                   </Link>
-                  <div className="flex items-center gap-2 text-xs sm:text-sm">
-                    <ThemeToggle />
-                    <a
-                      className="inline-flex items-center gap-2 rounded-full border border-border/60 px-2.5 py-1 font-medium transition hover:border-primary hover:text-primary"
-                      href="https://github.com/kosovatools/kosovatools.org"
-                      rel="noreferrer"
-                      target="_blank"
+                  <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex md:text-base">
+                    <Link
+                      className="transition hover:text-primary"
+                      href="/#tools"
                     >
-                      <Github aria-hidden className="h-4 w-4" />
-                      <span className="hidden sm:inline">GitHub</span>
-                    </a>
-                  </div>
+                      Veglat
+                    </Link>
+                    <Link
+                      className="transition hover:text-primary"
+                      href="/#about"
+                    >
+                      Përfshihu
+                    </Link>
+                  </nav>
                 </div>
-
-                <nav className="hidden flex-1 items-center justify-end gap-6 text-sm text-muted-foreground md:flex md:justify-center md:text-base">
-                  <Link
-                    className="transition hover:text-primary"
-                    href="/#tools"
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
+                  <a
+                    className="inline-flex items-center gap-2 rounded-full border border-border/60 px-2.5 py-1 font-medium transition hover:border-primary hover:text-primary"
+                    href="https://github.com/kosovatools/kosovatools.org"
+                    rel="noreferrer"
+                    target="_blank"
                   >
-                    Veglat
-                  </Link>
-                  <Link
-                    className="transition hover:text-primary"
-                    href="/#how-it-works"
-                  >
-                    Si funksionon
-                  </Link>
-                  <Link
-                    className="transition hover:text-primary"
-                    href="/#about"
-                  >
-                    Rreth nesh
-                  </Link>
-                </nav>
+                    <Github aria-hidden className="h-4 w-4" />
+                    <span className="hidden sm:inline">GitHub</span>
+                  </a>
+                  <ThemeToggle />
+                </div>
               </div>
             </header>
 

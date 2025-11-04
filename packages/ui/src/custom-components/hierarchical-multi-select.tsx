@@ -299,9 +299,7 @@ export function HierarchicalMultiSelect({
           ) : null}
         </div>
       </div>
-      <div
-        className={cn("overflow-y-auto", scrollContainerClassName)}
-      >
+      <div className={cn("overflow-y-auto", scrollContainerClassName)}>
         {normalizedNodes.length ? (
           <ul className="flex max-w-full flex-col gap-1 p-1">
             {renderNodes(normalizedNodes, 0)}

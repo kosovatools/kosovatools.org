@@ -8,7 +8,6 @@ import {
   Car,
   HandCoins,
   PackageSearch,
-  Sparkles,
   TrendingUp,
 } from "lucide-react";
 
@@ -119,80 +118,122 @@ const tools: ToolCard[] = [
   },
 ];
 
-type RoadmapCard = {
-  name: string;
-  description: string;
-  cta: string;
-  icon: LucideIcon;
-  category: string;
-  href?: string;
-  external?: boolean;
-};
-
-const roadmap: RoadmapCard[] = [
-  {
-    name: "Më shumë vegla qytetare",
-    description:
-      "Na ndihmo të vendosim çfarë të ndërtojmë më pas—gjurmues buxhetorë, eksplorues të prokurimit e të tjera.",
-    cta: "Sugjero një ide",
-    icon: Sparkles,
-    category: "Ide",
-    href: "https://github.com/kosovatools/kosovatools.org/issues/new/choose",
-    external: true,
-  },
-];
-
 export default function Page() {
+  const groupedTools = tools.reduce<
+    Array<{ category: string; tools: ToolCard[] }>
+  >((acc, tool) => {
+    const existingGroup = acc.find((entry) => entry.category === tool.category);
+
+    if (existingGroup) {
+      existingGroup.tools.push(tool);
+      return acc;
+    }
+
+    acc.push({ category: tool.category, tools: [tool] });
+    return acc;
+  }, []);
+  const totalTools = tools.length;
+  const toolCategories = Array.from(
+    new Set(tools.map((tool) => tool.category)),
+  );
+
   return (
     <main className="flex flex-col gap-24 px-6 py-16 sm:py-24">
-      <section className="mx-auto flex w-full max-w-5xl flex-col items-center gap-8 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1 text-xs font-medium uppercase tracking-wide text-primary">
-          Të dhëna të hapura për të gjithë
-        </span>
-        <div className="space-y-6">
-          <h1 className="text-balance text-4xl font-semibold leading-tight sm:text-5xl">
-            Vegla praktike për banorët e Kosovës, sipërmarrësit dhe hartuesit e
-            politikave.
-          </h1>
-          <p className="text-balance text-muted-foreground text-sm sm:text-lg">
-            Kosova Tools bashkon kalkulatorë, eksplorues dhe pultë që të merrni
-            vendime të informuara me të dhëna publike të besueshme.
-          </p>
-          <p className="text-center text-xs text-muted-foreground sm:text-sm">
-            Ndërtuar për interes publik dhe licencuar nën GNU Affero General
-            Public License v3.{" "}
-            <a
-              className="font-medium underline hover:text-primary"
-              href="https://github.com/kosovatools/kosovatools.org/blob/main/LICENSE"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Shikoni kodin burimor
-            </a>{" "}
-            dhe kontribuoni lirshëm.
-          </p>
+      <section className="mx-auto grid w-full max-w-[1500px] gap-12 text-center lg:grid-cols-12 lg:items-center lg:gap-16 lg:text-left">
+        <div className="flex flex-col items-center gap-8 lg:col-span-7 lg:items-start">
+          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1 text-xs font-medium uppercase tracking-wide text-primary">
+            Të dhëna të hapura për të gjithë
+          </span>
+          <div className="space-y-6 lg:max-w-2xl">
+            <h1 className="text-balance text-4xl font-semibold leading-tight sm:text-5xl xl:text-6xl">
+              Vegla praktike për banorët e Kosovës, sipërmarrësit dhe hartuesit
+              e politikave.
+            </h1>
+            <p className="text-balance text-muted-foreground text-sm sm:text-lg">
+              Kosova Tools bashkon kalkulatorë, eksplorues dhe pultë që të
+              merrni vendime të informuara me të dhëna publike të besueshme.
+            </p>
+            <p className="text-xs text-muted-foreground sm:text-sm">
+              Ndërtuar për interes publik dhe licencuar nën GNU Affero General
+              Public License v3.{" "}
+              <a
+                className="font-medium underline hover:text-primary"
+                href="https://github.com/kosovatools/kosovatools.org/blob/main/LICENSE"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Shikoni kodin burimor
+              </a>{" "}
+              dhe kontribuoni lirshëm.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+            <Button asChild size="lg">
+              <Link href="/#tools">
+                Eksploro veglat
+                <ArrowRight aria-hidden className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <a
+                href="https://github.com/kosovatools/kosovatools.org"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Kontribuo në GitHub
+              </a>
+            </Button>
+          </div>
         </div>
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <Button asChild size="lg">
-            <Link href="/#tools">
-              Eksploro veglat
-              <ArrowRight aria-hidden className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-          <Button asChild size="lg" variant="outline">
-            <a
-              href="https://github.com/kosovatools/kosovatools.org"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Kontribuo në GitHub
-            </a>
-          </Button>
+        <div className="mx-auto flex w-full max-w-lg flex-col gap-6 rounded-3xl border border-border/60 bg-background/80 p-8 text-left shadow-sm backdrop-blur lg:col-span-5 lg:mx-0 lg:max-w-none">
+          <div className="space-y-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
+              Panorama e veglave
+            </span>
+            <h2 className="text-2xl font-semibold leading-snug">
+              {totalTools} vegla të licencuara hapur për komunitetin
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Zgjidhni shërbimet që ju duhen për taksa, paga dhe analiza
+              statistikore. Gjithçka ndërtohet me transparencë dhe baza të
+              përditësuara të të dhënave.
+            </p>
+          </div>
+          <dl className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-2xl bg-primary/5 p-4">
+              <dt className="text-xs font-semibold uppercase tracking-wide text-primary">
+                Seksione
+              </dt>
+              <dd className="text-lg font-semibold">{toolCategories.length}</dd>
+            </div>
+            <div className="rounded-2xl bg-muted/40 p-4">
+              <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Qasje
+              </dt>
+              <dd className="text-lg font-semibold">Falas</dd>
+            </div>
+            <div className="rounded-2xl bg-muted/40 p-4">
+              <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Licenca
+              </dt>
+              <dd className="text-lg font-semibold">AGPL-3.0</dd>
+            </div>
+          </dl>
+          <div className="flex flex-wrap gap-2">
+            {toolCategories.map((category) => (
+              <span
+                key={category}
+                className="rounded-full border border-border/60 px-3 py-1 text-xs uppercase tracking-wide text-muted-foreground"
+              >
+                {category}
+              </span>
+            ))}
+          </div>
         </div>
       </section>
 
       <section
-        className="mx-auto flex w-full max-w-6xl flex-col gap-10"
+        className="mx-auto flex w-full max-w-[1500px] flex-col gap-10"
         id="tools"
       >
         <header className="flex flex-col gap-3 text-center sm:text-left">
@@ -207,158 +248,103 @@ export default function Page() {
             sakta dhe referenca të përditësuara nga institucionet e Kosovës.
           </p>
         </header>
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4 auto-rows-auto items-start">
-          {tools.map((tool) => {
-            const Icon = tool.icon;
+        <Card className="border-border/60 bg-background/80">
+          <CardHeader className="gap-2">
+            <CardTitle className="text-2xl font-semibold">
+              Zgjidh veglën që të duhet
+            </CardTitle>
+            <CardDescription className="text-sm">
+              Shfleto sipas kategorive dhe hap menjëherë veglën përkatëse me një
+              klikim.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-7">
+            {groupedTools.map((group) => (
+              <div key={group.category} className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-primary">
+                    {group.category}
+                  </span>
+                  <span className="h-px w-full bg-border/60" />
+                </div>
+                <div className="grid gap-2">
+                  {group.tools.map((tool) => {
+                    const Icon = tool.icon;
 
-            return (
-              <Card key={tool.name} className="border-border/70 pb-0">
-                <CardHeader className="gap-4">
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-full border border-border/70 px-3 py-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      {tool.category}
-                    </span>
-                    <Icon aria-hidden className="h-5 w-5 text-primary" />
-                  </div>
-                  <CardTitle className="text-xl font-semibold leading-tight">
-                    {tool.name}
-                  </CardTitle>
-                  <CardDescription className="text-sm">
-                    {tool.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pb-6">
-                  <Button asChild className="w-full" variant="secondary">
-                    <Link href={tool.href}>
-                      {tool.cta}
-                      <ArrowRight aria-hidden className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+                    return (
+                      <Link
+                        key={tool.name}
+                        className="group flex items-start gap-4 rounded-2xl border border-border/50 bg-background/60 px-4 py-3 transition hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                        href={tool.href}
+                      >
+                        <span className="mt-1 inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:bg-primary/15">
+                          <Icon aria-hidden className="h-4 w-4" />
+                        </span>
+                        <span className="flex flex-1 flex-col gap-1">
+                          <span className="text-sm font-medium">
+                            {tool.name}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {tool.description}
+                          </span>
+                        </span>
+                        <ArrowRight
+                          aria-hidden
+                          className="mt-1 h-4 w-4 flex-shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary"
+                        />
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       </section>
 
       <section
-        aria-labelledby="how-it-works-title"
-        className="mx-auto flex w-full max-w-5xl flex-col gap-10 rounded-3xl border border-border/60 bg-card/60 px-8 py-12 backdrop-blur"
-        id="how-it-works"
-      >
-        <div className="space-y-3 text-center sm:text-left">
-          <span className="text-xs font-semibold uppercase tracking-wide text-primary">
-            Pse ka rëndësi
-          </span>
-          <h2
-            id="how-it-works-title"
-            className="text-3xl font-semibold sm:text-4xl"
-          >
-            Ndërtuar për qartësi, mirëmbajtur hapur
-          </h2>
-          <p className="text-muted-foreground text-sm sm:text-base">
-            Çdo funksionalitet është i dokumentuar, transparent dhe i mbështetur
-            në kornizat ligjore më të fundit. Gjithmonë e dini cilat të dhëna
-            ushqejnë vendimet tuaja.
-          </p>
-        </div>
-        <dl className="grid gap-6 sm:grid-cols-3">
-          <div className="space-y-2 rounded-2xl bg-background/70 p-5 shadow-sm">
-            <dt className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Burime të verifikuara
-            </dt>
-            <dd className="text-sm text-muted-foreground">
-              Përditësuar drejtpërdrejt nga Dogana e Kosovës, Administrata
-              Tatimore dhe Agjencia e Statistikave të Kosovës.
-            </dd>
-          </div>
-          <div className="space-y-2 rounded-2xl bg-background/70 p-5 shadow-sm">
-            <dt className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Matematikë transparente
-            </dt>
-            <dd className="text-sm text-muted-foreground">
-              Llogaritjet mbështeten në formulat e publikuara që të verifikoni
-              çdo supozim dhe ndryshim norme.
-            </dd>
-          </div>
-          <div className="space-y-2 rounded-2xl bg-background/70 p-5 shadow-sm">
-            <dt className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Dizajn i qasshëm
-            </dt>
-            <dd className="text-sm text-muted-foreground">
-              Ndërfaqet përshtaten në shqip dhe anglisht, me navigim nga
-              tastiera dhe modalitet të errët të gatshëm.
-            </dd>
-          </div>
-        </dl>
-      </section>
-
-      <section
-        className="mx-auto flex w-full max-w-6xl flex-col gap-10"
+        className="mx-auto flex w-full max-w-[1500px] flex-col gap-8 text-center sm:text-left"
         id="about"
       >
-        <header className="flex flex-col gap-3 text-center sm:text-left">
-          <span className="text-xs font-semibold uppercase tracking-wide text-primary">
-            Plani i zhvillimit
-          </span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-primary">
+          Plani i zhvillimit
+        </span>
+        <div className="space-y-4">
           <h2 className="text-3xl font-semibold sm:text-4xl">
             Më shumë vegla për interes publik në rrugë e sipër
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base">
-            Kosova Tools është projekt i hapur me kod të publikuar në GitHub.
-            Kontributet nga komuniteti janë të mirëpritura për të zgjeruar
-            platformën. Ja çfarë planifikojmë më tej.
+            Kosova Tools është projekt i hapur me kod të publikuar në GitHub. Na
+            ndihmoni të përcaktojmë veglën e radhës që i shërben komunitetit.
           </p>
-        </header>
-        <div className="grid gap-6 md:grid-cols-2">
-          {roadmap.map((entry) => {
-            const Icon = entry.icon;
-            const actionable = Boolean(entry.href);
-
-            return (
-              <Card
-                key={entry.name}
-                className="h-full border-dashed border-border/60 bg-background/60 pb-0"
-              >
-                <CardHeader className="gap-4">
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-full border border-border/60 px-3 py-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      {entry.category}
-                    </span>
-                    <Icon aria-hidden className="h-5 w-5 text-primary" />
-                  </div>
-                  <CardTitle className="text-2xl font-semibold leading-tight">
-                    {entry.name}
-                  </CardTitle>
-                  <CardDescription className="text-sm">
-                    {entry.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pb-6">
-                  {actionable ? (
-                    <Button asChild className="w-full" variant="secondary">
-                      {entry.external ? (
-                        <a href={entry.href} rel="noreferrer" target="_blank">
-                          {entry.cta}
-                          <ArrowRight aria-hidden className="ml-2 h-4 w-4" />
-                        </a>
-                      ) : (
-                        <Link href={entry.href!}>
-                          {entry.cta}
-                          <ArrowRight aria-hidden className="ml-2 h-4 w-4" />
-                        </Link>
-                      )}
-                    </Button>
-                  ) : (
-                    <Button className="w-full" disabled variant="outline">
-                      {entry.cta}
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            );
-          })}
         </div>
+        <Card className="border-dashed border-border/60 bg-background/60">
+          <CardHeader className="flex flex-col gap-4 text-center sm:flex-row sm:items-start sm:justify-between sm:text-left">
+            <div className="space-y-2 sm:w-2/3">
+              <CardTitle className="text-2xl font-semibold leading-tight">
+                Kemi ide të reja, por duam t'i dëgjojmë edhe tuajat
+              </CardTitle>
+              <CardDescription className="text-sm">
+                Sugjeroni kalkulatorë, eksplorues të të dhënave ose shërbime të
+                tjera që do t'ua lehtësonin punën banorëve dhe institucioneve.
+              </CardDescription>
+            </div>
+            <Button
+              asChild
+              className="w-full sm:w-auto sm:self-center"
+              variant="secondary"
+            >
+              <a
+                href="https://github.com/kosovatools/kosovatools.org/issues/new/choose"
+                rel="noreferrer"
+                target="_blank"
+              >
+                Sugjero një ide
+                <ArrowRight aria-hidden className="ml-2 h-4 w-4" />
+              </a>
+            </Button>
+          </CardHeader>
+        </Card>
       </section>
     </main>
   );
