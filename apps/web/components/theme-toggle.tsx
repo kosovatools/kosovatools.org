@@ -13,6 +13,8 @@ type ThemeToggleProps = {
   className?: string;
 };
 
+const FALLBACK_LABEL = "Ndrysho temën";
+
 const themeLabels: Record<ThemeOption, string> = {
   light: "Ndrysho në temën e ndritshme",
   dark: "Ndrysho në temën e errët",
@@ -27,25 +29,31 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     setMounted(true);
   }, []);
 
-  const currentTheme = (
-    mounted ? (theme ?? "system") : "system"
-  ) as ThemeOption;
-  const activeResolvedTheme = (resolvedTheme ?? "system") as ThemeOption;
-  const nextTheme =
-    currentTheme === "system"
-      ? activeResolvedTheme === "dark"
-        ? "light"
-        : "dark"
-      : currentTheme === "light"
-        ? "dark"
-        : "system";
+  const currentTheme = mounted ? ((theme ?? "system") as ThemeOption) : null;
+  const activeResolvedTheme = mounted
+    ? ((resolvedTheme ?? "system") as ThemeOption)
+    : null;
+  const nextTheme = React.useMemo<ThemeOption | null>(() => {
+    if (!mounted || !currentTheme || !activeResolvedTheme) {
+      return null;
+    }
 
-  const nextThemeLabel = themeLabels[nextTheme];
+    if (currentTheme === "system") {
+      return activeResolvedTheme === "dark" ? "light" : "dark";
+    }
+
+    return currentTheme === "light" ? "dark" : "system";
+  }, [mounted, currentTheme, activeResolvedTheme]);
+
+  const nextThemeLabel = nextTheme ? themeLabels[nextTheme] : FALLBACK_LABEL;
 
   const handleClick = () => {
-    if (!mounted) return;
+    if (!mounted || !nextTheme) return;
     setTheme(nextTheme);
   };
+
+  const iconBaseClass =
+    "absolute inset-0 m-auto size-5 transition-all duration-300";
 
   return (
     <div className={cn("pointer-events-auto", className)}>
@@ -57,12 +65,13 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
         className="relative"
         onClick={handleClick}
         disabled={!mounted}
+        style={{ visibility: mounted ? "visible" : "hidden" }}
       >
         <Sun
           aria-hidden="true"
           className={cn(
-            "absolute inset-0 m-auto size-5 transition-all duration-300",
-            currentTheme === "light"
+            iconBaseClass,
+            mounted && currentTheme === "light"
               ? "scale-100 opacity-100"
               : "scale-0 opacity-0",
           )}
@@ -70,8 +79,8 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
         <Moon
           aria-hidden="true"
           className={cn(
-            "absolute inset-0 m-auto size-5 transition-all duration-300",
-            currentTheme === "dark"
+            iconBaseClass,
+            mounted && currentTheme === "dark"
               ? "scale-100 opacity-100"
               : "scale-0 opacity-0",
           )}
@@ -79,8 +88,8 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
         <Monitor
           aria-hidden="true"
           className={cn(
-            "absolute inset-0 m-auto size-5 transition-all duration-300",
-            currentTheme === "system"
+            iconBaseClass,
+            mounted && currentTheme === "system"
               ? "scale-100 opacity-100"
               : "scale-0 opacity-0",
           )}

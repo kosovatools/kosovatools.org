@@ -37,6 +37,27 @@ const geist = Geist({
   subsets: ["latin"],
 });
 
+const themeInitScript = `
+(() => {
+  try {
+    const root = document.documentElement;
+    const storedTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const theme = storedTheme === "light" || storedTheme === "dark"
+      ? storedTheme
+      : prefersDark
+        ? "dark"
+        : "light";
+
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+    root.style.colorScheme = theme;
+  } catch {
+    // Ignore if access to localStorage or matchMedia fails
+  }
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -44,6 +65,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sq" className={geist.className} suppressHydrationWarning>
+      <head>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeInitScript}
+        </Script>
+      </head>
       <body className="font-sans antialiased">
         <Script
           src="https://cloud.umami.is/script.js"
