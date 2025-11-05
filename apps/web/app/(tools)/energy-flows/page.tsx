@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import {
   ElectricityBalanceChart,
+  ElectricityProductionBySourceChart,
   EnergyFlowExplorer,
 } from "@workspace/energy-tracker";
 import { electricityMeta, electricityMonthly } from "@workspace/kas-data";
@@ -56,6 +57,23 @@ export default function EnergyFlowsPage() {
           </span>
         </div>
         <ElectricityBalanceChart data={electricityMonthly} />
+      </section>
+      <section className="space-y-4">
+        <div className="flex flex-col gap-2">
+          <h2 className="text-2xl font-semibold">
+            Si ndryshon prodhimi vendas sipas burimit
+          </h2>
+          <p className="max-w-2xl text-sm text-muted-foreground">
+            Shiko sa kontribuojnë termocentralet, hidrocentralet dhe burimet me
+            erë/diell në prodhimin total vendor për të identifikuar periudhat
+            kur burimet e ripërtritshme mbulojnë më shumë kërkesën.
+          </p>
+          <span className="text-xs text-muted-foreground">
+            Burimi: {electricityMeta.table ?? "E panjohur"}
+            {electricityMeta.unit ? ` (${electricityMeta.unit})` : ""}.
+          </span>
+        </div>
+        <ElectricityProductionBySourceChart data={electricityMonthly} />
       </section>
       <ReactQueryProvider>
         <EnergyFlowExplorer />

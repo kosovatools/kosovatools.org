@@ -20,4 +20,7 @@ export type {
   EnergyFlowTotals,
   EnergyFlowHourlyEntry,
 } from "./types";
-export { ElectricityBalanceChart } from "./electricity-balance-chart";
+export {
+  ElectricityBalanceChart,
+  ElectricityProductionBySourceChart,
+} from "./electricity-balance-chart";

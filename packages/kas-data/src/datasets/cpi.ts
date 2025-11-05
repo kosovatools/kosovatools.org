@@ -19,7 +19,7 @@ type RawCpiGroup = {
 };
 
 export type CpiMeta = DatasetMeta & {
-  title?: string;
+  title: string | null;
   group_count?: number;
   dimensions?: {
     time: { code: string; label: string };

@@ -13,7 +13,8 @@
   "scripts": {
     "lint": "eslint src scripts --max-warnings 0",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "fetch-data": "node scripts/fetch_kas.mjs --out data "
+    "typecheck:scripts": "tsc --project tsconfig.node.json --noEmit",
+    "fetch-data": "tsx scripts/fetch_kas.ts --out data"
   },
   "dependencies": {
     "@workspace/chart-utils": "workspace:*"
@@ -22,6 +23,7 @@
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "eslint": "^9.39.1",
+    "tsx": "^4.20.6",
     "typescript": "^5.9.3"
   },
   "license": "AGPL-3.0-only"

@@ -74,7 +74,6 @@ export function AgeDistributionPlot({
     payload?: { count?: number; age?: number };
   }) => {
     if (!props) return null;
-    console.log(props.payload);
     const { cx, cy, payload } = props;
     if (typeof cx !== "number" || typeof cy !== "number") {
       return null;

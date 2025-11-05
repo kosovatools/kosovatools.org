@@ -8,9 +8,9 @@ import {
 } from "@workspace/chart-utils";
 import {
   tradePartnerLabelMap,
-  tradeChapterLabelMap,
   type TradePartnerRecord,
   type TradeChapterYearRecord,
+  tradeChaptersYearlyMeta,
 } from "../datasets/trade";
 
 export type PartnerStackSeries = StackSeriesRow<string>;
@@ -89,10 +89,7 @@ const importChapterAccessors = {
   value: (record: TradeChapterYearRecord) => record.imports_eur,
 };
 
-function buildChapterOptions(
-  labelMap: Record<string, string>,
-  options: ChapterStackOptions = {},
-) {
+function buildChapterOptions(options: ChapterStackOptions = {}) {
   return {
     months: options.months,
     top: options.top,
@@ -100,7 +97,8 @@ function buildChapterOptions(
     selectedKeys: options.selectedKeys,
     excludedKeys: options.excludedKeys,
     periodGrouping: options.periodGrouping,
-    labelForKey: (key: string) => labelMap[key] || key,
+    labelForKey: (key: string) =>
+      tradeChaptersYearlyMeta.chaptersLabel[key] || key,
   };
 }
 
@@ -113,7 +111,7 @@ export function summarizeExportChapterTotals(
   return summarizeStackTotals(
     records,
     exportChapterAccessors,
-    buildChapterOptions(tradeChapterLabelMap, normalizedOptions),
+    buildChapterOptions(normalizedOptions),
   );
 }
 
@@ -126,7 +124,7 @@ export function summarizeImportChapterTotals(
   return summarizeStackTotals(
     records,
     importChapterAccessors,
-    buildChapterOptions(tradeChapterLabelMap, normalizedOptions),
+    buildChapterOptions(normalizedOptions),
   );
 }
 
@@ -137,7 +135,7 @@ export function buildExportChapterStackSeries(
   const result = buildStackSeries(
     records,
     exportChapterAccessors,
-    buildChapterOptions(tradeChapterLabelMap, options),
+    buildChapterOptions(options),
   );
   return {
     keys: result.keys,
@@ -153,7 +151,7 @@ export function buildImportChapterStackSeries(
   const result = buildStackSeries(
     records,
     importChapterAccessors,
-    buildChapterOptions(tradeChapterLabelMap, options),
+    buildChapterOptions(options),
   );
   return {
     keys: result.keys,

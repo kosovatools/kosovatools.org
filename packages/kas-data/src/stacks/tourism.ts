@@ -36,7 +36,6 @@ function accessorsForMetric(metric: TourismMetric) {
 }
 
 function buildOptions(
-  metric: TourismMetric,
   options: CountryStackOptions = {},
 ) {
   return {
@@ -63,7 +62,7 @@ export function summarizeCountryTotals(
   return summarizeStackTotals(
     records,
     accessorsForMetric(metric),
-    buildOptions(metric, { months, periodGrouping }),
+    buildOptions({ months, periodGrouping }),
   );
 }
 
@@ -74,7 +73,7 @@ export function buildCountryStackSeries(
   const result = buildStackSeries(
     records,
     accessorsForMetric(metric),
-    buildOptions(metric, options),
+    buildOptions(options),
   );
   return {
     keys: result.keys,

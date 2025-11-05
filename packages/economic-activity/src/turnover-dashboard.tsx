@@ -1067,10 +1067,7 @@ function TopCategoryByCitySection({
     query.error instanceof Error
       ? query.error.message
       : "Provoni përsëri më vonë.";
-  const records = React.useMemo(
-    () => query.data ?? [],
-    [query.data],
-  );
+  const records = React.useMemo(() => query.data ?? [], [query.data]);
   const citySummaries = React.useMemo(() => {
     const map = new Map<string, { turnover: number; years: Set<number> }>();
     for (const record of records) {

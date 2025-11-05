@@ -42,7 +42,6 @@ import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 
-const DEFAULT_METRIC: FuelMetric = "ready_for_market";
 const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";
 const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
 
@@ -50,13 +49,7 @@ type FuelBalanceChartProps = {
   balances: Record<FuelKey, FuelBalanceRecord[]>;
 };
 
-function toMetricOptions(): Array<{ id: FuelMetric; label: string }> {
-  return (Object.entries(fuelMetricLabels) as Array<[FuelMetric, string]>).map(
-    ([id, label]) => ({ id, label }),
-  );
-}
-
-const METRIC_OPTIONS = toMetricOptions();
+const DEFAULT_METRIC: FuelMetric = "ready_for_market";
 
 export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
   const [metric, setMetric] = React.useState<FuelMetric>(DEFAULT_METRIC);
@@ -140,13 +133,13 @@ export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted-foreground">Metrika</span>
           <div className="flex flex-wrap gap-2 text-xs">
-            {METRIC_OPTIONS.map((option) => {
-              const active = metric === option.id;
+            {Object.entries(fuelMetricLabels).map(([id, label]) => {
+              const active = metric === id;
               return (
                 <button
-                  key={option.id}
+                  key={id}
                   type="button"
-                  onClick={() => setMetric(option.id)}
+                  onClick={() => setMetric(id as FuelMetric)}
                   className={
                     "rounded-full border px-3 py-1 transition-colors " +
                     (active
@@ -154,7 +147,7 @@ export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
                       : "border-border bg-background hover:bg-muted")
                   }
                 >
-                  {option.label}
+                  {label}
                 </button>
               );
             })}
