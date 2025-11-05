@@ -5,6 +5,8 @@ import {
   fuelMeta,
   importsByPartnerMeta,
   tradeImportsByPartner,
+  tradeChaptersYearlyMeta,
+  tradeChaptersYearly,
   tourismByCountry,
   tourismByRegion,
   tourismCountryMeta,
@@ -20,6 +22,7 @@ import {
 } from "@workspace/ui/components/card";
 
 import { FuelBalanceChart } from "./fuel-balance-chart";
+import { TradeChapterStackedChart } from "./trade-chapter-stacked-chart";
 import { ImportPartnersStackedChart } from "./import-partners-stacked-chart";
 import { TourismCountryStackedChart } from "./tourism-country-stacked-chart";
 import { TourismRegionCharts } from "./tourism-region-stacked-chart";
@@ -27,6 +30,10 @@ import { TourismRegionCharts } from "./tourism-region-stacked-chart";
 export function DataInsightsDashboard() {
   const generatedLabel = formatGeneratedAt(importsByPartnerMeta.generated_at);
   const fuelSourceLabel = describeFuelSources(fuelMeta);
+  const chapterGeneratedLabel = formatGeneratedAt(
+    tradeChaptersYearlyMeta.generated_at,
+  );
+  const chapterSourceLabel = tradeChaptersYearlyMeta.table ?? "E panjohur";
 
   const chartContentClass = "px-2 sm:px-6";
 
@@ -54,6 +61,23 @@ export function DataInsightsDashboard() {
 
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold">Tregtia & Dogana</h2>
+        <Card>
+          <CardHeader>
+            <CardTitle>Kapitujt kryesorë të tregtisë (shtresuar)</CardTitle>
+            <CardDescription>
+              Të dhëna vjetore për eksportet (FOB) dhe importet (CIF) sipas
+              kapitujve të nomenklaturës doganore. Ndrysho fluksin ose filtro
+              kapitujt kryesorë për të parë kontributet në vite.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className={chartContentClass}>
+            <TradeChapterStackedChart data={tradeChaptersYearly} />
+          </CardContent>
+          <CardFooter className="flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+            <span>Burimi: {chapterSourceLabel}.</span>
+            <span>Gjeneruar: {chapterGeneratedLabel}</span>
+          </CardFooter>
+        </Card>
         <Card>
           <CardHeader>
             <CardTitle>Kontributet e partnerëve (shtresuar)</CardTitle>

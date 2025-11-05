@@ -1,0 +1,733 @@
+{
+  "meta": {
+    "table": "tab03.px",
+    "path": "ASKdata/External trade/Yearly indicators/tab03.px",
+    "generated_at": "2025-11-05T13:58:45.757Z",
+    "updated_at": "2018-02-06T23:00:00Z",
+    "unit": "thousand euro (CIF/FOB)",
+    "fields": [
+      {
+        "key": "imports_th_eur",
+        "label": "Importe",
+        "unit": "thousand EUR"
+      },
+      {
+        "key": "exports_th_eur",
+        "label": "Eksporte",
+        "unit": "thousand EUR"
+      }
+    ],
+    "years": [
+      "2024",
+      "2023",
+      "2022",
+      "2021",
+      "2020",
+      "2019",
+      "2018",
+      "2017",
+      "2016",
+      "2015",
+      "2014",
+      "2013",
+      "2012",
+      "2011",
+      "2010"
+    ],
+    "chapter_count": 98,
+    "record_count": 1462,
+    "zero_counts": {
+      "imports": 7,
+      "exports": 217
+    },
+    "chapters": [
+      {
+        "code": "01",
+        "label": "01 · Kafshë të gjalla",
+        "title": "Kapitulli 1",
+        "description": "Kafshë të gjalla",
+        "raw": "01- Kafshë të gjalla"
+      },
+      {
+        "code": "02",
+        "label": "02 · Mish dhe produkte prej mishi",
+        "title": "Kapitulli 2",
+        "description": "Mish dhe produkte prej mishi",
+        "raw": "02- Mish dhe produkte prej mishi"
+      },
+      {
+        "code": "03",
+        "label": "03 · Peshku dhe kafshët guaskore të nënujshme",
+        "title": "Kapitulli 3",
+        "description": "Peshku dhe kafshët guaskore të nënujshme",
+        "raw": "03- Peshku dhe kafshët guaskore të nënujshme"
+      },
+      {
+        "code": "04",
+        "label": "04 · Produktet bulmetore vezët e zogjve mjaltë nat",
+        "title": "Kapitulli 4",
+        "description": "Produktet bulmetore vezët e zogjve mjaltë nat",
+        "raw": "04- Produktet bulmetore vezët e zogjve mjaltë nat"
+      },
+      {
+        "code": "05",
+        "label": "05 · Produktet ushqimore me origjinë kafshe të pap",
+        "title": "Kapitulli 5",
+        "description": "Produktet ushqimore me origjinë kafshe të pap",
+        "raw": "05- Produktet ushqimore me origjinë kafshe të pap"
+      },
+      {
+        "code": "06",
+        "label": "06 · Pemët dhe bimët e tjera të gjalla, kokat e bi",
+        "title": "Kapitulli 6",
+        "description": "Pemët dhe bimët e tjera të gjalla, kokat e bi",
+        "raw": "06- Pemët dhe bimët e tjera të gjalla, kokat e bi"
+      },
+      {
+        "code": "07",
+        "label": "07 · Perimet ushqimore, rrënjët dhe zhardhok etj.",
+        "title": "Kapitulli 7",
+        "description": "Perimet ushqimore, rrënjët dhe zhardhok etj.",
+        "raw": "07- Perimet ushqimore, rrënjët dhe zhardhok etj."
+      },
+      {
+        "code": "08",
+        "label": "08 · Frutat dhe arrat e ngrënshme, lëkurat e agrum",
+        "title": "Kapitulli 8",
+        "description": "Frutat dhe arrat e ngrënshme, lëkurat e agrum",
+        "raw": "08- Frutat dhe arrat e ngrënshme, lëkurat e agrum"
+      },
+      {
+        "code": "09",
+        "label": "09 · Kafe, çaj, matë dhe erëza",
+        "title": "Kapitulli 9",
+        "description": "Kafe, çaj, matë dhe erëza",
+        "raw": "09- Kafe, çaj, matë dhe erëza"
+      },
+      {
+        "code": "10",
+        "label": "10 · Drithërat",
+        "title": "Kapitulli 10",
+        "description": "Drithërat",
+        "raw": "10- Drithërat"
+      },
+      {
+        "code": "11",
+        "label": "11 · Produkte e industrisë bluajtëse maltit nisesh",
+        "title": "Kapitulli 11",
+        "description": "Produkte e industrisë bluajtëse maltit nisesh",
+        "raw": "11- Produkte e industrisë bluajtëse maltit nisesh"
+      },
+      {
+        "code": "12",
+        "label": "12 · Farat vajore, frutat me përmbajtje vajore kok",
+        "title": "Kapitulli 12",
+        "description": "Farat vajore, frutat me përmbajtje vajore kok",
+        "raw": "12- Farat vajore, frutat me përmbajtje vajore kok"
+      },
+      {
+        "code": "13",
+        "label": "13 · Laç, gomat, rrëshirat, lëngjet dhe ekstrakte",
+        "title": "Kapitulli 13",
+        "description": "Laç, gomat, rrëshirat, lëngjet dhe ekstrakte",
+        "raw": "13- Laç, gomat, rrëshirat, lëngjet dhe ekstrakte"
+      },
+      {
+        "code": "14",
+        "label": "14 · Materialet bimore që përdoren për thurje prod",
+        "title": "Kapitulli 14",
+        "description": "Materialet bimore që përdoren për thurje prod",
+        "raw": "14- Materialet bimore që përdoren për thurje prod"
+      },
+      {
+        "code": "15",
+        "label": "15 · Vajra dhe dhjamra kafshe apo bimore dhe produ",
+        "title": "Kapitulli 15",
+        "description": "Vajra dhe dhjamra kafshe apo bimore dhe produ",
+        "raw": "15- Vajra dhe dhjamra kafshe apo bimore dhe produ"
+      },
+      {
+        "code": "16",
+        "label": "16 · Ushqimet e përgatitura prej mishit, prej pesh",
+        "title": "Kapitulli 16",
+        "description": "Ushqimet e përgatitura prej mishit, prej pesh",
+        "raw": "16- Ushqimet e përgatitura prej mishit, prej pesh"
+      },
+      {
+        "code": "17",
+        "label": "17 · Sheqerna dhe ëmbëlsirat prej tij",
+        "title": "Kapitulli 17",
+        "description": "Sheqerna dhe ëmbëlsirat prej tij",
+        "raw": "17- Sheqerna dhe ëmbëlsirat prej tij"
+      },
+      {
+        "code": "18",
+        "label": "18 · Kakao dhe përgatitjet prej kakaos.",
+        "title": "Kapitulli 18",
+        "description": "Kakao dhe përgatitjet prej kakaos.",
+        "raw": "18- Kakao dhe përgatitjet prej kakaos."
+      },
+      {
+        "code": "19",
+        "label": "19 · Përgatitjet prej drithërave, miellit, nishest",
+        "title": "Kapitulli 19",
+        "description": "Përgatitjet prej drithërave, miellit, nishest",
+        "raw": "19- Përgatitjet prej drithërave, miellit, nishest"
+      },
+      {
+        "code": "20",
+        "label": "20 · Përgatitjet prej zarzavateve, frutave, arrave",
+        "title": "Kapitulli 20",
+        "description": "Përgatitjet prej zarzavateve, frutave, arrave",
+        "raw": "20- Përgatitjet prej zarzavateve, frutave, arrave"
+      },
+      {
+        "code": "21",
+        "label": "21 · Përgatitje të ndryshme të ngrënshme.",
+        "title": "Kapitulli 21",
+        "description": "Përgatitje të ndryshme të ngrënshme.",
+        "raw": "21- Përgatitje të ndryshme të ngrënshme."
+      },
+      {
+        "code": "22",
+        "label": "22 · Pijet,pije alkoolike dhe uthllat.",
+        "title": "Kapitulli 22",
+        "description": "Pijet,pije alkoolike dhe uthllat.",
+        "raw": "22- Pijet,pije alkoolike dhe uthllat."
+      },
+      {
+        "code": "23",
+        "label": "23 · ore",
+        "title": "Mbetjet dhe kthimet nga industritë ushqim",
+        "description": "ore",
+        "raw": "23- Mbetjet dhe kthimet nga industritë ushqim-ore"
+      },
+      {
+        "code": "24",
+        "label": "24 · Duhani dhe zëvendësuesit e përpunuar të duhan",
+        "title": "Kapitulli 24",
+        "description": "Duhani dhe zëvendësuesit e përpunuar të duhan",
+        "raw": "24- Duhani dhe zëvendësuesit e përpunuar të duhan"
+      },
+      {
+        "code": "25",
+        "label": "25 · Kripëra, sulfuret, oksidet, gurët, materialet",
+        "title": "Kapitulli 25",
+        "description": "Kripëra, sulfuret, oksidet, gurët, materialet",
+        "raw": "25- Kripëra, sulfuret, oksidet, gurët, materialet"
+      },
+      {
+        "code": "26",
+        "label": "26 · Xeheroret, ngjyrërat dhe hiri.",
+        "title": "Kapitulli 26",
+        "description": "Xeheroret, ngjyrërat dhe hiri.",
+        "raw": "26- Xeheroret, ngjyrërat dhe hiri."
+      },
+      {
+        "code": "27",
+        "label": "27 · Lëndët djegëse minerale, vajrat minerale dhe",
+        "title": "Kapitulli 27",
+        "description": "Lëndët djegëse minerale, vajrat minerale dhe",
+        "raw": "27- Lëndët djegëse minerale, vajrat minerale dhe"
+      },
+      {
+        "code": "28",
+        "label": "28 · Kimikatet inorganike, përbërjet organike dhe i",
+        "title": "Kapitulli 28",
+        "description": "Kimikatet inorganike, përbërjet organike dhe i",
+        "raw": "28-Kimikatet inorganike, përbërjet organike dhe i"
+      },
+      {
+        "code": "29",
+        "label": "29 · Kimikatet organike",
+        "title": "Kapitulli 29",
+        "description": "Kimikatet organike",
+        "raw": "29- Kimikatet organike"
+      },
+      {
+        "code": "30",
+        "label": "30 · Produkte farmaceutike",
+        "title": "Kapitulli 30",
+        "description": "Produkte farmaceutike",
+        "raw": "30- Produkte farmaceutike"
+      },
+      {
+        "code": "31",
+        "label": "31 · Plehëruesit",
+        "title": "Kapitulli 31",
+        "description": "Plehëruesit",
+        "raw": "31- Plehëruesit"
+      },
+      {
+        "code": "32",
+        "label": "32 · Ekstraktet ngjyrosëse dhe tanikë,taninet dhe",
+        "title": "Kapitulli 32",
+        "description": "Ekstraktet ngjyrosëse dhe tanikë,taninet dhe",
+        "raw": "32- Ekstraktet ngjyrosëse dhe tanikë,taninet dhe"
+      },
+      {
+        "code": "33",
+        "label": "33 · Vajrat thelbësore dhe rrëshirat, përgatitjet",
+        "title": "Kapitulli 33",
+        "description": "Vajrat thelbësore dhe rrëshirat, përgatitjet",
+        "raw": "33- Vajrat thelbësore dhe rrëshirat, përgatitjet"
+      },
+      {
+        "code": "34",
+        "label": "34 · Sapuni, agjentat organike me veprim të sipër",
+        "title": "Kapitulli 34",
+        "description": "Sapuni, agjentat organike me veprim të sipër",
+        "raw": "34- Sapuni, agjentat organike me veprim të sipër"
+      },
+      {
+        "code": "35",
+        "label": "35 · Substanca albuminoidale; produktet me bazë am",
+        "title": "Kapitulli 35",
+        "description": "Substanca albuminoidale; produktet me bazë am",
+        "raw": "35- Substanca albuminoidale; produktet me bazë am"
+      },
+      {
+        "code": "36",
+        "label": "36 · Substanca albuminoidale, produktet me bazë am",
+        "title": "Kapitulli 36",
+        "description": "Substanca albuminoidale, produktet me bazë am",
+        "raw": "36- Substanca albuminoidale, produktet me bazë am"
+      },
+      {
+        "code": "37",
+        "label": "37 · Mallrat fotografike dhe kinematografike.",
+        "title": "Kapitulli 37",
+        "description": "Mallrat fotografike dhe kinematografike.",
+        "raw": "37- Mallrat fotografike dhe kinematografike."
+      },
+      {
+        "code": "38",
+        "label": "38 · Produkte të ndryshme kimike.",
+        "title": "Kapitulli 38",
+        "description": "Produkte të ndryshme kimike.",
+        "raw": "38- Produkte të ndryshme kimike."
+      },
+      {
+        "code": "39",
+        "label": "39 · Plastikat dhe artikujt prej tyre.",
+        "title": "Kapitulli 39",
+        "description": "Plastikat dhe artikujt prej tyre.",
+        "raw": "39- Plastikat dhe artikujt prej tyre."
+      },
+      {
+        "code": "40",
+        "label": "40 · Goma dhe artikuj prej saj",
+        "title": "Kapitulli 40",
+        "description": "Goma dhe artikuj prej saj",
+        "raw": "40- Goma dhe artikuj prej saj"
+      },
+      {
+        "code": "41",
+        "label": "41 · Lëkurat e përpunuara dhe të papërpunuara",
+        "title": "Kapitulli 41",
+        "description": "Lëkurat e përpunuara dhe të papërpunuara",
+        "raw": "41- Lëkurat e përpunuara dhe të papërpunuara"
+      },
+      {
+        "code": "42",
+        "label": "42 · Artikujt prej lëkure, samarët, mallrat e udhë",
+        "title": "Kapitulli 42",
+        "description": "Artikujt prej lëkure, samarët, mallrat e udhë",
+        "raw": "42- Artikujt prej lëkure, samarët, mallrat e udhë"
+      },
+      {
+        "code": "43",
+        "label": "43 · Gëzofët dhe qimet artificiale, prodhimet prej",
+        "title": "Kapitulli 43",
+        "description": "Gëzofët dhe qimet artificiale, prodhimet prej",
+        "raw": "43- Gëzofët dhe qimet artificiale, prodhimet prej"
+      },
+      {
+        "code": "44",
+        "label": "44 · Druri dhe artikujt prej druri, qymyri i druri",
+        "title": "Kapitulli 44",
+        "description": "Druri dhe artikujt prej druri, qymyri i druri",
+        "raw": "44- Druri dhe artikujt prej druri, qymyri i druri"
+      },
+      {
+        "code": "45",
+        "label": "45 · Tapa dhe artikujt prej tape",
+        "title": "Kapitulli 45",
+        "description": "Tapa dhe artikujt prej tape",
+        "raw": "45- Tapa dhe artikujt prej tape"
+      },
+      {
+        "code": "46",
+        "label": "46 · Prodhimet e kashtës të espartos apo të materi",
+        "title": "Kapitulli 46",
+        "description": "Prodhimet e kashtës të espartos apo të materi",
+        "raw": "46- Prodhimet e kashtës të espartos apo të materi"
+      },
+      {
+        "code": "47",
+        "label": "47 · Brumi i drurit apo i materialeve të tjera fib",
+        "title": "Kapitulli 47",
+        "description": "Brumi i drurit apo i materialeve të tjera fib",
+        "raw": "47- Brumi i drurit apo i materialeve të tjera fib"
+      },
+      {
+        "code": "48",
+        "label": "48 · Letra dhe kartoni, artikuj të brumit të letrë",
+        "title": "Kapitulli 48",
+        "description": "Letra dhe kartoni, artikuj të brumit të letrë",
+        "raw": "48- Letra dhe kartoni, artikuj të brumit të letrë"
+      },
+      {
+        "code": "49",
+        "label": "49 · Librat, revistat, pikturat dhe produkte të tj",
+        "title": "Kapitulli 49",
+        "description": "Librat, revistat, pikturat dhe produkte të tj",
+        "raw": "49- Librat, revistat, pikturat dhe produkte të tj"
+      },
+      {
+        "code": "50",
+        "label": "50 · Mendafshi",
+        "title": "Kapitulli 50",
+        "description": "Mendafshi",
+        "raw": "50- Mendafshi"
+      },
+      {
+        "code": "51",
+        "label": "51 · Leshi, qime kafshësh të holla apo të ashpra fi",
+        "title": "Kapitulli 51",
+        "description": "Leshi, qime kafshësh të holla apo të ashpra fi",
+        "raw": "51- Leshi, qime kafshësh të holla apo të ashpra fi"
+      },
+      {
+        "code": "52",
+        "label": "52 · Pambuku",
+        "title": "Kapitulli 52",
+        "description": "Pambuku",
+        "raw": "52- Pambuku"
+      },
+      {
+        "code": "53",
+        "label": "53 · Fibra të tjera tekstile vegjetale, fill letre",
+        "title": "Kapitulli 53",
+        "description": "Fibra të tjera tekstile vegjetale, fill letre",
+        "raw": "53- Fibra të tjera tekstile vegjetale, fill letre"
+      },
+      {
+        "code": "54",
+        "label": "54 · Filamentet e bëra nga njerëzit",
+        "title": "Kapitulli 54",
+        "description": "Filamentet e bëra nga njerëzit",
+        "raw": "54- Filamentet e bëra nga njerëzit"
+      },
+      {
+        "code": "55",
+        "label": "55 · Fibra themelore të bëra nga njerëzit",
+        "title": "Kapitulli 55",
+        "description": "Fibra themelore të bëra nga njerëzit",
+        "raw": "55- Fibra themelore të bëra nga njerëzit"
+      },
+      {
+        "code": "56",
+        "label": "56 · Mbushje, shajak dhe pelhura të paendura fijet",
+        "title": "Kapitulli 56",
+        "description": "Mbushje, shajak dhe pelhura të paendura fijet",
+        "raw": "56- Mbushje, shajak dhe pelhura të paendura fijet"
+      },
+      {
+        "code": "57",
+        "label": "57 · Qilimat dhe veshjet të tjera të dyshemesë prej",
+        "title": "Kapitulli 57",
+        "description": "Qilimat dhe veshjet të tjera të dyshemesë prej",
+        "raw": "57- Qilimat dhe veshjet të tjera të dyshemesë prej"
+      },
+      {
+        "code": "58",
+        "label": "58 · Pelhura speciale të endura,pelhura tekstili me",
+        "title": "Kapitulli 58",
+        "description": "Pelhura speciale të endura,pelhura tekstili me",
+        "raw": "58- Pelhura speciale të endura,pelhura tekstili me"
+      },
+      {
+        "code": "59",
+        "label": "59 · Pëlhurat tekstile të ngopura, të veshura, të",
+        "title": "Kapitulli 59",
+        "description": "Pëlhurat tekstile të ngopura, të veshura, të",
+        "raw": "59- Pëlhurat tekstile të ngopura, të veshura, të"
+      },
+      {
+        "code": "60",
+        "label": "60 · Pëlhurat e thurrura me një file apo me shumë",
+        "title": "Kapitulli 60",
+        "description": "Pëlhurat e thurrura me një file apo me shumë",
+        "raw": "60- Pëlhurat e thurrura me një file apo me shumë"
+      },
+      {
+        "code": "61",
+        "label": "61 · Artikujt të veshjes dhe rroba plotsuese, të t",
+        "title": "Kapitulli 61",
+        "description": "Artikujt të veshjes dhe rroba plotsuese, të t",
+        "raw": "61- Artikujt të veshjes dhe rroba plotsuese, të t"
+      },
+      {
+        "code": "62",
+        "label": "62 · Artikuj të veshjes dhe plotësues të veshjeve,",
+        "title": "Kapitulli 62",
+        "description": "Artikuj të veshjes dhe plotësues të veshjeve,",
+        "raw": "62- Artikuj të veshjes dhe plotësues të veshjeve,"
+      },
+      {
+        "code": "63",
+        "label": "63 · Artikuj të tjerë tekstili të ndërtuar,artiku",
+        "title": "Kapitulli 63",
+        "description": "Artikuj të tjerë tekstili të ndërtuar,artiku",
+        "raw": "63- Artikuj të tjerë tekstili të ndërtuar,artiku"
+      },
+      {
+        "code": "64",
+        "label": "64 · Këpucë dhe pjesët e artkujve të tillë",
+        "title": "Kapitulli 64",
+        "description": "Këpucë dhe pjesët e artkujve të tillë",
+        "raw": "64- Këpucë dhe pjesët e artkujve të tillë"
+      },
+      {
+        "code": "65",
+        "label": "65 · Veshjet e kokës dhe pjesët prej tyre",
+        "title": "Kapitulli 65",
+        "description": "Veshjet e kokës dhe pjesët prej tyre",
+        "raw": "65- Veshjet e kokës dhe pjesët prej tyre"
+      },
+      {
+        "code": "66",
+        "label": "66 · Çadrat, çadrat e diellit, bastunet mbështetës",
+        "title": "Kapitulli 66",
+        "description": "Çadrat, çadrat e diellit, bastunet mbështetës",
+        "raw": "66- Çadrat, çadrat e diellit, bastunet mbështetës"
+      },
+      {
+        "code": "67",
+        "label": "67 · Puplat dhe artikujt e bërë nga puplat,lulet a",
+        "title": "Kapitulli 67",
+        "description": "Puplat dhe artikujt e bërë nga puplat,lulet a",
+        "raw": "67- Puplat dhe artikujt e bërë nga puplat,lulet a"
+      },
+      {
+        "code": "68",
+        "label": "68 · Artikuj prej guri alliçie çimentoje asbesti m",
+        "title": "Kapitulli 68",
+        "description": "Artikuj prej guri alliçie çimentoje asbesti m",
+        "raw": "68- Artikuj prej guri alliçie çimentoje asbesti m"
+      },
+      {
+        "code": "69",
+        "label": "69 · Produkte të qeramikes",
+        "title": "Kapitulli 69",
+        "description": "Produkte të qeramikes",
+        "raw": "69- Produkte të qeramikes"
+      },
+      {
+        "code": "70",
+        "label": "70 · Qelq dhe artikujt prej qelqi",
+        "title": "Kapitulli 70",
+        "description": "Qelq dhe artikujt prej qelqi",
+        "raw": "70- Qelq dhe artikujt prej qelqi"
+      },
+      {
+        "code": "71",
+        "label": "71 · Perlat natyrale apo të kultivuara, gurët e çm",
+        "title": "Kapitulli 71",
+        "description": "Perlat natyrale apo të kultivuara, gurët e çm",
+        "raw": "71- Perlat natyrale apo të kultivuara, gurët e çm"
+      },
+      {
+        "code": "72",
+        "label": "72 · Hekur dhe çelik",
+        "title": "Kapitulli 72",
+        "description": "Hekur dhe çelik",
+        "raw": "72- Hekur dhe çelik"
+      },
+      {
+        "code": "73",
+        "label": "73 · Artikuj prej hekurit dhe çeliku",
+        "title": "Kapitulli 73",
+        "description": "Artikuj prej hekurit dhe çeliku",
+        "raw": "73- Artikuj prej hekurit dhe çeliku"
+      },
+      {
+        "code": "74",
+        "label": "74 · Bakr dhe artikuj prej bakri",
+        "title": "Kapitulli 74",
+        "description": "Bakr dhe artikuj prej bakri",
+        "raw": "74- Bakr dhe artikuj prej bakri"
+      },
+      {
+        "code": "75",
+        "label": "75 · Nikeli dhe artikuj prej tij",
+        "title": "Kapitulli 75",
+        "description": "Nikeli dhe artikuj prej tij",
+        "raw": "75- Nikeli dhe artikuj prej tij"
+      },
+      {
+        "code": "76",
+        "label": "76 · Alumin dhe artikuj prej tij",
+        "title": "Kapitulli 76",
+        "description": "Alumin dhe artikuj prej tij",
+        "raw": "76- Alumin dhe artikuj prej tij"
+      },
+      {
+        "code": "78",
+        "label": "78 · Plumbi dhe artikujt prej tij",
+        "title": "Kapitulli 78",
+        "description": "Plumbi dhe artikujt prej tij",
+        "raw": "78- Plumbi dhe artikujt prej tij"
+      },
+      {
+        "code": "79",
+        "label": "79 · Zinku dhe artikujt prej tij",
+        "title": "Kapitulli 79",
+        "description": "Zinku dhe artikujt prej tij",
+        "raw": "79- Zinku dhe artikujt prej tij"
+      },
+      {
+        "code": "80",
+        "label": "80 · Kallaji dhe artikujt prej tij",
+        "title": "Kapitulli 80",
+        "description": "Kallaji dhe artikujt prej tij",
+        "raw": "80- Kallaji dhe artikujt prej tij"
+      },
+      {
+        "code": "81",
+        "label": "81 · Metale të tjera bazë metaloqeramikat dhe prod",
+        "title": "Kapitulli 81",
+        "description": "Metale të tjera bazë metaloqeramikat dhe prod",
+        "raw": "81- Metale të tjera bazë metaloqeramikat dhe prod"
+      },
+      {
+        "code": "82",
+        "label": "82 · Veglat e punës, pajisjet e punës, takëmet e n",
+        "title": "Kapitulli 82",
+        "description": "Veglat e punës, pajisjet e punës, takëmet e n",
+        "raw": "82- Veglat e punës, pajisjet e punës, takëmet e n"
+      },
+      {
+        "code": "83",
+        "label": "83 · Artikuj të ndryshëm prej metali bazë",
+        "title": "Kapitulli 83",
+        "description": "Artikuj të ndryshëm prej metali bazë",
+        "raw": "83- Artikuj të ndryshëm prej metali bazë"
+      },
+      {
+        "code": "84",
+        "label": "84 · Reaktorët nukleare, bolierët, makinerit dhe p",
+        "title": "Kapitulli 84",
+        "description": "Reaktorët nukleare, bolierët, makinerit dhe p",
+        "raw": "84- Reaktorët nukleare, bolierët, makinerit dhe p"
+      },
+      {
+        "code": "85",
+        "label": "85 · Makineri dhe paisje elektrike dhe pjesët e ty",
+        "title": "Kapitulli 85",
+        "description": "Makineri dhe paisje elektrike dhe pjesët e ty",
+        "raw": "85- Makineri dhe paisje elektrike dhe pjesët e ty"
+      },
+      {
+        "code": "86",
+        "label": "86 · Lokomotivat e trenave, tramvajat, vagonët dhe",
+        "title": "Kapitulli 86",
+        "description": "Lokomotivat e trenave, tramvajat, vagonët dhe",
+        "raw": "86- Lokomotivat e trenave, tramvajat, vagonët dhe"
+      },
+      {
+        "code": "87",
+        "label": "87 · Mjetet e transportit të ndryshëm",
+        "title": "Kapitulli 87",
+        "description": "Mjetet e transportit të ndryshëm",
+        "raw": "87- Mjetet e transportit të ndryshëm"
+      },
+      {
+        "code": "88",
+        "label": "88 · Avionet, anijet e hapësirës dhe pjesët e tyre",
+        "title": "Kapitulli 88",
+        "description": "Avionet, anijet e hapësirës dhe pjesët e tyre",
+        "raw": "88- Avionet, anijet e hapësirës dhe pjesët e tyre"
+      },
+      {
+        "code": "89",
+        "label": "89 · Anijet, varkat dhe strukturat lundruese",
+        "title": "Kapitulli 89",
+        "description": "Anijet, varkat dhe strukturat lundruese",
+        "raw": "89- Anijet, varkat dhe strukturat lundruese"
+      },
+      {
+        "code": "90",
+        "label": "90 · Instrumentët dhe aparatet, fotografike, kinem",
+        "title": "Kapitulli 90",
+        "description": "Instrumentët dhe aparatet, fotografike, kinem",
+        "raw": "90- Instrumentët dhe aparatet, fotografike, kinem"
+      },
+      {
+        "code": "91",
+        "label": "91 · Orët e të gjitha llojeve dhe pjesët e tyre",
+        "title": "Orët e të gjitha llojeve dhe pjesët e tyre",
+        "description": "Orët e të gjitha llojeve dhe pjesët e tyre",
+        "raw": "91- Orët e të gjitha llojeve dhe pjesët e tyre-"
+      },
+      {
+        "code": "92",
+        "label": "92 · Instrumentet muzikore; pjesët dhe plotësues t",
+        "title": "Kapitulli 92",
+        "description": "Instrumentet muzikore; pjesët dhe plotësues t",
+        "raw": "92- Instrumentet muzikore; pjesët dhe plotësues t"
+      },
+      {
+        "code": "93",
+        "label": "93 · Armët dhe municionet; pjesët dhe plotësuesit",
+        "title": "Kapitulli 93",
+        "description": "Armët dhe municionet; pjesët dhe plotësuesit",
+        "raw": "93- Armët dhe municionet; pjesët dhe plotësuesit"
+      },
+      {
+        "code": "94",
+        "label": "94 · Krevatet, dyshekët, mbajtëset e d",
+        "title": "Mobileritë",
+        "description": "Krevatet, dyshekët, mbajtëset e d",
+        "raw": "94- Mobileritë: Krevatet, dyshekët, mbajtëset e d"
+      },
+      {
+        "code": "95",
+        "label": "95 · Lodrat, të domosdoshmet e lodrave dhe të spor",
+        "title": "Kapitulli 95",
+        "description": "Lodrat, të domosdoshmet e lodrave dhe të spor",
+        "raw": "95- Lodrat, të domosdoshmet e lodrave dhe të spor"
+      },
+      {
+        "code": "96",
+        "label": "96 · Artikuj të ndryshëm të prodhuar",
+        "title": "Artikuj të ndryshëm të prodhuar",
+        "description": "Artikuj të ndryshëm të prodhuar",
+        "raw": "96- Artikuj të ndryshëm të prodhuar-"
+      },
+      {
+        "code": "97",
+        "label": "97 · Veprat e artit, copat e mbledhura dhe antikit",
+        "title": "Kapitulli 97",
+        "description": "Veprat e artit, copat e mbledhura dhe antikit",
+        "raw": "97- Veprat e artit, copat e mbledhura dhe antikit"
+      },
+      {
+        "code": "98",
+        "label": "98 · Complete Industrial Plant",
+        "title": "Kapitulli 98",
+        "description": "Complete Industrial Plant",
+        "raw": "98:COMPLETE INDUSTRIAL PLANT"
+      },
+      {
+        "code": "99",
+        "label": "99 · Produktet e tjera",
+        "title": "Kapitulli 99",
+        "description": "Produktet e tjera",
+        "raw": "99- Produktet e tjera"
+      }
+    ]
+  },
+  "records": []
+}

@@ -1,6 +1,7 @@
 import tradeImportsJson from "../../data/kas_imports_monthly.json" with { type: "json" };
+import tradeChaptersYearlyJson from "../../data/kas_trade_chapters_yearly.json" with { type: "json" };
 import importsByPartnerJson from "../../data/kas_imports_by_partner.json" with { type: "json" };
-import type { Dataset } from "../types/dataset";
+import type { Dataset, DatasetMeta } from "../types/dataset";
 // Manual overrides for partners whose labels are missing or duplicated in source data.
 const PARTNER_LABEL_OVERRIDES: Record<string, string> = {
   "CW:": "Kurasao",
@@ -48,6 +49,112 @@ export const tradeImportsMonthly: TradeImportRecord[] =
 
 export const latestTradeImport: TradeImportRecord | undefined =
   tradeImportsMonthlyRecords.at(-1);
+
+type TradeChapterMetaEntry = {
+  code: string;
+  label: string;
+  title?: string;
+  description?: string;
+  raw?: string;
+};
+
+type TradeChaptersYearlyMeta = DatasetMeta & {
+  chapters?: TradeChapterMetaEntry[];
+  years?: string[];
+};
+
+type TradeChapterYearRawRecord = {
+  year: string;
+  chapter_code: string;
+  imports_th_eur: number | null;
+  exports_th_eur: number | null;
+};
+
+type TradeChaptersYearlyDataset = Dataset<
+  TradeChapterYearRawRecord,
+  TradeChaptersYearlyMeta
+>;
+
+const tradeChaptersYearlyDataset =
+  tradeChaptersYearlyJson as TradeChaptersYearlyDataset;
+
+export const tradeChaptersYearlyMeta = tradeChaptersYearlyDataset.meta;
+
+function buildChapterMetaMap(meta: TradeChaptersYearlyMeta) {
+  const mapByCode = new Map<string, TradeChapterMetaEntry>();
+  if (Array.isArray(meta?.chapters)) {
+    for (const entry of meta.chapters) {
+      if (entry.code) {
+        mapByCode.set(entry.code, entry);
+      }
+    }
+  }
+  return mapByCode;
+}
+
+const chapterMetaByCode = buildChapterMetaMap(tradeChaptersYearlyMeta);
+
+function buildChapterLabelMap(
+  meta: TradeChaptersYearlyMeta,
+): Record<string, string> {
+  if (!Array.isArray(meta?.chapters)) {
+    return {};
+  }
+  return meta.chapters.reduce(
+    (acc, entry) => {
+      if (entry.code && !(entry.code in acc)) {
+        acc[entry.code] = entry.label ?? entry.description ?? entry.code;
+      }
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
+}
+
+export const tradeChapterLabelMap = buildChapterLabelMap(
+  tradeChaptersYearlyMeta,
+);
+
+export type TradeChapterYearRecord = {
+  year: string;
+  chapter_code: string;
+  chapter_label: string;
+  chapter_title: string | null;
+  chapter_description: string | null;
+  imports_th_eur: number | null;
+  exports_th_eur: number | null;
+  imports_eur: number | null;
+  exports_eur: number | null;
+};
+
+const tradeChapterYearRecords: TradeChapterYearRecord[] =
+  tradeChaptersYearlyDataset.records
+    .map((record) => {
+      const metaEntry = chapterMetaByCode.get(record.chapter_code);
+      const label =
+        tradeChapterLabelMap[record.chapter_code] ??
+        metaEntry?.label ??
+        record.chapter_code;
+      const importsEur =
+        record.imports_th_eur != null ? record.imports_th_eur * 1_000 : null;
+      const exportsEur =
+        record.exports_th_eur != null ? record.exports_th_eur * 1_000 : null;
+      return {
+        year: record.year,
+        chapter_code: record.chapter_code,
+        chapter_label: label,
+        chapter_title: metaEntry?.title ?? null,
+        chapter_description: metaEntry?.description ?? null,
+        imports_th_eur: record.imports_th_eur,
+        exports_th_eur: record.exports_th_eur,
+        imports_eur: importsEur,
+        exports_eur: exportsEur,
+      };
+    })
+    .sort((a, b) => a.year.localeCompare(b.year));
+
+export const tradeChaptersYearly: TradeChapterYearRecord[] =
+  tradeChapterYearRecords;
 
 type TradePartnerRawRecord = {
   period: string;

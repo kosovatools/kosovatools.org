@@ -21,6 +21,12 @@ export const PATHS = {
     "Monthly indicators",
     "08_qarkullimi.px",
   ],
+  trade_chapters_yearly: [
+    "ASKdata",
+    "External trade",
+    "Yearly indicators",
+    "tab03.px",
+  ],
   energy_monthly: ["ASKdata", "Energy", "Monthly indicators", "tab01.px"],
   imports_by_partner: [
     "ASKdata",
@@ -69,7 +75,7 @@ const FUEL_SPECS = {
 
 const USER_AGENT = "kas-pxweb-fetch/1.1 (kosovatools.org)";
 
-export class PxError extends Error {}
+export class PxError extends Error { }
 
 function createMeta(parts, generatedAt, options = {}) {
   const { updatedAt = null, unit = null, fields = [], ...rest } = options;
@@ -180,6 +186,113 @@ function normalizeEnergyMetricLabel(label) {
     return "consumption_total_gwh";
   }
   return slugifyLabel(label) + "_gwh";
+}
+
+function normalizeWhitespace(text) {
+  return String(text ?? "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+const UPPERCASE_WORDS = new Set(["FOB", "CIF", "EU", "USA", "UK", "VAT"]);
+
+function smartTitleCase(word) {
+  const trimmed = word.trim();
+  if (!trimmed) return "";
+  const alpha = trimmed.replace(/[^A-Za-z]/g, "");
+  const upperAlpha = alpha.toUpperCase();
+  if (upperAlpha && UPPERCASE_WORDS.has(upperAlpha)) {
+    return trimmed.replace(alpha, upperAlpha);
+  }
+  return trimmed[0].toUpperCase() + trimmed.slice(1).toLowerCase();
+}
+
+function beautifyChapterText(text) {
+  const normalized = normalizeWhitespace(text);
+  const recombined = normalized
+    .split(/(\s+|[,;/()-])/g)
+    .map((token) => {
+      if (!token.trim()) return token;
+      if (/[^A-Za-z]/.test(token) && token.length === 1) {
+        return token;
+      }
+      return smartTitleCase(token);
+    })
+    .join("")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+  return recombined.replace(
+    /\b(And|Or|The|Of|With|For|On|In|By|To|At)\b/g,
+    (match) => match.toLowerCase(),
+  );
+}
+
+function maybeBeautifyChapterText(text) {
+  const normalized = normalizeWhitespace(text);
+  if (!normalized) return normalized;
+  const letters = normalized.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ]/g, "");
+  if (!letters) return normalized;
+  const uppercaseMatches = normalized.match(/[A-ZÀ-ÖØ-Þ]/g);
+  const uppercaseRatio =
+    uppercaseMatches && letters.length
+      ? uppercaseMatches.length / letters.length
+      : 0;
+  if (uppercaseRatio >= 0.6) {
+    return beautifyChapterText(normalized);
+  }
+  return normalized;
+}
+
+function parseTradeChapterLabel(text) {
+  const raw = normalizeWhitespace(text);
+  if (!raw) {
+    return {
+      code: "",
+      label: "",
+      description: "",
+      title: "",
+      raw: "",
+    };
+  }
+  let remainder = raw;
+  let code = "";
+  const leadingMatch = remainder.match(/^(\d{1,2})\s*([:.-])?\s*/);
+  if (leadingMatch) {
+    code = leadingMatch[1].padStart(2, "0");
+    remainder = remainder.slice(leadingMatch[0].length).trim();
+  }
+  if (!code) {
+    const numberMatch =
+      remainder.match(/\b\d{1,2}\b/) ?? raw.match(/\b\d{1,2}\b/);
+    if (numberMatch) {
+      code = numberMatch[0].padStart(2, "0");
+    }
+  }
+  const splitParts = remainder.split(/\s*[-–—:]\s*/).map((part) => part.trim());
+  let title = "";
+  let description = "";
+  if (splitParts.length > 1) {
+    title = maybeBeautifyChapterText(splitParts.shift());
+    description = maybeBeautifyChapterText(splitParts.join(" - "));
+  } else {
+    description = maybeBeautifyChapterText(remainder || raw);
+  }
+  if (!title && code) {
+    const numericCode = Number.parseInt(code, 10);
+    if (Number.isFinite(numericCode)) {
+      title = `Kapitulli ${numericCode}`;
+    }
+  }
+  if (!title) title = description || raw;
+  if (!description) description = title;
+  const label = code ? `${code} · ${description}` : description;
+  return {
+    code,
+    label,
+    description,
+    title,
+    raw,
+  };
 }
 
 export function normalizeYM(code) {
@@ -504,6 +617,156 @@ async function fetchTradeMonthly(outDir, generatedAt) {
     records,
   };
   await writeJson(outDir, "kas_imports_monthly.json", dataset);
+  return dataset;
+}
+
+async function fetchTradeChaptersYearly(outDir, generatedAt) {
+  const parts = PATHS.trade_chapters_yearly;
+  const meta = await pxGetMeta(parts, "sq");
+  const dimChapter =
+    metaFindVarCode(
+      meta,
+      (text, code) =>
+        text.toLowerCase().includes("kapit") ||
+        code.toLowerCase().includes("chapter"),
+    ) || "Chapter";
+  const dimYear =
+    metaFindVarCode(
+      meta,
+      (text, _code, variable) =>
+        variable.time === true || text.toLowerCase().includes("viti"),
+    ) || "Year";
+  const dimFlow =
+    metaFindVarCode(
+      meta,
+      (text, code) =>
+        text.toLowerCase().includes("export") ||
+        text.toLowerCase().includes("import") ||
+        code.toLowerCase().includes("export"),
+    ) || "Exporti/Import";
+
+  if (!dimChapter || !dimYear || !dimFlow) {
+    throw new PxError("Trade yearly chapters: missing dimensions");
+  }
+
+  const chapterPairs = metaValueMap(meta, dimChapter);
+  const yearCodes = metaTimeCodes(meta, dimYear) ?? [];
+  const flowPairs = metaValueMap(meta, dimFlow);
+  if (!chapterPairs.length || !yearCodes.length || !flowPairs.length) {
+    throw new PxError("Trade yearly chapters: missing values");
+  }
+
+  const query = [
+    {
+      code: dimChapter,
+      selection: { filter: "item", values: chapterPairs.map(([code]) => code) },
+    },
+    { code: dimYear, selection: { filter: "item", values: yearCodes } },
+    {
+      code: dimFlow,
+      selection: { filter: "item", values: flowPairs.map(([code]) => code) },
+    },
+  ];
+
+  const cube = await pxPostData(
+    parts,
+    { query, response: { format: "JSON" } },
+    "sq",
+  );
+  const table = tableLookup(cube, [dimChapter, dimYear, dimFlow]);
+  if (!table) {
+    throw new PxError("Trade yearly chapters: unexpected response format");
+  }
+  const { dimCodes, lookup } = table;
+  const updatedAt = Array.isArray(cube?.metadata)
+    ? (cube.metadata[0]?.updated ?? null)
+    : (cube?.metadata?.updated ?? null);
+
+  const flowKeyMap = {};
+  for (const [code, text] of flowPairs) {
+    const lower = text.toLowerCase();
+    if (lower.includes("import")) {
+      flowKeyMap[code] = "imports_th_eur";
+    } else if (lower.includes("export")) {
+      flowKeyMap[code] = "exports_th_eur";
+    }
+  }
+  if (!Object.values(flowKeyMap).includes("imports_th_eur")) {
+    throw new PxError("Trade yearly chapters: missing import flow");
+  }
+  if (!Object.values(flowKeyMap).includes("exports_th_eur")) {
+    throw new PxError("Trade yearly chapters: missing export flow");
+  }
+
+  const chapterSpecs = chapterPairs.map(([code, text]) => [
+    code,
+    parseTradeChapterLabel(text),
+  ]);
+
+  const records = [];
+  const zeroCounts = { imports: 0, exports: 0 };
+
+  for (const [chapterId, spec] of chapterSpecs) {
+    for (const yearCode of yearCodes) {
+      const record = {
+        year: yearCode,
+        chapter_code: spec.code,
+        imports_th_eur: null,
+        exports_th_eur: null,
+      };
+      for (const [flowCode] of flowPairs) {
+        const fieldKey = flowKeyMap[flowCode];
+        if (!fieldKey) continue;
+        const value = lookupTableValue(dimCodes, lookup, {
+          [dimChapter]: chapterId,
+          [dimYear]: yearCode,
+          [dimFlow]: flowCode,
+        });
+        const amount = tidyNumber(value);
+        if (amount === 0) {
+          if (fieldKey === "imports_th_eur") zeroCounts.imports += 1;
+          else zeroCounts.exports += 1;
+        }
+        record[fieldKey] = amount;
+      }
+      if (record.imports_th_eur != null || record.exports_th_eur != null) {
+        records.push(record);
+      }
+    }
+  }
+
+  const dataset = {
+    meta: createMeta(parts, generatedAt, {
+      updatedAt,
+      unit: "thousand euro (CIF/FOB)",
+      fields: [
+        {
+          key: "imports_th_eur",
+          label: "Importe",
+          unit: "thousand EUR",
+        },
+        {
+          key: "exports_th_eur",
+          label: "Eksporte",
+          unit: "thousand EUR",
+        },
+      ],
+      years: yearCodes.slice().reverse(),
+      chapter_count: chapterSpecs.length,
+      record_count: records.length,
+      zero_counts: zeroCounts,
+      chapters: chapterSpecs.map(([, spec]) => ({
+        code: spec.code,
+        label: spec.label,
+        title: spec.title,
+        description: spec.description,
+        raw: spec.raw,
+      })),
+    }),
+    records,
+  };
+
+  await writeJson(outDir, "kas_trade_chapters_yearly.json", dataset);
   return dataset;
 }
 
@@ -896,6 +1159,7 @@ async function fetchImportsByPartner(outDir, partners, generatedAt) {
   const { dimCodes, lookup } = table;
   const updatedAt = cube?.metadata?.updated ?? null;
   const rows = [];
+  let zeroFiltered = 0;
   for (const partnerCode of partnerCodes) {
     const partnerLabel = labelLookup[partnerCode] ?? partnerCode;
     for (const timeCode of allMonths) {
@@ -903,10 +1167,15 @@ async function fetchImportsByPartner(outDir, partners, generatedAt) {
         [dimPartner]: partnerCode,
         [dimTime]: timeCode,
       });
+      const amount = tidyNumber(value);
+      if (amount === 0) {
+        zeroFiltered += 1;
+        continue;
+      }
       rows.push({
         period: normalizeYM(timeCode),
         partner: partnerLabel,
-        imports_th_eur: tidyNumber(value),
+        imports_th_eur: amount,
       });
     }
   }
@@ -923,6 +1192,8 @@ async function fetchImportsByPartner(outDir, partners, generatedAt) {
         },
       ],
       partner_count: partnerCodes.length,
+      record_count: rows.length,
+      zero_filtered: zeroFiltered,
     }),
     records: rows,
   };
@@ -1054,6 +1325,10 @@ export async function main() {
   await fs.mkdir(outDir, { recursive: true });
   const started = new Date().toISOString();
   const tradeDataset = await fetchTradeMonthly(outDir, started);
+  const tradeChaptersYearlyDataset = await fetchTradeChaptersYearly(
+    outDir,
+    started,
+  );
   const energyDataset = await fetchEnergyMonthly(outDir, started);
   for (const [fuelName, spec] of Object.entries(FUEL_SPECS)) {
     try {
@@ -1100,7 +1375,8 @@ export async function main() {
   }
   console.log(
     `✔ trade (${tradeDataset.records.length} rows) ` +
-      `| energy (${energyDataset.records.length} rows)`,
+    `| trade chapters yearly (${tradeChaptersYearlyDataset.records.length} rows) ` +
+    `| energy (${energyDataset.records.length} rows)`,
   );
   console.log("Done.");
 }
