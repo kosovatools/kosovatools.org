@@ -4,22 +4,26 @@ import lngDataset from "../../data/kas_energy_lng_monthly.json" with { type: "js
 import jetDataset from "../../data/kas_energy_jet_monthly.json" with { type: "json" };
 import type { Dataset, DatasetMeta, DatasetMetaField } from "../types/dataset";
 
+export type FuelMetric =
+  | "production"
+  | "import"
+  | "export"
+  | "stock"
+  | "ready_for_market";
+
 export type FuelBalanceRecord = {
   period: string;
-  production: number | null;
-  import: number | null;
-  export: number | null;
-  stock: number | null;
-  ready_for_market: number | null;
-};
+} & Record<FuelMetric, number>;
 
 export type FuelKey = "gasoline" | "diesel" | "lng" | "jet";
 
 export const fuelKeys: FuelKey[] = ["gasoline", "diesel", "lng", "jet"];
 
 export type FuelMeta = DatasetMeta & {
-  fields: Array<DatasetMetaField & { key: keyof FuelBalanceRecord }>;
-  label?: string;
+  fields: Array<DatasetMetaField & { key: FuelMetric }>;
+  label: string;
+  metrics: FuelMetric[];
+  metric_labels: Record<FuelMetric, string>;
 };
 
 type FuelDataset = Dataset<FuelBalanceRecord, FuelMeta>;
@@ -39,10 +43,10 @@ export const fuelMeta: Record<FuelKey, FuelMeta> = {
 };
 
 export const fuelBalances: Record<FuelKey, FuelBalanceRecord[]> = {
-  gasoline: datasets.gasoline.records.slice(),
-  diesel: datasets.diesel.records.slice(),
-  lng: datasets.lng.records.slice(),
-  jet: datasets.jet.records.slice(),
+  gasoline: datasets.gasoline.records,
+  diesel: datasets.diesel.records,
+  lng: datasets.lng.records,
+  jet: datasets.jet.records,
 };
 
 const DEFAULT_LABELS: Record<FuelKey, string> = {
@@ -54,16 +58,12 @@ const DEFAULT_LABELS: Record<FuelKey, string> = {
 
 export const fuelLabels: Record<FuelKey, string> = fuelKeys.reduce(
   (acc, key) => {
-    acc[key] = fuelMeta[key]?.label ?? DEFAULT_LABELS[key];
+    const meta = fuelMeta[key];
+    acc[key] = meta.label ?? DEFAULT_LABELS[key];
     return acc;
   },
   {} as Record<FuelKey, string>,
 );
-
-export type FuelMetric = keyof Pick<
-  FuelBalanceRecord,
-  "import" | "production" | "export" | "stock" | "ready_for_market"
->;
 
 const METRIC_ORDER: FuelMetric[] = [
   "ready_for_market",
@@ -86,7 +86,7 @@ function titleizeMetric(metric: FuelMetric): string {
 
 function resolveMetricLabel(metric: FuelMetric): string {
   for (const meta of Object.values(fuelMeta)) {
-    const label = meta?.fields?.find((field) => field.key === metric)?.label;
+    const label = meta.metric_labels[metric];
     if (label) {
       return label;
     }
@@ -97,11 +97,11 @@ function resolveMetricLabel(metric: FuelMetric): string {
 const discoveredMetrics = (() => {
   const set = new Set<FuelMetric>();
   for (const meta of Object.values(fuelMeta)) {
-    for (const field of meta?.fields ?? []) {
-      if (isFuelMetricKey(field.key)) {
-        set.add(field.key);
+    meta.metrics.forEach((metric) => {
+      if (isFuelMetricKey(metric)) {
+        set.add(metric);
       }
-    }
+    });
   }
   return set;
 })();

@@ -7,11 +7,12 @@ import {
   type StackPeriodGrouping,
 } from "@workspace/chart-utils";
 import {
+  tourismCountryMeta,
+  tourismRegionMeta,
   type TourismCountryRecord,
   type TourismRegionRecord,
+  type TourismMetric,
 } from "../datasets/tourism";
-
-export type TourismMetric = "visitors" | "nights";
 
 export type CountryStackSeries = StackSeriesRow<string>;
 
@@ -35,9 +36,8 @@ function accessorsForMetric(metric: TourismMetric) {
   };
 }
 
-function buildOptions(
-  options: CountryStackOptions = {},
-) {
+function buildOptions(options: CountryStackOptions = {}) {
+  const countryLabels = tourismCountryMeta.country_labels;
   return {
     months: options.months,
     top: options.top,
@@ -45,7 +45,7 @@ function buildOptions(
     selectedKeys: options.selectedKeys,
     excludedKeys: options.excludedKeys,
     periodGrouping: options.periodGrouping,
-    labelForKey: (key: string) => key,
+    labelForKey: (key: string) => countryLabels[key] || key,
   };
 }
 
@@ -99,10 +99,11 @@ const regionAccessors = {
 };
 
 function buildRegionOptions(options: RegionStackOptions = {}) {
+  const regionLabels = tourismRegionMeta.region_labels;
   return {
     months: options.months,
     periodGrouping: options.periodGrouping,
-    labelForKey: (key: string) => key,
+    labelForKey: (key: string) => regionLabels[key] || key,
   };
 }
 

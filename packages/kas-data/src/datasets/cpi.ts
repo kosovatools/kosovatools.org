@@ -9,7 +9,7 @@ import type { DatasetMeta } from "../types/dataset";
 
 type RawCpiPoint = {
   period: string;
-  value: number | null;
+  value: number;
 };
 
 type RawCpiGroup = {
@@ -20,8 +20,9 @@ type RawCpiGroup = {
 
 export type CpiMeta = DatasetMeta & {
   title: string | null;
-  group_count?: number;
-  dimensions?: {
+  group_count: number;
+  group_labels: Record<string, string>;
+  dimensions: {
     time: { code: string; label: string };
     group: { code: string; label: string };
   };
@@ -34,7 +35,7 @@ type CpiDataset = {
 
 export type CpiSeriesPoint = {
   period: string;
-  value: number | null;
+  value: number;
 };
 
 export type CpiGroupSeries = {
@@ -93,7 +94,7 @@ function normalizeGroup(group: RawCpiGroup): CpiGroupSeries {
       value:
         typeof point.value === "number" && Number.isFinite(point.value)
           ? point.value
-          : null,
+          : 0,
     }))
     .sort((a, b) => a.period.localeCompare(b.period));
   return {
@@ -326,17 +327,17 @@ function sortSeriesByPeriod(series: CpiSeriesPoint[]): CpiSeriesPoint[] {
   return series.slice().sort((a, b) => a.period.localeCompare(b.period));
 }
 
-function average(values: number[]): number | null {
+function average(values: number[]): number {
   if (!values.length) {
-    return null;
+    return 0;
   }
   const sum = values.reduce((acc, value) => acc + value, 0);
   return sum / values.length;
 }
 
-function compoundPercentage(values: number[]): number | null {
+function compoundPercentage(values: number[]): number {
   if (!values.length) {
-    return null;
+    return 0;
   }
   let product = 1;
   for (const value of values) {

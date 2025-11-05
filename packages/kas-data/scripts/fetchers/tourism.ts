@@ -5,17 +5,18 @@ import { runPxDatasetPipeline } from "../pipeline/px-dataset";
 
 type TourismMetric = "visitors" | "nights";
 
+type VisitorGroupSlug = "total" | "local" | "external";
+
 type TourismRegionRecord = {
   period: string;
   region: string;
-  visitor_group: string;
-  visitor_group_label: string;
-} & Record<TourismMetric, number | null>;
+  visitor_group: VisitorGroupSlug;
+} & Record<TourismMetric, number>;
 
 type TourismCountryRecord = {
   period: string;
   country: string;
-} & Record<TourismMetric, number | null>;
+} & Record<TourismMetric, number>;
 
 const TOURISM_METRICS = Object.freeze([
   {
@@ -80,15 +81,18 @@ export async function fetchTourismRegion(outDir: string, generatedAt: string) {
       const regionEntry = axes.region;
       const visitorGroupEntry = axes.visitor_group;
       if (!regionEntry || !visitorGroupEntry) return null;
+      const regionCode = regionEntry.code;
       const visitorLabel =
-        visitorGroupEntry.metaLabel || visitorGroupEntry.label;
+        visitorGroupEntry.metaLabel ||
+        visitorGroupEntry.label ||
+        visitorGroupEntry.code;
+      const visitorSlug = normalizeGroupLabel(visitorLabel) as VisitorGroupSlug;
       return {
         period,
-        region: regionEntry.label,
-        visitor_group: normalizeGroupLabel(visitorLabel),
-        visitor_group_label: visitorLabel,
-        visitors: values.visitors ?? null,
-        nights: values.nights ?? null,
+        region: regionCode,
+        visitor_group: visitorSlug,
+        visitors: values.visitors ?? 0,
+        nights: values.nights ?? 0,
       };
     },
     buildMeta: ({ cubeSummary, fields, periods, axes, metrics }) => {
@@ -98,19 +102,30 @@ export async function fetchTourismRegion(outDir: string, generatedAt: string) {
         dimension.values.map((value) => value.key ?? value.code),
       );
       const visitorGroups = visitorAxis
-        ? visitorAxis.values.map((value) =>
-            normalizeGroupLabel(value.metaLabel),
+        ? Object.fromEntries(
+            visitorAxis.values.map((value) => {
+              const raw = value.metaLabel || value.label || value.code;
+              return [normalizeGroupLabel(raw), raw];
+            }),
           )
-        : [];
+        : {};
+      const regionLabels = regionAxis
+        ? Object.fromEntries(
+            regionAxis.values.map((value) => [
+              value.code,
+              value.metaLabel || value.label || value.code,
+            ]),
+          )
+        : {};
       return {
         updatedAt: cubeSummary.updatedAt,
         unit: "people",
         periods,
         fields,
-        regions: regionAxis
-          ? regionAxis.values.map((value) => value.metaLabel)
-          : [],
-        visitor_groups: visitorGroups,
+        regions: Object.keys(regionLabels),
+        region_labels: regionLabels,
+        visitor_groups: Object.keys(visitorGroups),
+        visitor_group_labels: visitorGroups,
         metrics: metricKeys,
       };
     },
@@ -166,11 +181,12 @@ export async function fetchTourismCountry(outDir: string, generatedAt: string) {
     createRecord: ({ period, axes, values }) => {
       const countryEntry = axes.country;
       if (!countryEntry) return null;
+      const countryCode = countryEntry.code;
       return {
         period,
-        country: countryEntry.label,
-        visitors: values.visitors ?? null,
-        nights: values.nights ?? null,
+        country: countryCode,
+        visitors: values.visitors ?? 0,
+        nights: values.nights ?? 0,
       };
     },
     buildMeta: ({ cubeSummary, fields, periods, axes, metrics }) => {
@@ -178,14 +194,21 @@ export async function fetchTourismCountry(outDir: string, generatedAt: string) {
       const metricKeys = metrics.flatMap((dimension) =>
         dimension.values.map((value) => value.key ?? value.code),
       );
+      const countryLabels = countryAxis
+        ? Object.fromEntries(
+            countryAxis.values.map((value) => [
+              value.code,
+              value.metaLabel || value.label || value.code,
+            ]),
+          )
+        : {};
       return {
         updatedAt: cubeSummary.updatedAt,
         unit: "people",
         periods,
         fields,
-        countries: countryAxis
-          ? countryAxis.values.map((value) => value.metaLabel)
-          : [],
+        countries: Object.keys(countryLabels),
+        country_labels: countryLabels,
         metrics: metricKeys,
       };
     },

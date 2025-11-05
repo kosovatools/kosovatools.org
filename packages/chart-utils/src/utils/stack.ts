@@ -1,8 +1,6 @@
 import {
   PERIOD_GROUPING_OPTIONS,
   buildGroupedPeriodList,
-  formatPeriodLabel,
-  getPeriodFormatter,
   groupPeriod,
   type PeriodFormatter,
   type PeriodFormatterOptions,
@@ -10,10 +8,9 @@ import {
 } from "./period";
 
 type MaybeNumber = number | null | undefined;
-
 export type StackPeriodGrouping = PeriodGrouping;
 
-export type StackAccessors<TRecord, TKey extends string> = {
+type StackAccessors<TRecord, TKey extends string> = {
   period: (record: TRecord) => string;
   key: (record: TRecord) => TKey;
   value: (record: TRecord) => MaybeNumber;
@@ -44,9 +41,7 @@ export type StackSeriesRow<TKey extends string> = {
 };
 
 export type StackPeriodFormatter = PeriodFormatter;
-
 export type StackPeriodFormatterOptions = PeriodFormatterOptions;
-
 export const STACK_PERIOD_GROUPING_OPTIONS = PERIOD_GROUPING_OPTIONS;
 
 export function groupStackPeriod(
@@ -63,31 +58,33 @@ export type StackBuildResult<TKey extends string> = {
   totals: StackTotal<TKey>[];
 };
 
+// ==== Internals ====
 const DEFAULT_OTHER_LABEL = "Të tjerët";
+const byTotalDesc = <TKey extends string>(
+  a: StackTotal<TKey>,
+  b: StackTotal<TKey>,
+) => b.total - a.total;
 
-function toNumber(value: MaybeNumber): number {
-  if (typeof value === "number" && Number.isFinite(value)) {
-    return value;
-  }
-  return 0;
-}
+const toNumber = (value: MaybeNumber): number =>
+  typeof value === "number" && Number.isFinite(value) ? value : 0;
 
-function collectPeriods<TRecord, TKey extends string>(
+const emptyBuildResult = <TKey extends string>(): StackBuildResult<TKey> => ({
+  keys: [],
+  series: [],
+  labelMap: {} as Record<TKey | "Other", string>,
+  totals: [],
+});
+
+function collectSortedPeriods<TRecord, TKey extends string>(
   records: readonly TRecord[],
   accessors: StackAccessors<TRecord, TKey>,
+  months?: number,
 ): string[] {
-  const periods = new Set<string>();
-  for (const record of records) {
-    periods.add(accessors.period(record));
-  }
-  return Array.from(periods).sort((a, b) => a.localeCompare(b));
-}
-
-function slicePeriods(periods: string[], months?: number): string[] {
-  if (months == null || months <= 0) {
-    return periods;
-  }
-  return periods.slice(-months);
+  const s = new Set<string>();
+  for (const r of records) s.add(accessors.period(r));
+  const all = Array.from(s).sort((a, b) => a.localeCompare(b));
+  if (months == null || months <= 0) return all;
+  return all.slice(-months);
 }
 
 function buildTotalsMap<TRecord, TKey extends string>(
@@ -96,56 +93,52 @@ function buildTotalsMap<TRecord, TKey extends string>(
   periodSet: Set<string>,
 ): Map<TKey, number> {
   const totals = new Map<TKey, number>();
-  for (const record of records) {
-    if (!periodSet.has(accessors.period(record))) continue;
-    const key = accessors.key(record);
-    const value = toNumber(accessors.value(record));
-    totals.set(key, (totals.get(key) ?? 0) + value);
+  for (const r of records) {
+    if (!periodSet.has(accessors.period(r))) continue;
+    const k = accessors.key(r);
+    const v = toNumber(accessors.value(r));
+    totals.set(k, (totals.get(k) ?? 0) + v);
   }
   return totals;
 }
 
-function resolveAllowedKeys<TKey extends string>(
+function pickAllowedKeys<TKey extends string>(
   totals: Map<TKey, number>,
-  options: StackOptions<TKey>,
+  opts: StackOptions<TKey>,
 ): TKey[] {
-  const excluded = new Set(options.excludedKeys ?? []);
-  const allowed = options.allowedKeys ? new Set(options.allowedKeys) : null;
-
-  const keys: TKey[] = [];
-  for (const key of totals.keys()) {
-    if (excluded.has(key)) continue;
-    if (allowed && !allowed.has(key)) continue;
-    keys.push(key);
+  const excluded = new Set(opts.excludedKeys ?? []);
+  const allowed = opts.allowedKeys ? new Set(opts.allowedKeys) : null;
+  const out: TKey[] = [];
+  for (const k of totals.keys()) {
+    if (excluded.has(k)) continue;
+    if (allowed && !allowed.has(k)) continue;
+    out.push(k);
   }
-  return keys;
+  return out;
 }
 
+// ==== Public API ====
 export function summarizeStackTotals<TRecord, TKey extends string>(
   records: readonly TRecord[],
   accessors: StackAccessors<TRecord, TKey>,
   options: StackOptions<TKey> = {},
 ): StackTotal<TKey>[] {
-  if (!records.length) {
-    return [];
-  }
+  if (!records.length) return [];
 
-  const periods = slicePeriods(
-    collectPeriods(records, accessors),
-    options.months,
-  );
+  const periods = collectSortedPeriods(records, accessors, options.months);
+  if (!periods.length) return [];
+
   const periodSet = new Set(periods);
   const totalsByKey = buildTotalsMap(records, accessors, periodSet);
+  const keys = pickAllowedKeys(totalsByKey, options);
 
-  const baseKeys = resolveAllowedKeys(totalsByKey, options);
-
-  const totals = baseKeys.map((key) => ({
+  const totals = keys.map((key) => ({
     key,
     label: options.labelForKey?.(key) ?? (key as string),
     total: totalsByKey.get(key) ?? 0,
   }));
 
-  return totals.sort(options.sortComparator ?? ((a, b) => b.total - a.total));
+  return totals.sort(options.sortComparator ?? byTotalDesc);
 }
 
 export function buildStackSeries<TRecord, TKey extends string>(
@@ -153,143 +146,77 @@ export function buildStackSeries<TRecord, TKey extends string>(
   accessors: StackAccessors<TRecord, TKey>,
   options: StackOptions<TKey> = {},
 ): StackBuildResult<TKey> {
-  if (!records.length) {
-    return {
-      keys: [],
-      series: [],
-      labelMap: {} as Record<TKey | "Other", string>,
-      totals: [],
-    };
-  }
+  if (!records.length) return emptyBuildResult();
 
-  const rawPeriods = slicePeriods(
-    collectPeriods(records, accessors),
-    options.months,
-  );
-  if (!rawPeriods.length) {
-    return {
-      keys: [],
-      series: [],
-      labelMap: {} as Record<TKey | "Other", string>,
-      totals: [],
-    };
-  }
-  const periodSet = new Set(rawPeriods);
+  const rawPeriods = collectSortedPeriods(records, accessors, options.months);
+  if (!rawPeriods.length) return emptyBuildResult();
 
   const grouping = options.periodGrouping ?? "monthly";
   const groupedPeriods = buildGroupedPeriodList(rawPeriods, grouping);
-  if (!groupedPeriods.length) {
-    return {
-      keys: [],
-      series: [],
-      labelMap: {} as Record<TKey | "Other", string>,
-      totals: [],
-    };
+  if (!groupedPeriods.length) return emptyBuildResult();
+
+  const periodSet = new Set(rawPeriods);
+  const totals = summarizeStackTotals(records, accessors, options);
+
+  // Determine primary keys
+  const availableKeys = totals.map((t) => t.key);
+  let primaryKeys: TKey[] = availableKeys;
+  if (options.selectedKeys?.length) {
+    const availableSet = new Set(availableKeys);
+    primaryKeys = options.selectedKeys.filter((k) => availableSet.has(k));
+  } else if (options.top && options.top > 0) {
+    primaryKeys = availableKeys.slice(0, options.top);
   }
-
-  const baseTotals = summarizeStackTotals(records, accessors, options);
-  const excludedSet = new Set(options.excludedKeys ?? []);
-
-  const availableKeys = baseTotals.map((item) => item.key);
-  const availableSet = new Set(availableKeys);
-
-  let primaryKeys: TKey[];
-
-  if (options.selectedKeys && options.selectedKeys.length) {
-    primaryKeys = options.selectedKeys.filter((key) => availableSet.has(key));
-  } else if (options.top != null && options.top > 0) {
-    primaryKeys = baseTotals.slice(0, options.top).map((item) => item.key);
-  } else {
-    primaryKeys = availableKeys;
-  }
-
-  if (!primaryKeys.length) {
+  if (!primaryKeys.length && availableKeys.length) {
     primaryKeys = availableKeys.slice(0, 1);
   }
 
   const includeOther = Boolean(options.includeOther);
   const otherLabel = options.otherLabel ?? DEFAULT_OTHER_LABEL;
+  const excluded = new Set(options.excludedKeys ?? []);
+  const primarySet = new Set(primaryKeys);
 
-  const recordsByPeriod = new Map<string, TRecord[]>();
-  for (const record of records) {
-    const period = accessors.period(record);
-    if (!periodSet.has(period)) continue;
-    const groupedPeriod = groupStackPeriod(period, grouping);
-    if (!recordsByPeriod.has(groupedPeriod)) {
-      recordsByPeriod.set(groupedPeriod, []);
-    }
-    recordsByPeriod.get(groupedPeriod)!.push(record);
+  // Index records by grouped period in a single pass
+  const byGrouped = new Map<string, TRecord[]>();
+  for (const r of records) {
+    const p = accessors.period(r);
+    if (!periodSet.has(p)) continue;
+    const gp = groupStackPeriod(p, grouping);
+    (byGrouped.get(gp) ?? byGrouped.set(gp, []).get(gp)!).push(r);
   }
 
-  const primarySet = new Set(primaryKeys);
-  const series = groupedPeriods.map<StackSeriesRow<TKey>>((groupedPeriod) => {
-    const rows = recordsByPeriod.get(groupedPeriod) ?? [];
-    const values: Record<string, number> = {};
-    let otherTotal = 0;
+  const series = groupedPeriods.map<StackSeriesRow<TKey>>((gp) => {
+    const rows = byGrouped.get(gp) ?? [];
+    const acc: Record<string, number> = {};
+    let other = 0;
+
     for (const row of rows) {
-      const key = accessors.key(row);
-      const value = toNumber(accessors.value(row));
-      if (excludedSet.has(key)) {
-        continue;
-      }
-      if (primarySet.has(key)) {
-        values[key] = (values[key] ?? 0) + value;
-      } else if (includeOther) {
-        otherTotal += value;
-      }
+      const k = accessors.key(row);
+      const v = toNumber(accessors.value(row));
+      if (excluded.has(k)) continue;
+      if (primarySet.has(k)) acc[k] = (acc[k] ?? 0) + v;
+      else if (includeOther) other += v;
     }
 
-    for (const key of primaryKeys) {
-      if (!(key in values)) {
-        values[key] = 0;
-      }
-    }
+    // Ensure stable key presence
+    for (const k of primaryKeys) if (!(k in acc)) acc[k] = 0;
+    if (includeOther) acc.Other = other;
 
-    if (includeOther) {
-      values.Other = otherTotal;
-    }
-
-    return {
-      period: groupedPeriod,
-      values: values as Record<TKey | "Other", number>,
-    };
+    return { period: gp, values: acc as Record<TKey | "Other", number> };
   });
 
   const keys: Array<TKey | "Other"> = includeOther
     ? [...primaryKeys, "Other"]
     : [...primaryKeys];
 
-  const labelMap = keys.reduce<Record<TKey | "Other", string>>(
-    (acc, key) => {
-      if (key === "Other") {
-        acc.Other = otherLabel;
-      } else {
-        acc[key] = options.labelForKey?.(key) ?? (key as string);
-      }
-      return acc;
-    },
-    {} as Record<TKey | "Other", string>,
-  );
+  const labelMap = Object.fromEntries(
+    keys.map((k) => [
+      k,
+      k === "Other"
+        ? otherLabel
+        : (options.labelForKey?.(k as TKey) ?? (k as string)),
+    ]),
+  ) as Record<TKey | "Other", string>;
 
-  return {
-    keys,
-    series,
-    labelMap,
-    totals: baseTotals,
-  };
-}
-
-export function formatStackPeriodLabel(
-  period: string,
-  grouping: StackPeriodGrouping,
-  options: StackPeriodFormatterOptions = {},
-): string {
-  return formatPeriodLabel(period, grouping, options);
-}
-
-export function getStackPeriodFormatter(
-  grouping: StackPeriodGrouping,
-  options: StackPeriodFormatterOptions = {},
-): StackPeriodFormatter {
-  return getPeriodFormatter(grouping, options);
+  return { keys, series, labelMap, totals };
 }

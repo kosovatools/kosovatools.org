@@ -2,9 +2,9 @@ import * as React from "react";
 
 import {
   groupStackPeriod,
-  getStackPeriodFormatter,
   type StackPeriodGrouping,
   type TimelineEvent,
+  getPeriodFormatter,
 } from "@workspace/chart-utils";
 
 type ChartDatum = {
@@ -30,7 +30,7 @@ export function useTimelineEventMarkers(
       return [];
     }
 
-    const periodFormatter = getStackPeriodFormatter(grouping);
+    const periodFormatter = getPeriodFormatter(grouping);
     const periodSet = new Set(data.map((row) => row.period));
     const markers = new Map<
       string,

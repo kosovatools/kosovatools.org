@@ -46,10 +46,7 @@ import {
   formatGeneratedAt,
 } from "@workspace/kas-data";
 
-import {
-  monthsFromRange,
-  getStackPeriodFormatter,
-} from "@workspace/chart-utils";
+import { monthsFromRange, getPeriodFormatter } from "@workspace/chart-utils";
 ```
 
 Stack helpers such as `buildPartnerStackSeries` and `buildFuelTypeStackSeries`

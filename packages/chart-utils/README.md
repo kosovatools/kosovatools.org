@@ -13,7 +13,7 @@ KAS fetch scripts live in `@workspace/kas-data`.
   `PERIOD_GROUPING_OPTIONS` and `sortGroupedPeriods`.
 - `src/utils/stack.ts` — generic stack builders used by domain wrappers in
   `@workspace/kas-data` (e.g., `buildStackSeries`, `summarizeStackTotals`,
-  `getStackPeriodFormatter`).
+  `getPeriodFormatter`).
 - `src/utils/time-range.ts` — shared presets like `DEFAULT_TIME_RANGE` and
   `monthsFromRange` for UI selectors.
 
@@ -23,7 +23,7 @@ KAS fetch scripts live in `@workspace/kas-data`.
 import {
   formatEuro,
   STACK_PERIOD_GROUPING_OPTIONS,
-  getStackPeriodFormatter,
+  getPeriodFormatter,
   monthsFromRange,
   DEFAULT_TIME_RANGE,
   DEFAULT_TIME_RANGE_OPTIONS,

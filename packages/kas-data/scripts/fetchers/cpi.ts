@@ -11,13 +11,13 @@ type CpiRecord = {
   period: string;
   group_code: string;
   group_label: string;
-  value: number | null;
+  value: number;
 };
 
 type CpiGroup = {
   code: string;
   label: string;
-  values: Array<{ period: string; value: number | null }>;
+  values: Array<{ period: string; value: number }>;
 };
 
 type CpiDataset = {
@@ -71,7 +71,10 @@ export async function fetchCpiDataset(
         period,
         group_code: groupEntry.code,
         group_label: groupEntry.metaLabel,
-        value: values.value ?? null,
+        value:
+          typeof values.value === "number" && Number.isFinite(values.value)
+            ? values.value
+            : 0,
       };
     },
     buildMeta: ({ cubeSummary, fields, periods, axes }) => {
@@ -79,6 +82,14 @@ export async function fetchCpiDataset(
       const groupAxis = axes.find((axis) => axis.alias === "group");
       const unit = cubeSummary.unit ?? null;
       const title = cubeSummary.title ?? null;
+      const groupLabels =
+        groupAxis?.values.reduce(
+          (acc, value) => {
+            acc[value.code] = value.metaLabel;
+            return acc;
+          },
+          {} as Record<string, string>,
+        ) ?? {};
       return {
         updatedAt: cubeSummary.updatedAt,
         unit,
@@ -88,7 +99,8 @@ export async function fetchCpiDataset(
           unit: field.unit ?? unit,
         })),
         title,
-        group_count: groupAxis?.values.length ?? 0,
+        group_count: Object.keys(groupLabels).length,
+        group_labels: groupLabels,
         dimensions: {
           time: {
             code: timeAxis?.code ?? "Viti/muaji",
@@ -123,7 +135,7 @@ export async function fetchCpiDataset(
         };
         entry.values.push({
           period: record.period,
-          value: record.value ?? null,
+          value: record.value,
         });
         if (!existing) groupMap.set(record.group_code, entry);
       }

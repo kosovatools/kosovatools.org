@@ -23,14 +23,14 @@ import { runPxDatasetPipeline } from "../pipeline/px-dataset";
 
 type TradeMonthlyRecord = {
   period: string;
-  imports_th_eur: number | null;
+  imports_eur: number;
 };
 
 type TradeChapterRecord = {
   year: string;
   chapter_code: string;
-  imports_th_eur: number | null;
-  exports_th_eur: number | null;
+  imports_eur: number;
+  exports_eur: number;
 };
 
 const TRADE_MONTHLY_INDICATORS: Array<{
@@ -41,9 +41,9 @@ const TRADE_MONTHLY_INDICATORS: Array<{
 }> = [
   {
     code: "1",
-    key: "imports_th_eur",
+    key: "imports_eur",
     label: "3 Importet (CIF)",
-    unit: "thousand EUR",
+    unit: "EUR",
   },
 ];
 
@@ -54,7 +54,7 @@ export async function fetchTradeMonthly(outDir: string, generatedAt: string) {
     parts: PATHS.trade_monthly,
     outDir,
     generatedAt,
-    unit: "thousand euro (CIF)",
+    unit: "euro (CIF)",
     timeDimension: {
       code: "Viti/muaji",
       text: "Viti/muaji",
@@ -67,10 +67,17 @@ export async function fetchTradeMonthly(outDir: string, generatedAt: string) {
         values: TRADE_MONTHLY_INDICATORS,
       },
     ],
-    createRecord: ({ period, values }) => ({
-      period,
-      imports_th_eur: values.imports_th_eur ?? null,
+    finalizeDataset: ({ metaEnvelope, records }) => ({
+      meta: metaEnvelope,
+      records: [...records].sort((a, b) => a.period.localeCompare(b.period)),
     }),
+    createRecord: ({ period, values }) => {
+      const importsThousand = values.imports_eur ?? 0;
+      return {
+        period,
+        imports_eur: importsThousand * 1_000,
+      };
+    },
   });
 }
 
@@ -125,9 +132,9 @@ export async function fetchTradeChaptersYearly(
   const { dimCodes, lookup } = table;
   const { updatedAt } = readCubeMetadata(cube);
 
-  const flowKeyMap: Record<string, "imports_th_eur" | "exports_th_eur"> = {
-    "0": "imports_th_eur",
-    "1": "exports_th_eur",
+  const flowKeyMap: Record<string, "imports_eur" | "exports_eur"> = {
+    "0": "imports_eur",
+    "1": "exports_eur",
   };
   const hasImportFlow = flowPairs.some(([code]) => code === "0");
   const hasExportFlow = flowPairs.some(([code]) => code === "1");
@@ -145,11 +152,11 @@ export async function fetchTradeChaptersYearly(
 
   for (const [chapterId, spec] of chapterSpecs) {
     for (const yearCode of yearCodes) {
-      const record: TradeChapterRecord = {
+      const baseRecord: TradeChapterRecord = {
         year: yearCode,
         chapter_code: spec.code,
-        imports_th_eur: null,
-        exports_th_eur: null,
+        imports_eur: 0,
+        exports_eur: 0,
       };
       for (const [flowCode] of flowPairs) {
         const fieldKey = flowKeyMap[flowCode];
@@ -159,10 +166,11 @@ export async function fetchTradeChaptersYearly(
           Year: yearCode,
           "Exporti/Import": flowCode,
         });
-        record[fieldKey] = tidyNumber(value);
+        const thousandValue = tidyNumber(value) ?? 0;
+        baseRecord[fieldKey] = thousandValue * 1_000;
       }
-      if (record.imports_th_eur != null || record.exports_th_eur != null) {
-        records.push(record);
+      if (baseRecord.imports_eur !== 0 || baseRecord.exports_eur !== 0) {
+        records.push(baseRecord);
       }
     }
   }
@@ -170,24 +178,24 @@ export async function fetchTradeChaptersYearly(
   const dataset = {
     meta: createMeta(parts, generatedAt, {
       updatedAt,
-      unit: "thousand euro (CIF/FOB)",
+      unit: "euro (CIF/FOB)",
       chaptersLabel: Object.fromEntries(
         chapterSpecs.map((c) => [c[1].code, c[1].label]),
       ),
       fields: [
         {
-          key: "imports_th_eur",
+          key: "imports_eur",
           label: "Importe",
-          unit: "thousand EUR",
+          unit: "EUR",
         },
         {
-          key: "exports_th_eur",
+          key: "exports_eur",
           label: "Eksporte",
-          unit: "thousand EUR",
+          unit: "EUR",
         },
       ],
     }),
-    records,
+    records: records.sort((a, b) => a.year.localeCompare(b.year)),
   };
   await writeJson(outDir, "kas_trade_chapters_yearly.json", dataset);
   return dataset;

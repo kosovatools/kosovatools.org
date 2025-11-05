@@ -25,7 +25,7 @@ import {
   type StackPeriodGrouping,
   formatCount,
   STACK_PERIOD_GROUPING_OPTIONS,
-  getStackPeriodFormatter,
+  getPeriodFormatter,
   type TimeRangeOption,
   DEFAULT_TIME_RANGE_OPTIONS,
   DEFAULT_TIME_RANGE,
@@ -73,7 +73,7 @@ export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
       keys,
       labelMap,
       series,
-      periodFormatter: getStackPeriodFormatter(periodGrouping),
+      periodFormatter: getPeriodFormatter(periodGrouping),
     });
   }, [balances, metric, monthsLimit, periodGrouping]);
 

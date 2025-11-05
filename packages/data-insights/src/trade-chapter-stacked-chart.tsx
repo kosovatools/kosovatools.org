@@ -6,7 +6,7 @@ import { Area, AreaChart, CartesianGrid, Legend, XAxis, YAxis } from "recharts";
 import {
   formatEuro,
   formatEuroCompact,
-  getStackPeriodFormatter,
+  getPeriodFormatter,
   type StackPeriodGrouping,
 } from "@workspace/chart-utils";
 import {
@@ -89,7 +89,7 @@ export function TradeChapterStackedChart({
       keys,
       labelMap,
       series,
-      periodFormatter: getStackPeriodFormatter(PERIOD_GROUPING),
+      periodFormatter: getPeriodFormatter(PERIOD_GROUPING),
     });
   }, [mode, data, top, includeOther, selectedKeys, excludedKeys]);
 

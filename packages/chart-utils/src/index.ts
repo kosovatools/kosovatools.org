@@ -11,8 +11,6 @@ export type {
 export {
   groupStackPeriod,
   STACK_PERIOD_GROUPING_OPTIONS,
-  formatStackPeriodLabel,
-  getStackPeriodFormatter,
   buildStackSeries,
   summarizeStackTotals,
 } from "./utils/stack";

@@ -20,7 +20,7 @@ import {
   DEFAULT_TIME_RANGE,
   DEFAULT_TIME_RANGE_OPTIONS,
   STACK_PERIOD_GROUPING_OPTIONS,
-  getStackPeriodFormatter,
+  getPeriodFormatter,
   groupStackPeriod,
   monthsFromRange,
   type StackPeriodGrouping,
@@ -117,7 +117,7 @@ export function ElectricityBalanceChart({
   const monthsLimit = monthsFromRange(range);
 
   const { chartData, keyMap, config, latestSummary } = useMemo(() => {
-    const periodFormatter = getStackPeriodFormatter(periodGrouping);
+    const periodFormatter = getPeriodFormatter(periodGrouping);
 
     const sorted = data
       .slice()
@@ -347,7 +347,7 @@ export function ElectricityProductionBySourceChart({
   const monthsLimit = monthsFromRange(range);
 
   const { chartData, keyMap, config, latestSummary } = useMemo(() => {
-    const periodFormatter = getStackPeriodFormatter(periodGrouping);
+    const periodFormatter = getPeriodFormatter(periodGrouping);
 
     const sorted = data
       .slice()

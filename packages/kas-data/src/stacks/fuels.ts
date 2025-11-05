@@ -17,7 +17,7 @@ import {
 type FuelStackRecord = {
   period: string;
   fuel: FuelKey;
-  value: number | null;
+  value: number;
 };
 
 export type FuelTypeStackSeries = StackSeriesRow<FuelKey>;
@@ -44,7 +44,7 @@ function toStackRecords(
       rows.push({
         period: entry.period,
         fuel: key,
-        value: entry?.[metric] ?? null,
+        value: entry[metric] ?? 0,
       });
     }
   }

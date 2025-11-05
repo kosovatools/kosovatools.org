@@ -167,10 +167,25 @@ export async function fetchEnergyMonthly(outDir: string, generatedAt: string) {
   });
 }
 
+type FuelMetricKey =
+  | "production"
+  | "import"
+  | "export"
+  | "stock"
+  | "ready_for_market";
+
 type FuelRecord = {
   period: string;
-  [metric: string]: number | string | null;
-};
+} & Record<FuelMetricKey, number>;
+
+const FUEL_METRIC_KEYS: readonly FuelMetricKey[] = [
+  "production",
+  "import",
+  "export",
+  "stock",
+  "ready_for_market",
+];
+const FUEL_METRIC_SET = new Set<FuelMetricKey>(FUEL_METRIC_KEYS);
 
 export async function fetchFuelTable(
   outDir: string,
@@ -205,24 +220,76 @@ export async function fetchFuelTable(
           throw new PxError(`${datasetId}: missing measure dimension`);
         },
         resolveValues: ({ baseValues }) =>
-          baseValues.map((value) => ({
-            code: value.code,
-            label: value.metaLabel,
-            key: normalizeFuelField(value.metaLabel),
-            unit: "tonnes",
-          })),
+          baseValues.map((value) => {
+            const normalized = normalizeFuelField(value.metaLabel);
+            if (!FUEL_METRIC_SET.has(normalized as FuelMetricKey)) {
+              throw new PxError(
+                `${datasetId}: unexpected fuel metric "${value.metaLabel}"`,
+              );
+            }
+            return {
+              code: value.code,
+              label: value.metaLabel,
+              key: normalized as FuelMetricKey,
+              unit: "tonnes",
+            };
+          }),
       },
     ],
-    createRecord: ({ period, values }) => ({
-      period,
-      ...values,
-    }),
-    buildMeta: ({ cubeSummary, fields, periods }) => ({
-      updatedAt: cubeSummary.updatedAt,
-      unit: "tonnes",
-      periods,
-      fields,
-      label,
-    }),
+    createRecord: ({ period, values }) => {
+      const record: FuelRecord = {
+        period,
+        production: 0,
+        import: 0,
+        export: 0,
+        stock: 0,
+        ready_for_market: 0,
+      };
+      for (const metric of FUEL_METRIC_KEYS) {
+        const raw = (values as Record<string, number | null | undefined>)[
+          metric
+        ];
+        record[metric] =
+          typeof raw === "number" && Number.isFinite(raw) ? raw : 0;
+      }
+      return record;
+    },
+    buildMeta: ({ cubeSummary, fields, periods }) => {
+      const typedFields = fields
+        .map((field) => {
+          if (
+            typeof field.key === "string" &&
+            FUEL_METRIC_SET.has(field.key as FuelMetricKey)
+          ) {
+            return {
+              ...field,
+              key: field.key as FuelMetricKey,
+            };
+          }
+          return null;
+        })
+        .filter(
+          (
+            field,
+          ): field is (typeof fields)[number] & {
+            key: FuelMetricKey;
+          } => field !== null,
+        );
+      const metricLabels: Partial<Record<FuelMetricKey, string>> = {};
+      const metrics: FuelMetricKey[] = [];
+      for (const field of typedFields) {
+        metrics.push(field.key);
+        metricLabels[field.key] = field.label;
+      }
+      return {
+        updatedAt: cubeSummary.updatedAt,
+        unit: "tonnes",
+        periods,
+        fields: typedFields,
+        label,
+        metrics,
+        metric_labels: metricLabels as Record<FuelMetricKey, string>,
+      };
+    },
   });
 }

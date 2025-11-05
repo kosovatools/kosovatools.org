@@ -6,10 +6,10 @@ Snapshot metadata lives inside each dataset's `meta` block.
 
 ### Trade Imports — `kas_imports_monthly.json`
 
-- **Primary chart:** Monthly line chart of `imports_th_eur` (thousand €).
+- **Primary chart:** Monthly line chart of `imports_eur` (euro).
 - **Fields:**
   - `period` (YYYY-MM)
-  - `imports_th_eur` (integer; thousand euro).
+  - `imports_eur` (integer; euro).
 - **Notes:** Support rolling average overlay, YoY callouts, and date-range filter.
 
 ### Electricity — `kas_energy_electricity_monthly.json`
@@ -27,6 +27,7 @@ Snapshot metadata lives inside each dataset's `meta` block.
   - `period`
   - Metrics above as numbers (mix of int/float depending on API response).
 - **Extras:** Toggle absolute vs % stack; small multiples per fuel; KPI cards for latest month.
+  - Metric labels surface through `meta.metric_labels` per fuel dataset.
 
 ### Fuel Mix Overview — aggregated from `kas_energy_{...}.json`
 
@@ -38,10 +39,9 @@ Snapshot metadata lives inside each dataset's `meta` block.
 - **Primary chart:** Small multiples (one per region) for `visitors` with visitor-group toggle (`total`, `local`, `external`).
 - **Fields:**
   - `period`
-  - `region`
-  - `visitor_group` (`total`, `local`, `external` slug)
-  - `visitor_group_label` (original label)
-  - `visitors`, `nights`.
+  - `region` (region code; map label via `meta.region_labels`)
+  - `visitor_group` (`total`, `local`, `external` slug; labels in `meta.visitor_group_labels`)
+  - `visitors`, `nights` (people/overnights).
 - **Extras:** Derived metric `avg_stay = nights / visitors`; stacked bar for selected period.
 
 ### Tourism by Country — `kas_tourism_country_monthly.json`
@@ -49,8 +49,8 @@ Snapshot metadata lives inside each dataset's `meta` block.
 - **Primary chart:** Stacked area of top-N countries across the last 12 months (toggle visitors vs nights). Use an "Other" bucket for the remainder.
 - **Fields:**
   - `period`
-  - `country`
-  - `visitors`, `nights`.
+  - `country` (country code; labels via `meta.country_labels`)
+  - `visitors`, `nights` (people/overnights).
 - **Extras:** Heatmap (country vs month).
 
 ### Imports by Partner — `kas_imports_by_partner.json`
@@ -58,8 +58,8 @@ Snapshot metadata lives inside each dataset's `meta` block.
 - **Primary chart:** Stacked area across the latest 12 months for top partners (include "Other" bucket).
 - **Fields:**
   - `period`
-  - `partner`
-  - `imports_th_eur` (thousand €).
+  - `partner` (ISO/code, map labels via `meta.partner_labels`)
+  - `imports_eur` (euro).
 - **Extras:** Line chart for selected partners; provide search & top-N filter.
 
 ## Implementation Notes

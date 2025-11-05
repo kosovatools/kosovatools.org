@@ -14,6 +14,7 @@ import {
 
 import {
   buildRegionStackSeries,
+  tourismRegionMeta,
   type TourismRegionRecord,
   timelineEvents,
 } from "@workspace/kas-data";
@@ -21,7 +22,7 @@ import {
   formatCount,
   type StackPeriodGrouping,
   STACK_PERIOD_GROUPING_OPTIONS,
-  getStackPeriodFormatter,
+  getPeriodFormatter,
   type TimeRangeOption,
   DEFAULT_TIME_RANGE_OPTIONS,
   DEFAULT_TIME_RANGE,
@@ -38,16 +39,30 @@ import { OptionSelector } from "@workspace/ui/custom-components/option-selector"
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 
-const groups = [
-  { id: "total", label: "Totali" },
-  { id: "local", label: "Lokal" },
-  { id: "external", label: "I jashtëm" },
-] as const;
+type VisitorGroupOption = {
+  id: TourismRegionRecord["visitor_group"];
+  label: string;
+};
+
+const visitorGroupOptions: VisitorGroupOption[] =
+  tourismRegionMeta.visitor_groups.map((id) => ({
+    id: id as TourismRegionRecord["visitor_group"],
+    label: tourismRegionMeta.visitor_group_labels[id] ?? id,
+  }));
+
+const DEFAULT_GROUP: TourismRegionRecord["visitor_group"] =
+  visitorGroupOptions[0]?.id ?? "total";
 const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
 
 export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
   const [group, setGroup] =
-    React.useState<(typeof groups)[number]["id"]>("total");
+    React.useState<TourismRegionRecord["visitor_group"]>(DEFAULT_GROUP);
+
+  React.useEffect(() => {
+    if (!visitorGroupOptions.some((option) => option.id === group)) {
+      setGroup(DEFAULT_GROUP);
+    }
+  }, [group]);
 
   const [periodGrouping, setPeriodGrouping] =
     React.useState<StackPeriodGrouping>("yearly");
@@ -67,7 +82,7 @@ export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
       keys,
       labelMap,
       series,
-      periodFormatter: getStackPeriodFormatter(periodGrouping),
+      periodFormatter: getPeriodFormatter(periodGrouping),
     });
   }, [data, group, monthsLimit, periodGrouping]);
 
@@ -121,7 +136,9 @@ export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
   }
 
   const groupLabel =
-    groups.find((option) => option.id === group)?.label ?? "Total";
+    visitorGroupOptions.find((option) => option.id === group)?.label ??
+    visitorGroupOptions[0]?.label ??
+    "Total";
 
   return (
     <div className="flex flex-col gap-4">
@@ -131,7 +148,7 @@ export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
             Grupi i vizitorëve
           </span>
           <div className="flex gap-2 text-xs">
-            {groups.map((option) => {
+            {visitorGroupOptions.map((option) => {
               const active = option.id === group;
               return (
                 <button

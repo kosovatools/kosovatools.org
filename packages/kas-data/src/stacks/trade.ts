@@ -7,7 +7,7 @@ import {
   type StackPeriodGrouping,
 } from "@workspace/chart-utils";
 import {
-  tradePartnerLabelMap,
+  importsByPartnerMeta,
   type TradePartnerRecord,
   type TradeChapterYearRecord,
   tradeChaptersYearlyMeta,
@@ -30,10 +30,11 @@ export type PartnerStackOptions = {
 const accessors = {
   period: (record: TradePartnerRecord) => record.period,
   key: (record: TradePartnerRecord) => record.partner,
-  value: (record: TradePartnerRecord) => record.imports_th_eur,
+  value: (record: TradePartnerRecord) => record.imports_eur,
 };
 
 function buildOptions(options: PartnerStackOptions = {}) {
+  const partnerLabels = importsByPartnerMeta.partner_labels;
   return {
     months: options.months,
     top: options.top,
@@ -41,7 +42,7 @@ function buildOptions(options: PartnerStackOptions = {}) {
     selectedKeys: options.selectedKeys,
     excludedKeys: options.excludedKeys,
     periodGrouping: options.periodGrouping,
-    labelForKey: (key: string) => tradePartnerLabelMap[key] || key,
+    labelForKey: (key: string) => partnerLabels[key] || key,
   };
 }
 
