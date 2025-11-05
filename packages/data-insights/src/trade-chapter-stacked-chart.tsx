@@ -28,6 +28,7 @@ import {
 } from "@workspace/ui/custom-components/option-selector";
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
+import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
 const DEFAULT_TOP_CHAPTERS = 6;
 const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
@@ -49,9 +50,6 @@ export function TradeChapterStackedChart({
   top?: number;
 }) {
   const [mode, setMode] = React.useState<ChartMode>("exports");
-  const [selectedKeys, setSelectedKeys] = React.useState<string[]>([]);
-  const [includeOther, setIncludeOther] = React.useState(true);
-  const [excludedKeys, setExcludedKeys] = React.useState<string[]>([]);
 
   const totals = React.useMemo(() => {
     const options = { periodGrouping: PERIOD_GROUPING };
@@ -60,43 +58,19 @@ export function TradeChapterStackedChart({
       : summarizeImportChapterTotals(data, options);
   }, [mode, data]);
 
-  const defaultKeys = React.useMemo(
-    () => totals.slice(0, Math.max(1, top)).map((item) => item.key),
-    [totals, top],
-  );
-
-  React.useEffect(() => {
-    setSelectedKeys((current) => {
-      if (!totals.length) {
-        return [];
-      }
-      const validKeys = new Set(totals.map((item) => item.key));
-      const next = current.filter((key) => validKeys.has(key));
-      if (next.length === current.length) {
-        return current.length ? current : defaultKeys;
-      }
-      if (!next.length) {
-        return defaultKeys;
-      }
-      return next;
-    });
-  }, [totals, defaultKeys]);
-
-  React.useEffect(() => {
-    const validKeys = new Set(totals.map((item) => item.key));
-    setExcludedKeys((previous) => {
-      const next = previous.filter((key) => validKeys.has(key));
-      return next.length === previous.length ? previous : next;
-    });
-  }, [totals]);
-
-  const handleSelectedKeysChange = React.useCallback((keys: string[]) => {
-    setSelectedKeys(keys);
-  }, []);
-
-  const handleIncludeOtherChange = React.useCallback((next: boolean) => {
-    setIncludeOther(next);
-  }, []);
+  const {
+    selectedKeys,
+    setSelectedKeys,
+    includeOther,
+    onIncludeOtherChange,
+    excludedKeys,
+    setExcludedKeys,
+    onSelectedKeysChange,
+  } = useStackedKeySelection({
+    totals,
+    topCount: top,
+    initialIncludeOther: true,
+  });
 
   const { chartData, keyMap, config } = React.useMemo(() => {
     const commonOptions = {
@@ -150,13 +124,13 @@ export function TradeChapterStackedChart({
       <StackedKeySelector
         totals={totals}
         selectedKeys={selectedKeys}
-        onSelectedKeysChange={handleSelectedKeysChange}
+        onSelectedKeysChange={onSelectedKeysChange}
         topCount={top}
         formatTotal={(value) => formatEuro(value)}
         selectionLabel="Zgjidh kapitujt"
         searchPlaceholder="Kërko kapitujt..."
         includeOther={includeOther}
-        onIncludeOtherChange={handleIncludeOtherChange}
+        onIncludeOtherChange={onIncludeOtherChange}
         promoteLabel='Aktivizo grupimin "Të tjerët"'
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}

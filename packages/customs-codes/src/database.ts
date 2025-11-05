@@ -1,5 +1,6 @@
 import Dexie, { type Table } from "dexie";
 import MiniSearch from "minisearch";
+import { createDatasetApi } from "@workspace/dataset-api";
 
 import type {
   CustomsFlatRow,
@@ -11,7 +12,8 @@ import type {
 const MINISEARCH_HIGHLIGHT_TEMPLATE =
   '<span class="bg-amber-200 rounded px-0.5">$&</span>';
 const INDEX_CHUNK_SIZE = 2_000;
-const CUSTOMS_TARRIFS_URL = "https://data.kosovatools.org/customs/tarrifs.json";
+const customsDataset = createDatasetApi({ prefix: "customs" });
+const CUSTOMS_TARRIFS_PATH = "tarrifs.json";
 
 function compareRecords(a: CustomsRecord, b: CustomsRecord): number {
   const ac = (a.code ?? "").toString();
@@ -57,29 +59,6 @@ function getDb(): CustomsDatabase {
   return dbInstance;
 }
 
-function extractCustomsRecords(payload: unknown): CustomsRecord[] {
-  if (Array.isArray(payload)) {
-    return payload as CustomsRecord[];
-  }
-
-  if (payload && typeof payload === "object") {
-    const { records, data } = payload as {
-      records?: unknown;
-      data?: unknown;
-    };
-
-    if (Array.isArray(records)) {
-      return records as CustomsRecord[];
-    }
-
-    if (Array.isArray(data)) {
-      return data as CustomsRecord[];
-    }
-  }
-
-  throw new Error("Unexpected customs data payload format.");
-}
-
 type MiniSearchHit = { id: string; highlight?: string | null };
 
 type InitializeOptions = {
@@ -118,19 +97,13 @@ export class CustomsDataService {
         message: "Duke ngarkuar të dhënat e tarifave...",
       });
 
-      const response = await fetch(CUSTOMS_TARRIFS_URL, {
-        cache: "no-cache",
-        mode: "cors",
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch customs data: ${response.status} ${response.statusText}`,
-        );
-      }
-
-      const payload = await response.json();
-      const data = extractCustomsRecords(payload);
+      const data = await customsDataset.fetchJson<CustomsRecord[]>(
+        CUSTOMS_TARRIFS_PATH,
+        {
+          cache: "no-cache",
+          mode: "cors",
+        },
+      );
 
       const total = data.length;
       if (total === 0) {

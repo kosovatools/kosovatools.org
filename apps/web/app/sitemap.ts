@@ -11,6 +11,7 @@ const staticRoutes = [
   "car-import-taxes",
   "data-insights",
   "inflation-tracker",
+  "economic-activity",
   "war-records",
 ];
 

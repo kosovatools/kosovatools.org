@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
+import { createDatasetApi } from "@workspace/dataset-api";
 import { VictimList, type MemorialVictim } from "@workspace/war-records";
 import {
   Card,
@@ -12,9 +13,10 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 
-const DATA_SOURCE =
-  process.env.NEXT_PUBLIC_WAR_RECORDS_DATA_URL ??
-  "https://data.kosovatools.org/war";
+const warRecordsDataset = createDatasetApi({
+  prefix: "war",
+  defaultInit: { cache: "no-store" },
+});
 const FIRST_CHUNK_FILE = "crimes-part-01.json";
 
 type VictimChunk = {
@@ -27,41 +29,10 @@ type VictimChunk = {
   records: MemorialVictim[];
 };
 
-function normalizeBaseUrl(url: string): string {
-  if (url.endsWith("/")) {
-    return url.slice(0, -1);
-  }
-  return url;
-}
-
-function resolveChunkUrl(source: string, file: string): string {
-  const base = normalizeBaseUrl(source);
-
-  if (base.endsWith(".json")) {
-    const slashIndex = base.lastIndexOf("/");
-    if (slashIndex === -1) {
-      return file;
-    }
-    const directory = base.slice(0, slashIndex);
-    return `${directory}/${file}`;
-  }
-
-  return `${base}/${file}`;
-}
-
 async function fetchChunk(file?: string): Promise<VictimChunk> {
   const target = file ?? FIRST_CHUNK_FILE;
 
-  const chunkUrl = resolveChunkUrl(DATA_SOURCE, target);
-  const response = await fetch(chunkUrl, { cache: "no-store" });
-
-  if (!response.ok) {
-    throw new Error(
-      `Nuk arrita të shkarkoj ${target} (${response.status} ${response.statusText})`,
-    );
-  }
-
-  const payload = (await response.json()) as VictimChunk;
+  const payload = await warRecordsDataset.fetchJson<VictimChunk>(target);
   if (!payload?.meta || !Array.isArray(payload.records)) {
     throw new Error(`Formati i papritur për ${target}`);
   }

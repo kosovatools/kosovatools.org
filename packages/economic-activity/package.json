@@ -1,5 +1,5 @@
 {
-  "name": "@workspace/energy-tracker",
+  "name": "@workspace/economic-activity",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -7,19 +7,16 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
-    },
-    "./*": "./src/*"
+    }
   },
   "scripts": {
     "lint": "eslint src --max-warnings 0",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@workspace/chart-utils": "workspace:*",
     "@workspace/dataset-api": "workspace:*",
-    "@workspace/kas-data": "workspace:*",
     "@workspace/ui": "workspace:*",
-    "lucide-react": "^0.475.0",
+    "@workspace/chart-utils": "workspace:*",
     "recharts": "2.15.4"
   },
   "peerDependencies": {

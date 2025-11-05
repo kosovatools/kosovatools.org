@@ -7,6 +7,7 @@ import {
   Building2,
   Car,
   HandCoins,
+  LineChart,
   Icon,
   PackageSearch,
   TrendingUp,
@@ -88,6 +89,15 @@ const tools: ToolCard[] = [
       "Pultë vizuale nga të dhënat e ASK për të kuptuar demografinë, punësimin dhe çmimet.",
     cta: "Shiko grafet",
     icon: BarChart3,
+    category: "Statistika",
+  },
+  {
+    name: "Aktiviteti ekonomik",
+    href: "/economic-activity",
+    description:
+      "Qarkullimi vjetor i bizneseve të Kosovës sipas kategorive ekonomike dhe komunave, i bazuar në të dhënat e Ministria e Financave.",
+    cta: "Shiko qarkullimin",
+    icon: LineChart,
     category: "Statistika",
   },
   {

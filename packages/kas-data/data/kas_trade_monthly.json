@@ -1,0 +1,391 @@
+{
+  "meta": {
+    "table": "08_qarkullimi.px",
+    "path": "ASKdata/External trade/Monthly indicators/08_qarkullimi.px",
+    "generated_at": "2025-11-05T15:53:30.289Z",
+    "updated_at": null,
+    "unit": "thousand euro (CIF)",
+    "fields": [
+      {
+        "key": "imports_th_eur",
+        "label": "Importe (CIF)",
+        "unit": "thousand EUR"
+      }
+    ],
+    "periods": 93
+  },
+  "records": [
+    {
+      "period": "2018-01",
+      "imports_th_eur": 195954
+    },
+    {
+      "period": "2018-02",
+      "imports_th_eur": 206145
+    },
+    {
+      "period": "2018-03",
+      "imports_th_eur": 256551
+    },
+    {
+      "period": "2018-04",
+      "imports_th_eur": 271651
+    },
+    {
+      "period": "2018-05",
+      "imports_th_eur": 311856
+    },
+    {
+      "period": "2018-06",
+      "imports_th_eur": 306978
+    },
+    {
+      "period": "2018-07",
+      "imports_th_eur": 310253
+    },
+    {
+      "period": "2018-08",
+      "imports_th_eur": 307007
+    },
+    {
+      "period": "2018-09",
+      "imports_th_eur": 293854
+    },
+    {
+      "period": "2018-10",
+      "imports_th_eur": 308876
+    },
+    {
+      "period": "2018-11",
+      "imports_th_eur": 274870
+    },
+    {
+      "period": "2018-12",
+      "imports_th_eur": 303013
+    },
+    {
+      "period": "2019-01",
+      "imports_th_eur": 190439
+    },
+    {
+      "period": "2019-02",
+      "imports_th_eur": 232713
+    },
+    {
+      "period": "2019-03",
+      "imports_th_eur": 289192
+    },
+    {
+      "period": "2019-04",
+      "imports_th_eur": 295487
+    },
+    {
+      "period": "2019-05",
+      "imports_th_eur": 321621
+    },
+    {
+      "period": "2019-06",
+      "imports_th_eur": 275237
+    },
+    {
+      "period": "2019-07",
+      "imports_th_eur": 336866
+    },
+    {
+      "period": "2019-08",
+      "imports_th_eur": 311857
+    },
+    {
+      "period": "2019-09",
+      "imports_th_eur": 295724
+    },
+    {
+      "period": "2019-10",
+      "imports_th_eur": 315126
+    },
+    {
+      "period": "2019-11",
+      "imports_th_eur": 297613
+    },
+    {
+      "period": "2019-12",
+      "imports_th_eur": 335257
+    },
+    {
+      "period": "2020-01",
+      "imports_th_eur": 221216
+    },
+    {
+      "period": "2020-02",
+      "imports_th_eur": 263392
+    },
+    {
+      "period": "2020-03",
+      "imports_th_eur": 252070
+    },
+    {
+      "period": "2020-04",
+      "imports_th_eur": 193974
+    },
+    {
+      "period": "2020-05",
+      "imports_th_eur": 239079
+    },
+    {
+      "period": "2020-06",
+      "imports_th_eur": 290804
+    },
+    {
+      "period": "2020-07",
+      "imports_th_eur": 306377
+    },
+    {
+      "period": "2020-08",
+      "imports_th_eur": 263305
+    },
+    {
+      "period": "2020-09",
+      "imports_th_eur": 287294
+    },
+    {
+      "period": "2020-10",
+      "imports_th_eur": 317689
+    },
+    {
+      "period": "2020-11",
+      "imports_th_eur": 305743
+    },
+    {
+      "period": "2020-12",
+      "imports_th_eur": 355976
+    },
+    {
+      "period": "2021-01",
+      "imports_th_eur": 235838
+    },
+    {
+      "period": "2021-02",
+      "imports_th_eur": 301710
+    },
+    {
+      "period": "2021-03",
+      "imports_th_eur": 382522
+    },
+    {
+      "period": "2021-04",
+      "imports_th_eur": 384540
+    },
+    {
+      "period": "2021-05",
+      "imports_th_eur": 366053
+    },
+    {
+      "period": "2021-06",
+      "imports_th_eur": 393295
+    },
+    {
+      "period": "2021-07",
+      "imports_th_eur": 430087
+    },
+    {
+      "period": "2021-08",
+      "imports_th_eur": 417595
+    },
+    {
+      "period": "2021-09",
+      "imports_th_eur": 420669
+    },
+    {
+      "period": "2021-10",
+      "imports_th_eur": 428545
+    },
+    {
+      "period": "2021-11",
+      "imports_th_eur": 431841
+    },
+    {
+      "period": "2021-12",
+      "imports_th_eur": 460056
+    },
+    {
+      "period": "2022-01",
+      "imports_th_eur": 338114
+    },
+    {
+      "period": "2022-02",
+      "imports_th_eur": 414770
+    },
+    {
+      "period": "2022-03",
+      "imports_th_eur": 493917
+    },
+    {
+      "period": "2022-04",
+      "imports_th_eur": 462742
+    },
+    {
+      "period": "2022-05",
+      "imports_th_eur": 443892
+    },
+    {
+      "period": "2022-06",
+      "imports_th_eur": 492832
+    },
+    {
+      "period": "2022-07",
+      "imports_th_eur": 502414
+    },
+    {
+      "period": "2022-08",
+      "imports_th_eur": 526829
+    },
+    {
+      "period": "2022-09",
+      "imports_th_eur": 478167
+    },
+    {
+      "period": "2022-10",
+      "imports_th_eur": 488774
+    },
+    {
+      "period": "2022-11",
+      "imports_th_eur": 475419
+    },
+    {
+      "period": "2022-12",
+      "imports_th_eur": 521522
+    },
+    {
+      "period": "2023-01",
+      "imports_th_eur": 353720
+    },
+    {
+      "period": "2023-02",
+      "imports_th_eur": 390688
+    },
+    {
+      "period": "2023-03",
+      "imports_th_eur": 508580
+    },
+    {
+      "period": "2023-04",
+      "imports_th_eur": 448259
+    },
+    {
+      "period": "2023-05",
+      "imports_th_eur": 518125
+    },
+    {
+      "period": "2023-06",
+      "imports_th_eur": 467380
+    },
+    {
+      "period": "2023-07",
+      "imports_th_eur": 512055
+    },
+    {
+      "period": "2023-08",
+      "imports_th_eur": 523154
+    },
+    {
+      "period": "2023-09",
+      "imports_th_eur": 527041
+    },
+    {
+      "period": "2023-10",
+      "imports_th_eur": 526972
+    },
+    {
+      "period": "2023-11",
+      "imports_th_eur": 593783
+    },
+    {
+      "period": "2023-12",
+      "imports_th_eur": 543093
+    },
+    {
+      "period": "2024-01",
+      "imports_th_eur": 379978
+    },
+    {
+      "period": "2024-02",
+      "imports_th_eur": 467758
+    },
+    {
+      "period": "2024-03",
+      "imports_th_eur": 520280
+    },
+    {
+      "period": "2024-04",
+      "imports_th_eur": 500728
+    },
+    {
+      "period": "2024-05",
+      "imports_th_eur": 516333
+    },
+    {
+      "period": "2024-06",
+      "imports_th_eur": 498758
+    },
+    {
+      "period": "2024-07",
+      "imports_th_eur": 581789
+    },
+    {
+      "period": "2024-08",
+      "imports_th_eur": 582002
+    },
+    {
+      "period": "2024-09",
+      "imports_th_eur": 506904
+    },
+    {
+      "period": "2024-10",
+      "imports_th_eur": 580292
+    },
+    {
+      "period": "2024-11",
+      "imports_th_eur": 566941
+    },
+    {
+      "period": "2024-12",
+      "imports_th_eur": 631134
+    },
+    {
+      "period": "2025-01",
+      "imports_th_eur": 473810
+    },
+    {
+      "period": "2025-02",
+      "imports_th_eur": 518644
+    },
+    {
+      "period": "2025-03",
+      "imports_th_eur": 610463
+    },
+    {
+      "period": "2025-04",
+      "imports_th_eur": 566199
+    },
+    {
+      "period": "2025-05",
+      "imports_th_eur": 604721
+    },
+    {
+      "period": "2025-06",
+      "imports_th_eur": 578693
+    },
+    {
+      "period": "2025-07",
+      "imports_th_eur": 660207
+    },
+    {
+      "period": "2025-08",
+      "imports_th_eur": 613065
+    },
+    {
+      "period": "2025-09",
+      "imports_th_eur": 606237
+    }
+  ]
+}

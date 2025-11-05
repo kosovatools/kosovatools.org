@@ -1,3 +1,4 @@
+import { createDatasetApi } from "@workspace/dataset-api";
 import { DEFAULT_NEIGHBORS } from "./constants";
 import type {
   EnergyFlowDailyLatest,
@@ -9,17 +10,10 @@ import type {
   EnergyFlowTotals,
 } from "./types";
 
-const BASE = "https://data.kosovatools.org/energy";
+const energyDataset = createDatasetApi({ prefix: "energy" });
 
-async function getJson<T>(url: string): Promise<T> {
-  const res = await fetch(url, { cache: "force-cache" });
-  if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
-  return res.json() as Promise<T>;
-}
-
-function localUrl(rel: string) {
-  const trimmed = rel.replace(/^\//, "");
-  return new URL(trimmed, `${BASE.replace(/\/$/, "")}/`).toString();
+async function getJson<T>(path: string): Promise<T> {
+  return energyDataset.fetchJson<T>(path);
 }
 
 const ZERO_TOTALS: EnergyFlowTotals = { importMWh: 0, exportMWh: 0, netMWh: 0 };
@@ -252,13 +246,13 @@ function normaliseIndex(dataset: unknown): EnergyFlowIndex {
 }
 
 export async function loadIndex(): Promise<EnergyFlowIndex> {
-  const raw = await getJson<unknown>(localUrl("index.json"));
+  const raw = await getJson<unknown>("index.json");
   return normaliseIndex(raw);
 }
 
 export async function loadMonthly(id: string): Promise<EnergyFlowSnapshot> {
   if (!id) throw new Error("Missing snapshot id");
-  const raw = await getJson<unknown>(localUrl(`monthly/${id}.json`));
+  const raw = await getJson<unknown>(`monthly/${id}.json`);
   const snapshot = normaliseSnapshot(raw);
   if (!snapshot) {
     throw new Error(`Invalid monthly snapshot for ${id}`);
@@ -267,7 +261,7 @@ export async function loadMonthly(id: string): Promise<EnergyFlowSnapshot> {
 }
 
 export async function loadLatestDaily(): Promise<EnergyFlowDailyLatest> {
-  const raw = await getJson<unknown>(localUrl("latest-daily.json"));
+  const raw = await getJson<unknown>("latest-daily.json");
   const latest = normaliseDailyLatest(raw);
   if (!latest) {
     throw new Error("Invalid latest daily dataset");

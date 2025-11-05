@@ -48,6 +48,9 @@ importers:
       '@workspace/data-insights':
         specifier: workspace:*
         version: link:../../packages/data-insights
+      '@workspace/dataset-api':
+        specifier: workspace:*
+        version: link:../../packages/dataset-api
       '@workspace/energy-tracker':
         specifier: workspace:*
         version: link:../../packages/energy-tracker
@@ -57,6 +60,9 @@ importers:
       '@workspace/kas-data':
         specifier: workspace:*
         version: link:../../packages/kas-data
+      '@workspace/economic-activity':
+        specifier: workspace:*
+        version: link:../../packages/economic-activity
       '@workspace/payroll':
         specifier: workspace:*
         version: link:../../packages/payroll
@@ -171,6 +177,21 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  packages/dataset-api:
+    devDependencies:
+      '@workspace/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^9.39.1
+        version: 9.39.1(jiti@2.6.1)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/customs-codes:
     dependencies:
       '@tanstack/react-table':
@@ -179,6 +200,9 @@ importers:
       '@tanstack/react-virtual':
         specifier: ^3.13.12
         version: 3.13.12(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@workspace/dataset-api':
+        specifier: workspace:*
+        version: link:../dataset-api
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -262,6 +286,9 @@ importers:
       '@workspace/chart-utils':
         specifier: workspace:*
         version: link:../chart-utils
+      '@workspace/dataset-api':
+        specifier: workspace:*
+        version: link:../dataset-api
       '@workspace/kas-data':
         specifier: workspace:*
         version: link:../kas-data
@@ -416,6 +443,49 @@ importers:
       eslint:
         specifier: ^9.39.1
         version: 9.39.1(jiti@2.6.1)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/economic-activity:
+    dependencies:
+      '@workspace/chart-utils':
+        specifier: workspace:*
+        version: link:../chart-utils
+      '@workspace/dataset-api':
+        specifier: workspace:*
+        version: link:../dataset-api
+      '@workspace/ui':
+        specifier: workspace:*
+        version: link:../ui
+      recharts:
+        specifier: 2.15.4
+        version: 2.15.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+    devDependencies:
+      '@tanstack/react-query':
+        specifier: ^5.90.6
+        version: 5.90.6(react@19.2.0)
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      '@workspace/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^9.39.1
+        version: 9.39.1(jiti@2.6.1)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

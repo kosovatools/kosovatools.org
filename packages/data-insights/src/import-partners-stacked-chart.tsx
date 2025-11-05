@@ -40,6 +40,7 @@ import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
+import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
 const DEFAULT_TOP_PARTNERS = 5;
 const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
@@ -67,47 +68,18 @@ export function ImportPartnersStackedChart({
     [data, monthsLimit, periodGrouping],
   );
 
-  const defaultKeys = React.useMemo(
-    () => totals.slice(0, Math.max(1, top)).map((item) => item.key),
-    [totals, top],
-  );
-
-  const [selectedKeys, setSelectedKeys] = React.useState<string[]>(defaultKeys);
-  const [includeOther, setIncludeOther] = React.useState(true);
-  const [excludedKeys, setExcludedKeys] = React.useState<string[]>([]);
-
-  React.useEffect(() => {
-    setSelectedKeys((current) => {
-      if (!totals.length) {
-        return [];
-      }
-      const validKeys = new Set(totals.map((item) => item.key));
-      const next = current.filter((key) => validKeys.has(key));
-      if (next.length === current.length) {
-        return current;
-      }
-      if (!next.length) {
-        return defaultKeys;
-      }
-      return next;
-    });
-  }, [totals, defaultKeys]);
-
-  React.useEffect(() => {
-    const validKeys = new Set(totals.map((item) => item.key));
-    setExcludedKeys((previous) => {
-      const next = previous.filter((key) => validKeys.has(key));
-      return next.length === previous.length ? previous : next;
-    });
-  }, [totals]);
-
-  const handleSelectedKeysChange = React.useCallback((keys: string[]) => {
-    setSelectedKeys(keys);
-  }, []);
-
-  const handleIncludeOtherChange = React.useCallback((next: boolean) => {
-    setIncludeOther(next);
-  }, []);
+  const {
+    selectedKeys,
+    includeOther,
+    excludedKeys,
+    setExcludedKeys,
+    onSelectedKeysChange,
+    onIncludeOtherChange,
+  } = useStackedKeySelection({
+    totals,
+    topCount: top,
+    initialIncludeOther: true,
+  });
 
   const { chartData, keyMap, config } = React.useMemo(() => {
     const { keys, series, labelMap } = buildPartnerStackSeries(data, {
@@ -175,13 +147,13 @@ export function ImportPartnersStackedChart({
       <StackedKeySelector
         totals={totals}
         selectedKeys={selectedKeys}
-        onSelectedKeysChange={handleSelectedKeysChange}
+        onSelectedKeysChange={onSelectedKeysChange}
         topCount={top}
         formatTotal={(value) => formatEuro(value)}
         selectionLabel="Zgjidh partnerët"
         searchPlaceholder="Kërko shtetet..."
         includeOther={includeOther}
-        onIncludeOtherChange={handleIncludeOtherChange}
+        onIncludeOtherChange={onIncludeOtherChange}
         promoteLabel='Aktivizo grupimin "Të tjerët"'
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}

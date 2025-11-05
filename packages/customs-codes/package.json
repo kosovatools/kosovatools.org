@@ -17,6 +17,7 @@
   "dependencies": {
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.12",
+    "@workspace/dataset-api": "workspace:*",
     "@workspace/ui": "workspace:*",
     "dexie": "^4.2.1",
     "lucide-react": "^0.475.0",

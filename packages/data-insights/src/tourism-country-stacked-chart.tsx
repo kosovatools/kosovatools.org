@@ -39,6 +39,7 @@ import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
+import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
 const DEFAULT_TOP_COUNTRIES = 5;
 
@@ -74,47 +75,18 @@ export function TourismCountryStackedChart({
     [data, monthsLimit, metric, periodGrouping],
   );
 
-  const defaultKeys = React.useMemo(
-    () => totals.slice(0, Math.max(1, top)).map((item) => item.key),
-    [totals, top],
-  );
-
-  const [selectedKeys, setSelectedKeys] = React.useState<string[]>(defaultKeys);
-  const [includeOther, setIncludeOther] = React.useState(true);
-  const [excludedKeys, setExcludedKeys] = React.useState<string[]>([]);
-
-  React.useEffect(() => {
-    setSelectedKeys((current) => {
-      if (!totals.length) {
-        return [];
-      }
-      const validKeys = new Set(totals.map((item) => item.key));
-      const next = current.filter((key) => validKeys.has(key));
-      if (next.length === current.length) {
-        return current;
-      }
-      if (!next.length) {
-        return defaultKeys;
-      }
-      return next;
-    });
-  }, [totals, defaultKeys]);
-
-  React.useEffect(() => {
-    const validKeys = new Set(totals.map((item) => item.key));
-    setExcludedKeys((previous) => {
-      const next = previous.filter((key) => validKeys.has(key));
-      return next.length === previous.length ? previous : next;
-    });
-  }, [totals]);
-
-  const handleSelectedKeysChange = React.useCallback((keys: string[]) => {
-    setSelectedKeys(keys);
-  }, []);
-
-  const handleIncludeOtherChange = React.useCallback((value: boolean) => {
-    setIncludeOther(value);
-  }, []);
+  const {
+    selectedKeys,
+    includeOther,
+    excludedKeys,
+    setExcludedKeys,
+    onSelectedKeysChange,
+    onIncludeOtherChange,
+  } = useStackedKeySelection({
+    totals,
+    topCount: top,
+    initialIncludeOther: true,
+  });
 
   const { chartData, keyMap, config } = React.useMemo(() => {
     const { keys, series, labelMap } = buildCountryStackSeries(data, {
@@ -207,13 +179,13 @@ export function TourismCountryStackedChart({
       <StackedKeySelector
         totals={totals}
         selectedKeys={selectedKeys}
-        onSelectedKeysChange={handleSelectedKeysChange}
+        onSelectedKeysChange={onSelectedKeysChange}
         topCount={top}
         formatTotal={(value) => formatCount(value)}
         selectionLabel="Zgjidh vendet"
         searchPlaceholder="Kërko vende..."
         includeOther={includeOther}
-        onIncludeOtherChange={handleIncludeOtherChange}
+        onIncludeOtherChange={onIncludeOtherChange}
         promoteLabel='Aktivizo grupimin "Të tjerët"'
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}
