@@ -282,8 +282,8 @@ export default function Page() {
             Vegla qytetare gati për t'u përdorur sot
           </h2>
           <p className="text-muted-foreground text-sm sm:text-base">
-            Çdo vegël është përgatitur me ndërfaqe dygjuhëshe, llogaritje të
-            sakta dhe referenca të përditësuara nga institucionet e Kosovës.
+            Çdo vegël është përgatitur me ndërfaqe në shqip, llogaritje të sakta
+            dhe referenca të përditësuara nga institucionet e Kosovës.
           </p>
         </header>
         <Card className="border-border/60 bg-background/80">
