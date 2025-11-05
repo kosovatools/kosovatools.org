@@ -18,9 +18,11 @@
     "@workspace/chart-utils": "workspace:*",
     "@workspace/kas-data": "workspace:*",
     "@workspace/ui": "workspace:*",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
     "recharts": "2.15.4"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@types/react": "19.2.2",
@@ -28,6 +30,8 @@
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "eslint": "^9.39.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "typescript": "^5.9.3"
   },
   "license": "AGPL-3.0-only"

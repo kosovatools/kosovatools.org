@@ -19,12 +19,12 @@
     "@workspace/kas-data": "workspace:*",
     "@workspace/ui": "workspace:*",
     "lucide-react": "^0.475.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
     "recharts": "2.15.4"
   },
   "peerDependencies": {
-    "@tanstack/react-query": "^5.90.6"
+    "@tanstack/react-query": "^5.90.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@tanstack/react-query": "^5.90.6",
@@ -33,6 +33,8 @@
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "eslint": "^9.39.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "typescript": "^5.9.3"
   }
 }

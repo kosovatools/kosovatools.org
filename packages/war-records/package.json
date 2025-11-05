@@ -1,5 +1,5 @@
 {
-  "name": "@workspace/customs-codes",
+  "name": "@workspace/war-records",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -15,12 +15,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@tanstack/react-table": "^8.21.3",
-    "@tanstack/react-virtual": "^3.13.12",
     "@workspace/ui": "workspace:*",
-    "dexie": "^4.2.1",
-    "lucide-react": "^0.475.0",
-    "minisearch": "^7.2.0"
+    "recharts": "2.15.4"
   },
   "peerDependencies": {
     "react": "^19.2.0",

@@ -1,17 +1,20 @@
+import { forwardRef } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
   BarChart3,
   Building2,
   Car,
   HandCoins,
+  Icon,
   PackageSearch,
   TrendingUp,
   Zap,
+  type LucideIcon,
+  type LucideProps,
 } from "lucide-react";
-
+import { candlestick } from "@lucide/lab";
 import { Button } from "@workspace/ui/components/button";
 import {
   Card,
@@ -20,6 +23,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
+
+const CandleIcon: LucideIcon = forwardRef<SVGSVGElement, LucideProps>(
+  (props, ref) => <Icon ref={ref} iconNode={candlestick} {...props} />,
+);
+CandleIcon.displayName = "CandleIcon";
 
 export const metadata: Metadata = {
   title: "Vegla qytetare për të dhëna, tregti dhe financa në Kosovë",
@@ -126,6 +134,15 @@ const tools: ToolCard[] = [
     cta: "Analizo rrjedhat e energjisë",
     icon: Zap,
     category: "Energjia",
+  },
+  {
+    name: "Regjistrat e luftës",
+    href: "/war-records",
+    description:
+      "Statistika dhe regjistrat e personave të vrarë ose të zhdukur në Kosovë (1998-2000) sipas Kosovo Memory Book.",
+    cta: "Shfleto regjistrat",
+    icon: CandleIcon,
+    category: "Kujtesa & drejtësia",
   },
 ];
 
@@ -273,7 +290,7 @@ export default function Page() {
             {groupedTools.map((group) => (
               <div key={group.category} className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-primary">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-primary text-nowrap">
                     {group.category}
                   </span>
                   <span className="h-px w-full bg-border/60" />

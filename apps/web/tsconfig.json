@@ -23,6 +23,8 @@
       "@workspace/data-insights/*": ["../../packages/data-insights/src/*"],
       "@workspace/payroll": ["../../packages/payroll/src/index.ts"],
       "@workspace/payroll/*": ["../../packages/payroll/src/*"],
+      "@workspace/war-records": ["../../packages/war-records/src/index.ts"],
+      "@workspace/war-records/*": ["../../packages/war-records/src/*"],
       "@workspace/ui/*": ["../../packages/ui/src/*"]
     },
     "plugins": [
