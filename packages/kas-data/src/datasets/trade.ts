@@ -60,4 +60,7 @@ type TradePartnerDataset = Dataset<
 >;
 export type ImportsByPartnerMeta = TradePartnerDataset["meta"];
 
-export const importsByPartner = importsByPartnerJson as TradePartnerDataset;
+export const importsByPartner =
+  // JSON import assertions expose literal meta fields that are narrower than DatasetMeta,
+  // so step through unknown before asserting the runtime shape we generate.
+  importsByPartnerJson as unknown as TradePartnerDataset;

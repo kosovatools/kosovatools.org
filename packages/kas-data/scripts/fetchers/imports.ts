@@ -88,7 +88,6 @@ export async function fetchImportsByPartner(
           alias: "partner",
           resolveValues: ({ baseValues }) => {
             if (includeAll) {
-              partnerCount = baseValues.length;
               return baseValues.map((v) => ({ code: v.code, label: v.label }));
             }
             const filtered = baseValues.filter(
@@ -100,7 +99,6 @@ export async function fetchImportsByPartner(
               throw new PxPipelineSkip(
                 "no partner codes matched requested filter",
               );
-            partnerCount = filtered.length;
             return filtered.map((v) => ({ code: v.code, label: v.label }));
           },
         },

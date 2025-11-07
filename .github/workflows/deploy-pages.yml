@@ -50,7 +50,7 @@ jobs:
         id: turbo-key
         run: |
           BASE="turbo-data-$(date -u +%G-W%V)"
-          HASH="${{ hashFiles('turbo.json', 'pnpm-lock.yaml', 'packages/stats/scripts/**') }}"
+          HASH="${{ hashFiles('turbo.json', 'pnpm-lock.yaml', 'packages/kas-data/scripts/**') }}"
           BUST="${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true' }}"
           if [ "$BUST" = "true" ]; then
             SUFFIX="$HASH-bust-$GITHUB_RUN_ID"
