@@ -153,7 +153,6 @@ export function ImportPartnersStackedChart({
         searchPlaceholder="Kërko shtetet..."
         includeOther={includeOther}
         onIncludeOtherChange={onIncludeOtherChange}
-        promoteLabel='Aktivizo grupimin "Të tjerët"'
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}
       />

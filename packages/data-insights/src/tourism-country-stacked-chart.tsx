@@ -186,7 +186,6 @@ export function TourismCountryStackedChart({
         searchPlaceholder="Kërko vende..."
         includeOther={includeOther}
         onIncludeOtherChange={onIncludeOtherChange}
-        promoteLabel='Aktivizo grupimin "Të tjerët"'
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}
       />

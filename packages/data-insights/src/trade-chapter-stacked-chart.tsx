@@ -131,7 +131,6 @@ export function TradeChapterStackedChart({
         searchPlaceholder="Kërko kapitujt..."
         includeOther={includeOther}
         onIncludeOtherChange={onIncludeOtherChange}
-        promoteLabel='Aktivizo grupimin "Të tjerët"'
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}
       />
