@@ -116,8 +116,8 @@ export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => `${formatCount(value)} vizitorë`,
-    formatTotal: (value) => `${formatCount(value)} vizitorë`,
+    formatValue: (value) => formatCount(value),
+    formatTotal: (value) => formatCount(value),
   });
 
   const eventMarkers = useTimelineEventMarkers(

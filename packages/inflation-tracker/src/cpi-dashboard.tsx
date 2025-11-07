@@ -38,7 +38,6 @@ import { Button } from "@workspace/ui/components/button";
 import {
   Card,
   CardContent,
-
   CardDescription,
   CardHeader,
   CardTitle,
@@ -103,19 +102,19 @@ const METRIC_OPTIONS: Array<{
   label: string;
   description: string;
 }> = [
-    {
-      id: "index",
-      label: "Indeksi (2015 = 100)",
-      description:
-        "Reflekton nivelin e çmimeve të konsumit krahasuar me vitin bazë 2015.",
-    },
-    {
-      id: "change",
-      label: "Ndryshimi mujor (%)",
-      description:
-        "Shfaq përqindjen e ndryshimit nga periudha paraprake për secilin grup.",
-    },
-  ];
+  {
+    id: "index",
+    label: "Indeksi (2015 = 100)",
+    description:
+      "Reflekton nivelin e çmimeve të konsumit krahasuar me vitin bazë 2015.",
+  },
+  {
+    id: "change",
+    label: "Ndryshimi mujor (%)",
+    description:
+      "Shfaq përqindjen e ndryshimit nga periudha paraprake për secilin grup.",
+  },
+];
 
 const decimalFormatter = createNumberFormatter("sq", {
   minimumFractionDigits: 1,

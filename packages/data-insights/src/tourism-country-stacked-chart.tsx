@@ -119,8 +119,7 @@ export function TourismCountryStackedChart({
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => `${formatCount(value)} vizitorë`,
-
+    formatValue: (value) => formatCount(value),
   });
 
   const eventMarkers = useTimelineEventMarkers(

@@ -333,7 +333,7 @@ export function StackedKeySelector({
                           ? "border-primary/40 bg-primary/10 text-primary"
                           : "hover:border-border hover:bg-muted",
                         otherDisabled &&
-                        "cursor-not-allowed border-transparent hover:bg-transparent",
+                          "cursor-not-allowed border-transparent hover:bg-transparent",
                       )}
                       aria-disabled={otherDisabled}
                     >
