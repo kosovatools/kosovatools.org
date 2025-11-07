@@ -585,7 +585,8 @@ function CategoriesOverYearsChart({
           onExcludedKeysChange={setExcludedKeys}
         />
       ) : null}
-      <ChartContainer config={view.config}
+      <ChartContainer
+        config={view.config}
         className="aspect-[1/1.5] sm:aspect-video"
       >
         <AreaChart

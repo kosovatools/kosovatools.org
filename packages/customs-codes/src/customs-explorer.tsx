@@ -138,8 +138,6 @@ export function CustomsExplorer() {
     [codePrefix],
   );
 
-  const topLevelNodes = treeData.length;
-
   const idPrefixInputId = "id-prefix-input";
   const descInputId = "description-input";
 
@@ -150,12 +148,6 @@ export function CustomsExplorer() {
           Math.round((indexingState.loaded / indexingState.total) * 100),
         )
       : null;
-
-  const statusText = indexingState
-    ? indexingState.message
-    : loading || isPending
-      ? "Duke u ngarkuar ..."
-      : `${topLevelNodes} kategori kryesore`;
 
   return (
     <section className="space-y-6">
@@ -213,28 +205,7 @@ export function CustomsExplorer() {
         </CardContent>
       </Card>
 
-      <Card className="overflow-hidden gap-0 pb-0">
-        <CardHeader className="border-b pb-4">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="space-y-1">
-              <CardTitle className="text-lg font-semibold sm:text-xl">
-                Rezultatet
-              </CardTitle>
-              <CardDescription>
-                Klikoni ikonën për të zgjeruar hierarkinë e kodeve dhe shikoni
-                detyrimet e llogaritura në kohë reale.
-              </CardDescription>
-            </div>
-            <span
-              className="inline-flex items-center gap-2 rounded-full border border-muted-foreground/20 px-3 py-1.5 text-xs font-medium text-muted-foreground"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              {statusText}
-            </span>
-          </div>
-        </CardHeader>
-
+      <Card className="overflow-hidden gap-0 py-0">
         <CardContent className="p-0">
           {indexingState ? (
             <div className="space-y-2 border-b px-4 py-3 text-xs text-muted-foreground sm:text-sm">

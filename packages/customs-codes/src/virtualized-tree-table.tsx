@@ -11,6 +11,7 @@ import {
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 import { Skeleton } from "@workspace/ui/components/skeleton";
+import { cn } from "@workspace/ui/lib/utils";
 import type { CustomsTreeNode } from "./types";
 
 type VirtualizedTreeTableProps = {
@@ -21,7 +22,7 @@ type VirtualizedTreeTableProps = {
 };
 
 const GRID_TEMPLATE =
-  "minmax(160px,1fr) minmax(600px,1.6fr) 50px 50px 50px 50px 50px 50px 120px";
+  "minmax(150px,1fr) minmax(600px,1.6fr) 50px 50px 50px 50px 50px 50px 120px";
 const MIN_ROW_HEIGHT = 56;
 const SKELETON_ROW_COUNT = 8;
 const SKELETON_SECONDARY_WIDTHS = [
@@ -43,6 +44,25 @@ function computeMinTableWidth(template: string): number {
 }
 
 const MIN_TABLE_WIDTH = computeMinTableWidth(GRID_TEMPLATE);
+type CustomsRateField = keyof Pick<
+  CustomsTreeNode,
+  "percentage" | "cefta" | "msa" | "trmtl" | "tvsh" | "excise"
+>;
+const RATE_FIELDS: CustomsRateField[] = [
+  "percentage",
+  "cefta",
+  "msa",
+  "trmtl",
+  "tvsh",
+  "excise",
+];
+
+function hasNoTaxes(node: CustomsTreeNode): boolean {
+  return RATE_FIELDS.every((field) => {
+    const value = node[field];
+    return (Number.isFinite(value) ? value : 0) === 0;
+  });
+}
 
 export function VirtualizedTreeTable({
   columns,
@@ -137,12 +157,19 @@ export function VirtualizedTreeTable({
 
               const row = rows[virtualItem.index];
               if (!row) return null;
+              const isLeafRow = !row.getCanExpand();
+              const rowHasNoTaxes = isLeafRow && hasNoTaxes(row.original);
               return (
                 <div
                   key={row.id}
                   data-index={virtualItem.index}
                   ref={rowVirtualizer.measureElement}
-                  className="absolute inset-x-0 grid gap-4 border-b px-4 py-3 text-sm transition-colors hover:bg-muted/40"
+                  className={cn(
+                    "absolute inset-x-0 grid gap-4 border-b px-4 py-3 text-sm transition-colors",
+                    rowHasNoTaxes
+                      ? "bg-emerald-50 hover:bg-emerald-100"
+                      : "hover:bg-muted/40",
+                  )}
                   style={{
                     gridTemplateColumns: GRID_TEMPLATE,
                     transform: `translateY(${virtualItem.start}px)`,

@@ -321,40 +321,43 @@ function SearchableListSection<Item>({
         </Button>
       </div>
       <ul
-        className={cn("flex h-full flex-col gap-1 overflow-y-auto p-2", listClassName)}
+        className={cn(
+          "flex h-full flex-col gap-1 overflow-y-auto p-2",
+          listClassName,
+        )}
         {...restListProps}
       >
         {items.length === 0
           ? emptyState
           : items.map((item) => {
-            const config = getItemConfig(item);
-            return (
-              <li key={config.key}>
-                <label
-                  htmlFor={config.checkboxId}
-                  className={cn(
-                    "group flex w-full cursor-pointer items-center gap-3 overflow-hidden rounded-md border border-transparent px-2 py-1 transition-colors",
-                    config.checked
-                      ? "border-primary/40 bg-primary/10 text-primary"
-                      : "hover:border-border hover:bg-muted",
-                    config.className,
-                  )}
-                  aria-disabled={config.ariaDisabled}
-                >
-                  <span className="flex min-w-0 flex-1 items-center gap-2">
-                    <Checkbox
-                      id={config.checkboxId}
-                      checked={config.checked}
-                      disabled={config.disabled}
-                      onCheckedChange={config.onCheckedChange}
-                      className="size-3.5 flex-none"
-                    />
-                    <span className="truncate">{config.label}</span>
-                  </span>
-                </label>
-              </li>
-            );
-          })}
+              const config = getItemConfig(item);
+              return (
+                <li key={config.key}>
+                  <label
+                    htmlFor={config.checkboxId}
+                    className={cn(
+                      "group flex w-full cursor-pointer items-center gap-3 overflow-hidden rounded-md border border-transparent px-2 py-1 transition-colors",
+                      config.checked
+                        ? "border-primary/40 bg-primary/10 text-primary"
+                        : "hover:border-border hover:bg-muted",
+                      config.className,
+                    )}
+                    aria-disabled={config.ariaDisabled}
+                  >
+                    <span className="flex min-w-0 flex-1 items-center gap-2">
+                      <Checkbox
+                        id={config.checkboxId}
+                        checked={config.checked}
+                        disabled={config.disabled}
+                        onCheckedChange={config.onCheckedChange}
+                        className="size-3.5 flex-none"
+                      />
+                      <span className="truncate">{config.label}</span>
+                    </span>
+                  </label>
+                </li>
+              );
+            })}
       </ul>
     </section>
   );

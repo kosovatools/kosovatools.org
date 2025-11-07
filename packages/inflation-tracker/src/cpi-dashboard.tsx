@@ -101,19 +101,19 @@ const METRIC_OPTIONS: Array<{
   label: string;
   description: string;
 }> = [
-    {
-      id: "index",
-      label: "Indeksi (2015 = 100)",
-      description:
-        "Reflekton nivelin e çmimeve të konsumit krahasuar me vitin bazë 2015.",
-    },
-    {
-      id: "change",
-      label: "Ndryshimi mujor (%)",
-      description:
-        "Shfaq përqindjen e ndryshimit nga periudha paraprake për secilin grup.",
-    },
-  ];
+  {
+    id: "index",
+    label: "Indeksi (2015 = 100)",
+    description:
+      "Reflekton nivelin e çmimeve të konsumit krahasuar me vitin bazë 2015.",
+  },
+  {
+    id: "change",
+    label: "Ndryshimi mujor (%)",
+    description:
+      "Shfaq përqindjen e ndryshimit nga periudha paraprake për secilin grup.",
+  },
+];
 
 const decimalFormatter = createNumberFormatter("sq", {
   minimumFractionDigits: 1,
@@ -438,8 +438,8 @@ export function InflationDashboard({
           <div className="flex flex-col gap-2">
             <CardTitle>Indeksi i Çmimeve për Konsumatorin</CardTitle>
             <CardDescription>
-              Përzgjidh grupe COICOP për të krahasuar indeksin bazë 2015 = 100 ose
-              ndryshimet mujore të IHÇK-së në periudha të ndryshme kohore.
+              Përzgjidh grupe COICOP për të krahasuar indeksin bazë 2015 = 100
+              ose ndryshimet mujore të IHÇK-së në periudha të ndryshme kohore.
             </CardDescription>
           </div>
           <div className="flex flex-col gap-2 md:items-end">
@@ -589,7 +589,8 @@ export function InflationDashboard({
                       <div className="text-xs text-muted-foreground">
                         {row.latestLabel ? (
                           <>
-                            Periudha e fundit: <strong>{row.latestLabel}</strong>
+                            Periudha e fundit:{" "}
+                            <strong>{row.latestLabel}</strong>
                           </>
                         ) : (
                           "Periudha e fundit: —"
@@ -613,7 +614,6 @@ export function InflationDashboard({
               </div>
             </div>
           </div>
-
         </CardContent>
       </Card>
       <Alert className="border-border/70 bg-muted/25">
@@ -623,15 +623,15 @@ export function InflationDashboard({
         </AlertTitle>
         <AlertDescription className="space-y-2 text-sm">
           <p>
-            Nëse një bukë kushtonte 0.30 € në 2015 (viti bazë kur indeksi
-            është 100), një indeks aktual 130 tregon se çmimi është rritur me
+            Nëse një bukë kushtonte 0.30 € në 2015 (viti bazë kur indeksi është
+            100), një indeks aktual 130 tregon se çmimi është rritur me
             afërsisht 30%. Llogaritja bëhet duke shumëzuar çmimin bazë me
             indeksin e ri: <strong>0.30 € × (130 ÷ 100) ≈ 0.39 €</strong>, pra
             rreth 9 cent më shumë.
           </p>
           <p className="text-xs text-muted-foreground">
-            Në përgjithësi përdor rregullin: çmimi i ri ≈ çmimi bazë ×
-            (indeksi aktual ÷ 100).
+            Në përgjithësi përdor rregullin: çmimi i ri ≈ çmimi bazë × (indeksi
+            aktual ÷ 100).
           </p>
         </AlertDescription>
       </Alert>
@@ -646,14 +646,14 @@ export function InflationDashboard({
             </li>
             <li>
               Kur zgjedh tremujor, sezonal apo vjetor, vlera e indeksit
-              përfaqëson mesataren e muajve përkatës; përqindjet e
-              "Ndryshimit" shumëzohen nga ndryshimet mujore për të marrë një
-              normë të vetme për periudhën.
+              përfaqëson mesataren e muajve përkatës; përqindjet e "Ndryshimit"
+              shumëzohen nga ndryshimet mujore për të marrë një normë të vetme
+              për periudhën.
             </li>
             <li>
-              Inflacioni kumulativ gjithmonë kompilohet nga të dhënat mujore
-              dhe mat dallimin mes muajit të parë dhe të fundit në intervalin
-              e zgjedhur.
+              Inflacioni kumulativ gjithmonë kompilohet nga të dhënat mujore dhe
+              mat dallimin mes muajit të parë dhe të fundit në intervalin e
+              zgjedhur.
             </li>
             <li>
               Për të eksploruar nën-kategori, hapni degët përkatëse në listën
@@ -662,7 +662,6 @@ export function InflationDashboard({
           </ul>
         </AlertDescription>
       </Alert>
-
     </>
   );
 }
