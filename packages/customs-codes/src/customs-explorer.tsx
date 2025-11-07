@@ -1,21 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldLabel,
-} from "@workspace/ui/components/field";
-import { Input } from "@workspace/ui/components/input";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import { Progress } from "@workspace/ui/components/progress";
 import { CustomsDataService } from "./database";
 import type { CustomsTreeNode, InitializationProgress } from "./types";
@@ -37,6 +31,8 @@ export function CustomsExplorer() {
   const [loading, setLoading] = useState<boolean>(true);
   const [idQuery, setIdQuery] = useState<string>("");
   const [descQuery, setDescQuery] = useState<string>("");
+  const [codeFilterOpen, setCodeFilterOpen] = useState(false);
+  const [descFilterOpen, setDescFilterOpen] = useState(false);
   const [indexingState, setIndexingState] =
     useState<InitializationProgress | null>(null);
   const [initialized, setInitialized] = useState(false);
@@ -50,6 +46,14 @@ export function CustomsExplorer() {
     250,
   );
   const codePrefix = debouncedId;
+  const toggleCodeFilter = useCallback(
+    () => setCodeFilterOpen((previous) => !previous),
+    [],
+  );
+  const toggleDescFilter = useCallback(
+    () => setDescFilterOpen((previous) => !previous),
+    [],
+  );
 
   useEffect(() => {
     mountedRef.current = true;
@@ -134,12 +138,25 @@ export function CustomsExplorer() {
     () =>
       createCustomsColumns({
         codePrefix,
+        idQuery,
+        onIdQueryChange: setIdQuery,
+        descQuery,
+        onDescQueryChange: setDescQuery,
+        isCodeFilterOpen: codeFilterOpen,
+        onToggleCodeFilter: toggleCodeFilter,
+        isDescFilterOpen: descFilterOpen,
+        onToggleDescFilter: toggleDescFilter,
       }),
-    [codePrefix],
+    [
+      codeFilterOpen,
+      codePrefix,
+      descFilterOpen,
+      descQuery,
+      idQuery,
+      toggleCodeFilter,
+      toggleDescFilter,
+    ],
   );
-
-  const idPrefixInputId = "id-prefix-input";
-  const descInputId = "description-input";
 
   const progressPercent =
     indexingState && indexingState.total > 0
@@ -151,60 +168,6 @@ export function CustomsExplorer() {
 
   return (
     <section className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold sm:text-xl">
-            Filtro të dhënat
-          </CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">
-            Plotësoni njërin ose disa prej fushave për të kufizuar rezultatet.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4 md:grid-cols-4">
-          <Field>
-            <FieldLabel
-              htmlFor={idPrefixInputId}
-              className="text-sm text-muted-foreground"
-            >
-              Prefiksi i Kodit
-            </FieldLabel>
-            <FieldContent>
-              <Input
-                id={idPrefixInputId}
-                type="text"
-                value={idQuery}
-                onChange={(event) => setIdQuery(event.currentTarget.value)}
-                placeholder="p.sh. 7208 ose 01"
-                autoComplete="off"
-                inputMode="numeric"
-              />
-            </FieldContent>
-          </Field>
-          <Field className="md:col-span-3">
-            <FieldLabel
-              htmlFor={descInputId}
-              className="text-sm text-muted-foreground"
-            >
-              Përshkrimi
-            </FieldLabel>
-            <FieldContent>
-              <Input
-                id={descInputId}
-                type="text"
-                value={descQuery}
-                onChange={(event) => setDescQuery(event.currentTarget.value)}
-                placeholder='p.sh. "tub çeliku"'
-                autoComplete="off"
-              />
-            </FieldContent>
-            <FieldDescription className="text-xs text-muted-foreground">
-              Shkruani të paktën 3 shkronja nga përshkrimi (p.sh. "vajra" ose
-              "tub") për të parë nën-kodet përkatëse.
-            </FieldDescription>
-          </Field>
-        </CardContent>
-      </Card>
-
       <Card className="overflow-hidden gap-0 py-0">
         <CardContent className="p-0">
           {indexingState ? (

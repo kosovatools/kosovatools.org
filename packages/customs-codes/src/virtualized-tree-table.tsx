@@ -22,7 +22,7 @@ type VirtualizedTreeTableProps = {
 };
 
 const GRID_TEMPLATE =
-  "minmax(150px,1fr) minmax(600px,1.6fr) 50px 50px 50px 50px 50px 50px 120px";
+  "minmax(180px,1fr) minmax(600px,1.6fr) 50px 50px 50px 50px 50px 50px 120px";
 const MIN_ROW_HEIGHT = 56;
 const SKELETON_ROW_COUNT = 8;
 const SKELETON_SECONDARY_WIDTHS = [
@@ -113,9 +113,9 @@ export function VirtualizedTreeTable({
                 {header.isPlaceholder
                   ? null
                   : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext(),
-                    )}
+                    header.column.columnDef.header,
+                    header.getContext(),
+                  )}
               </div>
             )),
           )}

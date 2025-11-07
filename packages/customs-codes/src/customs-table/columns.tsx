@@ -1,8 +1,12 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 import type { ColumnDef } from "@tanstack/react-table";
+import { Filter, X } from "lucide-react";
 
 import { Button } from "@workspace/ui/components/button";
+import { Input } from "@workspace/ui/components/input";
 import { formatDate, formatPercent } from "../formatters";
 import type { CustomsTreeNode } from "../types";
 
@@ -11,14 +15,47 @@ import { highlightPrefix } from "../highlighting";
 
 type ColumnFactoryParams = {
   codePrefix: string;
+  idQuery: string;
+  onIdQueryChange: (value: string) => void;
+  descQuery: string;
+  onDescQueryChange: (value: string) => void;
+  isCodeFilterOpen: boolean;
+  onToggleCodeFilter: () => void;
+  isDescFilterOpen: boolean;
+  onToggleDescFilter: () => void;
 };
 
 export function createCustomsColumns({
   codePrefix,
+  idQuery,
+  onIdQueryChange,
+  descQuery,
+  onDescQueryChange,
+  isCodeFilterOpen,
+  onToggleCodeFilter,
+  isDescFilterOpen,
+  onToggleDescFilter,
 }: ColumnFactoryParams): ColumnDef<CustomsTreeNode>[] {
   return [
     {
-      header: "Kodi",
+      header: () => (
+        <FilterableHeader
+          label="Kodi"
+          active={isCodeFilterOpen}
+          hasActiveFilter={Boolean(idQuery)}
+          onToggle={onToggleCodeFilter}
+        >
+          <Input
+            value={idQuery}
+            onChange={(event) => onIdQueryChange(event.currentTarget.value)}
+            placeholder="p.sh. 7208 ose 01"
+            inputMode="numeric"
+            autoComplete="off"
+            aria-label="Filtro sipas prefiksit të kodit"
+            className="h-8 w-full normal-case text-xs font-normal tracking-normal"
+          />
+        </FilterableHeader>
+      ),
       id: "code",
       accessorFn: (row) => row.code,
       cell: (info) => {
@@ -56,7 +93,23 @@ export function createCustomsColumns({
       },
     },
     {
-      header: "Përshkrimi",
+      header: () => (
+        <FilterableHeader
+          label="Përshkrimi"
+          active={isDescFilterOpen}
+          hasActiveFilter={Boolean(descQuery)}
+          onToggle={onToggleDescFilter}
+        >
+          <Input
+            value={descQuery}
+            onChange={(event) => onDescQueryChange(event.currentTarget.value)}
+            placeholder='p.sh. "tub çeliku"'
+            autoComplete="off"
+            aria-label="Filtro sipas përshkrimit"
+            className="h-8 w-full normal-case text-xs font-normal tracking-normal"
+          />
+        </FilterableHeader>
+      ),
       id: "description",
       accessorKey: "description",
       cell: (info) => {
@@ -79,41 +132,116 @@ export function createCustomsColumns({
       },
     },
     {
-      header: "Bazë",
+      header: () => <ColumnHeaderLabel>Bazë</ColumnHeaderLabel>,
       accessorKey: "percentage",
       cell: (info) => <span>{formatPercent(info.getValue() as number)}</span>,
     },
     {
-      header: "CEFTA",
+      header: () => <ColumnHeaderLabel>CEFTA</ColumnHeaderLabel>,
       accessorKey: "cefta",
       cell: (info) => <span>{formatPercent(info.getValue() as number)}</span>,
     },
     {
-      header: "MSA",
+      header: () => <ColumnHeaderLabel>MSA</ColumnHeaderLabel>,
       accessorKey: "msa",
       cell: (info) => <span>{formatPercent(info.getValue() as number)}</span>,
     },
     {
-      header: "TRMTL",
+      header: () => <ColumnHeaderLabel>TRMTL</ColumnHeaderLabel>,
       accessorKey: "trmtl",
       cell: (info) => <span>{formatPercent(info.getValue() as number)}</span>,
     },
     {
-      header: "TVSH",
+      header: () => <ColumnHeaderLabel>TVSH</ColumnHeaderLabel>,
       accessorKey: "tvsh",
       cell: (info) => <span>{formatPercent(info.getValue() as number)}</span>,
     },
     {
-      header: "Aksizë",
+      header: () => <ColumnHeaderLabel>Aksizë</ColumnHeaderLabel>,
       accessorKey: "excise",
       cell: (info) => <span>{formatPercent(info.getValue() as number)}</span>,
     },
     {
-      header: "E vlefshme nga",
+      header: () => <ColumnHeaderLabel>E vlefshme nga</ColumnHeaderLabel>,
       accessorKey: "validFrom",
       cell: (info) => (
         <span className="text-xs">{formatDate(info.getValue())}</span>
       ),
     },
   ];
+}
+
+type FilterableHeaderProps = {
+  label: string;
+  active: boolean;
+  hasActiveFilter?: boolean;
+  children: ReactNode;
+  onToggle: () => void;
+};
+
+function FilterableHeader({
+  label,
+  active,
+  hasActiveFilter,
+  children,
+  onToggle,
+}: FilterableHeaderProps) {
+  const iconLabel = active
+    ? `Mbyll filtrin për ${label}`
+    : `Hap filtrin për ${label}`;
+  return (
+    <div className="space-y-1">
+      <div className="flex h-9 w-full items-center gap-2">
+        {active ? (
+          <>
+            <div className="flex-1">{children}</div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={onToggle}
+              aria-label={iconLabel}
+              aria-pressed={active}
+              className="h-7 w-7 text-muted-foreground hover:text-foreground"
+            >
+              <X className="h-4 w-4" aria-hidden />
+            </Button>
+          </>
+        ) : (
+          <>
+            <ColumnHeaderLabel>{label}</ColumnHeaderLabel>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={onToggle}
+              aria-label={iconLabel}
+              aria-pressed={active}
+              className={`relative h-6 w-6 text-muted-foreground hover:text-foreground ${hasActiveFilter ? "text-foreground" : ""
+                }`}
+            >
+              <Filter className="h-3.5 w-3.5" aria-hidden />
+              {hasActiveFilter ? (
+                <>
+                  <span
+                    aria-hidden
+                    className="absolute right-1 top-1 block h-1.5 w-1.5 rounded-full bg-primary"
+                  />
+                  <span className="sr-only">Filtri aktiv</span>
+                </>
+              ) : null}
+            </Button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ColumnHeaderLabel({ children }: { children: ReactNode }) {
+  return (
+    <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+      {children}
+    </span>
+  );
 }
