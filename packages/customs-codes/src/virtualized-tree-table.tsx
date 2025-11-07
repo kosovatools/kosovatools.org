@@ -109,7 +109,7 @@ export function VirtualizedTreeTable({
         >
           {table.getHeaderGroups().map((headerGroup) =>
             headerGroup.headers.map((header) => (
-              <div key={header.id} className="min-w-0">
+              <div key={header.id} className="min-w-0 items-center flex">
                 {header.isPlaceholder
                   ? null
                   : flexRender(
@@ -167,7 +167,7 @@ export function VirtualizedTreeTable({
                   className={cn(
                     "absolute inset-x-0 grid gap-4 border-b px-4 py-3 text-sm transition-colors",
                     rowHasNoTaxes
-                      ? "bg-emerald-50 hover:bg-emerald-100"
+                      ? "bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-400/20 dark:hover:bg-emerald-400/30"
                       : "hover:bg-muted/40",
                   )}
                   style={{

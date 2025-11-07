@@ -15,6 +15,16 @@ const INDEX_CHUNK_SIZE = 2_000;
 const customsDataset = createDatasetApi({ prefix: "customs" });
 const CUSTOMS_TARRIFS_PATH = "tarrifs.json";
 
+function parseValidFromTimestamp(
+  value: string | null | undefined,
+): number | null {
+  if (typeof value !== "string") return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  const timestamp = Date.parse(trimmed);
+  return Number.isNaN(timestamp) ? null : timestamp;
+}
+
 function compareRecords(a: CustomsRecord, b: CustomsRecord): number {
   const ac = (a.code ?? "").toString();
   const bc = (b.code ?? "").toString();
@@ -216,6 +226,28 @@ export class CustomsDataService {
     } catch (error) {
       console.error("Error fetching all data:", error);
       return [];
+    }
+  }
+
+  static async getLatestValidFromDate(
+    records?: CustomsFlatRow[],
+  ): Promise<Date | null> {
+    try {
+      const source = records ?? (await this.getAllData());
+      let latestTimestamp: number | null = null;
+
+      for (const record of source) {
+        const candidate = parseValidFromTimestamp(record.validFrom);
+        if (candidate === null) continue;
+        if (latestTimestamp === null || candidate > latestTimestamp) {
+          latestTimestamp = candidate;
+        }
+      }
+
+      return latestTimestamp === null ? null : new Date(latestTimestamp);
+    } catch (error) {
+      console.error("Failed to compute latest ValidFrom date:", error);
+      return null;
     }
   }
 

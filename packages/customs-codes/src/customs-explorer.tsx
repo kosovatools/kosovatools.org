@@ -17,6 +17,17 @@ import type { CustomsTreeNode, InitializationProgress } from "./types";
 import { createCustomsColumns } from "./customs-table/columns";
 import { VirtualizedTreeTable } from "./virtualized-tree-table";
 
+type DatasetValidity = {
+  iso: string;
+  display: string;
+};
+
+const datasetDateFormatter = new Intl.DateTimeFormat("sq-AL", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
 function useDebouncedValue<T>(value: T, delayMs: number): T {
   const [debounced, setDebounced] = useState(value);
   useEffect(() => {
@@ -36,6 +47,8 @@ export function CustomsExplorer() {
   const [indexingState, setIndexingState] =
     useState<InitializationProgress | null>(null);
   const [initialized, setInitialized] = useState(false);
+  const [datasetValidity, setDatasetValidity] =
+    useState<DatasetValidity | null>(null);
   const [isPending, startTransition] = useTransition();
   const mountedRef = useRef(true);
 
@@ -78,9 +91,19 @@ export function CustomsExplorer() {
         });
 
         const all = await CustomsDataService.getAllData();
+        const latestValidFromDate =
+          await CustomsDataService.getLatestValidFromDate(all);
         if (!mountedRef.current) return;
         startTransition(() => {
           setTreeData(CustomsDataService.buildTreeFromList(all));
+          setDatasetValidity(
+            latestValidFromDate
+              ? {
+                iso: latestValidFromDate.toISOString(),
+                display: datasetDateFormatter.format(latestValidFromDate),
+              }
+              : null,
+          );
           setInitialized(true);
         });
       } catch (error) {
@@ -90,11 +113,11 @@ export function CustomsExplorer() {
           current && current.phase === "error"
             ? current
             : {
-                phase: "error",
-                loaded: 0,
-                total: 0,
-                message: "Indeksimi dështoi. Kontrolloni konsolën për detaje.",
-              },
+              phase: "error",
+              loaded: 0,
+              total: 0,
+              message: "Indeksimi dështoi. Kontrolloni konsolën për detaje.",
+            },
         );
       } finally {
         if (mountedRef.current) setLoading(false);
@@ -161,9 +184,9 @@ export function CustomsExplorer() {
   const progressPercent =
     indexingState && indexingState.total > 0
       ? Math.min(
-          100,
-          Math.round((indexingState.loaded / indexingState.total) * 100),
-        )
+        100,
+        Math.round((indexingState.loaded / indexingState.total) * 100),
+      )
       : null;
 
   return (
@@ -185,6 +208,30 @@ export function CustomsExplorer() {
               ) : null}
             </div>
           ) : null}
+
+          <div className="space-y-2 border-b px-4 py-3 text-xs text-muted-foreground sm:text-sm">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1">
+                <span className="text-foreground text-sm font-semibold uppercase tracking-wide">
+                  Përditësuar së fundmi:
+                  <time
+                    title={datasetValidity?.iso ?? "—"}
+                    dateTime={datasetValidity?.iso ?? undefined}
+                    className="font-medium text-foreground ml-1"
+                  >
+                    {datasetValidity?.display ?? "—"}
+                  </time>
+                </span>
+                <p>
+                  Data tregon vlerën më të fundit të fushës{" "}
+                  <span className="font-mono">E vlefshme nga</span> në datasetin{" "}
+                  <span className="font-mono">customs/tarrifs.json</span> të
+                  publikuar nga Dogana e Kosovës.
+                </p>
+              </div>
+
+            </div>
+          </div>
 
           <VirtualizedTreeTable
             columns={columns}
