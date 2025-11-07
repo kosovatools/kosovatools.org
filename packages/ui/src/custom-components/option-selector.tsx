@@ -56,7 +56,7 @@ export function OptionSelector<T extends SelectorOptionValue>({
               variant={active ? "default" : "outline"}
               onClick={() => onChange(option.id)}
               disabled={disabled}
-              className="px-3 py-1 text-xs"
+              className="px-2 py-1 text-xs"
             >
               {option.label}
             </Button>
