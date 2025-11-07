@@ -14,38 +14,29 @@ import {
 } from "../lib/pxweb";
 import {
   createMeta,
+  describePxSources,
   normalizeYM,
   parseTradeChapterLabel,
   tidyNumber,
-  type TradeChapterLabel,
+  type MetaField,
 } from "../lib/utils";
 import { runPxDatasetPipeline } from "../pipeline/px-dataset";
 
-type TradeMonthlyRecord = {
-  period: string;
-  imports_eur: number;
-};
+type TradeMonthlyRecord = { period: string; imports: number | null };
 
 type TradeChapterRecord = {
-  year: string;
-  chapter_code: string;
-  imports_eur: number;
-  exports_eur: number;
+  period: string;
+  chapter: string;
+  imports: number | null;
+  exports: number | null;
 };
 
-const TRADE_MONTHLY_INDICATORS: Array<{
-  code: string;
-  key: string;
-  label: string;
-  unit: string;
-}> = [
-  {
-    code: "1",
-    key: "imports_eur",
-    label: "3 Importet (CIF)",
-    unit: "EUR",
-  },
-];
+const TRADE_MONTHLY_METRIC = {
+  code: "1",
+  key: "imports",
+  label: "Imports",
+  unit: "EUR",
+} as const;
 
 export async function fetchTradeMonthly(outDir: string, generatedAt: string) {
   return runPxDatasetPipeline<TradeMonthlyRecord>({
@@ -54,30 +45,24 @@ export async function fetchTradeMonthly(outDir: string, generatedAt: string) {
     parts: PATHS.trade_monthly,
     outDir,
     generatedAt,
-    unit: "euro (CIF)",
+    unit: "EUR",
     timeDimension: {
       code: "Viti/muaji",
       text: "Viti/muaji",
       toLabel: normalizeYM,
+      granularity: "monthly",
     },
     metricDimensions: [
-      {
-        code: "Variabla",
-        text: "Variabla",
-        values: TRADE_MONTHLY_INDICATORS,
-      },
+      { code: "Variabla", text: "Variabla", values: [TRADE_MONTHLY_METRIC] },
     ],
-    finalizeDataset: ({ metaEnvelope, records }) => ({
-      meta: metaEnvelope,
+    createRecord: ({ period, values }) => {
+      const th = values.imports ?? null;
+      return { period, imports: th == null ? null : th * 1_000 };
+    },
+    finalizeDataset: ({ meta, records }) => ({
+      meta,
       records: [...records].sort((a, b) => a.period.localeCompare(b.period)),
     }),
-    createRecord: ({ period, values }) => {
-      const importsThousand = values.imports_eur ?? 0;
-      return {
-        period,
-        imports_eur: importsThousand * 1_000,
-      };
-    },
   });
 }
 
@@ -106,57 +91,45 @@ export async function fetchTradeChaptersYearly(
   const query = [
     {
       code: "Chapter",
-      selection: {
-        filter: "item",
-        values: chapterPairs.map(([code]) => code),
-      },
+      selection: { filter: "item", values: chapterPairs.map(([code]) => code) },
     },
-    {
-      code: "Year",
-      selection: { filter: "item", values: yearCodes },
-    },
+    { code: "Year", selection: { filter: "item", values: yearCodes } },
     {
       code: "Exporti/Import",
-      selection: {
-        filter: "item",
-        values: flowPairs.map(([code]) => code),
-      },
+      selection: { filter: "item", values: flowPairs.map(([code]) => code) },
     },
   ];
 
   const cube = await pxPostData(parts, { query, response: { format: "JSON" } });
   const table = tableLookup(cube, ["Chapter", "Year", "Exporti/Import"]);
-  if (!table) {
+  if (!table)
     throw new PxError("Trade yearly chapters: unexpected response format");
-  }
   const { dimCodes, lookup } = table;
   const { updatedAt } = readCubeMetadata(cube);
 
-  const flowKeyMap: Record<string, "imports_eur" | "exports_eur"> = {
-    "0": "imports_eur",
-    "1": "exports_eur",
+  const flowKeyMap: Record<string, "imports" | "exports"> = {
+    "0": "imports",
+    "1": "exports",
   };
   const hasImportFlow = flowPairs.some(([code]) => code === "0");
   const hasExportFlow = flowPairs.some(([code]) => code === "1");
-  if (!hasImportFlow || !hasExportFlow) {
+  if (!hasImportFlow || !hasExportFlow)
     throw new PxError(
       "Trade yearly chapters: expected flow codes 0 (Import) and 1 (Export)",
     );
-  }
 
-  const chapterSpecs: Array<[string, TradeChapterLabel]> = chapterPairs.map(
-    ([code, text]) => [code, parseTradeChapterLabel(text)],
+  const chapterSpecs = chapterPairs.map(
+    ([code, text]) => [code, parseTradeChapterLabel(text)] as const,
   );
 
   const records: TradeChapterRecord[] = [];
-
   for (const [chapterId, spec] of chapterSpecs) {
     for (const yearCode of yearCodes) {
-      const baseRecord: TradeChapterRecord = {
-        year: yearCode,
-        chapter_code: spec.code,
-        imports_eur: 0,
-        exports_eur: 0,
+      const base: TradeChapterRecord = {
+        period: yearCode,
+        chapter: spec.code,
+        imports: null,
+        exports: null,
       };
       for (const [flowCode] of flowPairs) {
         const fieldKey = flowKeyMap[flowCode];
@@ -166,36 +139,47 @@ export async function fetchTradeChaptersYearly(
           Year: yearCode,
           "Exporti/Import": flowCode,
         });
-        const thousandValue = tidyNumber(value) ?? 0;
-        baseRecord[fieldKey] = thousandValue * 1_000;
+        const thousandValue = tidyNumber(value);
+        base[fieldKey] = thousandValue == null ? null : thousandValue * 1_000;
       }
-      if (baseRecord.imports_eur !== 0 || baseRecord.exports_eur !== 0) {
-        records.push(baseRecord);
-      }
+      if (base.imports !== null || base.exports !== null) records.push(base);
     }
   }
 
+  const sourcePaths = [parts] as const;
+  const { description: source, urls: sourceUrls } =
+    describePxSources(sourcePaths);
+
+  const first = yearCodes[0]!;
+  const last = yearCodes[yearCodes.length - 1]!;
+  const fields: MetaField[] = [
+    { key: "imports", label: "Importe", unit: "EUR" },
+    { key: "exports", label: "Eksporte", unit: "EUR" },
+  ];
+
+  const metaOut = createMeta("kas_trade_chapters_yearly", generatedAt, {
+    updated_at: updatedAt ?? null,
+    time: {
+      key: "period",
+      granularity: "yearly",
+      first,
+      last,
+      count: yearCodes.length,
+    },
+    fields,
+    metrics: fields.map((f) => f.key),
+    dimensions: {
+      chapter: chapterSpecs.map(([, s]) => ({ key: s.code, label: s.label })),
+    },
+    unit: "EUR",
+    source,
+    source_urls: sourceUrls,
+    notes: ["Source values are thousand EUR; scaled to EUR."],
+  });
+
   const dataset = {
-    meta: createMeta(parts, generatedAt, {
-      updatedAt,
-      unit: "euro (CIF/FOB)",
-      chaptersLabel: Object.fromEntries(
-        chapterSpecs.map((c) => [c[1].code, c[1].label]),
-      ),
-      fields: [
-        {
-          key: "imports_eur",
-          label: "Importe",
-          unit: "EUR",
-        },
-        {
-          key: "exports_eur",
-          label: "Eksporte",
-          unit: "EUR",
-        },
-      ],
-    }),
-    records: records.sort((a, b) => a.year.localeCompare(b.year)),
+    meta: metaOut,
+    records: records.sort((a, b) => a.period.localeCompare(b.period)),
   };
   await writeJson(outDir, "kas_trade_chapters_yearly.json", dataset);
   return dataset;

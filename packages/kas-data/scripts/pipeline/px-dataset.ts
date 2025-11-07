@@ -11,7 +11,15 @@ import {
   type PxMeta,
   type PxVariable,
 } from "../lib/pxweb";
-import { createMeta, tidyNumber, type MetaField } from "../lib/utils";
+import {
+  createMeta,
+  describePxSources,
+  tidyNumber,
+  type Meta,
+  type MetaField,
+  type DimensionOption,
+  type TimeGranularity,
+} from "../lib/utils";
 import { writeJson } from "../lib/io";
 
 export class PxPipelineSkip extends PxError {
@@ -30,7 +38,7 @@ type DimensionValueSpec = {
   label?: string | null;
   key?: string;
   unit?: string | null;
-  [key: string]: unknown;
+  [k: string]: unknown;
 };
 
 type ResolvedDimensionValue = DimensionValueSpec & {
@@ -50,16 +58,15 @@ type AxisDimensionSpec = {
   toLabel?: (valueCode: string, context: DimensionValueLabelContext) => string;
   iterate?: boolean;
   sort?: (a: ResolvedDimensionValue, b: ResolvedDimensionValue) => number;
+  granularity?: TimeGranularity;
 };
 
-type TimeDimensionSpec = AxisDimensionSpec & {
-  alias?: string;
-};
+type TimeDimensionSpec = AxisDimensionSpec & { alias?: string };
 
 type MetricDimensionSpec = {
-  code: DimensionCodeResolver;
+  code: DimensionCodeResolver; // may be implicit (return null) -> single metric
   text?: string | null;
-  alias?: string;
+  alias?: string; // ignored in meta.dimensions (metrics are not a dimension)
   values?: DimensionValueSpec[];
   resolveValues?: (
     context: DimensionValueResolverContext,
@@ -68,20 +75,13 @@ type MetricDimensionSpec = {
   sort?: (a: ResolvedDimensionValue, b: ResolvedDimensionValue) => number;
 };
 
-type QueryDimensionSpec = {
-  code: string;
-  values: string[];
-};
+type QueryDimensionSpec = { code: string; values: string[] };
 
 type DimensionResolverContext = {
   datasetId: string;
   meta: PxMeta;
   variables: PxVariable[];
-  resolved: {
-    timeCode?: string;
-    axisCodes: string[];
-    metricCodes: string[];
-  };
+  resolved: { timeCode?: string; axisCodes: string[]; metricCodes: string[] };
 };
 
 type DimensionValueResolverContext = DimensionResolverContext & {
@@ -116,29 +116,15 @@ type ResolvedAxisDimension = {
 
 type ResolvedMetricDimension = {
   code: string;
-  alias: string;
   variable: PxVariable | null;
   values: ResolvedDimensionValue[];
   hasDimension: boolean;
   spec: MetricDimensionSpec;
 };
 
-type BuildMetaContext<RecordShape extends Record<string, unknown>> = {
-  sourceMeta: PxMeta;
-  cube: PxCube;
-  cubeSummary: ReturnType<typeof readCubeMetadata>;
-  axes: ResolvedAxisDimension[];
-  metrics: ResolvedMetricDimension[];
-  records: RecordShape[];
-  fields: MetaField[];
-  unit: string | null;
-  updatedAt: string | null;
-  periods: number;
-};
-
 type FinalizeDatasetContext<RecordShape extends Record<string, unknown>> = {
   datasetId: string;
-  metaEnvelope: Record<string, unknown>;
+  meta: Meta;
   sourceMeta: PxMeta;
   cube: PxCube;
   cubeSummary: ReturnType<typeof readCubeMetadata>;
@@ -146,6 +132,8 @@ type FinalizeDatasetContext<RecordShape extends Record<string, unknown>> = {
   metrics: ResolvedMetricDimension[];
   records: RecordShape[];
   fields: MetaField[];
+  dimensions: Record<string, DimensionOption[]>;
+  granularity: TimeGranularity;
 };
 
 type RecordContext = {
@@ -160,7 +148,7 @@ type RecordContext = {
 };
 
 type DefaultDatasetShape<RecordShape extends Record<string, unknown>> = {
-  meta: Record<string, unknown>;
+  meta: Meta;
   records: RecordShape[];
 };
 
@@ -178,17 +166,18 @@ export type PipelineSpec<
   axes?: AxisDimensionSpec[];
   metricDimensions?: MetricDimensionSpec[];
   queryDimensions?: QueryDimensionSpec[];
-  unit?: string | null;
-  extraFields?: MetaField[];
+  unit?: string | null; // optional default
+  extraFields?: MetaField[]; // will be appended; must have units
   createRecord: (
     context: RecordContext,
   ) => RecordShape | RecordShape[] | null | undefined;
-  buildMeta?: (
-    context: BuildMetaContext<RecordShape>,
-  ) => Record<string, unknown>;
+  buildNotes?: (context: {
+    cubeSummary: ReturnType<typeof readCubeMetadata>;
+  }) => string[] | undefined;
   finalizeDataset?: (
     context: FinalizeDatasetContext<RecordShape>,
   ) => DatasetShape;
+  writeFile?: boolean;
 };
 
 export async function runPxDatasetPipeline<
@@ -208,20 +197,20 @@ export async function runPxDatasetPipeline<
     unit = null,
     createRecord,
     extraFields = [],
-    buildMeta,
+    buildNotes,
     finalizeDataset,
     meta: providedMeta,
+    writeFile = true,
   } = spec;
 
-  if (!datasetId) {
-    throw new PxError("runPxDatasetPipeline: missing datasetId");
-  }
-  if (!filename) {
-    throw new PxError(`${datasetId}: expected output filename`);
-  }
-  if (!Array.isArray(parts) || !parts.length) {
+  if (!datasetId) throw new PxError("runPxDatasetPipeline: missing datasetId");
+  if (!filename) throw new PxError(`${datasetId}: expected output filename`);
+  if (!Array.isArray(parts) || !parts.length)
     throw new PxError(`${datasetId}: expected PX path parts for dataset`);
-  }
+
+  const defaultSourcePaths = [parts] as const;
+  const { description: defaultSource, urls: defaultSourceUrls } =
+    describePxSources(defaultSourcePaths);
 
   const meta = providedMeta ?? (await pxGetMeta(parts));
   const variables = metaVariables(meta);
@@ -229,11 +218,7 @@ export async function runPxDatasetPipeline<
     datasetId,
     meta,
     variables,
-    resolved: {
-      timeCode: undefined,
-      axisCodes: [],
-      metricCodes: [],
-    },
+    resolved: { timeCode: undefined, axisCodes: [], metricCodes: [] },
   };
 
   const resolvedTime = resolveAxisDimension(timeDimension, resolverContext, {
@@ -251,10 +236,8 @@ export async function runPxDatasetPipeline<
     resolvedAxes.push(resolved);
   });
 
-  if (!Array.isArray(metricSpecs) || metricSpecs.length === 0) {
+  if (!Array.isArray(metricSpecs) || metricSpecs.length === 0)
     throw new PxError(`${datasetId}: expected at least one metric dimension`);
-  }
-
   const resolvedMetrics: ResolvedMetricDimension[] = metricSpecs.map(
     (metricSpec, metricIndex) =>
       resolveMetricDimension(metricSpec, resolverContext, metricIndex),
@@ -262,12 +245,40 @@ export async function runPxDatasetPipeline<
 
   const allAxes = [resolvedTime, ...resolvedAxes];
 
+  const dimensionOptions: Record<string, DimensionOption[]> = {};
+  const captureDimensionOptions = (
+    alias: string | null | undefined,
+    values: ResolvedDimensionValue[],
+  ) => {
+    if (!alias || !values.length) return;
+    if (alias === resolvedTime.alias) return; // never include period in dimensions
+    dimensionOptions[alias] = values.map((v) => {
+      const label = v.metaLabel || v.label || v.code;
+      const optionKey =
+        typeof v.key === "string" && v.key.length ? v.key : v.code;
+      return {
+        key: optionKey,
+        label,
+      };
+    });
+  };
+
+  resolvedAxes.forEach((axis) =>
+    captureDimensionOptions(axis.alias, axis.values),
+  );
+
+  const resolvedGranularity: TimeGranularity =
+    timeDimension.granularity ??
+    ((): TimeGranularity => {
+      throw new PxError(`${datasetId}: time granularity is required`);
+    })();
+
   const query = [
     ...allAxes.map((dimension) => ({
       code: dimension.code,
       selection: {
         filter: "item",
-        values: dimension.values.map((value) => value.code),
+        values: dimension.values.map((v) => v.code),
       },
     })),
     ...resolvedMetrics
@@ -276,24 +287,22 @@ export async function runPxDatasetPipeline<
         code: dimension.code,
         selection: {
           filter: "item",
-          values: dimension.values.map((value) => value.code),
+          values: dimension.values.map((v) => v.code),
         },
       })),
     ...queryDimensions.map((dimension) => ({
       code: dimension.code,
       selection: {
         filter: "item",
-        values: dimension.values.map((value) => String(value)),
+        values: dimension.values.map((v) => String(v)),
       },
     })),
   ];
 
   const cube = await pxPostData(parts, { query });
-  const dimensionOrder = query.map((dimension) => dimension.code);
+  const dimensionOrder = query.map((d) => d.code);
   const table = tableLookup(cube, dimensionOrder);
-  if (!table) {
-    throw new PxError(`${datasetId}: unexpected PX response format`);
-  }
+  if (!table) throw new PxError(`${datasetId}: unexpected PX response format`);
   const { dimCodes, lookup } = table;
 
   const baseAssignments: Record<string, string> = {};
@@ -303,11 +312,10 @@ export async function runPxDatasetPipeline<
   for (const axis of allAxes) {
     if (axis.iterate === false) {
       const firstValue = axis.values[0];
-      if (!firstValue) {
+      if (!firstValue)
         throw new PxPipelineSkip(
           `${datasetId}: axis "${axis.code}" resolved no values`,
         );
-      }
       const entry = createAxisContextEntry(axis, firstValue);
       baseAssignments[axis.code] = firstValue.code;
       baseAliasContext[axis.alias] = entry;
@@ -316,18 +324,16 @@ export async function runPxDatasetPipeline<
   }
 
   for (const filter of queryDimensions) {
-    if (!Array.isArray(filter.values) || filter.values.length === 0) {
+    if (!Array.isArray(filter.values) || filter.values.length === 0)
       throw new PxError(
         `${datasetId}: query dimension "${filter.code}" missing values`,
       );
-    }
     baseAssignments[filter.code] = String(filter.values[0]);
   }
 
   const iterableAxes = allAxes.filter((axis) => axis.iterate !== false);
-  if (!iterableAxes.length) {
+  if (!iterableAxes.length)
     throw new PxError(`${datasetId}: no iterable axes configured`);
-  }
 
   const records: RecordShape[] = [];
   const timeAlias = resolvedTime.alias;
@@ -340,20 +346,18 @@ export async function runPxDatasetPipeline<
   ) => {
     if (index >= iterableAxes.length) {
       const periodEntry = aliasCtx[timeAlias];
-      if (!periodEntry) {
+      if (!periodEntry)
         throw new PxError(
-          `${datasetId}: time dimension "${resolvedTime.code}" missing from record context`,
+          `${datasetId}: time dimension missing in record context`,
         );
-      }
       const values: Record<string, number | null> = {};
       for (const metric of resolvedMetrics) {
         if (!metric.hasDimension) {
-          if (metric.values.length !== 1) {
+          if (metric.values.length !== 1)
             throw new PxError(
               `${datasetId}: implicit metric dimension requires a single value`,
             );
-          }
-          const metricSpec = metric.values[0];
+          const metricSpec = metric.values[0]!;
           const raw = lookupTableValue(dimCodes, lookup, assignments);
           values[metricSpec.key ?? metricSpec.code] = tidyNumber(raw);
           continue;
@@ -382,13 +386,12 @@ export async function runPxDatasetPipeline<
       });
       if (Array.isArray(recordResult)) {
         for (const entry of recordResult) {
-          if (entry && typeof entry === "object") {
+          if (entry && typeof entry === "object")
             records.push(entry as RecordShape);
-          } else if (entry !== null && entry !== undefined) {
+          else if (entry !== null && entry !== undefined)
             throw new PxError(
               `${datasetId}: createRecord returned invalid array entry`,
             );
-          }
         }
       } else if (recordResult && typeof recordResult === "object") {
         records.push(recordResult as RecordShape);
@@ -397,24 +400,14 @@ export async function runPxDatasetPipeline<
       }
       return;
     }
-
-    const axis = iterableAxes[index];
+    const axis = iterableAxes[index]!;
     for (const value of axis.values) {
       const entry = createAxisContextEntry(axis, value);
       walk(
         index + 1,
-        {
-          ...assignments,
-          [axis.code]: value.code,
-        },
-        {
-          ...aliasCtx,
-          [axis.alias]: entry,
-        },
-        {
-          ...codeCtx,
-          [axis.code]: entry,
-        },
+        { ...assignments, [axis.code]: value.code },
+        { ...aliasCtx, [axis.alias]: entry },
+        { ...codeCtx, [axis.code]: entry },
       );
     }
   };
@@ -427,81 +420,86 @@ export async function runPxDatasetPipeline<
   );
 
   const cubeSummary = readCubeMetadata(cube);
-  const datasetUnit =
-    unit ?? (cubeSummary.unit ? String(cubeSummary.unit) : null);
+  const datasetUnit = unit
+    ? String(unit)
+    : cubeSummary.unit
+      ? String(cubeSummary.unit)
+      : undefined;
   const updatedAt =
     typeof cubeSummary.updatedAt === "string"
       ? cubeSummary.updatedAt
       : (cubeSummary.updatedAt ?? null);
-  const periods = resolvedTime.values.length;
 
-  const metricFields: MetaField[] = [];
+  // Time stats from resolvedTime values
+  const periodCodes = resolvedTime.values.map((v) => v.label);
+  const first = periodCodes[0] ?? "";
+  const last = periodCodes[periodCodes.length - 1] ?? "";
+  if (!first || !last)
+    throw new PxError(`${datasetId}: unable to resolve first/last period`);
+
+  // Build fields (units required)
+  const fields: MetaField[] = [];
   for (const metric of resolvedMetrics) {
     for (const value of metric.values) {
       const key =
-        typeof value.key === "string" && value.key.length > 0
+        typeof value.key === "string" && value.key.length
           ? value.key
           : value.code;
       const label =
-        typeof value.label === "string" && value.label.length > 0
+        typeof value.label === "string" && value.label.length
           ? value.label
           : key;
-      const entryUnit =
-        value.unit === undefined ? datasetUnit : (value.unit ?? null);
-      const exists = metricFields.some((field) => field.key === key);
-      if (!exists) {
-        metricFields.push({
-          key,
-          label,
-          unit: entryUnit ?? null,
-        });
-      }
+      const entryUnit = value.unit ?? datasetUnit ?? "";
+      if (!entryUnit)
+        throw new PxError(`${datasetId}: unit is required for metric ${key}`);
+      const exists = fields.some((f) => f.key === key);
+      if (!exists) fields.push({ key, label, unit: entryUnit });
     }
   }
+  fields.push(...extraFields); // extraFields must already have non-empty units
 
-  const fields: MetaField[] = [...metricFields, ...extraFields];
+  const metrics = fields.map((f) => f.key);
 
-  const metaPayload = buildMeta
-    ? buildMeta({
-        sourceMeta: meta,
-        cube,
-        cubeSummary,
-        axes: allAxes,
-        metrics: resolvedMetrics,
-        records,
-        fields,
-        unit: datasetUnit,
-        updatedAt,
-        periods,
-      })
-    : {
-        updatedAt,
-        unit: datasetUnit,
-        periods,
-        fields,
-      };
+  const metaObj = createMeta(datasetId, generatedAt, {
+    updated_at: updatedAt,
+    time: {
+      key: "period",
+      granularity: resolvedGranularity,
+      first,
+      last,
+      count: resolvedTime.values.length,
+    },
+    fields,
+    metrics,
+    dimensions: dimensionOptions,
+    unit: datasetUnit,
+    source: defaultSource,
+    source_urls: defaultSourceUrls,
+    notes: buildNotes ? (buildNotes({ cubeSummary }) ?? []) : [],
+  } as unknown as Meta);
 
-  const metaEnvelope = createMeta(parts, generatedAt, metaPayload);
   const defaultDataset: DefaultDatasetShape<RecordShape> = {
-    meta: metaEnvelope,
+    meta: metaObj,
     records,
   };
 
   const dataset = finalizeDataset
     ? finalizeDataset({
         datasetId,
-        metaEnvelope,
+        meta: metaObj,
         sourceMeta: meta,
         cube,
         cubeSummary,
-        axes: allAxes,
+        axes: [resolvedTime, ...resolvedAxes],
         metrics: resolvedMetrics,
         records,
         fields,
+        dimensions: dimensionOptions,
+        granularity: resolvedGranularity,
       })
     : (defaultDataset as DatasetShape);
 
-  await writeJson(outDir, filename, dataset);
+  if (writeFile) await writeJson(outDir, filename, dataset);
   return dataset;
 }
 
@@ -512,29 +510,23 @@ function resolveAxisDimension(
 ): ResolvedAxisDimension {
   const { datasetId, meta, variables } = context;
   const rawCode = resolveDimensionCode(spec.code, context);
-  if (!rawCode) {
+  if (!rawCode)
     throw new PxError(`${datasetId}: axis dimension missing code resolver`);
-  }
   const code = String(rawCode);
   const variable = expectVariable(variables, datasetId, code, spec.text);
   const baseValues = prepareBaseValues(variable, options.isTime);
   const baseLookup = new Map(baseValues.map((entry) => [entry.code, entry]));
 
   let valueSpecs: DimensionValueSpec[];
-  if (typeof spec.resolveValues === "function") {
-    valueSpecs = spec.resolveValues({
-      ...context,
-      variable,
-      baseValues,
-    });
-  } else if (Array.isArray(spec.values) && spec.values.length) {
+  if (typeof spec.resolveValues === "function")
+    valueSpecs = spec.resolveValues({ ...context, variable, baseValues });
+  else if (Array.isArray(spec.values) && spec.values.length)
     valueSpecs = spec.values;
-  } else {
+  else
     valueSpecs = baseValues.map((entry) => ({
       code: entry.code,
       label: entry.label,
     }));
-  }
 
   const values = normalizeDimensionValues(
     datasetId,
@@ -545,16 +537,14 @@ function resolveAxisDimension(
     variable,
     meta,
   );
-  if (!values.length) {
+  if (!values.length)
     throw new PxPipelineSkip(
       `${datasetId}: axis "${code}" resolved zero values`,
     );
-  }
 
   const alias =
     spec.alias ??
     (options.isTime ? "period" : code || `axis_${options.axisIndex}`);
-
   context.resolved.axisCodes.push(code);
 
   return {
@@ -584,31 +574,22 @@ function resolveMetricDimension(
   const baseLookup = new Map(baseValues.map((entry) => [entry.code, entry]));
 
   let valueSpecs: DimensionValueSpec[];
-  if (typeof spec.resolveValues === "function") {
-    valueSpecs = spec.resolveValues({
-      ...context,
-      variable,
-      baseValues,
-    });
-  } else if (Array.isArray(spec.values) && spec.values.length) {
+  if (typeof spec.resolveValues === "function")
+    valueSpecs = spec.resolveValues({ ...context, variable, baseValues });
+  else if (Array.isArray(spec.values) && spec.values.length)
     valueSpecs = spec.values;
-  } else if (hasDimension) {
+  else if (hasDimension)
     valueSpecs = baseValues.map((entry) => ({
       code: entry.code,
       label: entry.label,
       key: entry.code,
     }));
-  } else {
-    valueSpecs = [];
-  }
+  else valueSpecs = [];
 
-  if (!valueSpecs.length) {
+  if (!valueSpecs.length)
     throw new PxError(
-      `${datasetId}: metric dimension ${
-        hasDimension ? `"${code}"` : "(implicit)"
-      } resolved zero values`,
+      `${datasetId}: metric dimension ${hasDimension ? `"${code}"` : "(implicit)"} resolved zero values`,
     );
-  }
 
   const values = normalizeDimensionValues(
     datasetId,
@@ -619,29 +600,14 @@ function resolveMetricDimension(
     variable,
     meta,
   );
-
-  for (const value of values) {
-    if (!value.key || typeof value.key !== "string") {
+  for (const value of values)
+    if (!value.key || typeof value.key !== "string")
       throw new PxError(
         `${datasetId}: metric value "${value.code}" missing key`,
       );
-    }
-  }
 
-  const alias = spec.alias ?? (hasDimension ? code : `value_${metricIndex}`);
-
-  if (hasDimension) {
-    context.resolved.metricCodes.push(code);
-  }
-
-  return {
-    code,
-    alias,
-    variable,
-    values,
-    hasDimension,
-    spec,
-  };
+  if (hasDimension) context.resolved.metricCodes.push(code);
+  return { code, variable, values, hasDimension, spec };
 }
 
 function resolveDimensionCode(
@@ -663,12 +629,11 @@ function expectVariable(
   code: string,
   expectedText?: string | null,
 ): PxVariable {
-  const target = variables.find((variable) => String(variable?.code) === code);
-  if (!target) {
+  const target = variables.find((v) => String(v?.code) === code);
+  if (!target)
     throw new PxError(
       `${datasetId}: expected dimension "${code}" not found in PxWeb metadata`,
     );
-  }
   if (
     expectedText &&
     String(target.text ?? "").trim() !== String(expectedText).trim()
@@ -686,15 +651,11 @@ function prepareBaseValues(
 ): ResolvedDimensionValue[] {
   if (!variable) return [];
   const pairs = buildValuePairs(variable);
-  const mapped = pairs.map(([code, label]) => {
-    const valueCode = String(code);
-    const valueLabel = String(label);
-    return {
-      code: valueCode,
-      label: valueLabel,
-      metaLabel: valueLabel,
-    };
-  });
+  const mapped = pairs.map(([code, label]) => ({
+    code: String(code),
+    label: String(label),
+    metaLabel: String(label),
+  }));
   if (isTime && variable.time === true) mapped.reverse();
   return mapped;
 }
@@ -715,17 +676,15 @@ function normalizeDimensionValues(
 ): ResolvedDimensionValue[] {
   const resolved: ResolvedDimensionValue[] = valueSpecs.map((value) => {
     const code = String(value?.code ?? "");
-    if (!code) {
+    if (!code)
       throw new PxError(
         `${datasetId}: dimension "${dimensionCode}" has value without code`,
       );
-    }
     const base = baseLookup.get(code);
-    if (!base && variable) {
+    if (!base && variable)
       throw new PxError(
         `${datasetId}: dimension "${dimensionCode}" missing expected code "${code}"`,
       );
-    }
     const metaLabel =
       base?.metaLabel ??
       base?.label ??
@@ -739,11 +698,7 @@ function normalizeDimensionValues(
         ? spec.toLabel(code, {
             datasetId,
             value: {
-              ...(base ?? {
-                code,
-                label: interimLabel,
-                metaLabel,
-              }),
+              ...(base ?? { code, label: interimLabel, metaLabel }),
               ...value,
               code,
               label: interimLabel,
@@ -754,22 +709,14 @@ function normalizeDimensionValues(
           })
         : interimLabel;
     return {
-      ...(base ?? {
-        code,
-        label: interimLabel,
-        metaLabel,
-      }),
+      ...(base ?? { code, label: interimLabel, metaLabel }),
       ...value,
       code,
       label,
       metaLabel,
     };
   });
-
-  if (typeof spec.sort === "function") {
-    resolved.sort(spec.sort);
-  }
-
+  if (typeof spec.sort === "function") resolved.sort(spec.sort);
   return resolved;
 }
 

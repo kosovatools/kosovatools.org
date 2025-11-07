@@ -33,5 +33,5 @@ export {
   DEFAULT_TIME_RANGE_OPTIONS,
   DEFAULT_TIME_RANGE,
 } from "./utils/time-range";
-export type { TimeRangeOption, TimeRangeDefinition } from "./utils/time-range";
+export type { TimeRangeOption } from "./utils/time-range";
 export type { TimelineEvent, TimelineEventCategory } from "./types/timeline";

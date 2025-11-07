@@ -1,49 +1,72 @@
 import { PATHS } from "../lib/constants";
-import { normalizeYM } from "../lib/utils";
+import {
+  createMeta,
+  describePxSources,
+  normalizeYM,
+  type MetaField,
+} from "../lib/utils";
 import { runPxDatasetPipeline } from "../pipeline/px-dataset";
+import { writeJson } from "../lib/io";
+import { PxError } from "../lib/pxweb";
 
-type CpiSpec = {
-  path_key: keyof typeof PATHS;
-  filename: string;
-};
+type PxDatasetResult<RecordShape extends Record<string, unknown>> = Awaited<
+  ReturnType<typeof runPxDatasetPipeline<RecordShape>>
+>;
 
-type CpiRecord = {
+type RawCpiRecord = { period: string; group: string; value: number | null };
+type RawCpiDataset = PxDatasetResult<RawCpiRecord>;
+
+export type CpiMetric = "index" | "change";
+
+export type CpiRecord = {
   period: string;
-  group_code: string;
-  group_label: string;
-  value: number;
-};
+  group: string;
+} & Record<CpiMetric, number | null>;
 
-type CpiGroup = {
-  code: string;
-  label: string;
-  values: Array<{ period: string; value: number }>;
-};
+const CPI_METRIC_FIELDS: ReadonlyArray<MetaField & { key: CpiMetric }> = [
+  { key: "index", label: "CPI Index", unit: "" },
+  { key: "change", label: "CPI Change (m/m)", unit: "%" },
+];
 
-type CpiDataset = {
-  meta: Record<string, unknown>;
-  groups: CpiGroup[];
-};
+const CPI_DATASET_ID = "kas_cpi_monthly";
+const CPI_FILENAME = "kas_cpi_monthly.json";
 
-export async function fetchCpiDataset(
+const COMPONENT_SPECS = {
+  index: {
+    datasetId: "kas_cpi_index_monthly",
+    path_key: "cpi_index",
+    unit: "index",
+  },
+  change: {
+    datasetId: "kas_cpi_change_monthly",
+    path_key: "cpi_change",
+    unit: "%",
+  },
+} as const satisfies Record<
+  CpiMetric,
+  { datasetId: string; path_key: keyof typeof PATHS; unit: string }
+>;
+
+type ComponentSpec = (typeof COMPONENT_SPECS)[CpiMetric];
+
+async function fetchCpiComponent(
   outDir: string,
   generatedAt: string,
-  _months: unknown,
-  { path_key, filename }: CpiSpec,
-) {
-  const datasetId = filename.replace(/\.json$/i, "");
-  const parts = PATHS[path_key];
-
-  return runPxDatasetPipeline<CpiRecord, CpiDataset>({
-    datasetId,
-    filename,
+  spec: ComponentSpec,
+): Promise<RawCpiDataset> {
+  const parts = PATHS[spec.path_key];
+  return runPxDatasetPipeline<RawCpiRecord>({
+    datasetId: spec.datasetId,
+    filename: `${spec.datasetId}.json`,
     parts,
     outDir,
     generatedAt,
+    unit: spec.unit,
     timeDimension: {
       code: "Viti/muaji",
       text: "Viti/muaji",
       toLabel: normalizeYM,
+      granularity: "monthly",
     },
     axes: [
       {
@@ -56,98 +79,123 @@ export async function fetchCpiDataset(
       {
         code: () => null,
         values: [
-          {
-            code: "__value__",
-            key: "value",
-            label: "Value",
-          },
+          { code: "__value__", key: "value", label: "Value", unit: spec.unit },
         ],
       },
     ],
     createRecord: ({ period, axes, values }) => {
-      const groupEntry = axes.group;
-      if (!groupEntry) return null;
-      return {
-        period,
-        group_code: groupEntry.code,
-        group_label: groupEntry.metaLabel,
-        value:
-          typeof values.value === "number" && Number.isFinite(values.value)
-            ? values.value
-            : 0,
-      };
+      const group = axes.group;
+      if (!group) return null;
+      const rawValue = values.value;
+      const value =
+        typeof rawValue === "number" ? rawValue : (rawValue ?? null);
+      return { period, group: group.code, value };
     },
-    buildMeta: ({ cubeSummary, fields, periods, axes }) => {
-      const timeAxis = axes.find((axis) => axis.isTime);
-      const groupAxis = axes.find((axis) => axis.alias === "group");
-      const unit = cubeSummary.unit ?? null;
-      const title = cubeSummary.title ?? null;
-      const groupLabels =
-        groupAxis?.values.reduce(
-          (acc, value) => {
-            acc[value.code] = value.metaLabel;
-            return acc;
-          },
-          {} as Record<string, string>,
-        ) ?? {};
-      return {
-        updatedAt: cubeSummary.updatedAt,
-        unit,
-        periods,
-        fields: fields.map((field) => ({
-          ...field,
-          unit: field.unit ?? unit,
-        })),
-        title,
-        group_count: Object.keys(groupLabels).length,
-        group_labels: groupLabels,
-        dimensions: {
-          time: {
-            code: timeAxis?.code ?? "Viti/muaji",
-            label: timeAxis?.variable?.text ?? "Viti/muaji",
-          },
-          group: {
-            code: groupAxis?.code ?? "Grupet dhe nëngrupet",
-            label: groupAxis?.variable?.text ?? "Grupet dhe nëngrupet",
-          },
-        },
-      };
-    },
-    finalizeDataset: ({ metaEnvelope, records, axes }) => {
-      const groupAxis = axes.find((axis) => axis.alias === "group");
-      const labelLookup = new Map<string, string>();
-      if (groupAxis) {
-        for (const value of groupAxis.values) {
-          labelLookup.set(value.code, value.metaLabel);
-        }
-      }
-      const groupMap = new Map<string, CpiGroup>();
-      for (const record of records) {
-        const label =
-          labelLookup.get(record.group_code) ??
-          record.group_label ??
-          record.group_code;
-        const existing = groupMap.get(record.group_code);
-        const entry = existing ?? {
-          code: record.group_code,
-          label,
-          values: [],
-        };
-        entry.values.push({
-          period: record.period,
-          value: record.value,
-        });
-        if (!existing) groupMap.set(record.group_code, entry);
-      }
-      const orderedGroups = groupAxis
-        ? groupAxis.values
-            .map((value) => groupMap.get(value.code))
-            .filter((value): value is CpiGroup => Boolean(value))
-        : Array.from(groupMap.values());
-      return {
-        meta: metaEnvelope,
-        groups: orderedGroups,
-      };
-    },
+    writeFile: false,
   });
+}
+
+function mergeCpiRecords(
+  indexDataset: RawCpiDataset,
+  changeDataset: RawCpiDataset,
+): CpiRecord[] {
+  const recordMap = new Map<string, CpiRecord>();
+  const ensureRecord = (period: string, group: string): CpiRecord => {
+    const key = `${period}:${group}`;
+    let record = recordMap.get(key);
+    if (!record) {
+      record = { period, group, index: null, change: null };
+      recordMap.set(key, record);
+    }
+    return record;
+  };
+
+  for (const entry of indexDataset.records) {
+    ensureRecord(entry.period, entry.group).index = entry.value ?? null;
+  }
+
+  for (const entry of changeDataset.records) {
+    ensureRecord(entry.period, entry.group).change = entry.value ?? null;
+  }
+
+  return Array.from(recordMap.values()).sort((a, b) => {
+    if (a.period === b.period) return a.group.localeCompare(b.group);
+    return a.period.localeCompare(b.period);
+  });
+}
+
+function collectGroupOptions(
+  indexDataset: RawCpiDataset,
+  changeDataset: RawCpiDataset,
+) {
+  const options =
+    indexDataset.meta.dimensions.group ?? changeDataset.meta.dimensions.group;
+  if (!options || !options.length)
+    throw new PxError("cpi: group dimension options missing");
+  return options;
+}
+
+function collectPeriodStats(records: CpiRecord[]) {
+  if (!records.length) throw new PxError("cpi: no CPI records generated");
+  const periods = Array.from(new Set(records.map((r) => r.period))).sort();
+  return {
+    first: periods[0]!,
+    last: periods[periods.length - 1]!,
+    count: periods.length,
+  };
+}
+
+function latestTimestamp(values: Array<string | null>): string | null {
+  const filtered = values.filter(
+    (value): value is string => typeof value === "string" && value.length > 0,
+  );
+  if (!filtered.length) return null;
+  return filtered.sort().at(-1)!;
+}
+
+function mergeNotes(
+  values: Array<readonly string[] | null | undefined>,
+): string[] {
+  const merged = new Set<string>();
+  values.forEach((list) => list?.forEach((note) => merged.add(note)));
+  return Array.from(merged);
+}
+
+export async function fetchCpiMonthly(outDir: string, generatedAt: string) {
+  const componentResults = await Promise.all([
+    fetchCpiComponent(outDir, generatedAt, COMPONENT_SPECS.index),
+    fetchCpiComponent(outDir, generatedAt, COMPONENT_SPECS.change),
+  ]);
+  const [indexDataset, changeDataset] = componentResults;
+
+  const records = mergeCpiRecords(indexDataset, changeDataset);
+  const { first, last, count } = collectPeriodStats(records);
+  const groupOptions = collectGroupOptions(indexDataset, changeDataset);
+
+  const { description: source, urls: sourceUrls } = describePxSources([
+    PATHS.cpi_index,
+    PATHS.cpi_change,
+  ]);
+  const fields = CPI_METRIC_FIELDS.map((field) => ({ ...field }));
+  const metrics = fields.map((field) => field.key);
+
+  const meta = createMeta(CPI_DATASET_ID, generatedAt, {
+    updated_at: latestTimestamp([
+      indexDataset.meta.updated_at,
+      changeDataset.meta.updated_at,
+    ]),
+    time: { key: "period", granularity: "monthly", first, last, count },
+    fields,
+    metrics,
+    dimensions: { group: groupOptions },
+    unit: null,
+    source,
+    source_urls: sourceUrls,
+    title: indexDataset.meta.title ?? changeDataset.meta.title ?? null,
+    notes: mergeNotes([indexDataset.meta.notes, changeDataset.meta.notes]),
+  });
+
+  const dataset = { meta, records };
+  await writeJson(outDir, CPI_FILENAME, dataset);
+  return dataset;
 }

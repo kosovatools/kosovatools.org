@@ -6,13 +6,13 @@ export type PeriodFormatterOptions = { locale?: string; fallback?: string };
 
 // ==== Constants ====
 export const PERIOD_GROUPING_OPTIONS: ReadonlyArray<{
-  id: PeriodGrouping;
+  key: PeriodGrouping;
   label: string;
 }> = [
-  { id: "monthly", label: "Mujor" },
-  { id: "quarterly", label: "Tremujor" },
-  { id: "yearly", label: "Vjetor" },
-  { id: "seasonal", label: "Sezonal" },
+  { key: "monthly", label: "Mujor" },
+  { key: "quarterly", label: "Tremujor" },
+  { key: "yearly", label: "Vjetor" },
+  { key: "seasonal", label: "Sezonal" },
 ];
 
 const DEFAULT_PERIOD_GROUPING: PeriodGrouping = "monthly";

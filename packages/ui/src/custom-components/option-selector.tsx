@@ -10,25 +10,19 @@ export type SelectorOptionValue = string | number;
 export type SelectorOptionDefinition<
   T extends SelectorOptionValue = SelectorOptionValue,
 > = {
-  id: T;
+  key: T;
   label: React.ReactNode;
 };
 
-export type TimeRangeOption = number | "all";
-
-export type TimeRangeDefinition<T extends TimeRangeOption = TimeRangeOption> =
-  SelectorOptionDefinition<T>;
-
-export type OptionSelectorProps<
-  T extends SelectorOptionValue = SelectorOptionValue,
-> = {
-  value: T;
-  onChange: (value: T) => void;
-  options: ReadonlyArray<SelectorOptionDefinition<T>>;
-  className?: string;
-  disabled?: boolean;
-  label?: React.ReactNode;
-};
+type OptionSelectorProps<T extends SelectorOptionValue = SelectorOptionValue> =
+  {
+    value: T;
+    onChange: (value: T) => void;
+    options: ReadonlyArray<SelectorOptionDefinition<T>>;
+    className?: string;
+    disabled?: boolean;
+    label?: React.ReactNode;
+  };
 
 export function OptionSelector<T extends SelectorOptionValue>({
   value,
@@ -45,16 +39,17 @@ export function OptionSelector<T extends SelectorOptionValue>({
           {label}
         </span>
       ) : null}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex gap-2">
         {options.map((option) => {
-          const active = value === option.id;
+          const optionValue = option.key;
+          const active = value === optionValue;
           return (
             <Button
-              key={option.id}
+              key={String(optionValue)}
               type="button"
               size="sm"
               variant={active ? "default" : "outline"}
-              onClick={() => onChange(option.id)}
+              onClick={() => onChange(optionValue)}
               disabled={disabled}
               className="px-2 py-1 text-xs"
             >

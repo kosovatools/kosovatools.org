@@ -1,0 +1,172 @@
+{
+  "meta": {
+    "table": "tourism_monthly",
+    "path": "ASKdata/Tourism and hotels/Treguesit mujorë/tourism_monthly",
+    "generated_at": "2025-11-07T16:16:48.914Z",
+    "updated_at": null,
+    "unit": "people",
+    "fields": [
+      {
+        "key": "visitors",
+        "label": "Visitors",
+        "unit": "people"
+      },
+      {
+        "key": "nights",
+        "label": "Nights",
+        "unit": "overnights"
+      }
+    ],
+    "source": "Data derived from Table 01, Table 02 in Tourism and hotels",
+    "source_urls": [
+      "ASKdata/Tourism and hotels/Treguesit mujorë/tab01.px",
+      "ASKdata/Tourism and hotels/Treguesit mujorë/tab02.px"
+    ],
+    "periods": 55,
+    "metrics": [
+      "visitors",
+      "nights"
+    ],
+    "slices": [
+      "region",
+      "country"
+    ],
+    "slice_labels": {
+      "region": "Rajonet",
+      "country": "Shtetet"
+    },
+    "region_meta": {
+      "table": "tab01.px",
+      "path": "ASKdata/Tourism and hotels/Treguesit mujorë/tab01.px",
+      "generated_at": "2025-11-07T16:16:48.914Z",
+      "updated_at": null,
+      "unit": "people",
+      "fields": [
+        {
+          "key": "visitors",
+          "label": "Visitors",
+          "unit": "people"
+        },
+        {
+          "key": "nights",
+          "label": "Nights",
+          "unit": "overnights"
+        }
+      ],
+      "source": "Table 01 in Tourism and hotels",
+      "source_urls": [
+        "ASKdata/Tourism and hotels/Treguesit mujorë/tab01.px"
+      ],
+      "periods": 55,
+      "regions": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "region_labels": {
+        "0": "Gjakovë",
+        "1": "Gjilan",
+        "2": "Mitrovicë",
+        "3": "Pejë",
+        "4": "Prizren",
+        "5": "Prishtinë",
+        "6": "Ferizaj"
+      },
+      "visitor_groups": [
+        "total",
+        "local",
+        "external"
+      ],
+      "visitor_group_labels": {
+        "total": "Gjithsej",
+        "local": "Vendor",
+        "external": "Të jashtëm"
+      },
+      "metrics": [
+        "visitors",
+        "nights"
+      ]
+    },
+    "country_meta": {
+      "table": "tab02.px",
+      "path": "ASKdata/Tourism and hotels/Treguesit mujorë/tab02.px",
+      "generated_at": "2025-11-07T16:16:48.914Z",
+      "updated_at": null,
+      "unit": "people",
+      "fields": [
+        {
+          "key": "visitors",
+          "label": "Visitors",
+          "unit": "people"
+        },
+        {
+          "key": "nights",
+          "label": "Nights",
+          "unit": "overnights"
+        }
+      ],
+      "source": "Table 02 in Tourism and hotels",
+      "source_urls": [
+        "ASKdata/Tourism and hotels/Treguesit mujorë/tab02.px"
+      ],
+      "periods": 55,
+      "countries": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21"
+      ],
+      "country_labels": {
+        "0": "Të jashtëm",
+        "1": "Austria",
+        "2": "Belgjika",
+        "3": "Bosna & Hercegovina",
+        "4": "Britania e Madhe",
+        "5": "Franca",
+        "6": "Gjermania",
+        "7": "Greqia",
+        "8": "Holanda",
+        "9": "Italia",
+        "10": "Kroacia",
+        "11": "Mali I Zi",
+        "12": "Maqedonia",
+        "13": "Polonia",
+        "14": "Serbia",
+        "15": "SHBA",
+        "16": "Shqipëria",
+        "17": "Sllovenia",
+        "18": "Spanja",
+        "19": "Turqia",
+        "20": "Zvicra",
+        "21": "Të tjera"
+      },
+      "metrics": [
+        "visitors",
+        "nights"
+      ]
+    }
+  },
+  "records": []
+}

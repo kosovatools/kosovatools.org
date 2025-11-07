@@ -99,9 +99,9 @@ export function CustomsExplorer() {
           setDatasetValidity(
             latestValidFromDate
               ? {
-                iso: latestValidFromDate.toISOString(),
-                display: datasetDateFormatter.format(latestValidFromDate),
-              }
+                  iso: latestValidFromDate.toISOString(),
+                  display: datasetDateFormatter.format(latestValidFromDate),
+                }
               : null,
           );
           setInitialized(true);
@@ -113,11 +113,11 @@ export function CustomsExplorer() {
           current && current.phase === "error"
             ? current
             : {
-              phase: "error",
-              loaded: 0,
-              total: 0,
-              message: "Indeksimi dështoi. Kontrolloni konsolën për detaje.",
-            },
+                phase: "error",
+                loaded: 0,
+                total: 0,
+                message: "Indeksimi dështoi. Kontrolloni konsolën për detaje.",
+              },
         );
       } finally {
         if (mountedRef.current) setLoading(false);
@@ -184,9 +184,9 @@ export function CustomsExplorer() {
   const progressPercent =
     indexingState && indexingState.total > 0
       ? Math.min(
-        100,
-        Math.round((indexingState.loaded / indexingState.total) * 100),
-      )
+          100,
+          Math.round((indexingState.loaded / indexingState.total) * 100),
+        )
       : null;
 
   return (
@@ -228,7 +228,6 @@ export function CustomsExplorer() {
                 publikuar nga Dogana e Kosovës.
               </p>
             </div>
-
           </div>
         </div>
 

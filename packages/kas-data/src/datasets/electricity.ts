@@ -1,5 +1,5 @@
 import energyElectricity from "../../data/kas_energy_electricity_monthly.json" with { type: "json" };
-import type { Dataset, DatasetMeta, DatasetMetaField } from "../types/dataset";
+import type { Dataset, DatasetMeta } from "../types/dataset";
 
 export type ElectricityRecord = {
   period: string;
@@ -19,15 +19,15 @@ export type ElectricityRecord = {
   consumption_total_gwh?: number | null;
 };
 
-export type ElectricityMeta = DatasetMeta & {
-  fields: Array<DatasetMetaField & { key: keyof ElectricityRecord }>;
-};
+type ElectricityMetric =
+  Exclude<keyof ElectricityRecord, "period"> extends infer Keys
+    ? Keys extends string
+      ? Keys
+      : never
+    : never;
+
+export type ElectricityMeta = DatasetMeta<ElectricityMetric>;
 
 type ElectricityDataset = Dataset<ElectricityRecord, ElectricityMeta>;
 
-const electricityDataset = energyElectricity as ElectricityDataset;
-
-export const electricityMeta = electricityDataset.meta;
-
-export const electricityMonthly: ElectricityRecord[] =
-  electricityDataset.records.slice();
+export const electricityDataset = energyElectricity as ElectricityDataset;

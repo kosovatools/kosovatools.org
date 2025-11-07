@@ -21,7 +21,7 @@ import {
   type CpiGroupNode,
   type CpiMetric,
   type CpiSeriesPoint,
-} from "@workspace/kas-data";
+} from "./cpi-data";
 import {
   sortGroupedPeriods,
   getPeriodFormatter,
@@ -36,6 +36,7 @@ import {
 } from "@workspace/ui/components/alert";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -88,27 +89,27 @@ type SummaryRow = {
   cumulative: number | null;
 };
 
-const RANGE_OPTIONS: Array<{ id: RangeOption; label: string }> = [
-  { id: 12, label: "12 muaj" },
-  { id: 24, label: "24 muaj" },
-  { id: 60, label: "5 vjet" },
-  { id: 120, label: "10 vjet" },
-  { id: "all", label: "Gjithë seria" },
+const RANGE_OPTIONS: Array<{ key: RangeOption; label: string }> = [
+  { key: 12, label: "12 muaj" },
+  { key: 24, label: "24 muaj" },
+  { key: 60, label: "5 vjet" },
+  { key: 120, label: "10 vjet" },
+  { key: "all", label: "Gjithë seria" },
 ];
 
 const METRIC_OPTIONS: Array<{
-  id: Metric;
+  key: Metric;
   label: string;
   description: string;
 }> = [
   {
-    id: "index",
+    key: "index",
     label: "Indeksi (2015 = 100)",
     description:
       "Reflekton nivelin e çmimeve të konsumit krahasuar me vitin bazë 2015.",
   },
   {
-    id: "change",
+    key: "change",
     label: "Ndryshimi mujor (%)",
     description:
       "Shfaq përqindjen e ndryshimit nga periudha paraprake për secilin grup.",
@@ -222,7 +223,7 @@ export function InflationDashboard({
   }, [metric]);
 
   React.useEffect(() => {
-    const allowed = new Set(RANGE_OPTIONS.map((option) => option.id));
+    const allowed = new Set(RANGE_OPTIONS.map((option) => option.key));
     if (!allowed.has(range)) {
       setRange(60);
     }
@@ -230,7 +231,7 @@ export function InflationDashboard({
 
   React.useEffect(() => {
     if (
-      !PERIOD_GROUPING_OPTIONS.some((option) => option.id === periodGrouping)
+      !PERIOD_GROUPING_OPTIONS.some((option) => option.key === periodGrouping)
     ) {
       setPeriodGrouping("monthly");
     }
@@ -442,13 +443,13 @@ export function InflationDashboard({
               ose ndryshimet mujore të IHÇK-së në periudha të ndryshme kohore.
             </CardDescription>
           </div>
-          <div className="flex flex-col gap-2 md:items-end">
+          <CardAction className="">
             <OptionSelector
               options={METRIC_OPTIONS}
               onChange={setMetric}
               value={metric}
             />
-          </div>
+          </CardAction>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
           <div className="grid gap-6 lg:grid-cols-[minmax(260px,320px)_minmax(0,1fr)] lg:items-start">

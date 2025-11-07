@@ -1,7 +1,7 @@
 export type TimeRangeOption = number | "all";
 
-export type TimeRangeDefinition<T extends TimeRangeOption = TimeRangeOption> = {
-  id: T;
+type TimeRangeDefinition<T extends TimeRangeOption = TimeRangeOption> = {
+  key: T;
   label: string;
 };
 
@@ -23,12 +23,12 @@ export function monthsFromRange(option: TimeRangeOption): number | undefined {
 }
 
 export const DEFAULT_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> = [
-  { id: 12, label: "12 muaj" },
-  { id: 24, label: "24 muaj" },
-  { id: 36, label: "3 vjet" },
-  { id: 60, label: "5 vjet" },
-  { id: 120, label: "10 vjet" },
-  { id: "all", label: "Gjithë seria" },
+  { key: 12, label: "12 muaj" },
+  { key: 24, label: "24 muaj" },
+  { key: 36, label: "3 vjet" },
+  { key: 60, label: "5 vjet" },
+  { key: 120, label: "10 vjet" },
+  { key: "all", label: "Gjithë seria" },
 ];
 
 export const DEFAULT_TIME_RANGE: TimeRangeOption = 36;

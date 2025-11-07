@@ -18,48 +18,37 @@ const PARTNER_LABEL_OVERRIDES: Record<string, string> = {
 };
 
 function formatPartnerName(partner: string): string {
-  if (!partner || partner === "Other") {
+  if (!partner || partner === "Other")
     return partner ? "Të tjerët" : "E panjohur";
-  }
-
   const override = PARTNER_LABEL_OVERRIDES[partner];
-  if (override) {
-    return override;
-  }
-
+  if (override) return override;
   let label = partner;
   const separators = [":", "-"];
-  for (const separator of separators) {
-    const index = label.indexOf(separator);
-    if (index >= 0 && index + 1 < label.length) {
-      label = label.slice(index + 1);
+  for (const s of separators) {
+    const idx = label.indexOf(s);
+    if (idx >= 0 && idx + 1 < label.length) {
+      label = label.slice(idx + 1);
       break;
     }
   }
-
   label = label.replace(/_/g, " ").trim();
-  if (!label) {
-    return partner;
-  }
-
+  if (!label) return partner;
   const transformed = label
     .toLowerCase()
     .replace(
       /(^|[\s,/&-])(\p{L})/gu,
-      (_match: string, prefix: string, char: string) =>
-        `${prefix}${char.toUpperCase()}`,
+      (_m: string, p: string, c: string) => `${p}${c.toUpperCase()}`,
     )
     .replace(/\s+/g, " ")
     .trim()
     .split(",")[0];
-
   return transformed || partner;
 }
 
-type PartnerRecord = {
+export type PartnerRecord = {
   period: string;
   partner: string;
-  imports_eur: number;
+  imports: number | null;
 };
 
 export async function fetchImportsByPartner(
@@ -69,17 +58,13 @@ export async function fetchImportsByPartner(
 ) {
   const datasetId = "kas_imports_by_partner";
   const parts = PATHS.imports_by_partner;
-  const normalizedFilters = partners
-    .map((entry) => entry.trim())
-    .filter((entry) => entry.length > 0);
-  const normalizedTokens = normalizedFilters.map((entry) =>
-    entry.toUpperCase(),
-  );
+  const normalizedTokens = partners
+    .map((p) => p.trim())
+    .filter(Boolean)
+    .map((p) => p.toUpperCase());
   const includeAll =
     normalizedTokens.length === 1 && normalizedTokens[0] === "ALL";
   const wanted = new Set(normalizedTokens);
-  let zeroFiltered = 0;
-  let partnerCount = 0;
   const partnerLabels = new Map<string, string>();
 
   try {
@@ -89,11 +74,12 @@ export async function fetchImportsByPartner(
       parts,
       outDir,
       generatedAt,
-      unit: "euro",
+      unit: "EUR",
       timeDimension: {
         code: "Viti/muaji",
         text: "Viti/muaji",
         toLabel: normalizeYM,
+        granularity: "monthly",
       },
       axes: [
         {
@@ -103,26 +89,19 @@ export async function fetchImportsByPartner(
           resolveValues: ({ baseValues }) => {
             if (includeAll) {
               partnerCount = baseValues.length;
-              return baseValues.map((value) => ({
-                code: value.code,
-                label: value.label,
-              }));
+              return baseValues.map((v) => ({ code: v.code, label: v.label }));
             }
-            const filtered = baseValues.filter((value) => {
-              const codeToken = value.code.toUpperCase();
-              const labelToken = value.metaLabel.toUpperCase();
-              return wanted.has(codeToken) || wanted.has(labelToken);
-            });
-            if (!filtered.length) {
+            const filtered = baseValues.filter(
+              (v) =>
+                wanted.has(v.code.toUpperCase()) ||
+                wanted.has(v.metaLabel.toUpperCase()),
+            );
+            if (!filtered.length)
               throw new PxPipelineSkip(
                 "no partner codes matched requested filter",
               );
-            }
             partnerCount = filtered.length;
-            return filtered.map((value) => ({
-              code: value.code,
-              label: value.label,
-            }));
+            return filtered.map((v) => ({ code: v.code, label: v.label }));
           },
         },
       ],
@@ -132,7 +111,7 @@ export async function fetchImportsByPartner(
           values: [
             {
               code: "__value__",
-              key: "imports_eur",
+              key: "imports",
               label: "Imports",
               unit: "EUR",
             },
@@ -140,41 +119,35 @@ export async function fetchImportsByPartner(
         },
       ],
       createRecord: ({ period, values, axes }) => {
-        const partnerEntry = axes.partner;
-        if (!partnerEntry) return null;
-        const amountThousand = values.imports_eur ?? 0;
-        if (amountThousand === 0) {
-          zeroFiltered += 1;
-          return null;
-        }
-        const partnerCode = partnerEntry.code;
-        const partnerName =
-          partnerEntry.label || partnerEntry.metaLabel || partnerCode;
+        const p = axes.partner;
+        if (!p) return null;
+        const amountThousand = values.imports ?? null;
+        if (amountThousand == null)
+          return { period, partner: p.code, imports: null };
+        const partnerName = p.label || p.metaLabel || p.code;
         const partnerLabel = formatPartnerName(partnerName);
-        const importsEur = amountThousand * 1_000;
-        partnerLabels.set(partnerCode, partnerLabel);
-        return {
-          period,
-          partner: partnerCode,
-          imports_eur: importsEur,
-        };
+        partnerLabels.set(p.code, partnerLabel);
+        return { period, partner: p.code, imports: amountThousand * 1_000 };
       },
-      buildMeta: ({ cubeSummary, fields, periods, records }) => ({
-        updatedAt: cubeSummary.updatedAt,
-        unit: "euro",
-        periods,
-        fields,
-        partner_count: partnerCount,
-        record_count: records.length,
-        zero_filtered: zeroFiltered,
-        partner_labels: Object.fromEntries(partnerLabels),
+      finalizeDataset: ({ meta, records }) => ({
+        meta: {
+          ...meta,
+          dimensions: {
+            ...meta.dimensions,
+            partner: (meta.dimensions.partner ?? []).map((opt) => ({
+              key: opt.key,
+              label: formatPartnerName(opt.label || opt.key),
+            })),
+          },
+        },
+        records: records.sort((a, b) => a.period.localeCompare(b.period)),
       }),
     });
-  } catch (error) {
-    if (error instanceof PxPipelineSkip) {
+  } catch (e) {
+    if (e instanceof PxPipelineSkip) {
       console.warn("! No partner codes matched; skipping partner download");
       return { skipped: true as const };
     }
-    throw error;
+    throw e;
   }
 }

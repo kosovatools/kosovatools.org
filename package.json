@@ -7,7 +7,8 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{json,mjs,js,ts,tsx,md}\"",
-    "fetch-data": "turbo run fetch-data"
+    "fetch-data": "turbo run fetch-data",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json"
   },
   "devDependencies": {
     "@types/node": "^24.10.0",

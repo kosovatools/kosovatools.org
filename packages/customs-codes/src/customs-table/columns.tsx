@@ -217,8 +217,9 @@ function FilterableHeader({
               onClick={onToggle}
               aria-label={iconLabel}
               aria-pressed={active}
-              className={`relative h-6 w-6 text-muted-foreground hover:text-foreground ${hasActiveFilter ? "text-foreground" : ""
-                }`}
+              className={`relative h-6 w-6 text-muted-foreground hover:text-foreground ${
+                hasActiveFilter ? "text-foreground" : ""
+              }`}
             >
               <Filter className="h-3.5 w-3.5" aria-hidden />
               {hasActiveFilter ? (

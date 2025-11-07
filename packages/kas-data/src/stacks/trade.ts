@@ -7,14 +7,14 @@ import {
   type StackPeriodGrouping,
 } from "@workspace/chart-utils";
 import {
-  importsByPartnerMeta,
   type TradePartnerRecord,
   type TradeChapterYearRecord,
-  tradeChaptersYearlyMeta,
+  importsByPartner,
+  tradeChaptersYearly,
 } from "../datasets/trade";
+import { createLabelMap } from "../utils/meta";
 
 export type PartnerStackSeries = StackSeriesRow<string>;
-
 export type PartnerTotal = StackTotal<string>;
 
 export type PartnerStackOptions = {
@@ -28,13 +28,15 @@ export type PartnerStackOptions = {
 };
 
 const accessors = {
-  period: (record: TradePartnerRecord) => record.period,
-  key: (record: TradePartnerRecord) => record.partner,
-  value: (record: TradePartnerRecord) => record.imports_eur,
+  period: (r: TradePartnerRecord) => r.period,
+  key: (r: TradePartnerRecord) => r.partner,
+  value: (r: TradePartnerRecord) => r.imports ?? 0,
 };
+const partnerLabelMap = createLabelMap(
+  importsByPartner.meta.dimensions.partner,
+);
 
 function buildOptions(options: PartnerStackOptions = {}) {
-  const partnerLabels = importsByPartnerMeta.partner_labels;
   return {
     months: options.months,
     top: options.top,
@@ -42,7 +44,7 @@ function buildOptions(options: PartnerStackOptions = {}) {
     selectedKeys: options.selectedKeys,
     excludedKeys: options.excludedKeys,
     periodGrouping: options.periodGrouping,
-    labelForKey: (key: string) => partnerLabels[key] || key,
+    labelForKey: (key: string) => partnerLabelMap[key] ?? key,
   };
 }
 
@@ -52,7 +54,6 @@ export function summarizePartnerTotals(
 ): PartnerTotal[] {
   const normalizedOptions =
     typeof options === "number" ? { months: options } : (options ?? {});
-
   return summarizeStackTotals(
     records,
     accessors,
@@ -73,22 +74,22 @@ export function buildPartnerStackSeries(
 }
 
 export type ChapterStackSeries = StackSeriesRow<string>;
-
 export type ChapterTotal = StackTotal<string>;
-
 export type ChapterStackOptions = PartnerStackOptions;
 
 const exportChapterAccessors = {
-  period: (record: TradeChapterYearRecord) => record.year,
-  key: (record: TradeChapterYearRecord) => record.chapter_code,
-  value: (record: TradeChapterYearRecord) => record.exports_eur,
+  period: (r: TradeChapterYearRecord) => r.period,
+  key: (r: TradeChapterYearRecord) => r.chapter,
+  value: (r: TradeChapterYearRecord) => r.exports ?? 0,
 };
-
 const importChapterAccessors = {
-  period: (record: TradeChapterYearRecord) => record.year,
-  key: (record: TradeChapterYearRecord) => record.chapter_code,
-  value: (record: TradeChapterYearRecord) => record.imports_eur,
+  period: (r: TradeChapterYearRecord) => r.period,
+  key: (r: TradeChapterYearRecord) => r.chapter,
+  value: (r: TradeChapterYearRecord) => r.imports ?? 0,
 };
+const chapterLabelMap = createLabelMap(
+  tradeChaptersYearly.meta.dimensions.chapter,
+);
 
 function buildChapterOptions(options: ChapterStackOptions = {}) {
   return {
@@ -98,8 +99,7 @@ function buildChapterOptions(options: ChapterStackOptions = {}) {
     selectedKeys: options.selectedKeys,
     excludedKeys: options.excludedKeys,
     periodGrouping: options.periodGrouping,
-    labelForKey: (key: string) =>
-      tradeChaptersYearlyMeta.chaptersLabel[key] || key,
+    labelForKey: (key: string) => chapterLabelMap[key] ?? key,
   };
 }
 
@@ -107,12 +107,12 @@ export function summarizeExportChapterTotals(
   records: TradeChapterYearRecord[],
   options?: number | Pick<ChapterStackOptions, "months" | "periodGrouping">,
 ): ChapterTotal[] {
-  const normalizedOptions =
+  const normalized =
     typeof options === "number" ? { months: options } : (options ?? {});
   return summarizeStackTotals(
     records,
     exportChapterAccessors,
-    buildChapterOptions(normalizedOptions),
+    buildChapterOptions(normalized),
   );
 }
 
@@ -120,12 +120,12 @@ export function summarizeImportChapterTotals(
   records: TradeChapterYearRecord[],
   options?: number | Pick<ChapterStackOptions, "months" | "periodGrouping">,
 ): ChapterTotal[] {
-  const normalizedOptions =
+  const normalized =
     typeof options === "number" ? { months: options } : (options ?? {});
   return summarizeStackTotals(
     records,
     importChapterAccessors,
-    buildChapterOptions(normalizedOptions),
+    buildChapterOptions(normalized),
   );
 }
 

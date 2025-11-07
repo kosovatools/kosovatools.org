@@ -7,15 +7,15 @@ import {
   type StackPeriodGrouping,
 } from "@workspace/chart-utils";
 import {
-  tourismCountryMeta,
-  tourismRegionMeta,
+  tourismCountry,
+  tourismRegion,
   type TourismCountryRecord,
   type TourismRegionRecord,
   type TourismMetric,
 } from "../datasets/tourism";
+import { createLabelMap } from "../utils/meta";
 
 export type CountryStackSeries = StackSeriesRow<string>;
-
 export type CountryTotal = StackTotal<string>;
 
 export type CountryStackOptions = {
@@ -30,14 +30,15 @@ export type CountryStackOptions = {
 
 function accessorsForMetric(metric: TourismMetric) {
   return {
-    period: (record: TourismCountryRecord) => record.period,
-    key: (record: TourismCountryRecord) => record.country,
-    value: (record: TourismCountryRecord) => record[metric],
+    period: (r: TourismCountryRecord) => r.period,
+    key: (r: TourismCountryRecord) => r.country,
+    value: (r: TourismCountryRecord) => r[metric] ?? 0,
   };
 }
 
+const countryLabelMap = createLabelMap(tourismCountry.meta.dimensions.country);
+
 function buildOptions(options: CountryStackOptions = {}) {
-  const countryLabels = tourismCountryMeta.country_labels;
   return {
     months: options.months,
     top: options.top,
@@ -45,7 +46,7 @@ function buildOptions(options: CountryStackOptions = {}) {
     selectedKeys: options.selectedKeys,
     excludedKeys: options.excludedKeys,
     periodGrouping: options.periodGrouping,
-    labelForKey: (key: string) => countryLabels[key] || key,
+    labelForKey: (key: string) => countryLabelMap[key] ?? key,
   };
 }
 
@@ -83,9 +84,7 @@ export function buildCountryStackSeries(
 }
 
 export type RegionVisitorGroup = TourismRegionRecord["visitor_group"];
-
 export type RegionStackSeries = StackSeriesRow<string>;
-
 export type RegionStackOptions = {
   months?: number;
   group?: RegionVisitorGroup;
@@ -93,17 +92,17 @@ export type RegionStackOptions = {
 };
 
 const regionAccessors = {
-  period: (record: TourismRegionRecord) => record.period,
-  key: (record: TourismRegionRecord) => record.region,
-  value: (record: TourismRegionRecord) => record.visitors,
+  period: (r: TourismRegionRecord) => r.period,
+  key: (r: TourismRegionRecord) => r.region,
+  value: (r: TourismRegionRecord) => r.visitors ?? 0,
 };
+const regionLabelMap = createLabelMap(tourismRegion.meta.dimensions.region);
 
 function buildRegionOptions(options: RegionStackOptions = {}) {
-  const regionLabels = tourismRegionMeta.region_labels;
   return {
     months: options.months,
     periodGrouping: options.periodGrouping,
-    labelForKey: (key: string) => regionLabels[key] || key,
+    labelForKey: (key: string) => regionLabelMap[key] ?? key,
   };
 }
 
@@ -114,16 +113,14 @@ export function buildRegionStackSeries(
   options: RegionStackOptions = {},
 ): Pick<StackBuildResult<string>, "keys" | "series" | "labelMap"> {
   const group = options.group ?? DEFAULT_REGION_GROUP;
-  const filtered = records.filter((record) =>
-    group ? record.visitor_group === group : true,
+  const filtered = records.filter((r) =>
+    group ? r.visitor_group === group : true,
   );
-
   const result = buildStackSeries(
     filtered,
     regionAccessors,
     buildRegionOptions(options),
   );
-
   return {
     keys: result.keys,
     series: result.series,

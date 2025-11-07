@@ -3,35 +3,55 @@ import { PxError, buildValuePairs, type PxVariable } from "../lib/pxweb";
 import { normalizeGroupLabel, normalizeYM } from "../lib/utils";
 import { runPxDatasetPipeline } from "../pipeline/px-dataset";
 
-type TourismMetric = "visitors" | "nights";
+export type TourismMetric = "visitors" | "nights";
 
-type VisitorGroupSlug = "total" | "local" | "external";
-
-type TourismRegionRecord = {
+export type TourismRegionRecord = {
   period: string;
   region: string;
-  visitor_group: VisitorGroupSlug;
-} & Record<TourismMetric, number>;
-
-type TourismCountryRecord = {
+  visitor_group: "total" | "local" | "external";
+  visitors: number | null;
+  nights: number | null;
+};
+export type TourismCountryRecord = {
   period: string;
   country: string;
-} & Record<TourismMetric, number>;
+  visitors: number | null;
+  nights: number | null;
+};
 
-const TOURISM_METRICS = Object.freeze([
+const TOURISM_METRICS = [
   {
     code: "0",
     key: "visitors" as const,
     expectedLabel: "Vizitorët",
-    field: { key: "visitors", label: "Visitors", unit: "people" },
+    unit: "people",
   },
   {
     code: "1",
     key: "nights" as const,
     expectedLabel: "Netqëndrimet",
-    field: { key: "nights", label: "Nights", unit: "overnights" },
+    unit: "overnights",
   },
-]);
+];
+
+function ensureTourismMetrics(variable: PxVariable, datasetId: string) {
+  const pairs = buildValuePairs(variable);
+  const lookup = new Map(pairs);
+  const metrics = [] as typeof TOURISM_METRICS;
+  for (const m of TOURISM_METRICS) {
+    const label = lookup.get(m.code);
+    if (!label)
+      throw new PxError(
+        `${datasetId}: missing expected metric code "${m.code}"`,
+      );
+    if (label !== m.expectedLabel)
+      console.warn(
+        `${datasetId}: metric ${m.code} label changed: "${label}" (expected "${m.expectedLabel}")`,
+      );
+    metrics.push(m);
+  }
+  return metrics;
+}
 
 export async function fetchTourismRegion(outDir: string, generatedAt: string) {
   const datasetId = "kas_tourism_region_monthly";
@@ -47,17 +67,22 @@ export async function fetchTourismRegion(outDir: string, generatedAt: string) {
       code: "Viti/muaji",
       text: "Viti/muaji",
       toLabel: normalizeYM,
+      granularity: "monthly",
     },
     axes: [
-      {
-        code: "Rajonet",
-        text: "Rajonet",
-        alias: "region",
-      },
+      { code: "Rajonet", text: "Rajonet", alias: "region" },
       {
         code: "Vendor/jashtem",
         text: "Vendor/jashtem",
         alias: "visitor_group",
+        resolveValues: ({ baseValues }) =>
+          baseValues.map((value) => {
+            const label = value.metaLabel || value.label || value.code;
+            return {
+              ...value,
+              key: normalizeGroupLabel(label),
+            };
+          }),
       },
     ],
     metricDimensions: [
@@ -68,65 +93,30 @@ export async function fetchTourismRegion(outDir: string, generatedAt: string) {
             variable as PxVariable,
             datasetId,
           );
-          return metrics.map((metric) => ({
-            code: metric.code,
-            key: metric.key,
-            label: metric.field.label,
-            unit: metric.field.unit,
+          return metrics.map((m) => ({
+            code: m.code,
+            key: m.key,
+            label: m.key === "visitors" ? "Visitors" : "Nights",
+            unit: m.unit,
           }));
         },
       },
     ],
     createRecord: ({ period, axes, values }) => {
-      const regionEntry = axes.region;
-      const visitorGroupEntry = axes.visitor_group;
-      if (!regionEntry || !visitorGroupEntry) return null;
-      const regionCode = regionEntry.code;
-      const visitorLabel =
-        visitorGroupEntry.metaLabel ||
-        visitorGroupEntry.label ||
-        visitorGroupEntry.code;
-      const visitorSlug = normalizeGroupLabel(visitorLabel) as VisitorGroupSlug;
+      const r = axes.region;
+      const g = axes.visitor_group;
+      if (!r || !g) return null;
+      const visitorLabel = g.metaLabel || g.label || g.code;
+      const visitorSlug = normalizeGroupLabel(visitorLabel) as
+        | "total"
+        | "local"
+        | "external";
       return {
         period,
-        region: regionCode,
+        region: r.code,
         visitor_group: visitorSlug,
-        visitors: values.visitors ?? 0,
-        nights: values.nights ?? 0,
-      };
-    },
-    buildMeta: ({ cubeSummary, fields, periods, axes, metrics }) => {
-      const regionAxis = axes.find((axis) => axis.alias === "region");
-      const visitorAxis = axes.find((axis) => axis.alias === "visitor_group");
-      const metricKeys = metrics.flatMap((dimension) =>
-        dimension.values.map((value) => value.key ?? value.code),
-      );
-      const visitorGroups = visitorAxis
-        ? Object.fromEntries(
-            visitorAxis.values.map((value) => {
-              const raw = value.metaLabel || value.label || value.code;
-              return [normalizeGroupLabel(raw), raw];
-            }),
-          )
-        : {};
-      const regionLabels = regionAxis
-        ? Object.fromEntries(
-            regionAxis.values.map((value) => [
-              value.code,
-              value.metaLabel || value.label || value.code,
-            ]),
-          )
-        : {};
-      return {
-        updatedAt: cubeSummary.updatedAt,
-        unit: "people",
-        periods,
-        fields,
-        regions: Object.keys(regionLabels),
-        region_labels: regionLabels,
-        visitor_groups: Object.keys(visitorGroups),
-        visitor_group_labels: visitorGroups,
-        metrics: metricKeys,
+        visitors: values.visitors ?? null,
+        nights: values.nights ?? null,
       };
     },
   });
@@ -146,6 +136,7 @@ export async function fetchTourismCountry(outDir: string, generatedAt: string) {
       code: "Viti/muaji",
       text: "Viti/muaji",
       toLabel: normalizeYM,
+      granularity: "monthly",
     },
     axes: [
       {
@@ -154,10 +145,10 @@ export async function fetchTourismCountry(outDir: string, generatedAt: string) {
         alias: "country",
         resolveValues: ({ baseValues }) =>
           baseValues
-            .filter((value) => value.metaLabel.toLowerCase() !== "external")
-            .map((value) => ({
-              code: value.code,
-              label: value.label,
+            .filter((v) => v.metaLabel.toLowerCase() !== "external")
+            .map((v) => ({
+              code: v.code,
+              label: v.metaLabel || v.label || v.code,
             })),
       },
     ],
@@ -169,69 +160,24 @@ export async function fetchTourismCountry(outDir: string, generatedAt: string) {
             variable as PxVariable,
             datasetId,
           );
-          return metrics.map((metric) => ({
-            code: metric.code,
-            key: metric.key,
-            label: metric.field.label,
-            unit: metric.field.unit,
+          return metrics.map((m) => ({
+            code: m.code,
+            key: m.key,
+            label: m.key === "visitors" ? "Visitors" : "Nights",
+            unit: m.unit,
           }));
         },
       },
     ],
     createRecord: ({ period, axes, values }) => {
-      const countryEntry = axes.country;
-      if (!countryEntry) return null;
-      const countryCode = countryEntry.code;
+      const c = axes.country;
+      if (!c) return null;
       return {
         period,
-        country: countryCode,
-        visitors: values.visitors ?? 0,
-        nights: values.nights ?? 0,
-      };
-    },
-    buildMeta: ({ cubeSummary, fields, periods, axes, metrics }) => {
-      const countryAxis = axes.find((axis) => axis.alias === "country");
-      const metricKeys = metrics.flatMap((dimension) =>
-        dimension.values.map((value) => value.key ?? value.code),
-      );
-      const countryLabels = countryAxis
-        ? Object.fromEntries(
-            countryAxis.values.map((value) => [
-              value.code,
-              value.metaLabel || value.label || value.code,
-            ]),
-          )
-        : {};
-      return {
-        updatedAt: cubeSummary.updatedAt,
-        unit: "people",
-        periods,
-        fields,
-        countries: Object.keys(countryLabels),
-        country_labels: countryLabels,
-        metrics: metricKeys,
+        country: c.code,
+        visitors: values.visitors ?? null,
+        nights: values.nights ?? null,
       };
     },
   });
-}
-
-function ensureTourismMetrics(variable: PxVariable, datasetId: string) {
-  const pairs = buildValuePairs(variable);
-  const lookup = new Map(pairs);
-  const metrics = [];
-  for (const metric of TOURISM_METRICS) {
-    const label = lookup.get(metric.code);
-    if (!label) {
-      throw new PxError(
-        `${datasetId}: missing expected metric code "${metric.code}" (${metric.expectedLabel})`,
-      );
-    }
-    if (label !== metric.expectedLabel) {
-      throw new PxError(
-        `${datasetId}: metric "${metric.code}" label changed (expected "${metric.expectedLabel}" got "${label}")`,
-      );
-    }
-    metrics.push(metric);
-  }
-  return metrics;
 }

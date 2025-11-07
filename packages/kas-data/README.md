@@ -21,6 +21,9 @@ Statistics PxWeb series for downstream visualisations.
 pnpm --filter @workspace/kas-data fetch-data
 # or
 node packages/kas-data/scripts/fetch_kas.mjs --out packages/kas-data/data
+
+# to stub JSON payloads before committing
+pnpm --filter @workspace/kas-data stub-data
 ```
 
 The fetch script marks refreshed files with `git update-index --skip-worktree`
@@ -41,8 +44,8 @@ import {
   electricityMonthly,
   electricityMeta,
   fuelBalances,
-  fuelMeta,
-  describeFuelSources,
+  fuelDatasetMeta,
+  describeDatasetSource,
   formatGeneratedAt,
 } from "@workspace/kas-data";
 
@@ -53,7 +56,19 @@ Stack helpers such as `buildPartnerStackSeries` and `buildFuelTypeStackSeries`
 call into `@workspace/chart-utils`' generic utilities so behaviour is consistent across
 charts (windowing, “Other” buckets, label resolution). Each JSON snapshot now ships as
 `{ meta, records }` (or `{ meta, groups }` for CPI) so downstream code can surface table
-metadata without consulting a separate manifest.
+metadata without consulting a separate manifest. The shared `meta.dimensions` map exposes
+selector-friendly options (arrays of `{ id, label }`) for every categorical axis (e.g.,
+`visitor_group`, `region`, `fuel`, `metric`), so UI layers can plug those definitions
+directly into reusable components like `OptionSelector`.
+
+Fuel balances now ship as a single table (`fuelBalances`) where each record includes a
+`fuel` key plus every metric in tonnes, which keeps the JSON footprint small while letting
+stacked charts share one code path per metric. `meta.source` and `meta.source_urls`
+capture the contributing PxWeb tables so UI surfaces can display accurate provenance text.
+
+Tourism exports follow the same pattern via `kas_tourism_monthly.json`; one dataset
+contains both country and region series, and the `meta.dimensions` entries expose
+`visitor_group`, `region`, `country`, and `metric` selectors directly (no per-slice metadata).
 
 ## Development workflow
 

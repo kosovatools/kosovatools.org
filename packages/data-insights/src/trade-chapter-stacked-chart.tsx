@@ -4,17 +4,13 @@ import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
+  buildStackSeries,
+  summarizeStackTotals,
   formatEuroCompact,
   getPeriodFormatter,
   type StackPeriodGrouping,
 } from "@workspace/chart-utils";
-import {
-  buildExportChapterStackSeries,
-  buildImportChapterStackSeries,
-  summarizeExportChapterTotals,
-  summarizeImportChapterTotals,
-  type TradeChapterYearRecord,
-} from "@workspace/kas-data";
+import { createLabelMap, tradeChaptersYearly } from "@workspace/kas-data";
 import {
   ChartContainer,
   ChartLegend,
@@ -37,27 +33,59 @@ const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
 type ChartMode = "exports" | "imports";
 
 const FLOW_OPTIONS: ReadonlyArray<SelectorOptionDefinition<ChartMode>> = [
-  { id: "exports", label: "Eksportet (FOB)" },
-  { id: "imports", label: "Importet (CIF)" },
+  { key: "exports", label: "Eksportet (FOB)" },
+  { key: "imports", label: "Importet (CIF)" },
 ];
 
 const PERIOD_GROUPING: StackPeriodGrouping = "yearly";
 
+type ChapterStackRecord = {
+  period: string;
+  chapter: string;
+  value: number;
+};
+
+const chapterAccessors = {
+  period: (record: ChapterStackRecord) => record.period,
+  key: (record: ChapterStackRecord) => record.chapter,
+  value: (record: ChapterStackRecord) => record.value,
+};
+const data = tradeChaptersYearly.records;
+const chapterLabelMap = createLabelMap(
+  tradeChaptersYearly.meta.dimensions.chapter,
+);
+
+const labelForChapter = (key: string) => chapterLabelMap[key] ?? key;
+
+const sanitizeValue = (value: number | null | undefined): number =>
+  typeof value === "number" && Number.isFinite(value) ? value : 0;
+
 export function TradeChapterStackedChart({
-  data,
   top = DEFAULT_TOP_CHAPTERS,
 }: {
-  data: TradeChapterYearRecord[];
   top?: number;
 }) {
   const [mode, setMode] = React.useState<ChartMode>("exports");
 
-  const totals = React.useMemo(() => {
-    const options = { periodGrouping: PERIOD_GROUPING };
-    return mode === "exports"
-      ? summarizeExportChapterTotals(data, options)
-      : summarizeImportChapterTotals(data, options);
-  }, [mode, data]);
+  const stackRecords = React.useMemo<ChapterStackRecord[]>(() => {
+    if (!data.length) return [];
+    return data.map((record) => ({
+      period: record.period,
+      chapter: record.chapter,
+      value: sanitizeValue(
+        mode === "exports" ? record.exports : record.imports,
+      ),
+    }));
+  }, [mode]);
+
+  const totals = React.useMemo(
+    () =>
+      summarizeStackTotals(stackRecords, chapterAccessors, {
+        periodGrouping: PERIOD_GROUPING,
+        labelForKey: labelForChapter,
+      }),
+    [stackRecords],
+  );
 
   const {
     selectedKeys,
@@ -74,17 +102,22 @@ export function TradeChapterStackedChart({
   });
 
   const { chartData, keyMap, config } = React.useMemo(() => {
-    const commonOptions = {
-      top,
-      includeOther,
-      selectedKeys,
-      excludedKeys,
-      periodGrouping: PERIOD_GROUPING,
-    };
-    const { keys, series, labelMap } =
-      mode === "exports"
-        ? buildExportChapterStackSeries(data, commonOptions)
-        : buildImportChapterStackSeries(data, commonOptions);
+    if (!stackRecords.length) {
+      return { chartData: [], keyMap: [], config: {} };
+    }
+
+    const { keys, series, labelMap } = buildStackSeries(
+      stackRecords,
+      chapterAccessors,
+      {
+        top,
+        includeOther,
+        selectedKeys,
+        excludedKeys,
+        periodGrouping: PERIOD_GROUPING,
+        labelForKey: labelForChapter,
+      },
+    );
 
     return buildStackedChartView({
       keys,
@@ -92,7 +125,7 @@ export function TradeChapterStackedChart({
       series,
       periodFormatter: getPeriodFormatter(PERIOD_GROUPING),
     });
-  }, [mode, data, top, includeOther, selectedKeys, excludedKeys]);
+  }, [stackRecords, top, includeOther, selectedKeys, excludedKeys]);
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,

@@ -12,15 +12,14 @@ import {
 } from "recharts";
 
 import {
-  buildFuelTypeStackSeries,
-  fuelKeys,
-  fuelMetricLabels,
-  type FuelBalanceRecord,
+  fuelDataset,
+  timelineEvents,
+  createLabelMap,
   type FuelKey,
   type FuelMetric,
-  timelineEvents,
 } from "@workspace/kas-data";
 import {
+  buildStackSeries,
   type StackPeriodGrouping,
   formatCount,
   STACK_PERIOD_GROUPING_OPTIONS,
@@ -46,29 +45,61 @@ import { OptionSelector } from "@workspace/ui/custom-components/option-selector"
 const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";
 const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
 
-type FuelBalanceChartProps = {
-  balances: Record<FuelKey, FuelBalanceRecord[]>;
+type FuelStackRecord = {
+  period: string;
+  fuel: FuelKey;
+  value: number;
 };
 
-const DEFAULT_METRIC: FuelMetric = "ready_for_market";
+const fuelStackAccessors = {
+  period: (record: FuelStackRecord) => record.period,
+  key: (record: FuelStackRecord) => record.fuel,
+  value: (record: FuelStackRecord) => record.value,
+};
 
-export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
-  const [metric, setMetric] = React.useState<FuelMetric>(DEFAULT_METRIC);
+const sanitizeValue = (value: number | null | undefined): number =>
+  typeof value === "number" && Number.isFinite(value) ? value : 0;
+
+const defaultMetric = "ready_for_market";
+const metricOptions = fuelDataset.meta.fields;
+const metricLabelMap = createLabelMap(metricOptions);
+const fuelLabelMap = createLabelMap(fuelDataset.meta.dimensions.fuel);
+const fuelKeys = Object.keys(fuelLabelMap) as FuelKey[];
+const balances = fuelDataset.records;
+export function FuelBalanceChart() {
+  const [metric, setMetric] = React.useState<FuelMetric>(defaultMetric);
+
   const [periodGrouping, setPeriodGrouping] =
     React.useState<StackPeriodGrouping>("monthly");
-
   const [range, setRange] = React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
-
   const monthsLimit = monthsFromRange(range);
 
+  const stackRecords = React.useMemo<FuelStackRecord[]>(() => {
+    if (!balances.length) return [];
+    return balances.map((balance) => ({
+      period: balance.period,
+      fuel: balance.fuel,
+      value: sanitizeValue(balance[metric]),
+    }));
+  }, [metric]);
+
   const { chartData, keyMap, config } = React.useMemo(() => {
-    const { keys, series, labelMap } = buildFuelTypeStackSeries(balances, {
-      months: monthsLimit,
-      metric,
-      selectedKeys: fuelKeys,
-      includeOther: false,
-      periodGrouping,
-    });
+    if (!stackRecords.length || !fuelKeys.length) {
+      return { chartData: [], keyMap: [], config: {} };
+    }
+
+    const { keys, series, labelMap } = buildStackSeries(
+      stackRecords,
+      fuelStackAccessors,
+      {
+        months: monthsLimit,
+        selectedKeys: fuelKeys,
+        allowedKeys: fuelKeys,
+        includeOther: false,
+        periodGrouping,
+        labelForKey: (key) => fuelLabelMap[key as FuelKey] ?? key,
+      },
+    );
 
     return buildStackedChartView({
       keys,
@@ -76,7 +107,7 @@ export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
       series,
       periodFormatter: getPeriodFormatter(periodGrouping),
     });
-  }, [balances, metric, monthsLimit, periodGrouping]);
+  }, [stackRecords, monthsLimit, periodGrouping]);
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
@@ -122,7 +153,11 @@ export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
     );
   }
 
-  const metricLabel = fuelMetricLabels[metric];
+  const metricLabelNode = metricLabelMap[metric] ?? metric;
+  const metricLabelText =
+    typeof metricLabelNode === "string"
+      ? metricLabelNode
+      : String(metricLabelNode ?? metric);
   const summaryDisplay =
     latestSummary && latestSummary.total != null
       ? `${formatCount(latestSummary.total)} tonë`
@@ -131,29 +166,12 @@ export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">Metrika</span>
-          <div className="flex flex-wrap gap-2 text-xs">
-            {Object.entries(fuelMetricLabels).map(([id, label]) => {
-              const active = metric === id;
-              return (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setMetric(id as FuelMetric)}
-                  className={
-                    "rounded-full border px-3 py-1 transition-colors " +
-                    (active
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border bg-background hover:bg-muted")
-                  }
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <OptionSelector
+          value={metric}
+          onChange={(value) => setMetric(value as FuelMetric)}
+          options={metricOptions}
+          label="Metrika"
+        />
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
@@ -175,7 +193,7 @@ export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
             <span className="font-medium text-foreground">
               {summaryDisplay}
             </span>{" "}
-            total {metricLabel.toLowerCase()} në të gjitha llojet e
+            total {metricLabelText.toLowerCase()} në të gjitha llojet e
             karburanteve.
           </>
         ) : (
@@ -183,7 +201,7 @@ export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
             <span className="font-medium text-foreground">
               {summaryDisplay}
             </span>{" "}
-            total {metricLabel.toLowerCase()} në të gjitha llojet e
+            total {metricLabelText.toLowerCase()} në të gjitha llojet e
             karburanteve.
           </>
         )}

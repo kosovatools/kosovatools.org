@@ -201,13 +201,30 @@ export function HierarchicalMultiSelect({
           <li key={node.id} className="flex min-w-0 flex-col gap-1">
             <div
               className={cn(
-                "flex w-full items-center gap-2 overflow-hidden rounded-md px-1 py-0.5 text-sm transition-colors",
+                "flex w-full cursor-pointer items-center gap-2 overflow-hidden rounded-md px-1 py-0.5 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary/60",
                 isChecked
                   ? "bg-primary/10 text-primary"
                   : "hover:bg-muted/60 text-foreground",
                 nodeClassName,
               )}
               style={{ paddingLeft: depth * 16 }}
+              role="checkbox"
+              aria-checked={isChecked}
+              aria-label={node.label}
+              tabIndex={0}
+              onClick={(event) => {
+                const target = event.target as HTMLElement | null;
+                if (target?.closest("[data-hms-stop]")) {
+                  return;
+                }
+                updateSelection(node.id, !isChecked);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === " " || event.key === "Enter") {
+                  event.preventDefault();
+                  updateSelection(node.id, !isChecked);
+                }
+              }}
             >
               {hasChildren ? (
                 <Button
@@ -215,7 +232,11 @@ export function HierarchicalMultiSelect({
                   variant="ghost"
                   size="icon-sm"
                   className="h-5 w-5 text-muted-foreground"
-                  onClick={() => toggleExpand(node.id)}
+                  data-hms-stop
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    toggleExpand(node.id);
+                  }}
                   aria-label={
                     isExpanded ? `Mbyll ${node.label}` : `Hap ${node.label}`
                   }
@@ -229,11 +250,9 @@ export function HierarchicalMultiSelect({
               ) : (
                 <span className="h-5 w-5" />
               )}
-              <label
-                className="flex min-w-0 cursor-pointer items-center gap-2 overflow-hidden"
-                title={node.label}
-              >
+              <div className="flex min-w-0 items-center gap-2 overflow-hidden">
                 <Checkbox
+                  data-hms-stop
                   checked={isIndeterminate ? "indeterminate" : isChecked}
                   onCheckedChange={(value) =>
                     updateSelection(node.id, value === true)
@@ -244,7 +263,7 @@ export function HierarchicalMultiSelect({
                 <span className="truncate font-medium whitespace-nowrap">
                   {node.label}
                 </span>
-              </label>
+              </div>
             </div>
             {hasChildren && isExpanded ? (
               <ul className="flex min-w-0 flex-col gap-1">

@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "table": "fuel_balances",
+    "path": "ASKdata/Energy/Monthly indicators/fuel_balances",
+    "generated_at": "2025-11-07T16:16:48.914Z",
+    "updated_at": null,
+    "unit": "tonnes",
+    "fields": [
+      {
+        "key": "production",
+        "label": "Prodhimi",
+        "unit": "tonnes"
+      },
+      {
+        "key": "import",
+        "label": "Import",
+        "unit": "tonnes"
+      },
+      {
+        "key": "export",
+        "label": "Export",
+        "unit": "tonnes"
+      },
+      {
+        "key": "stock",
+        "label": "Stoku",
+        "unit": "tonnes"
+      },
+      {
+        "key": "ready_for_market",
+        "label": "E gatshme per treg",
+        "unit": "tonnes"
+      }
+    ],
+    "source": "Data derived from Table 03, Table 04, Table 05, Table 06 in Energy",
+    "source_urls": [
+      "ASKdata/Energy/Monthly indicators/tab03.px",
+      "ASKdata/Energy/Monthly indicators/tab04.px",
+      "ASKdata/Energy/Monthly indicators/tab05.px",
+      "ASKdata/Energy/Monthly indicators/tab06.px"
+    ],
+    "periods": 44,
+    "fuels": [
+      "gasoline",
+      "diesel",
+      "lng",
+      "jet"
+    ],
+    "fuel_labels": {
+      "gasoline": "Gasoline",
+      "diesel": "Diesel",
+      "lng": "LNG",
+      "jet": "Jet / kerosene"
+    },
+    "fuel_tables": {
+      "gasoline": "tab03.px",
+      "diesel": "tab04.px",
+      "lng": "tab05.px",
+      "jet": "tab06.px"
+    },
+    "fuel_paths": {
+      "gasoline": "ASKdata/Energy/Monthly indicators/tab03.px",
+      "diesel": "ASKdata/Energy/Monthly indicators/tab04.px",
+      "lng": "ASKdata/Energy/Monthly indicators/tab05.px",
+      "jet": "ASKdata/Energy/Monthly indicators/tab06.px"
+    },
+    "metrics": [
+      "production",
+      "import",
+      "export",
+      "stock",
+      "ready_for_market"
+    ],
+    "metric_labels": {
+      "production": "Prodhimi",
+      "import": "Import",
+      "export": "Export",
+      "stock": "Stoku",
+      "ready_for_market": "E gatshme per treg"
+    }
+  },
+  "records": []
+}

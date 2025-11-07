@@ -12,12 +12,13 @@ import {
 } from "recharts";
 
 import {
-  buildCountryStackSeries,
-  summarizeCountryTotals,
-  type TourismCountryRecord,
   timelineEvents,
+  createLabelMap,
+  tourismCountry,
 } from "@workspace/kas-data";
 import {
+  buildStackSeries,
+  summarizeStackTotals,
   formatCount,
   type StackPeriodGrouping,
   STACK_PERIOD_GROUPING_OPTIONS,
@@ -44,21 +45,43 @@ import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-sele
 
 const DEFAULT_TOP_COUNTRIES = 5;
 
-const metricOptions = [
-  { id: "visitors" as const, label: "Vizitorë" },
-  { id: "nights" as const, label: "Qëndrime nate" },
-];
+const metricOptions = tourismCountry.meta.fields;
 
 const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
 
+type CountryStackRecord = {
+  period: string;
+  country: string;
+  value: number;
+};
+
+const countryAccessors = {
+  period: (record: CountryStackRecord) => record.period,
+  key: (record: CountryStackRecord) => record.country,
+  value: (record: CountryStackRecord) => record.value,
+};
+
+const countryLabelMap = createLabelMap(tourismCountry.meta.dimensions.country);
+
+const labelForCountry = (key: string) => countryLabelMap[key] ?? key;
+
+const sanitizeValue = (value: number | null | undefined): number =>
+  typeof value === "number" && Number.isFinite(value) ? value : 0;
+const data = tourismCountry.records;
 export function TourismCountryStackedChart({
-  data,
   top = DEFAULT_TOP_COUNTRIES,
 }: {
-  data: TourismCountryRecord[];
   top?: number;
 }) {
-  const [metric, setMetric] = React.useState<"visitors" | "nights">("visitors");
+  const defaultMetric = "visitors";
+  const [metric, setMetric] = React.useState<"visitors" | "nights">(
+    defaultMetric,
+  );
+  React.useEffect(() => {
+    if (!metricOptions.some((option) => option.key === metric)) {
+      setMetric(defaultMetric);
+    }
+  }, [metric, defaultMetric]);
   const [periodGrouping, setPeriodGrouping] =
     React.useState<StackPeriodGrouping>("yearly");
 
@@ -66,14 +89,23 @@ export function TourismCountryStackedChart({
 
   const monthsLimit = monthsFromRange(range);
 
+  const stackRecords = React.useMemo<CountryStackRecord[]>(() => {
+    if (!data.length) return [];
+    return data.map((record) => ({
+      period: record.period,
+      country: record.country,
+      value: sanitizeValue(record[metric]),
+    }));
+  }, [metric]);
+
   const totals = React.useMemo(
     () =>
-      summarizeCountryTotals(data, {
+      summarizeStackTotals(stackRecords, countryAccessors, {
         months: monthsLimit,
-        metric,
         periodGrouping,
+        labelForKey: labelForCountry,
       }),
-    [data, monthsLimit, metric, periodGrouping],
+    [stackRecords, monthsLimit, periodGrouping],
   );
 
   const {
@@ -90,15 +122,23 @@ export function TourismCountryStackedChart({
   });
 
   const { chartData, keyMap, config } = React.useMemo(() => {
-    const { keys, series, labelMap } = buildCountryStackSeries(data, {
-      months: monthsLimit,
-      top,
-      metric,
-      includeOther,
-      selectedKeys,
-      excludedKeys,
-      periodGrouping,
-    });
+    if (!stackRecords.length) {
+      return { chartData: [], keyMap: [], config: {} };
+    }
+
+    const { keys, series, labelMap } = buildStackSeries(
+      stackRecords,
+      countryAccessors,
+      {
+        months: monthsLimit,
+        top,
+        includeOther,
+        selectedKeys,
+        excludedKeys,
+        periodGrouping,
+        labelForKey: labelForCountry,
+      },
+    );
 
     return buildStackedChartView({
       keys,
@@ -107,10 +147,9 @@ export function TourismCountryStackedChart({
       periodFormatter: getPeriodFormatter(periodGrouping),
     });
   }, [
-    data,
+    stackRecords,
     monthsLimit,
     top,
-    metric,
     includeOther,
     selectedKeys,
     excludedKeys,
@@ -141,29 +180,12 @@ export function TourismCountryStackedChart({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">Metrika</span>
-          <div className="flex gap-2 text-xs">
-            {metricOptions.map((option) => {
-              const active = metric === option.id;
-              return (
-                <button
-                  key={option.id}
-                  type="button"
-                  onClick={() => setMetric(option.id)}
-                  className={
-                    "rounded-full border px-3 py-1 transition-colors " +
-                    (active
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border bg-background hover:bg-muted")
-                  }
-                >
-                  {option.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <OptionSelector
+          value={metric}
+          onChange={(value) => setMetric(value as "visitors" | "nights")}
+          options={metricOptions}
+          label="Metrika"
+        />
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}

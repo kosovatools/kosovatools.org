@@ -9,6 +9,10 @@ export * from "./stacks/trade";
 export * from "./stacks/fuels";
 export * from "./stacks/tourism";
 
-export type { Dataset, DatasetMeta, DatasetMetaField } from "./types/dataset";
-
+export type {
+  Dataset,
+  DatasetMeta,
+  DatasetMetaField,
+  DimensionOption,
+} from "./types/dataset";
 export * from "./utils/meta";

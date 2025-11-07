@@ -12,12 +12,13 @@ import {
 } from "recharts";
 
 import {
-  buildRegionStackSeries,
-  tourismRegionMeta,
-  type TourismRegionRecord,
   timelineEvents,
+  tourismRegion,
+  createLabelMap,
+  type TourismRegionRecord,
 } from "@workspace/kas-data";
 import {
+  buildStackSeries,
   formatCount,
   type StackPeriodGrouping,
   STACK_PERIOD_GROUPING_OPTIONS,
@@ -36,31 +37,50 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
-import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import {
+  OptionSelector,
+  type SelectorOptionDefinition,
+} from "@workspace/ui/custom-components/option-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 
-type VisitorGroupOption = {
-  id: TourismRegionRecord["visitor_group"];
-  label: string;
-};
+const visitorGroupOptions: SelectorOptionDefinition<
+  TourismRegionRecord["visitor_group"]
+>[] =
+  tourismRegion.meta.dimensions.visitor_group?.map((option) => ({
+    key: option.key as TourismRegionRecord["visitor_group"],
+    label: option.label,
+  })) ?? [];
 
-const visitorGroupOptions: VisitorGroupOption[] =
-  tourismRegionMeta.visitor_groups.map((id) => ({
-    id: id as TourismRegionRecord["visitor_group"],
-    label: tourismRegionMeta.visitor_group_labels[id] ?? id,
-  }));
-
-const DEFAULT_GROUP: TourismRegionRecord["visitor_group"] =
-  visitorGroupOptions[0]?.id ?? "total";
+const DEFAULT_GROUP = "total";
 const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
 
-export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
+type RegionStackRecord = {
+  period: string;
+  region: string;
+  value: number;
+};
+
+const regionAccessors = {
+  period: (record: RegionStackRecord) => record.period,
+  key: (record: RegionStackRecord) => record.region,
+  value: (record: RegionStackRecord) => record.value,
+};
+
+const regionLabelMap = createLabelMap(tourismRegion.meta.dimensions.region);
+
+const labelForRegion = (key: string) => regionLabelMap[key] ?? key;
+
+const sanitizeValue = (value: number | null | undefined): number =>
+  typeof value === "number" && Number.isFinite(value) ? value : 0;
+const data = tourismRegion.records;
+
+export function TourismRegionCharts() {
   const [group, setGroup] =
     React.useState<TourismRegionRecord["visitor_group"]>(DEFAULT_GROUP);
 
   React.useEffect(() => {
-    if (!visitorGroupOptions.some((option) => option.id === group)) {
+    if (!visitorGroupOptions.some((option) => option.key === group)) {
       setGroup(DEFAULT_GROUP);
     }
   }, [group]);
@@ -72,12 +92,35 @@ export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
 
   const monthsLimit = monthsFromRange(range);
 
+  const filteredRecords = React.useMemo(
+    () =>
+      data.filter((record) => (group ? record.visitor_group === group : true)),
+    [group],
+  );
+
+  const stackRecords = React.useMemo<RegionStackRecord[]>(() => {
+    if (!filteredRecords.length) return [];
+    return filteredRecords.map((record) => ({
+      period: record.period,
+      region: record.region,
+      value: sanitizeValue(record.visitors),
+    }));
+  }, [filteredRecords]);
+
   const { chartData, keyMap, config } = React.useMemo(() => {
-    const { keys, series, labelMap } = buildRegionStackSeries(data, {
-      months: monthsLimit,
-      group,
-      periodGrouping,
-    });
+    if (!stackRecords.length) {
+      return { chartData: [], keyMap: [], config: {} };
+    }
+
+    const { keys, series, labelMap } = buildStackSeries(
+      stackRecords,
+      regionAccessors,
+      {
+        months: monthsLimit,
+        periodGrouping,
+        labelForKey: labelForRegion,
+      },
+    );
 
     return buildStackedChartView({
       keys,
@@ -85,7 +128,7 @@ export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
       series,
       periodFormatter: getPeriodFormatter(periodGrouping),
     });
-  }, [data, group, monthsLimit, periodGrouping]);
+  }, [stackRecords, monthsLimit, periodGrouping]);
 
   const latestSummary = React.useMemo<{
     periodLabel: string;
@@ -137,38 +180,23 @@ export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
   }
 
   const groupLabel =
-    visitorGroupOptions.find((option) => option.id === group)?.label ??
+    visitorGroupOptions.find((option) => option.key === group)?.label ??
     visitorGroupOptions[0]?.label ??
     "Total";
+  const groupLabelText =
+    typeof groupLabel === "string" ? groupLabel : String(groupLabel ?? "Total");
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm text-muted-foreground">
-            Grupi i vizitorëve
-          </span>
-          <div className="flex gap-2 text-xs">
-            {visitorGroupOptions.map((option) => {
-              const active = option.id === group;
-              return (
-                <button
-                  key={option.id}
-                  type="button"
-                  onClick={() => setGroup(option.id)}
-                  className={
-                    "rounded-full border px-3 py-1 transition-colors " +
-                    (active
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border bg-background hover:bg-muted")
-                  }
-                >
-                  {option.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <OptionSelector
+          value={group}
+          onChange={(value) =>
+            setGroup(value as TourismRegionRecord["visitor_group"])
+          }
+          options={visitorGroupOptions}
+          label="Grupi i vizitorëve"
+        />
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
@@ -189,7 +217,7 @@ export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
           <span className="font-medium text-foreground">
             {formatCount(latestSummary.total)}
           </span>{" "}
-          {groupLabel.toLowerCase()} vizitorë në të gjitha rajonet.
+          {groupLabelText.toLowerCase()} vizitorë në të gjitha rajonet.
         </p>
       ) : null}
 

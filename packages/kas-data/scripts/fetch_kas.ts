@@ -26,8 +26,12 @@ import {
   normalizeYM,
   tidyNumber,
 } from "./lib/utils";
-import { fetchCpiDataset } from "./fetchers/cpi";
-import { fetchEnergyMonthly, fetchFuelTable } from "./fetchers/energy";
+import { fetchCpiMonthly } from "./fetchers/cpi";
+import {
+  fetchEnergyMonthly,
+  fetchFuelTable,
+  writeFuelCombinedDataset,
+} from "./fetchers/energy";
 import { fetchImportsByPartner } from "./fetchers/imports";
 import { fetchTradeChaptersYearly, fetchTradeMonthly } from "./fetchers/trade";
 import { fetchTourismCountry, fetchTourismRegion } from "./fetchers/tourism";
@@ -38,18 +42,16 @@ type CliArgs = {
   noPartners: boolean;
 };
 
+type FuelKey = keyof typeof FUEL_SPECS;
+
+type FuelDatasetResult = Awaited<ReturnType<typeof fetchFuelTable>>;
+
 export async function main(): Promise<void> {
   const argv = process.argv.slice(2);
-  const args: CliArgs = {
-    out: null,
-    partners: null,
-    noPartners: false,
-  };
+  const args: CliArgs = { out: null, partners: null, noPartners: false };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
-    if (typeof arg !== "string") {
-      continue;
-    }
+    if (typeof arg !== "string") continue;
     switch (arg) {
       case "--out":
         args.out = argv[i + 1] ?? null;
@@ -65,10 +67,13 @@ export async function main(): Promise<void> {
       case "--no-partners":
         args.noPartners = true;
         break;
+      case "--help":
+        console.log(
+          `Usage: fetch_kas [--out <dir>] [--partners ALL|CODE1,CODE2] [--no-partners]`,
+        );
+        return;
       default:
-        if (arg.startsWith("--")) {
-          throw new PxError(`Unknown argument: ${arg}`);
-        }
+        if (arg.startsWith("--")) throw new PxError(`Unknown argument: ${arg}`);
     }
   }
 
@@ -76,9 +81,8 @@ export async function main(): Promise<void> {
     ? path.resolve(process.cwd(), args.out)
     : path.resolve(process.cwd(), "data");
   let partners: string[] | null = null;
-  if (!args.noPartners) {
+  if (!args.noPartners)
     partners = args.partners?.length ? args.partners : ["ALL"];
-  }
 
   console.log("ASKdata PxWeb consolidator");
   console.log("   out     :", outDir);
@@ -87,19 +91,12 @@ export async function main(): Promise<void> {
   await fs.mkdir(outDir, { recursive: true });
   const started = new Date().toISOString();
 
-  /**
-   * Helper function to run a fetch task and log its outcome.
-   * @param name - The display name of the task.
-   * @param taskFn - The async function executing the fetch.
-   * @returns The result of the taskFn, or null on failure.
-   */
   const runTask = async <T>(
     name: string,
     taskFn: () => Promise<T>,
   ): Promise<T | null> => {
     try {
-      const result = await taskFn();
-      return result;
+      return await taskFn();
     } catch (error) {
       console.warn(
         `! ${name} download failed:`,
@@ -120,41 +117,36 @@ export async function main(): Promise<void> {
     fetchEnergyMonthly(outDir, started),
   );
 
-  for (const [fuelName, spec] of Object.entries(FUEL_SPECS)) {
-    await runTask(`Fuel: ${fuelName}`, () =>
+  const fuelDatasets: Partial<Record<FuelKey, FuelDatasetResult>> = {};
+  for (const [fuelName, spec] of Object.entries(FUEL_SPECS) as Array<
+    [FuelKey, (typeof FUEL_SPECS)[FuelKey]]
+  >) {
+    const dataset = await runTask(`Fuel: ${fuelName}`, () =>
       fetchFuelTable(outDir, fuelName, spec, started),
     );
+    if (dataset) {
+      fuelDatasets[fuelName] = dataset;
+    }
   }
+  await runTask("Fuel: dataset", () =>
+    writeFuelCombinedDataset(outDir, started, fuelDatasets),
+  );
 
   await runTask("Tourism Region", () => fetchTourismRegion(outDir, started));
   await runTask("Tourism Country", () => fetchTourismCountry(outDir, started));
 
-  await runTask("CPI Change", () =>
-    fetchCpiDataset(outDir, started, undefined, {
-      path_key: "cpi_change",
-      filename: "kas_cpi_change_monthly.json",
-    }),
-  );
-
-  await runTask("CPI Index", () =>
-    fetchCpiDataset(outDir, started, undefined, {
-      path_key: "cpi_index",
-      filename: "kas_cpi_index_monthly.json",
-    }),
-  );
+  await runTask("CPI Monthly", () => fetchCpiMonthly(outDir, started));
 
   if (partners) {
     await runTask("Imports by Partner", () =>
-      fetchImportsByPartner(outDir, partners, started),
+      fetchImportsByPartner(outDir, partners!, started),
     );
   }
 
   console.log(
-    `✔ trade (${tradeDataset?.records?.length ?? 0} rows) ` +
-      `| trade chapters yearly (${
-        tradeChaptersYearlyDataset?.records?.length ?? 0
-      } rows) ` +
-      `| energy (${energyDataset?.records?.length ?? 0} rows)`,
+    `✔ trade (${tradeDataset && "records" in tradeDataset ? tradeDataset.records.length : 0} rows) ` +
+      `| trade chapters yearly (${tradeChaptersYearlyDataset && "records" in tradeChaptersYearlyDataset ? tradeChaptersYearlyDataset.records.length : 0} rows) ` +
+      `| energy (${energyDataset && "records" in energyDataset ? energyDataset.records?.length : 0} rows)`,
   );
   console.log("Done.");
 }

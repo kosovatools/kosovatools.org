@@ -12,7 +12,8 @@ import {
 
 import {
   type ElectricityRecord,
-  electricityMeta,
+  createLabelMap,
+  electricityDataset,
   timelineEvents,
 } from "@workspace/kas-data";
 import {
@@ -44,69 +45,26 @@ import { formatAuto } from "./utils/number-format";
 import { Fragment, useMemo, useState } from "react";
 
 const SERIES_KEYS = ["production_gwh", "import_gwh"] as const;
-const FIELD_LABELS: Partial<Record<keyof ElectricityRecord, string>> = {};
-for (const field of electricityMeta.fields ?? []) {
-  FIELD_LABELS[field.key] = field.label;
-}
+const labelMap = createLabelMap(electricityDataset.meta.fields);
 
-function getFieldLabel<Key extends keyof ElectricityRecord>(
-  key: Key,
-  fallback: string,
-): string {
-  const label = FIELD_LABELS[key];
-  return typeof label === "string" && label.trim().length > 0
-    ? label
-    : fallback;
-}
+const PRODUCTION_TOTAL_LABEL = labelMap.production_gwh;
 
-const LABEL_MAP: Record<(typeof SERIES_KEYS)[number], string> = {
-  production_gwh: getFieldLabel("production_gwh", "Prodhimi bruto"),
-  import_gwh: getFieldLabel("import_gwh", "Importi"),
-};
-
-const PRODUCTION_TOTAL_LABEL = getFieldLabel(
-  "production_gwh",
-  "Prodhimi bruto",
-);
 const PRODUCTION_SERIES_KEYS = [
   "production_thermal_gwh",
   "production_hydro_gwh",
   "production_wind_solar_gwh",
 ] as const;
-const PRODUCTION_LABEL_MAP: Record<
-  (typeof PRODUCTION_SERIES_KEYS)[number],
-  string
-> = {
-  production_thermal_gwh: getFieldLabel(
-    "production_thermal_gwh",
-    "Termocentralet",
-  ),
-  production_hydro_gwh: getFieldLabel("production_hydro_gwh", "Hidrocentralet"),
-  production_wind_solar_gwh: getFieldLabel(
-    "production_wind_solar_gwh",
-    "Era & Dielli",
-  ),
-};
 
-const EXPORT_LABEL = getFieldLabel("export_gwh", "Eksporti");
-const GROSS_AVAILABLE_LABEL = getFieldLabel(
-  "gross_available_gwh",
-  "Furnizimi neto",
-);
+const EXPORT_LABEL = labelMap.export_gwh;
 const NET_IMPORT_LABEL = "Import neto";
 const NET_EXPORT_LABEL = "Eksport neto";
 
 type ElectricityUnit = "GWh" | "MWh";
 const ENERGY_UNIT: ElectricityUnit =
-  electricityMeta.unit === "MWh" ? "MWh" : "GWh";
+  electricityDataset.meta.unit === "MWh" ? "MWh" : "GWh";
 
-type ElectricityBalanceChartProps = {
-  data: ElectricityRecord[];
-};
-
-export function ElectricityBalanceChart({
-  data,
-}: ElectricityBalanceChartProps) {
+const data = electricityDataset.records;
+export function ElectricityBalanceChart() {
   const chartClassName = "w-full aspect-[4/3] sm:aspect-video";
   const chartMargin = { top: 56, right: 0, left: 0, bottom: 0 };
 
@@ -140,7 +98,7 @@ export function ElectricityBalanceChart({
       series.length > 0
         ? buildStackedChartView({
             keys: SERIES_KEYS.slice(),
-            labelMap: LABEL_MAP,
+            labelMap: labelMap,
             series,
             periodFormatter,
           })
@@ -152,7 +110,7 @@ export function ElectricityBalanceChart({
       config: view.config,
       latestSummary: buildLatestSummary(aggregated, periodFormatter),
     };
-  }, [data, monthsLimit, periodGrouping]);
+  }, [monthsLimit, periodGrouping]);
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
@@ -174,12 +132,12 @@ export function ElectricityBalanceChart({
     const metrics: Array<{ key: string; label: string; value: number }> = [
       {
         key: "production_total",
-        label: LABEL_MAP.production_gwh,
+        label: labelMap.production_gwh,
         value: latestSummary.productionTotal,
       },
       {
         key: "import_total",
-        label: LABEL_MAP.import_gwh,
+        label: labelMap.import_gwh,
         value: latestSummary.importTotal,
       },
       {
@@ -192,7 +150,7 @@ export function ElectricityBalanceChart({
     if (latestSummary.grossAvailable != null) {
       metrics.push({
         key: "gross_available",
-        label: GROSS_AVAILABLE_LABEL,
+        label: labelMap.gross_available_gwh,
         value: latestSummary.grossAvailable,
       });
     }
@@ -331,7 +289,7 @@ export function ElectricityBalanceChart({
 }
 
 type ElectricityProductionBySourceChartProps = {
-  data: ElectricityRecord[];
+  data: readonly ElectricityRecord[];
 };
 
 export function ElectricityProductionBySourceChart({
@@ -374,7 +332,7 @@ export function ElectricityProductionBySourceChart({
       series.length > 0
         ? buildStackedChartView({
             keys: PRODUCTION_SERIES_KEYS.slice(),
-            labelMap: PRODUCTION_LABEL_MAP,
+            labelMap,
             series,
             periodFormatter,
           })
@@ -413,7 +371,7 @@ export function ElectricityProductionBySourceChart({
       },
       ...latestSummary.sources.map((source) => ({
         key: source.key,
-        label: PRODUCTION_LABEL_MAP[source.key],
+        label: labelMap[source.key],
         value: source.value,
       })),
     ];

@@ -1,16 +1,11 @@
 import {
-  describeFuelSources,
+  describeDatasetSource,
   formatGeneratedAt,
-  fuelBalances,
-  fuelMeta,
-  importsByPartnerMeta,
-  tradeImportsByPartner,
-  tradeChaptersYearlyMeta,
+  fuelDataset,
   tradeChaptersYearly,
-  tourismByCountry,
-  tourismByRegion,
-  tourismCountryMeta,
-  tourismRegionMeta,
+  tourismRegion,
+  tourismCountry,
+  importsByPartner,
 } from "@workspace/kas-data";
 import {
   Card,
@@ -28,12 +23,15 @@ import { TourismCountryStackedChart } from "./tourism-country-stacked-chart";
 import { TourismRegionCharts } from "./tourism-region-stacked-chart";
 
 export function DataInsightsDashboard() {
-  const generatedLabel = formatGeneratedAt(importsByPartnerMeta.generated_at);
-  const fuelSourceLabel = describeFuelSources(fuelMeta);
+  const generatedLabel = formatGeneratedAt(importsByPartner.meta.generated_at);
+  const fuelSourceLabel = describeDatasetSource(fuelDataset.meta);
+  const chapterSourceLabel = describeDatasetSource(tradeChaptersYearly.meta);
+  const partnersSourceLabel = describeDatasetSource(importsByPartner.meta);
+  const tourismCountrySourceLabel = describeDatasetSource(tourismCountry.meta);
+  const tourismRegionSourceLabel = describeDatasetSource(tourismRegion.meta);
   const chapterGeneratedLabel = formatGeneratedAt(
-    tradeChaptersYearlyMeta.generated_at,
+    tradeChaptersYearly.meta.generated_at,
   );
-  const chapterSourceLabel = tradeChaptersYearlyMeta.table ?? "E panjohur";
 
   const chartContentClass = "px-2 sm:px-6";
 
@@ -71,7 +69,7 @@ export function DataInsightsDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
-            <TradeChapterStackedChart data={tradeChaptersYearly} />
+            <TradeChapterStackedChart />
           </CardContent>
           <CardFooter className="flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <span>Burimi: {chapterSourceLabel}.</span>
@@ -88,10 +86,13 @@ export function DataInsightsDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
-            <ImportPartnersStackedChart data={tradeImportsByPartner} top={6} />
+            <ImportPartnersStackedChart
+              data={importsByPartner.records}
+              top={6}
+            />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Burimi: {importsByPartnerMeta.table ?? "E panjohur"}.
+            Burimi: {partnersSourceLabel}.
           </CardFooter>
         </Card>
       </section>
@@ -108,7 +109,7 @@ export function DataInsightsDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
-            <FuelBalanceChart balances={fuelBalances} />
+            <FuelBalanceChart />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
             Burimet: {fuelSourceLabel}.
@@ -128,10 +129,10 @@ export function DataInsightsDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
-            <TourismCountryStackedChart data={tourismByCountry} top={5} />
+            <TourismCountryStackedChart top={5} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Burimi: {tourismCountryMeta.table ?? "E panjohur"}.
+            Burimi: {tourismCountrySourceLabel}.
           </CardFooter>
         </Card>
 
@@ -144,10 +145,10 @@ export function DataInsightsDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
-            <TourismRegionCharts data={tourismByRegion} />
+            <TourismRegionCharts />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
-            Burimi: {tourismRegionMeta.table ?? "E panjohur"}.
+            Burimi: {tourismRegionSourceLabel}.
           </CardFooter>
         </Card>
       </section>

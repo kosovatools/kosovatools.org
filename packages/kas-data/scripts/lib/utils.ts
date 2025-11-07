@@ -1,30 +1,138 @@
 export type MetaField = {
   key: string;
   label: string;
-  unit?: string | null;
+  unit: string; // REQUIRED per v1.1
 };
 
-export type CreateMetaOptions = {
-  updatedAt?: string | null;
+export type DimensionOption = {
+  key: string;
+  label: string;
+};
+
+export type TimeGranularity =
+  | "yearly"
+  | "quarterly"
+  | "monthly"
+  | "weekly"
+  | "daily";
+
+export type Meta = {
+  id: string;
+  generated_at: string;
+  updated_at: string | null;
+  time: {
+    key: "period";
+    granularity: TimeGranularity;
+    first: string;
+    last: string;
+    count: number;
+  };
+  fields: MetaField[];
+  metrics: string[];
+  dimensions: Record<string, DimensionOption[]>; // excludes period
   unit?: string | null;
-  fields?: MetaField[];
-} & Record<string, unknown>;
+  source: string;
+  source_urls: string[];
+  title?: string | null;
+  notes?: string[];
+};
 
 export function createMeta(
-  parts: readonly string[],
+  id: string,
   generatedAt: string,
-  options: CreateMetaOptions = {},
-) {
-  const { updatedAt = null, unit = null, fields = [], ...rest } = options;
-  return {
-    table: parts[parts.length - 1],
-    path: parts.join("/"),
-    generated_at: generatedAt,
-    updated_at: updatedAt,
-    unit,
+  options: Omit<Meta, "id" | "generated_at">,
+): Meta {
+  const {
+    updated_at,
+    time,
     fields,
-    ...rest,
-  } as const;
+    metrics,
+    dimensions,
+    unit,
+    source,
+    source_urls,
+    title,
+    notes,
+  } = options as unknown as Meta;
+
+  // Minimal runtime validation to enforce v1.1
+  if (!time || time.key !== "period")
+    throw new Error("meta.time.key must be 'period'");
+  if (!time.first || !time.last)
+    throw new Error("meta.time.first/last required");
+  if (!time.granularity) throw new Error("meta.time.granularity required");
+  if (!Array.isArray(fields) || !fields.length)
+    throw new Error("meta.fields required");
+  for (const f of fields)
+    if (f.unit === undefined || f.unit === null)
+      throw new Error("field.unit must be provided");
+  if (!Array.isArray(metrics) || metrics.length !== fields.length)
+    throw new Error("meta.metrics must mirror fields");
+
+  return {
+    id,
+    generated_at: generatedAt,
+    updated_at,
+    time,
+    fields,
+    metrics,
+    dimensions: dimensions ?? {},
+    unit,
+    source,
+    source_urls,
+    title: title ?? null,
+    notes: notes ?? [],
+  };
+}
+
+function normalizeTableLabel(filename: string): string {
+  const base = filename.replace(/\.px$/i, "");
+  const tabMatch = base.match(/^tab\s*(\d+)/i);
+  if (tabMatch && tabMatch[1]) return `Table ${tabMatch[1].padStart(2, "0")}`;
+  const numericPrefix = base.match(/^(\d{1,3})[_-]?/);
+  if (numericPrefix && numericPrefix[1])
+    return `Table ${numericPrefix[1].padStart(2, "0")}`;
+  return `Table ${base}`;
+}
+
+function pathToUrl(parts: readonly string[]): string {
+  return parts.join("/");
+}
+
+function resolveCategory(parts: readonly string[]): string {
+  return parts[1] ?? parts[0] ?? "ASKdata";
+}
+
+function buildCompositeDescription(
+  categories: string[],
+  tableLabels: string[],
+): string {
+  if (tableLabels.length === 1)
+    return `${tableLabels[0]} in ${categories[0] ?? "ASKdata"}`;
+  const uniqueCategories = Array.from(new Set(categories));
+  if (uniqueCategories.length === 1)
+    return `Data derived from ${tableLabels.join(", ")} in ${uniqueCategories[0]}`;
+  return `Data derived from ${tableLabels.join(", ")} across ${uniqueCategories.join(", ")}`;
+}
+
+export function describePxSources(
+  sourcePaths: readonly (readonly string[])[],
+): { description: string; urls: string[] } {
+  if (!sourcePaths.length) return { description: "Unknown source", urls: [] };
+  const tableLabels: string[] = [];
+  const categories: string[] = [];
+  const urls: string[] = [];
+  for (const parts of sourcePaths) {
+    if (!parts || !parts.length) continue;
+    const normalizedParts = parts as readonly string[];
+    const last = normalizedParts[normalizedParts.length - 1];
+    if (!last) continue;
+    tableLabels.push(normalizeTableLabel(last));
+    categories.push(resolveCategory(normalizedParts));
+    urls.push(pathToUrl(normalizedParts));
+  }
+  const description = buildCompositeDescription(categories, tableLabels);
+  return { description, urls };
 }
 
 export function jsonStringify(obj: unknown): string {
@@ -66,21 +174,16 @@ export function normalizeFuelField(label: string): string {
   if (
     (normalized.includes("ready") && normalized.includes("market")) ||
     (normalized.includes("gatshme") && normalized.includes("treg"))
-  ) {
+  )
     return "ready_for_market";
-  }
-  if (normalized.includes("production") || normalized.includes("prodhim")) {
+  if (normalized.includes("production") || normalized.includes("prodhim"))
     return "production";
-  }
-  if (normalized.includes("import") || normalized.includes("importi")) {
+  if (normalized.includes("import") || normalized.includes("importi"))
     return "import";
-  }
-  if (normalized.includes("export") || normalized.includes("eksport")) {
+  if (normalized.includes("export") || normalized.includes("eksport"))
     return "export";
-  }
-  if (normalized.includes("stock") || normalized.includes("stok")) {
+  if (normalized.includes("stock") || normalized.includes("stok"))
     return "stock";
-  }
   return slugifyLabel(label);
 }
 
@@ -110,9 +213,8 @@ export function smartTitleCase(word: string): string {
   if (!trimmed) return "";
   const alpha = trimmed.replace(/[^A-Za-z]/g, "");
   const upperAlpha = alpha.toUpperCase();
-  if (upperAlpha && UPPERCASE_WORDS.has(upperAlpha)) {
+  if (upperAlpha && UPPERCASE_WORDS.has(upperAlpha))
     return trimmed.replace(alpha, upperAlpha);
-  }
   const firstChar = trimmed.charAt(0);
   if (!firstChar) return "";
   return firstChar.toUpperCase() + trimmed.slice(1).toLowerCase();
@@ -124,9 +226,7 @@ export function beautifyChapterText(text: string): string {
     .split(/(\s+|[,;/()-])/g)
     .map((token) => {
       if (!token.trim()) return token;
-      if (/[^A-Za-z]/.test(token) && token.length === 1) {
-        return token;
-      }
+      if (/[^A-Za-z]/.test(token) && token.length === 1) return token;
       return smartTitleCase(token);
     })
     .join("")
@@ -134,7 +234,7 @@ export function beautifyChapterText(text: string): string {
     .trim();
   return recombined.replace(
     /\b(And|Or|The|Of|With|For|On|In|By|To|At)\b/g,
-    (match) => match.toLowerCase(),
+    (m) => m.toLowerCase(),
   );
 }
 
@@ -148,9 +248,7 @@ export function maybeBeautifyChapterText(text: string): string {
     uppercaseMatches && letters.length
       ? uppercaseMatches.length / letters.length
       : 0;
-  if (uppercaseRatio >= 0.6) {
-    return beautifyChapterText(normalized);
-  }
+  if (uppercaseRatio >= 0.6) return beautifyChapterText(normalized);
   return normalized;
 }
 
@@ -165,13 +263,7 @@ export type TradeChapterLabel = {
 export function parseTradeChapterLabel(text: string): TradeChapterLabel {
   const raw = normalizeWhitespace(text);
   if (!raw) {
-    return {
-      code: "",
-      label: "",
-      description: "",
-      title: "",
-      raw: "",
-    };
+    return { code: "", label: "", description: "", title: "", raw: "" };
   }
   let remainder = raw;
   let code = "";
@@ -183,11 +275,9 @@ export function parseTradeChapterLabel(text: string): TradeChapterLabel {
   if (!code) {
     const numberMatch =
       remainder.match(/\b\d{1,2}\b/) ?? raw.match(/\b\d{1,2}\b/);
-    if (numberMatch) {
-      code = numberMatch[0]?.padStart(2, "0") ?? "";
-    }
+    if (numberMatch) code = numberMatch[0]?.padStart(2, "0") ?? "";
   }
-  const splitParts = remainder.split(/\s*[-–—:]\s*/).map((part) => part.trim());
+  const splitParts = remainder.split(/\s*[-–—:]\s*/).map((p) => p.trim());
   let title = "";
   let description = "";
   if (splitParts.length > 1) {
@@ -199,26 +289,16 @@ export function parseTradeChapterLabel(text: string): TradeChapterLabel {
   }
   if (!title && code) {
     const numericCode = Number.parseInt(code, 10);
-    if (Number.isFinite(numericCode)) {
-      title = `Kapitulli ${numericCode}`;
-    }
+    if (Number.isFinite(numericCode)) title = `Kapitulli ${numericCode}`;
   }
   if (!title) title = description || raw;
   if (!description) description = title;
   const label = code ? `${code} · ${description}` : description;
-  return {
-    code,
-    label,
-    description,
-    title,
-    raw,
-  };
+  return { code, label, description, title, raw };
 }
 
 export function normalizeYM(code: string): string {
-  if (/^\d{6}$/.test(code)) {
-    return `${code.slice(0, 4)}-${code.slice(4)}`;
-  }
+  if (/^\d{6}$/.test(code)) return `${code.slice(0, 4)}-${code.slice(4)}`;
   if (code.includes("M")) {
     const [year = "", month = ""] = code.split("M", 2);
     if (!month) return year;

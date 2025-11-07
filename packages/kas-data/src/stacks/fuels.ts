@@ -7,21 +7,17 @@ import {
   type StackPeriodGrouping,
 } from "@workspace/chart-utils";
 import {
-  fuelKeys,
-  fuelLabels,
+  fuelDataset,
   type FuelBalanceRecord,
   type FuelKey,
   type FuelMetric,
 } from "../datasets/fuels";
+import { createLabelMap } from "../utils/meta";
 
-type FuelStackRecord = {
-  period: string;
-  fuel: FuelKey;
-  value: number;
-};
-
+type FuelStackRecord = { period: string; fuel: FuelKey; value: number };
+const fuelLabelMap = createLabelMap(fuelDataset.meta.dimensions.fuel);
+const fuelKeys = Object.keys(fuelLabelMap) as FuelKey[];
 export type FuelTypeStackSeries = StackSeriesRow<FuelKey>;
-
 export type FuelTotal = StackTotal<FuelKey>;
 
 export type FuelTypeStackOptions = {
@@ -35,44 +31,48 @@ export type FuelTypeStackOptions = {
 const DEFAULT_METRIC: FuelMetric = "ready_for_market";
 
 function toStackRecords(
-  balances: Record<FuelKey, FuelBalanceRecord[]>,
+  balances: FuelBalanceRecord[],
   metric: FuelMetric,
 ): FuelStackRecord[] {
-  const rows: FuelStackRecord[] = [];
-  for (const key of fuelKeys) {
-    for (const entry of balances[key] ?? []) {
-      rows.push({
-        period: entry.period,
-        fuel: key,
-        value: entry[metric] ?? 0,
-      });
-    }
-  }
-  return rows;
+  return balances.map((e) => ({
+    period: e.period,
+    fuel: e.fuel,
+    value:
+      typeof e[metric] === "number" && Number.isFinite(e[metric])
+        ? (e[metric] as number)
+        : 0,
+  }));
 }
 
 function accessors() {
   return {
-    period: (record: FuelStackRecord) => record.period,
-    key: (record: FuelStackRecord) => record.fuel,
-    value: (record: FuelStackRecord) => record.value,
+    period: (r: FuelStackRecord) => r.period,
+    key: (r: FuelStackRecord) => r.fuel,
+    value: (r: FuelStackRecord) => r.value,
   };
+}
+
+function labelForFuel(key: FuelKey): string {
+  return fuelLabelMap[key] ?? key;
 }
 
 function buildOptions(options: FuelTypeStackOptions = {}, selected: FuelKey[]) {
   return {
     months: options.months,
     includeOther:
-      options.includeOther && selected.length < fuelKeys.length ? true : false,
+      options.includeOther &&
+      selected.length < fuelDataset.meta.dimensions.fuel.length
+        ? true
+        : false,
     selectedKeys: selected,
     allowedKeys: fuelKeys,
-    labelForKey: (key: FuelKey) => fuelLabels[key],
+    labelForKey: labelForFuel,
     periodGrouping: options.periodGrouping,
   };
 }
 
 export function summarizeFuelTotals(
-  balances: Record<FuelKey, FuelBalanceRecord[]>,
+  balances: FuelBalanceRecord[],
   {
     months,
     metric = DEFAULT_METRIC,
@@ -83,13 +83,13 @@ export function summarizeFuelTotals(
   return summarizeStackTotals(records, accessors(), {
     months,
     allowedKeys: fuelKeys,
-    labelForKey: (key: FuelKey) => fuelLabels[key],
+    labelForKey: labelForFuel,
     periodGrouping,
   });
 }
 
 export function buildFuelTypeStackSeries(
-  balances: Record<FuelKey, FuelBalanceRecord[]>,
+  balances: FuelBalanceRecord[],
   {
     metric = DEFAULT_METRIC,
     selectedKeys,

@@ -12,12 +12,14 @@ import {
 } from "recharts";
 
 import {
-  buildPartnerStackSeries,
-  summarizePartnerTotals,
-  type TradePartnerRecord,
   timelineEvents,
+  createLabelMap,
+  type TradePartnerRecord,
+  importsByPartner,
 } from "@workspace/kas-data";
 import {
+  buildStackSeries,
+  summarizeStackTotals,
   formatEuroCompact,
   type StackPeriodGrouping,
   STACK_PERIOD_GROUPING_OPTIONS,
@@ -45,11 +47,32 @@ import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-sele
 const DEFAULT_TOP_PARTNERS = 5;
 const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
 
+type PartnerStackRecord = {
+  period: string;
+  partner: string;
+  value: number;
+};
+
+const partnerAccessors = {
+  period: (record: PartnerStackRecord) => record.period,
+  key: (record: PartnerStackRecord) => record.partner,
+  value: (record: PartnerStackRecord) => record.value,
+};
+
+const partnerLabelMap = createLabelMap(
+  importsByPartner.meta.dimensions.partner,
+);
+
+const labelForPartner = (key: string) => partnerLabelMap[key] ?? key;
+
+const sanitizeValue = (value: number | null | undefined): number =>
+  typeof value === "number" && Number.isFinite(value) ? value : 0;
+
 export function ImportPartnersStackedChart({
   data,
   top = DEFAULT_TOP_PARTNERS,
 }: {
-  data: TradePartnerRecord[];
+  data: readonly TradePartnerRecord[];
   top?: number;
 }) {
   const [periodGrouping, setPeriodGrouping] =
@@ -59,13 +82,23 @@ export function ImportPartnersStackedChart({
 
   const monthsLimit = monthsFromRange(range);
 
+  const stackRecords = React.useMemo<PartnerStackRecord[]>(() => {
+    if (!data.length) return [];
+    return data.map((record) => ({
+      period: record.period,
+      partner: record.partner,
+      value: sanitizeValue(record.imports),
+    }));
+  }, [data]);
+
   const totals = React.useMemo(
     () =>
-      summarizePartnerTotals(data, {
+      summarizeStackTotals(stackRecords, partnerAccessors, {
         months: monthsLimit,
         periodGrouping,
+        labelForKey: labelForPartner,
       }),
-    [data, monthsLimit, periodGrouping],
+    [stackRecords, monthsLimit, periodGrouping],
   );
 
   const {
@@ -82,14 +115,23 @@ export function ImportPartnersStackedChart({
   });
 
   const { chartData, keyMap, config } = React.useMemo(() => {
-    const { keys, series, labelMap } = buildPartnerStackSeries(data, {
-      months: monthsLimit,
-      top,
-      includeOther,
-      selectedKeys,
-      excludedKeys,
-      periodGrouping,
-    });
+    if (!stackRecords.length) {
+      return { chartData: [], keyMap: [], config: {} };
+    }
+
+    const { keys, series, labelMap } = buildStackSeries(
+      stackRecords,
+      partnerAccessors,
+      {
+        months: monthsLimit,
+        top,
+        includeOther,
+        selectedKeys,
+        excludedKeys,
+        periodGrouping,
+        labelForKey: labelForPartner,
+      },
+    );
 
     return buildStackedChartView({
       keys,
@@ -98,7 +140,7 @@ export function ImportPartnersStackedChart({
       periodFormatter: getPeriodFormatter(periodGrouping),
     });
   }, [
-    data,
+    stackRecords,
     monthsLimit,
     top,
     includeOther,
