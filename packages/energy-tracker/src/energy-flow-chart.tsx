@@ -110,7 +110,10 @@ export function MonthlyFlowTrendChart({
   }));
 
   return (
-    <ChartContainer config={chartConfig}>
+    <ChartContainer
+      config={chartConfig}
+      className="aspect-[1/1.5] sm:aspect-video"
+    >
       <ComposedChart
         data={chartData}
         margin={{ top: 16, right: 24, bottom: 12, left: 12 }}
@@ -118,10 +121,10 @@ export function MonthlyFlowTrendChart({
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="label" tickMargin={8} />
         <YAxis
+          width="auto"
           tickFormatter={(value: number | string) =>
             formatAuto(value, { includeUnit: true })
           }
-          width={110}
         />
         <ChartTooltip
           content={
@@ -208,7 +211,10 @@ export function HourlyFlowPatternChart({
     }));
 
   return (
-    <ChartContainer config={chartConfig}>
+    <ChartContainer
+      config={chartConfig}
+      className="aspect-[1/1.5] sm:aspect-video"
+    >
       <ComposedChart
         data={chartData}
         margin={{ top: 16, right: 24, bottom: 12, left: 12 }}
@@ -216,6 +222,7 @@ export function HourlyFlowPatternChart({
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="label" tickMargin={8} />
         <YAxis
+          width="auto"
           tickFormatter={(value: number | string) =>
             formatAuto(value, {
               includeUnit: true,
@@ -229,7 +236,6 @@ export function HourlyFlowPatternChart({
               },
             })
           }
-          width={120}
         />
         <ChartTooltip
           content={
@@ -283,15 +289,18 @@ export function DailyFlowChart({ data }: { data: EnergyFlowDailyPoint[] }) {
   });
 
   return (
-    <ChartContainer config={chartConfig}>
+    <ChartContainer
+      config={chartConfig}
+      className="aspect-[1/1.5] sm:aspect-video"
+    >
       <ComposedChart
         data={chartData}
-        margin={{ top: 16, right: 24, bottom: 12, left: 12 }}
+        margin={{ top: 16, right: 0, bottom: 12, left: 0 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="label" tickMargin={8} />
         <YAxis
-          width={110}
+          width="auto"
           tickFormatter={(value: number | string) =>
             formatAuto(value, { includeUnit: true })
           }

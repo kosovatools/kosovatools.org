@@ -115,6 +115,7 @@ export function VirtualizedTreeTable({
                 return (
                   <div
                     key={`skeleton-${virtualItem.index}`}
+                    data-index={virtualItem.index}
                     ref={rowVirtualizer.measureElement}
                     className="absolute inset-x-0 grid items-center gap-4 border-b px-4 py-3 text-sm"
                     style={{

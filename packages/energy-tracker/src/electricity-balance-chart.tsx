@@ -139,11 +139,11 @@ export function ElectricityBalanceChart({
     const view =
       series.length > 0
         ? buildStackedChartView({
-          keys: SERIES_KEYS.slice(),
-          labelMap: LABEL_MAP,
-          series,
-          periodFormatter,
-        })
+            keys: SERIES_KEYS.slice(),
+            labelMap: LABEL_MAP,
+            series,
+            periodFormatter,
+          })
         : { chartData: [], keyMap: [], config: {} as ChartConfig };
 
     return {
@@ -245,10 +245,11 @@ export function ElectricityBalanceChart({
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-sm text-muted-foreground">
-            {`Periudha e fundit${latestSummary?.periodLabel
-              ? ` (${latestSummary.periodLabel})`
-              : ""
-              }:`}{" "}
+            {`Periudha e fundit${
+              latestSummary?.periodLabel
+                ? ` (${latestSummary.periodLabel})`
+                : ""
+            }:`}{" "}
             {summaryContent}
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -276,6 +277,7 @@ export function ElectricityBalanceChart({
               axisLine={false}
             />
             <YAxis
+              width="auto"
               tickFormatter={(value) =>
                 formatAuto(Number(value), { inputUnit: ENERGY_UNIT })
               }
@@ -288,7 +290,6 @@ export function ElectricityBalanceChart({
                 stroke="var(--muted-foreground)"
                 strokeDasharray="3 3"
                 ifOverflow="extendDomain"
-                isFront
               >
                 <Label
                   value={event.label}
@@ -372,11 +373,11 @@ export function ElectricityProductionBySourceChart({
     const view =
       series.length > 0
         ? buildStackedChartView({
-          keys: PRODUCTION_SERIES_KEYS.slice(),
-          labelMap: PRODUCTION_LABEL_MAP,
-          series,
-          periodFormatter,
-        })
+            keys: PRODUCTION_SERIES_KEYS.slice(),
+            labelMap: PRODUCTION_LABEL_MAP,
+            series,
+            periodFormatter,
+          })
         : { chartData: [], keyMap: [], config: {} as ChartConfig };
 
     return {
@@ -457,10 +458,11 @@ export function ElectricityProductionBySourceChart({
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-sm text-muted-foreground">
-            {`Periudha e fundit${latestSummary?.periodLabel
-              ? ` (${latestSummary.periodLabel})`
-              : ""
-              }:`}{" "}
+            {`Periudha e fundit${
+              latestSummary?.periodLabel
+                ? ` (${latestSummary.periodLabel})`
+                : ""
+            }:`}{" "}
             {summaryContent}
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -488,6 +490,7 @@ export function ElectricityProductionBySourceChart({
               axisLine={false}
             />
             <YAxis
+              width="auto"
               tickFormatter={(value) =>
                 formatAuto(Number(value), { inputUnit: ENERGY_UNIT })
               }
@@ -500,7 +503,6 @@ export function ElectricityProductionBySourceChart({
                 stroke="var(--muted-foreground)"
                 strokeDasharray="3 3"
                 ifOverflow="extendDomain"
-                isFront
               >
                 <Label
                   value={event.label}

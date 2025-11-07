@@ -108,7 +108,7 @@ export function AgeDistributionPlot({
     >
       <LineChart
         data={points}
-        margin={{ top: 16, right: 24, bottom: 32, left: 16 }}
+        margin={{ top: 16, right: 0, bottom: 32, left: 0 }}
       >
         <CartesianGrid strokeDasharray="3 3" className="text-border/40" />
         <XAxis
@@ -127,17 +127,16 @@ export function AgeDistributionPlot({
           }}
         />
         <YAxis
+          width="auto"
           dataKey="count"
           allowDecimals={false}
           tickLine={false}
           axisLine={false}
           stroke="hsl(var(--muted-foreground))"
-          width={40}
           label={{
             value: "Numri",
             angle: -90,
             position: "insideLeft",
-            dx: -8,
             fill: "hsl(var(--muted-foreground))",
             className: "text-xs",
           }}

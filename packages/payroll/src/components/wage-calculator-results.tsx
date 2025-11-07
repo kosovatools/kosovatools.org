@@ -23,6 +23,8 @@ import type {
   NetToGrossResult,
   WageCalculatorResult,
 } from "../lib/wage-calculator";
+import { LinkProps, NodeProps } from "recharts/types/chart/Sankey";
+import { formatEuroWithCents } from "../../../chart-utils/src";
 
 export interface WageCalculatorResultsProps {
   result: WageCalculatorResult;
@@ -43,42 +45,8 @@ function SummaryItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-type SankeyNodeDatum = {
-  name?: string;
-  value?: number;
-  depth?: number;
-  fill?: string;
-  stroke?: string;
-  [key: string]: unknown;
-};
-
-type SankeyLinkDatum = {
-  source?: SankeyNodeDatum;
-  target?: SankeyNodeDatum;
-  value?: number;
-  color?: string;
-  [key: string]: unknown;
-};
-
-type SankeyNodeWithLabelProps = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  index: number;
-  payload: SankeyNodeDatum;
-  formatCurrency: (value: number) => string;
-} & Record<string, unknown>;
-
-function SankeyNodeWithLabel({
-  x,
-  y,
-  width,
-  height,
-  payload,
-  formatCurrency,
-}: SankeyNodeWithLabelProps) {
-  const fill = typeof payload.fill === "string" ? payload.fill : "var(--muted)";
+function SankeyNodeWithLabel({ x, y, width, height, payload }: NodeProps) {
+  const fill = "var(--muted)";
   const amountValue =
     typeof payload.value === "number" && Number.isFinite(payload.value)
       ? Math.max(payload.value, 0)
@@ -147,7 +115,7 @@ function SankeyNodeWithLabel({
                 color: "var(--muted-foreground)",
               }}
             >
-              {formatCurrency(amountValue)}
+              {formatEuroWithCents(amountValue)}
             </span>
           ) : null}
         </div>
@@ -155,20 +123,6 @@ function SankeyNodeWithLabel({
     </g>
   );
 }
-
-type SankeyLinkWithLabelProps = {
-  sourceX: number;
-  targetX: number;
-  sourceY: number;
-  targetY: number;
-  sourceControlX: number;
-  targetControlX: number;
-  sourceRelativeY: number;
-  targetRelativeY: number;
-  linkWidth: number;
-  index: number;
-  payload: SankeyLinkDatum;
-};
 
 function SankeyLinkWithLabel({
   sourceX,
@@ -178,14 +132,8 @@ function SankeyLinkWithLabel({
   sourceControlX,
   targetControlX,
   linkWidth,
-  payload,
-}: SankeyLinkWithLabelProps) {
-  const strokeColor =
-    (typeof payload.color === "string" && payload.color) ||
-    (typeof payload.source?.stroke === "string" && payload.source.stroke) ||
-    (typeof payload.source?.fill === "string" && payload.source.fill) ||
-    (typeof payload.target?.stroke === "string" && payload.target.stroke) ||
-    "var(--muted-foreground)";
+}: LinkProps) {
+  const strokeColor = "var(--muted-foreground)";
 
   return (
     <g>
@@ -387,12 +335,7 @@ function WageCalculatorResults({
                   margin={{ top: 12, bottom: 12, left: 8, right: 8 }}
                   linkCurvature={0.45}
                   link={(linkProps) => <SankeyLinkWithLabel {...linkProps} />}
-                  node={(nodeProps) => (
-                    <SankeyNodeWithLabel
-                      {...nodeProps}
-                      formatCurrency={formatCurrency}
-                    />
-                  )}
+                  node={(nodeProps) => <SankeyNodeWithLabel {...nodeProps} />}
                 >
                   <ChartTooltip
                     content={

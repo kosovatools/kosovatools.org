@@ -101,19 +101,19 @@ const METRIC_OPTIONS: Array<{
   label: string;
   description: string;
 }> = [
-    {
-      id: "index",
-      label: "Indeksi (2015 = 100)",
-      description:
-        "Reflekton nivelin e çmimeve të konsumit krahasuar me vitin bazë 2015.",
-    },
-    {
-      id: "change",
-      label: "Ndryshimi mujor (%)",
-      description:
-        "Shfaq përqindjen e ndryshimit nga periudha paraprake për secilin grup.",
-    },
-  ];
+  {
+    id: "index",
+    label: "Indeksi (2015 = 100)",
+    description:
+      "Reflekton nivelin e çmimeve të konsumit krahasuar me vitin bazë 2015.",
+  },
+  {
+    id: "change",
+    label: "Ndryshimi mujor (%)",
+    description:
+      "Shfaq përqindjen e ndryshimit nga periudha paraprake për secilin grup.",
+  },
+];
 
 const decimalFormatter = createNumberFormatter("sq", {
   minimumFractionDigits: 1,
@@ -437,12 +437,13 @@ export function InflationDashboard({
         <div className="flex flex-col gap-2">
           <CardTitle>Indeksi i Çmimeve për Konsumatorin</CardTitle>
           <CardDescription>
-            Përzgjidh grupe COICOP për të krahasuar indeksin bazë 2015 = 100
-            ose ndryshimet mujore të IHÇK-së në periudha të ndryshme kohore.
+            Përzgjidh grupe COICOP për të krahasuar indeksin bazë 2015 = 100 ose
+            ndryshimet mujore të IHÇK-së në periudha të ndryshme kohore.
           </CardDescription>
         </div>
         <div className="flex flex-col gap-2 md:items-end">
-          <OptionSelector options={METRIC_OPTIONS}
+          <OptionSelector
+            options={METRIC_OPTIONS}
             onChange={setMetric}
             value={metric}
           />
@@ -487,7 +488,7 @@ export function InflationDashboard({
             </div>
             <ChartContainer
               config={chartConfig}
-              className="w-full overflow-hidden"
+              className="aspect-[1/1.5] sm:aspect-video"
             >
               {hasData && chartData.length ? (
                 <LineChart
@@ -502,6 +503,7 @@ export function InflationDashboard({
                     axisLine={false}
                   />
                   <YAxis
+                    width="auto"
                     axisLine={false}
                     tickFormatter={(value) =>
                       metric === "index"
@@ -586,8 +588,7 @@ export function InflationDashboard({
                     <div className="text-xs text-muted-foreground">
                       {row.latestLabel ? (
                         <>
-                          Periudha e fundit:{" "}
-                          <strong>{row.latestLabel}</strong>
+                          Periudha e fundit: <strong>{row.latestLabel}</strong>
                         </>
                       ) : (
                         "Periudha e fundit: —"
@@ -620,10 +621,10 @@ export function InflationDashboard({
           <AlertDescription className="space-y-2 text-sm">
             <p>
               Nëse një bukë kushtonte 0.30 € në 2015 (viti bazë kur indeksi
-              është 100), një indeks aktual 130 tregon se çmimi është rritur
-              me afërsisht 30%. Llogaritja bëhet duke shumëzuar çmimin bazë me
-              indeksin e ri: <strong>0.30 € × (130 ÷ 100) ≈ 0.39 €</strong>,
-              pra rreth 9 cent më shumë.
+              është 100), një indeks aktual 130 tregon se çmimi është rritur me
+              afërsisht 30%. Llogaritja bëhet duke shumëzuar çmimin bazë me
+              indeksin e ri: <strong>0.30 € × (130 ÷ 100) ≈ 0.39 €</strong>, pra
+              rreth 9 cent më shumë.
             </p>
             <p className="text-xs text-muted-foreground">
               Në përgjithësi përdor rregullin: çmimi i ri ≈ çmimi bazë ×
@@ -637,8 +638,8 @@ export function InflationDashboard({
           <AlertDescription>
             <ul className="list-disc space-y-2 pl-5 text-sm">
               <li>
-                Të dhënat burojnë nga tabelat zyrtare të ASK: cpi09.px
-                (indeksi 2015 = 100) dhe cpi05.px (ndryshimi mujor i IHÇK-së).
+                Të dhënat burojnë nga tabelat zyrtare të ASK: cpi09.px (indeksi
+                2015 = 100) dhe cpi05.px (ndryshimi mujor i IHÇK-së).
               </li>
               <li>
                 Kur zgjedh tremujor, sezonal apo vjetor, vlera e indeksit
@@ -648,12 +649,12 @@ export function InflationDashboard({
               </li>
               <li>
                 Inflacioni kumulativ gjithmonë kompilohet nga të dhënat mujore
-                dhe mat dallimin mes muajit të parë dhe të fundit në
-                intervalin e zgjedhur.
+                dhe mat dallimin mes muajit të parë dhe të fundit në intervalin
+                e zgjedhur.
               </li>
               <li>
-                Për të eksploruar nën-kategori, hapni degët përkatëse në
-                listën hierarkike dhe aktivizoni disa grupe njëkohësisht.
+                Për të eksploruar nën-kategori, hapni degët përkatëse në listën
+                hierarkike dhe aktivizoni disa grupe njëkohësisht.
               </li>
             </ul>
           </AlertDescription>

@@ -5,12 +5,14 @@ import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import {
   Area,
   AreaChart,
-  Bar,
-  BarChart,
   CartesianGrid,
+  Cell,
+  Pie,
+  PieChart,
   XAxis,
   YAxis,
 } from "recharts";
+import type { PieLabelRenderProps } from "recharts";
 
 import {
   fetchCategoriesLastYear,
@@ -50,7 +52,6 @@ import {
   getPeriodFormatter,
 } from "@workspace/chart-utils";
 import {
-  ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
@@ -79,6 +80,7 @@ const OTHER_LABEL = "Të tjerët";
 const CATEGORY_STACK_TOP = 6;
 const MONTHLY_STACK_TOP = 6;
 const CITY_STACK_TOP = 5;
+const PIE_FALLBACK_COLOR = "hsl(var(--primary))";
 
 type StackedView = ReturnType<typeof buildStackedChartView>;
 
@@ -88,6 +90,153 @@ type CategoryStackOptions = {
   includeOther?: boolean;
   excludedKeys?: string[];
 };
+
+type SliceColor = {
+  fill: string;
+  stroke: string;
+};
+
+type CategorySlice = TurnoverCategoryRecord & SliceColor;
+type CitySlice = TurnoverCityRecord & SliceColor;
+
+function buildColoredSlices<T extends { turnover: number }>(
+  records: T[],
+): Array<T & SliceColor> {
+  if (!records.length) {
+    return [];
+  }
+
+  const palette = createChromaPalette(records.length);
+  const fallbackPaletteColor = palette.at(-1);
+
+  return records.map((record, index) => {
+    const paletteColor = palette[index] ?? fallbackPaletteColor;
+    const fill = paletteColor?.light ?? PIE_FALLBACK_COLOR;
+    const stroke =
+      paletteColor?.dark ?? paletteColor?.light ?? PIE_FALLBACK_COLOR;
+    return {
+      ...record,
+      fill,
+      stroke,
+    };
+  });
+}
+
+type TooltipFormatter = NonNullable<
+  React.ComponentProps<typeof ChartTooltipContent>["formatter"]
+>;
+
+function usePieTooltipFormatter<T extends SliceColor>({
+  getLabel,
+}: {
+  getLabel: (slice?: T, fallbackName?: string) => string;
+}): TooltipFormatter {
+  return React.useCallback<TooltipFormatter>(
+    (value, name, entry) => {
+      const slice = entry?.payload as T | undefined;
+      const color =
+        slice?.fill ??
+        (typeof entry?.color === "string" ? entry.color : undefined) ??
+        PIE_FALLBACK_COLOR;
+
+      const fallbackName =
+        typeof name === "string" || typeof name === "number"
+          ? String(name)
+          : undefined;
+
+      const label = getLabel(slice, fallbackName) ?? "";
+
+      const numericValue =
+        typeof value === "number"
+          ? value
+          : typeof value === "string"
+            ? Number(value)
+            : Array.isArray(value) && value.length
+              ? Number(value[0])
+              : NaN;
+
+      const formattedValue = Number.isFinite(numericValue)
+        ? formatEuroCompact(numericValue)
+        : "-";
+
+      return (
+        <div className="flex w-full items-center gap-2">
+          <span
+            className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
+            style={{ backgroundColor: color }}
+          />
+          <div className="flex flex-1 items-center justify-between gap-2">
+            <span className="text-muted-foreground">{label}</span>
+            <span className="text-foreground font-mono font-medium tabular-nums">
+              {formattedValue}
+            </span>
+          </div>
+        </div>
+      );
+    },
+    [getLabel],
+  );
+}
+
+function renderPieSliceLabel({ value }: PieLabelRenderProps) {
+  if (typeof value === "number") {
+    return formatEuroCompact(value);
+  }
+
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return formatEuroCompact(Number.isFinite(parsed) ? parsed : null);
+  }
+
+  if (Array.isArray(value) && value.length) {
+    const parsed = Number(value[0]);
+    return formatEuroCompact(Number.isFinite(parsed) ? parsed : null);
+  }
+
+  return formatEuroCompact(null);
+}
+
+type PieLegendSlice = {
+  turnover: number;
+  fill: string;
+};
+
+function PieLegendList<T extends PieLegendSlice>({
+  slices,
+  getLabel,
+}: {
+  slices: T[];
+  getLabel: (slice: T) => string;
+}) {
+  if (!slices.length) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-col justify-stretch gap-2 pt-4 text-xs">
+      {slices.map((slice, index) => {
+        const label = getLabel(slice);
+        return (
+          <div
+            key={`${label}-${index}`}
+            className="flex items-center justify-between"
+          >
+            <div className="flex items-center gap-2">
+              <span
+                className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
+                style={{ backgroundColor: slice.fill }}
+              />
+              <span className="font-medium leading-none">{label}</span>
+            </div>
+            <span className="font-mono text-muted-foreground">
+              {formatEuroCompact(slice.turnover)}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 function ensureStackView(
   keys: string[],
@@ -279,164 +428,90 @@ function TurnoverByCategoryChart({
 }: {
   records: TurnoverCategoryRecord[];
 }) {
-  const palette = React.useMemo(() => createChromaPalette(1), []);
-  const [turnoverColor] = palette;
-
-  const chartConfig = React.useMemo<ChartConfig>(() => {
-    if (turnoverColor) {
-      return {
-        turnover: {
-          label: "Qarkullimi",
-          theme: {
-            light: turnoverColor.light,
-            dark: turnoverColor.dark,
-          },
-        },
-      };
-    }
-    return {
-      turnover: {
-        label: "Qarkullimi",
-        color: "hsl(var(--primary))",
-      },
-    };
-  }, [turnoverColor]);
-
-  const tooltip = useChartTooltipFormatters({
-    keys: [
-      {
-        id: "turnover",
-        palette: turnoverColor ?? { light: "#2563eb", dark: "#60a5fa" },
-        label: "Qarkullimi",
-      },
-    ],
-    formatValue: formatEuroCompact,
+  const topRecords = React.useMemo(() => records.slice(0, 14), [records]);
+  const slices = React.useMemo<CategorySlice[]>(
+    () => buildColoredSlices(topRecords),
+    [topRecords],
+  );
+  const tooltipFormatter = usePieTooltipFormatter<CategorySlice>({
+    getLabel: (slice, fallback) => slice?.category ?? fallback ?? "",
   });
 
-  const topRecords = React.useMemo(() => records.slice(0, 14), [records]);
-
   return (
-    <ChartContainer
-      config={chartConfig}
-      className="h-[500px] w-full min-w-0 !aspect-auto"
-    >
-      <BarChart
-        data={topRecords}
-        layout="vertical"
-        margin={{ top: 12, right: 24, bottom: 12, left: 12 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          type="number"
-          tickFormatter={(value: number | string) =>
-            formatEuroCompact(Number(value))
-          }
-        />
-        <YAxis
-          dataKey="category"
-          type="category"
-          tickLine={false}
-          axisLine={false}
-        />
-        <ChartTooltip
-          cursor={{ fill: "hsl(var(--muted)/0.4)" }}
-          content={
-            <ChartTooltipContent
-              indicator="dot"
-              formatter={tooltip.formatter}
-              labelFormatter={(label) => label}
-            />
-          }
-        />
-        <Bar
-          dataKey="turnover"
-          fill="var(--color-turnover)"
-          radius={[0, 4, 4, 0]}
-          maxBarSize={28}
-        />
-      </BarChart>
-    </ChartContainer>
+    <div className="space-y-4 grid grid-cols-1 md:grid-cols-2">
+      <ChartContainer config={{}} className="aspect-square ">
+        <PieChart>
+          <Pie
+            data={slices}
+            dataKey="turnover"
+            nameKey="category"
+            cx="50%"
+            cy="50%"
+            outerRadius="60%"
+            label={renderPieSliceLabel}
+          >
+            {slices.map((slice) => (
+              <Cell
+                key={slice.category}
+                fill={slice.fill}
+                stroke={slice.stroke}
+                strokeWidth={1}
+              />
+            ))}
+          </Pie>
+          <ChartTooltip
+            cursor={false}
+            content={
+              <ChartTooltipContent hideLabel formatter={tooltipFormatter} />
+            }
+          />
+        </PieChart>
+      </ChartContainer>
+      <PieLegendList slices={slices} getLabel={(slice) => slice.category} />
+    </div>
   );
 }
 
 function TurnoverByCityChart({ records }: { records: TurnoverCityRecord[] }) {
-  const palette = React.useMemo(() => createChromaPalette(1), []);
-  const [turnoverColor] = palette;
-
-  const chartConfig = React.useMemo<ChartConfig>(() => {
-    if (turnoverColor) {
-      return {
-        turnover: {
-          label: "Qarkullimi",
-          theme: {
-            light: turnoverColor.light,
-            dark: turnoverColor.dark,
-          },
-        },
-      };
-    }
-    return {
-      turnover: {
-        label: "Qarkullimi",
-        color: "hsl(var(--primary))",
-      },
-    };
-  }, [turnoverColor]);
-
-  const tooltip = useChartTooltipFormatters({
-    keys: [
-      {
-        id: "turnover",
-        palette: turnoverColor ?? { light: "#2563eb", dark: "#60a5fa" },
-        label: "Qarkullimi",
-      },
-    ],
-    formatValue: formatEuroCompact,
+  const topRecords = React.useMemo(() => records.slice(0, 14), [records]);
+  const slices = React.useMemo<CitySlice[]>(
+    () => buildColoredSlices(topRecords),
+    [topRecords],
+  );
+  const tooltipFormatter = usePieTooltipFormatter<CitySlice>({
+    getLabel: (slice, fallback) => slice?.city ?? fallback ?? "",
   });
 
-  const topRecords = React.useMemo(() => records.slice(0, 14), [records]);
-
   return (
-    <ChartContainer
-      config={chartConfig}
-      className="h-[500px] w-full min-w-0 !aspect-auto"
-    >
-      <BarChart
-        data={topRecords}
-        layout="vertical"
-        margin={{ top: 12, right: 24, bottom: 12, left: 12 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          type="number"
-          tickFormatter={(value: number | string) =>
-            formatEuroCompact(Number(value))
-          }
-        />
-        <YAxis
-          dataKey="city"
-          type="category"
-          tickLine={false}
-          axisLine={false}
-        />
-        <ChartTooltip
-          cursor={{ fill: "hsl(var(--muted)/0.4)" }}
-          content={
-            <ChartTooltipContent
-              indicator="dot"
-              formatter={tooltip.formatter}
-              labelFormatter={(label) => label}
-            />
-          }
-        />
-        <Bar
-          dataKey="turnover"
-          fill="var(--color-turnover)"
-          radius={[0, 4, 4, 0]}
-          maxBarSize={28}
-        />
-      </BarChart>
-    </ChartContainer>
+    <div className="space-y-4 grid grid-cols-1 md:grid-cols-2">
+      <ChartContainer config={{}} className="aspect-square sm:aspect-[1.4]">
+        <PieChart>
+          <Pie
+            data={slices}
+            dataKey="turnover"
+            nameKey="city"
+            outerRadius="60%"
+            label={renderPieSliceLabel}
+          >
+            {slices.map((slice) => (
+              <Cell
+                key={slice.city}
+                fill={slice.fill}
+                stroke={slice.stroke}
+                strokeWidth={1}
+              />
+            ))}
+          </Pie>
+          <ChartTooltip
+            cursor={false}
+            content={
+              <ChartTooltipContent hideLabel formatter={tooltipFormatter} />
+            }
+          />
+        </PieChart>
+      </ChartContainer>
+      <PieLegendList slices={slices} getLabel={(slice) => slice.city} />
+    </div>
   );
 }
 
@@ -510,10 +585,7 @@ function CategoriesOverYearsChart({
           onExcludedKeysChange={setExcludedKeys}
         />
       ) : null}
-      <ChartContainer
-        config={view.config}
-        className="h-[380px] w-full !aspect-auto"
-      >
+      <ChartContainer config={view.config} className="csm:aspect-video">
         <AreaChart
           data={view.chartData}
           margin={{ top: 16, right: 24, bottom: 12, left: 12 }}
@@ -526,7 +598,7 @@ function CategoriesOverYearsChart({
             tickMargin={8}
           />
           <YAxis
-            width={110}
+            width="auto"
             tickFormatter={(value: number | string) =>
               formatEuroCompact(Number(value))
             }
@@ -632,7 +704,7 @@ function MonthlyCategoryStackedChart({
       ) : null}
       <ChartContainer
         config={view.config}
-        className="h-[360px] w-full !aspect-auto"
+        className="aspect-[1/1.5] sm:aspect-video"
       >
         <AreaChart
           data={view.chartData}
@@ -646,6 +718,7 @@ function MonthlyCategoryStackedChart({
             axisLine={false}
           />
           <YAxis
+            width="auto"
             tickFormatter={(value: number | string) =>
               formatEuroCompact(Number(value))
             }
@@ -773,7 +846,7 @@ function TopCategoryByCityStackedChart({
       ) : null}
       <ChartContainer
         config={view.config}
-        className="h-[380px] w-full !aspect-auto"
+        className="aspect-[1/1.5] sm:aspect-video"
       >
         <AreaChart
           data={view.chartData}
@@ -787,6 +860,7 @@ function TopCategoryByCityStackedChart({
             axisLine={false}
           />
           <YAxis
+            width="auto"
             tickFormatter={(value: number | string) =>
               formatEuroCompact(Number(value))
             }

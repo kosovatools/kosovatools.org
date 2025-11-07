@@ -135,7 +135,10 @@ export function TradeChapterStackedChart({
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}
       />
-      <ChartContainer config={config} className="h-[360px] !aspect-auto">
+      <ChartContainer
+        config={config}
+        className="aspect-[1/1.5] sm:aspect-video"
+      >
         <AreaChart data={chartData} margin={CHART_MARGIN}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
@@ -145,6 +148,7 @@ export function TradeChapterStackedChart({
             axisLine={false}
           />
           <YAxis
+            width="auto"
             tickFormatter={(value) => formatEuroCompact(value as number)}
             axisLine={false}
           />

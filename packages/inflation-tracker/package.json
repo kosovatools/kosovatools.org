@@ -19,7 +19,7 @@
     "@workspace/eslint-config": "workspace:*",
     "@workspace/kas-data": "workspace:*",
     "@workspace/ui": "workspace:*",
-    "recharts": "2.15.4"
+    "recharts": "3.3.0"
   },
   "peerDependencies": {
     "react": "^19.2.0",

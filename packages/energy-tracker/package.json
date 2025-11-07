@@ -20,7 +20,7 @@
     "@workspace/kas-data": "workspace:*",
     "@workspace/ui": "workspace:*",
     "lucide-react": "^0.475.0",
-    "recharts": "2.15.4"
+    "recharts": "3.3.0"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.90.6",

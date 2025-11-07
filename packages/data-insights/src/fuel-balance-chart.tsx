@@ -198,6 +198,7 @@ export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
             axisLine={false}
           />
           <YAxis
+            width="auto"
             tickFormatter={(value) => formatCount(value as number)}
             axisLine={false}
           />
@@ -208,7 +209,6 @@ export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
               stroke="var(--muted-foreground)"
               strokeDasharray="3 3"
               ifOverflow="extendDomain"
-              isFront
             >
               <Label
                 value={event.label}

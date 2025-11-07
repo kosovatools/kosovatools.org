@@ -193,7 +193,7 @@ export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
         </p>
       ) : null}
 
-      <ChartContainer config={config} className="h-[360px] !aspect-auto">
+      <ChartContainer config={config} className="">
         <AreaChart data={chartData} margin={CHART_MARGIN}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
@@ -203,6 +203,7 @@ export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
             axisLine={false}
           />
           <YAxis
+            width="auto"
             tickFormatter={(value) => formatCount(value as number)}
             axisLine={false}
           />
@@ -213,7 +214,6 @@ export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
               stroke="var(--muted-foreground)"
               strokeDasharray="3 3"
               ifOverflow="extendDomain"
-              isFront
             >
               <Label
                 value={event.label}
