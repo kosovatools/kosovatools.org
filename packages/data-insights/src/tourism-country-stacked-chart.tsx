@@ -49,7 +49,7 @@ const metricOptions = [
   { id: "nights" as const, label: "Qëndrime nate" },
 ];
 
-const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
+const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
 
 export function TourismCountryStackedChart({
   data,

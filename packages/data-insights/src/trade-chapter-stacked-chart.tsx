@@ -32,7 +32,7 @@ import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
 const DEFAULT_TOP_CHAPTERS = 6;
-const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
+const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
 
 type ChartMode = "exports" | "imports";
 

@@ -44,7 +44,7 @@ import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 
 const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";
-const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
+const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
 
 type FuelBalanceChartProps = {
   balances: Record<FuelKey, FuelBalanceRecord[]>;

@@ -43,7 +43,7 @@ import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
 const DEFAULT_TOP_PARTNERS = 5;
-const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
+const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
 
 export function ImportPartnersStackedChart({
   data,

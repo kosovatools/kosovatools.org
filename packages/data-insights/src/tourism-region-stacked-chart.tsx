@@ -53,7 +53,7 @@ const visitorGroupOptions: VisitorGroupOption[] =
 
 const DEFAULT_GROUP: TourismRegionRecord["visitor_group"] =
   visitorGroupOptions[0]?.id ?? "total";
-const CHART_MARGIN = { top: 56, right: 24, left: 8, bottom: 0 };
+const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
 
 export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
   const [group, setGroup] =

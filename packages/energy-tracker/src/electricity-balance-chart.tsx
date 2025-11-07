@@ -108,7 +108,7 @@ export function ElectricityBalanceChart({
   data,
 }: ElectricityBalanceChartProps) {
   const chartClassName = "w-full aspect-[4/3] sm:aspect-video";
-  const chartMargin = { top: 56, right: 24, left: 8, bottom: 0 };
+  const chartMargin = { top: 56, right: 0, left: 0, bottom: 0 };
 
   const [periodGrouping, setPeriodGrouping] =
     useState<StackPeriodGrouping>("seasonal");
@@ -139,11 +139,11 @@ export function ElectricityBalanceChart({
     const view =
       series.length > 0
         ? buildStackedChartView({
-            keys: SERIES_KEYS.slice(),
-            labelMap: LABEL_MAP,
-            series,
-            periodFormatter,
-          })
+          keys: SERIES_KEYS.slice(),
+          labelMap: LABEL_MAP,
+          series,
+          periodFormatter,
+        })
         : { chartData: [], keyMap: [], config: {} as ChartConfig };
 
     return {
@@ -245,11 +245,10 @@ export function ElectricityBalanceChart({
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-sm text-muted-foreground">
-            {`Periudha e fundit${
-              latestSummary?.periodLabel
-                ? ` (${latestSummary.periodLabel})`
-                : ""
-            }:`}{" "}
+            {`Periudha e fundit${latestSummary?.periodLabel
+              ? ` (${latestSummary.periodLabel})`
+              : ""
+              }:`}{" "}
             {summaryContent}
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -338,7 +337,7 @@ export function ElectricityProductionBySourceChart({
   data,
 }: ElectricityProductionBySourceChartProps) {
   const chartClassName = "w-full aspect-[4/3] sm:aspect-video";
-  const chartMargin = { top: 56, right: 24, left: 8, bottom: 0 };
+  const chartMargin = { top: 56, right: 0, left: 0, bottom: 0 };
 
   const [periodGrouping, setPeriodGrouping] =
     useState<StackPeriodGrouping>("seasonal");
@@ -373,11 +372,11 @@ export function ElectricityProductionBySourceChart({
     const view =
       series.length > 0
         ? buildStackedChartView({
-            keys: PRODUCTION_SERIES_KEYS.slice(),
-            labelMap: PRODUCTION_LABEL_MAP,
-            series,
-            periodFormatter,
-          })
+          keys: PRODUCTION_SERIES_KEYS.slice(),
+          labelMap: PRODUCTION_LABEL_MAP,
+          series,
+          periodFormatter,
+        })
         : { chartData: [], keyMap: [], config: {} as ChartConfig };
 
     return {
@@ -458,11 +457,10 @@ export function ElectricityProductionBySourceChart({
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-sm text-muted-foreground">
-            {`Periudha e fundit${
-              latestSummary?.periodLabel
-                ? ` (${latestSummary.periodLabel})`
-                : ""
-            }:`}{" "}
+            {`Periudha e fundit${latestSummary?.periodLabel
+              ? ` (${latestSummary.periodLabel})`
+              : ""
+              }:`}{" "}
             {summaryContent}
           </div>
           <div className="flex flex-wrap items-center gap-3">
