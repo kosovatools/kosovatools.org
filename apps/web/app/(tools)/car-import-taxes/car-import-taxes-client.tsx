@@ -17,27 +17,6 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 
-const currencyFormatter = new Intl.NumberFormat("sq", {
-  style: "currency",
-  currency: "EUR",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
-const percentageFormatter = new Intl.NumberFormat("sq", {
-  style: "percent",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 1,
-});
-
-function formatCurrency(value: number) {
-  return currencyFormatter.format(value);
-}
-
-function formatPercentage(value: number) {
-  return percentageFormatter.format(value);
-}
-
 export function CarImportTaxesClient() {
   const currentYear = useMemo(() => new Date().getFullYear(), []);
 
@@ -152,8 +131,6 @@ export function CarImportTaxesClient() {
 
         <CarImportTaxesResults
           result={result}
-          formatCurrency={formatCurrency}
-          formatPercentage={formatPercentage}
         />
       </div>
 

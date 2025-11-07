@@ -1,5 +1,6 @@
 import { useMemo, type ChangeEvent } from "react";
 
+import { createNumberFormatter } from "@workspace/chart-utils";
 import {
   Field,
   FieldContent,
@@ -52,6 +53,11 @@ const PREMIUM_LABELS: Record<
     description: "Orë të punuara në ditë pushimi të përcaktuara nga Qeveria.",
   },
 };
+
+const coefficientFormatter = createNumberFormatter("sq-AL", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 3,
+});
 
 export interface PublicWageCalculatorInputsProps {
   mode: CalculationMode;
@@ -206,10 +212,7 @@ export function PublicWageCalculatorInputs({
       return null;
     }
 
-    return new Intl.NumberFormat("sq-AL", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 3,
-    }).format(selectedPosition.coefficient);
+    return coefficientFormatter(selectedPosition.coefficient);
   }, [selectedPosition]);
 
   const sectorOptions = useMemo(() => {

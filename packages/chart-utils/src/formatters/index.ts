@@ -78,6 +78,11 @@ export const formatEuro = createCurrencyFormatter("sq", "EUR");
 
 export const formatEuroCompact = createCompactCurrencyFormatter("sq", "EUR");
 
+export const formatEuroWithCents = createCurrencyFormatter("sq", "EUR", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
 export const formatEnergyGWh = createNumberFormatter("sq", {
   maximumFractionDigits: 0,
 });

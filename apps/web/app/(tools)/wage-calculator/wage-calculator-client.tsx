@@ -18,19 +18,7 @@ import {
   calculateWageBreakdown,
   type JobType,
 } from "@workspace/payroll";
-
-const currencyFormatter = new Intl.NumberFormat("sq", {
-  style: "currency",
-  currency: "EUR",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
-const percentageFormatter = new Intl.NumberFormat("sq", {
-  style: "percent",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 1,
-});
+import { formatEuroWithCents, formatPercent } from "@workspace/chart-utils";
 
 const DEFAULT_VALUES: Pick<
   WageCalculatorInputsProps,
@@ -49,13 +37,7 @@ const DEFAULT_VALUES: Pick<
 
 const DEFAULT_MODE: CalculationMode = "grossToNet";
 
-function formatCurrency(value: number) {
-  return currencyFormatter.format(value);
-}
 
-function formatPercentage(value: number) {
-  return percentageFormatter.format(value);
-}
 
 export function WageCalculatorClient() {
   const [mode, setMode] = useState<CalculationMode>(DEFAULT_MODE);
@@ -136,8 +118,8 @@ export function WageCalculatorClient() {
         <WageCalculatorResults
           result={activeResult}
           inverseResult={mode === "netToGross" ? inverseBreakdown : undefined}
-          formatCurrency={formatCurrency}
-          formatPercentage={formatPercentage}
+          formatCurrency={formatEuroWithCents}
+          formatPercentage={formatPercent}
         />
       </div>
 

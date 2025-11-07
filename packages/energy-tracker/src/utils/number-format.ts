@@ -1,3 +1,8 @@
+import {
+  createNumberFormatter,
+  type ValueFormatter,
+} from "@workspace/chart-utils";
+
 const LOCALE = "sq-AL";
 const DEFAULT_FALLBACK = "Pa të dhëna";
 
@@ -11,10 +16,6 @@ const DEFAULT_LARGE_DIGITS = {
   maximumFractionDigits: 1,
 } as const;
 
-export const percentFormatter = new Intl.NumberFormat(LOCALE, {
-  style: "percent",
-  maximumFractionDigits: 1,
-});
 
 type EnergyUnit = "MWh" | "GWh";
 
@@ -37,7 +38,7 @@ type FormatEnergyAutoOptions = {
   largeUnitDigits?: DigitOverrides;
 };
 
-const numberFormatterCache = new Map<string, Intl.NumberFormat>();
+const numberFormatterCache = new Map<string, ValueFormatter>();
 
 function normalise(value: number | string | null | undefined): number | null {
   if (value == null) return null;
@@ -65,10 +66,7 @@ function resolveDigits(
   };
 }
 
-function getFormatter(
-  signed: boolean,
-  digits: RequiredDigits,
-): Intl.NumberFormat {
+function getFormatter(signed: boolean, digits: RequiredDigits): ValueFormatter {
   const key = [
     signed ? "signed" : "unsigned",
     digits.minimumFractionDigits,
@@ -77,7 +75,7 @@ function getFormatter(
 
   let formatter = numberFormatterCache.get(key);
   if (!formatter) {
-    formatter = new Intl.NumberFormat(LOCALE, {
+    formatter = createNumberFormatter(LOCALE, {
       minimumFractionDigits: digits.minimumFractionDigits,
       maximumFractionDigits: digits.maximumFractionDigits,
       signDisplay: signed ? "always" : "auto",
@@ -117,7 +115,7 @@ export function formatEnergyAuto(
   const formatter = getFormatter(signed, digits);
   const baseValue = useGWh ? valueInMWh / 1_000 : valueInMWh;
 
-  const formatted = formatter.format(baseValue);
+  const formatted = formatter(baseValue);
   return includeUnit ? `${formatted} ${toUnitLabel(useGWh)}` : formatted;
 }
 

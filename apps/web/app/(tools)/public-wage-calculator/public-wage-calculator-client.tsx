@@ -13,6 +13,7 @@ import {
   type PolicyFormState,
   type PublicWageCalculationMode,
 } from "@workspace/public-wage-calculator";
+import { formatCount, formatEuroWithCents } from "@workspace/chart-utils";
 import {
   Card,
   CardContent,
@@ -21,18 +22,6 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { cn } from "@workspace/ui/lib/utils";
-
-const currencyFormatter = new Intl.NumberFormat("sq-AL", {
-  style: "currency",
-  currency: "EUR",
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-
-const integerFormatter = new Intl.NumberFormat("sq-AL", {
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-});
 
 const DEFAULT_POLICY: PolicyFormState = {
   allowancesApplyOn: "base",
@@ -195,7 +184,7 @@ export function PublicWageCalculatorClient() {
     setAllowances((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const formatCurrency = (value: number) => currencyFormatter.format(value);
+  const formatCurrency = (value: number) => formatEuroWithCents(value);
 
   return (
     <article className="space-y-8">
@@ -277,7 +266,7 @@ export function PublicWageCalculatorClient() {
           selectedPosition={mode === "catalog" ? selectedPosition : null}
           policy={policy}
           formatCurrency={formatCurrency}
-          formatNumber={(value) => integerFormatter.format(value)}
+          formatNumber={(value) => formatCount(value)}
         />
       </div>
 

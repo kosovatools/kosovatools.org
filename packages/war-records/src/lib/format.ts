@@ -1,14 +1,3 @@
-const numberFormatter = new Intl.NumberFormat("sq-AL", {
-  maximumFractionDigits: 0,
-});
-
-export function formatNumber(value: number | null | undefined): string {
-  if (value === null || value === undefined || Number.isNaN(value)) {
-    return "—";
-  }
-
-  return numberFormatter.format(value);
-}
 
 export function formatLabel(value: string): string {
   return value

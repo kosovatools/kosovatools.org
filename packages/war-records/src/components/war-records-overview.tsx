@@ -11,9 +11,10 @@ import { Separator } from "@workspace/ui/components/separator";
 import { cn } from "@workspace/ui/lib/utils";
 
 import { crimeStats, findBreakdownCount } from "../data";
-import { formatLabel, formatNumber } from "../lib/format";
+import { formatLabel } from "../lib/format";
 import { AgeDistributionPlot } from "./age-distribution-plot";
 import type { CrimeStats } from "../types";
+import { formatCount } from "@workspace/chart-utils";
 
 type BreakdownListProps = {
   title: string;
@@ -52,7 +53,7 @@ function BreakdownList({
                   {formatLabel(entry.value)}
                 </span>
                 <span className="text-foreground text-sm font-semibold">
-                  {formatNumber(entry.count)}
+                  {formatCount(entry.count)}
                 </span>
               </li>
             ))}
@@ -100,7 +101,7 @@ export function WarRecordsOverview({
             </CardTitle>
           </div>
           <CardDescription className="max-w-3xl text-base leading-relaxed">
-            Arkivi dokumenton {formatNumber(stats.totals.records)} persona të
+            Arkivi dokumenton {formatCount(stats.totals.records)} persona të
             vrarë, zhdukur ose të vdekur nga dhuna e luftës në Kosovë më 1998–
             2000, sipas projektit Kosovo Memory Book të Humanitarian Law Center.
             Statistikat ofrojnë një pasqyrë të plotë të humbjeve pa e
@@ -118,7 +119,7 @@ export function WarRecordsOverview({
                 Rekorde të dokumentuara
               </figcaption>
               <p className="mt-2 text-3xl font-semibold tracking-tight">
-                {formatNumber(stats.totals.records)}
+                {formatCount(stats.totals.records)}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
                 Përfshirë të vrarë, të zhdukurit dhe vdekje të tjera nga lufta.
@@ -129,7 +130,7 @@ export function WarRecordsOverview({
                 Civilë të vrarë ose zhdukur
               </figcaption>
               <p className="mt-2 text-3xl font-semibold tracking-tight">
-                {formatNumber(civilianCount)}
+                {formatCount(civilianCount)}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
                 Individë jashtë formacioneve të armatosura.
@@ -140,7 +141,7 @@ export function WarRecordsOverview({
                 Pjesëtarë të formacioneve të armatosura
               </figcaption>
               <p className="mt-2 text-3xl font-semibold tracking-tight">
-                {formatNumber(armedCount)}
+                {formatCount(armedCount)}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">
                 Përfshirë të gjithë të identifikuarit në formacione.
@@ -151,13 +152,13 @@ export function WarRecordsOverview({
                 Të mitur &amp; të moshuar
               </figcaption>
               <p className="mt-2 text-3xl font-semibold tracking-tight">
-                {formatNumber(stats.ageInsights.minorsUnder18)}{" "}
+                {formatCount(stats.ageInsights.minorsUnder18)}{" "}
                 <span className="text-base font-normal text-muted-foreground">
                   fëmijë
                 </span>
               </p>
               <p className="text-foreground text-xl font-semibold tracking-tight">
-                {formatNumber(stats.ageInsights.seniors65Plus)}{" "}
+                {formatCount(stats.ageInsights.seniors65Plus)}{" "}
                 <span className="text-base font-normal text-muted-foreground">
                   65+
                 </span>
@@ -191,7 +192,7 @@ export function WarRecordsOverview({
                         {formatLabel(entry.value)}
                       </p>
                       <p className="mt-2 text-2xl font-semibold">
-                        {formatNumber(entry.count)}
+                        {formatCount(entry.count)}
                       </p>
                     </div>
                   </li>
@@ -227,7 +228,7 @@ export function WarRecordsOverview({
                               : formatLabel(entry.value)}
                         </span>
                         <span className="font-semibold">
-                          {formatNumber(entry.count)}
+                          {formatCount(entry.count)}
                         </span>
                       </li>
                     ))}
@@ -247,7 +248,7 @@ export function WarRecordsOverview({
                           {formatLabel(entry.value)}
                         </span>
                         <span className="font-semibold">
-                          {formatNumber(entry.count)}
+                          {formatCount(entry.count)}
                         </span>
                       </li>
                     ))}
@@ -329,8 +330,8 @@ export function WarRecordsOverview({
           </div>
           <Separator />
           <p className="text-sm text-muted-foreground">
-            {formatNumber(stats.ageInsights.minorsUnder18)} fëmijë dhe{" "}
-            {formatNumber(stats.ageInsights.seniors65Plus)} persona mbi moshën
+            {formatCount(stats.ageInsights.minorsUnder18)} fëmijë dhe{" "}
+            {formatCount(stats.ageInsights.seniors65Plus)} persona mbi moshën
             65 vjeç u humbën.
           </p>
         </CardContent>

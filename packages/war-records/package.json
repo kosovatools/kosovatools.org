@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@workspace/ui": "workspace:*",
+    "@workspace/chart-utils": "workspace:*",
     "recharts": "2.15.4"
   },
   "peerDependencies": {

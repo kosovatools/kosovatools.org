@@ -27,6 +27,7 @@ import {
   sortGroupedPeriods,
   getPeriodFormatter,
   PERIOD_GROUPING_OPTIONS,
+  createNumberFormatter,
   type PeriodGrouping,
 } from "@workspace/chart-utils";
 import {
@@ -100,26 +101,21 @@ const METRIC_OPTIONS: Array<{
   label: string;
   description: string;
 }> = [
-  {
-    id: "index",
-    label: "Indeksi (2015 = 100)",
-    description:
-      "Reflekton nivelin e çmimeve të konsumit krahasuar me vitin bazë 2015.",
-  },
-  {
-    id: "change",
-    label: "Ndryshimi mujor (%)",
-    description:
-      "Shfaq përqindjen e ndryshimit nga periudha paraprake për secilin grup.",
-  },
-];
+    {
+      id: "index",
+      label: "Indeksi (2015 = 100)",
+      description:
+        "Reflekton nivelin e çmimeve të konsumit krahasuar me vitin bazë 2015.",
+    },
+    {
+      id: "change",
+      label: "Ndryshimi mujor (%)",
+      description:
+        "Shfaq përqindjen e ndryshimit nga periudha paraprake për secilin grup.",
+    },
+  ];
 
-const percentFormatter = new Intl.NumberFormat("sq", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
-
-const valueFormatter = new Intl.NumberFormat("sq", {
+const decimalFormatter = createNumberFormatter("sq", {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
 });
@@ -129,8 +125,8 @@ function formatMetricValue(value: number | null, metric: Metric): string {
     return "—";
   }
   return metric === "index"
-    ? valueFormatter.format(value)
-    : `${percentFormatter.format(value)}%`;
+    ? decimalFormatter(value)
+    : `${decimalFormatter(value)}%`;
 }
 
 function formatPercentChange(value: number | null): string {
@@ -138,7 +134,7 @@ function formatPercentChange(value: number | null): string {
     return "—";
   }
   const sign = value > 0 ? "+" : value < 0 ? "−" : "±";
-  return `${sign}${percentFormatter.format(Math.abs(value))}%`;
+  return `${sign}${decimalFormatter(Math.abs(value))}%`;
 }
 
 function findLatestPoint(series: CpiSeriesPoint[]): CpiSeriesPoint | null {
@@ -417,8 +413,8 @@ export function InflationDashboard({
     keys: tooltipKeys,
     formatValue: (value: number) =>
       metric === "index"
-        ? valueFormatter.format(value)
-        : `${percentFormatter.format(value)}%`,
+        ? decimalFormatter(value)
+        : `${decimalFormatter(value)}%`,
   });
 
   const handleSelectionChange = React.useCallback(
@@ -562,8 +558,8 @@ export function InflationDashboard({
                       axisLine={false}
                       tickFormatter={(value) =>
                         metric === "index"
-                          ? valueFormatter.format(value as number)
-                          : `${percentFormatter.format(value as number)}%`
+                          ? decimalFormatter(value as number)
+                          : `${decimalFormatter(value as number)}%`
                       }
                     />
                     {metric === "change" ? (

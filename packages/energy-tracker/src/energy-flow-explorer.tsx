@@ -39,7 +39,8 @@ import { Label } from "@workspace/ui/components/label";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { Separator } from "@workspace/ui/components/separator";
 import { cn } from "@workspace/ui/lib/utils";
-import { formatAuto, percentFormatter } from "./utils/number-format";
+import { formatAuto } from "./utils/number-format";
+import { formatPercent } from "@workspace/chart-utils";
 
 type NeighborRow = EnergyFlowSnapshot["neighbors"][number];
 type DailyRow = EnergyFlowDailyLatest["days"][number];
@@ -544,7 +545,7 @@ export function EnergyFlowExplorer() {
               </p>
               <div className="mt-1 text-sm text-foreground">
                 {snapshot && topImport ? (
-                  `${topImport.country} (${formatAuto(topImport.importMWh)}) · ${percentFormatter.format(topImportShare || 0)} e importeve`
+                  `${topImport.country} (${formatAuto(topImport.importMWh)}) · ${formatPercent(topImportShare || 0)} e importeve`
                 ) : showSnapshotSkeleton ? (
                   <Skeleton className="h-4 w-56" />
                 ) : (
@@ -567,7 +568,7 @@ export function EnergyFlowExplorer() {
               </p>
               <div className="mt-1 text-sm text-foreground">
                 {snapshot && topExport ? (
-                  `${topExport.country} (${formatAuto(topExport.exportMWh)}) · ${percentFormatter.format(topExportShare || 0)} e eksporteve`
+                  `${topExport.country} (${formatAuto(topExport.exportMWh)}) · ${formatPercent(topExportShare || 0)} e eksporteve`
                 ) : showSnapshotSkeleton ? (
                   <Skeleton className="h-4 w-56" />
                 ) : (
@@ -614,64 +615,64 @@ export function EnergyFlowExplorer() {
               <tbody>
                 {showSnapshotSkeleton
                   ? Array.from({ length: 4 }).map((_, index) => (
-                      <tr
-                        key={`skeleton-${index}`}
-                        className="border-b border-border/40 last:border-0"
-                      >
-                        <td className="py-2 pr-4">
-                          <Skeleton className="h-4 w-40" />
-                          <Skeleton className="mt-2 h-3 w-16" />
-                        </td>
-                        <td className="py-2 pr-4 text-right">
-                          <Skeleton className="ml-auto h-4 w-24" />
-                        </td>
-                        <td className="py-2 pr-4 text-right">
-                          <Skeleton className="ml-auto h-4 w-24" />
-                        </td>
-                        <td className="py-2 text-right">
-                          <Skeleton className="ml-auto h-4 w-24" />
-                        </td>
-                      </tr>
-                    ))
+                    <tr
+                      key={`skeleton-${index}`}
+                      className="border-b border-border/40 last:border-0"
+                    >
+                      <td className="py-2 pr-4">
+                        <Skeleton className="h-4 w-40" />
+                        <Skeleton className="mt-2 h-3 w-16" />
+                      </td>
+                      <td className="py-2 pr-4 text-right">
+                        <Skeleton className="ml-auto h-4 w-24" />
+                      </td>
+                      <td className="py-2 pr-4 text-right">
+                        <Skeleton className="ml-auto h-4 w-24" />
+                      </td>
+                      <td className="py-2 text-right">
+                        <Skeleton className="ml-auto h-4 w-24" />
+                      </td>
+                    </tr>
+                  ))
                   : neighbors.map((row) => (
-                      <tr
-                        key={row.code}
-                        className="border-b border-border/40 last:border-0"
+                    <tr
+                      key={row.code}
+                      className="border-b border-border/40 last:border-0"
+                    >
+                      <td className="py-2 pr-4">
+                        <div className="font-medium text-foreground">
+                          {row.country}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {row.code}
+                        </div>
+                      </td>
+                      <td className="py-2 pr-4 text-right">
+                        {row.hasData
+                          ? formatAuto(row.importMWh)
+                          : "Pa të dhëna"}
+                      </td>
+                      <td className="py-2 pr-4 text-right">
+                        {row.hasData
+                          ? formatAuto(row.exportMWh)
+                          : "Pa të dhëna"}
+                      </td>
+                      <td
+                        className={cn(
+                          "py-2 text-right font-semibold",
+                          row.hasData
+                            ? row.netMWh >= 0
+                              ? "text-destructive"
+                              : "text-emerald-600 dark:text-emerald-400"
+                            : "text-muted-foreground",
+                        )}
                       >
-                        <td className="py-2 pr-4">
-                          <div className="font-medium text-foreground">
-                            {row.country}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {row.code}
-                          </div>
-                        </td>
-                        <td className="py-2 pr-4 text-right">
-                          {row.hasData
-                            ? formatAuto(row.importMWh)
-                            : "Pa të dhëna"}
-                        </td>
-                        <td className="py-2 pr-4 text-right">
-                          {row.hasData
-                            ? formatAuto(row.exportMWh)
-                            : "Pa të dhëna"}
-                        </td>
-                        <td
-                          className={cn(
-                            "py-2 text-right font-semibold",
-                            row.hasData
-                              ? row.netMWh >= 0
-                                ? "text-destructive"
-                                : "text-emerald-600 dark:text-emerald-400"
-                              : "text-muted-foreground",
-                          )}
-                        >
-                          {row.hasData
-                            ? formatAuto(row.netMWh, { signed: true })
-                            : "Pa të dhëna"}
-                        </td>
-                      </tr>
-                    ))}
+                        {row.hasData
+                          ? formatAuto(row.netMWh, { signed: true })
+                          : "Pa të dhëna"}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

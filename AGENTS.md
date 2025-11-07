@@ -26,7 +26,7 @@ Install dependencies with `pnpm install`. Use `pnpm dev` to run Turborepo's `nex
 
 ## Coding Style & Naming Conventions
 
-Shared ESLint presets in `packages/eslint-config` extend Next.js and React rules with zero-warning enforcement. Prettier handles formatting (two-space indentation, trailing commas); always run `pnpm format`. Use PascalCase for components and exported hooks, camelCase for utilities, and align route folder names under `app/` with their URL segments.
+Shared ESLint presets in `packages/eslint-config` extend Next.js and React rules with zero-warning enforcement. Prettier handles formatting (two-space indentation, trailing commas); always run `pnpm format`. Use PascalCase for components and exported hooks, camelCase for utilities, and align route folder names under `app/` with their URL segments. When formatting data, import helpers from `@workspace/chart-utils` (see `packages/chart-utils/src/formatters` and `getPeriodFormatter`) instead of spinning up ad-hoc `Intl` instances, so currency, counts, and period labels stay consistent.
 
 ## Data Visualization Colors
 

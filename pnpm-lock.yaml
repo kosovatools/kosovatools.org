@@ -42,6 +42,9 @@ importers:
       '@workspace/car-import-taxes':
         specifier: workspace:*
         version: link:../../packages/car-import-taxes
+      '@workspace/chart-utils':
+        specifier: workspace:*
+        version: link:../../packages/chart-utils
       '@workspace/customs-codes':
         specifier: workspace:*
         version: link:../../packages/customs-codes
@@ -133,6 +136,9 @@ importers:
 
   packages/car-import-taxes:
     dependencies:
+      '@workspace/chart-utils':
+        specifier: workspace:*
+        version: link:../chart-utils
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -529,6 +535,9 @@ importers:
 
   packages/public-wage-calculator:
     dependencies:
+      '@workspace/chart-utils':
+        specifier: workspace:*
+        version: link:../chart-utils
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -679,6 +688,9 @@ importers:
 
   packages/war-records:
     dependencies:
+      '@workspace/chart-utils':
+        specifier: workspace:*
+        version: link:../chart-utils
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui

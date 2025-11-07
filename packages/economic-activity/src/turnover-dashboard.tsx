@@ -41,7 +41,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { buildStackSeries, summarizeStackTotals } from "@workspace/chart-utils";
+import {
+  buildStackSeries,
+  summarizeStackTotals,
+  formatEuro,
+  formatEuroCompact,
+  formatCount,
+  getPeriodFormatter,
+} from "@workspace/chart-utils";
 import {
   ChartConfig,
   ChartContainer,
@@ -65,26 +72,8 @@ import {
   type StackedSeriesRow,
 } from "@workspace/ui/lib/stacked-chart-helpers";
 
-const euroFormatter = new Intl.NumberFormat("sq", {
-  style: "currency",
-  currency: "EUR",
-  maximumFractionDigits: 0,
-});
-
-const euroCompactFormatter = new Intl.NumberFormat("sq", {
-  style: "currency",
-  currency: "EUR",
-  notation: "compact",
-  maximumFractionDigits: 1,
-});
-
-const monthFormatter = new Intl.DateTimeFormat("sq", {
-  month: "short",
-});
-
-const yearFormatter = new Intl.NumberFormat("sq", {
-  maximumFractionDigits: 0,
-});
+const formatMonthlyPeriod = getPeriodFormatter("monthly");
+const formatYearlyPeriod = getPeriodFormatter("yearly");
 
 const OTHER_LABEL = "Të tjerët";
 const CATEGORY_STACK_TOP = 6;
@@ -173,7 +162,7 @@ function buildCategoryOverYearsView(
     result.keys.map((key) => String(key)),
     result.labelMap,
     result.series,
-    (period) => yearFormatter.format(Number(period)),
+    (period) => formatYearlyPeriod(String(period)),
   );
 }
 
@@ -228,16 +217,7 @@ function buildMonthlyCategoryView(
     result.keys.map((key) => String(key)),
     result.labelMap,
     result.series,
-    (period) => {
-      const [yearString, monthString] = period.split("-");
-      const monthNumber = Number(monthString) || 1;
-      const date = new Date(
-        Number(yearString) || dataset.year,
-        monthNumber - 1,
-        1,
-      );
-      return monthFormatter.format(date);
-    },
+    (period) => formatMonthlyPeriod(period),
   );
 }
 
@@ -290,16 +270,8 @@ function buildCityCategoryView(
     result.keys.map((key) => String(key)),
     result.labelMap,
     result.series,
-    (period) => yearFormatter.format(Number(period)),
+    (period) => formatYearlyPeriod(String(period)),
   );
-}
-
-function formatEuro(value: number): string {
-  return euroFormatter.format(value);
-}
-
-function formatEuroCompact(value: number): string {
-  return euroCompactFormatter.format(value);
 }
 
 function TurnoverByCategoryChart({
@@ -365,7 +337,6 @@ function TurnoverByCategoryChart({
           type="category"
           tickLine={false}
           axisLine={false}
-          width={280}
         />
         <ChartTooltip
           cursor={{ fill: "hsl(var(--muted)/0.4)" }}
@@ -447,7 +418,6 @@ function TurnoverByCityChart({ records }: { records: TurnoverCityRecord[] }) {
           type="category"
           tickLine={false}
           axisLine={false}
-          width={200}
         />
         <ChartTooltip
           cursor={{ fill: "hsl(var(--muted)/0.4)" }}
@@ -680,7 +650,6 @@ function MonthlyCategoryStackedChart({
             axisLine={false}
           />
           <YAxis
-            width={110}
             tickFormatter={(value: number | string) =>
               formatEuroCompact(Number(value))
             }
@@ -825,7 +794,6 @@ function TopCategoryByCityStackedChart({
             axisLine={false}
           />
           <YAxis
-            width={110}
             tickFormatter={(value: number | string) =>
               formatEuroCompact(Number(value))
             }
@@ -1280,9 +1248,9 @@ export function TurnoverDashboard() {
         </p>
         <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
           {datasetYear ? <span>Viti i referencës: {datasetYear}</span> : null}
-          {totalTaxpayers ? (
+          {totalTaxpayers !== null ? (
             <span>
-              Tatimpagues në total: {totalTaxpayers.toLocaleString("sq")}
+              Tatimpagues në total: {formatCount(totalTaxpayers)}
             </span>
           ) : null}
           {yearRangeLabel ? (

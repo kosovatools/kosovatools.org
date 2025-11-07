@@ -25,6 +25,7 @@
     "@workspace/public-wage-calculator": "workspace:*",
     "@workspace/war-records": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "@workspace/chart-utils": "workspace:*",
     "@lucide/lab": "^0.1.2",
     "babel-plugin-react-compiler": "^1.0.0",
     "chroma-js": "^3.1.2",
