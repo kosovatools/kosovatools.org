@@ -104,7 +104,7 @@ export function VirtualizedTreeTable({
     <div className="w-full overflow-x-auto">
       <div style={{ minWidth: MIN_TABLE_WIDTH }}>
         <div
-          className="sticky top-0 z-10 grid gap-4 border-b bg-muted/60 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+          className="sticky top-0 z-10 grid gap-4 border-b bg-muted/60 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
           style={{ gridTemplateColumns: GRID_TEMPLATE }}
         >
           {table.getHeaderGroups().map((headerGroup) =>

@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 
 export default function CustomsCodesPage() {
   return (
-    <article className="space-y-10">
+    <article className="space-y-10 -mb-3 sm:-mb-8">
       <header className="space-y-4">
         <h1 className="text-3xl font-semibold tracking-tight">
           Shfletuesi i Tarifave Doganore të Republikës së Kosovës

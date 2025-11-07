@@ -190,57 +190,55 @@ export function CustomsExplorer() {
       : null;
 
   return (
-    <section className="space-y-6">
-      <Card className="overflow-hidden gap-0 py-0">
-        <CardContent className="p-0">
-          {indexingState ? (
-            <div className="space-y-2 border-b px-4 py-3 text-xs text-muted-foreground sm:text-sm">
-              <div className="flex items-center justify-between gap-4">
-                <span>{indexingState.message}</span>
-                {progressPercent !== null ? (
-                  <span className="font-medium text-foreground">
-                    {progressPercent}%
-                  </span>
-                ) : null}
-              </div>
+    <Card className="overflow-hidden gap-0 py-0 border-b-0 rounded-b-none">
+      <CardContent className="p-0 ">
+        {indexingState ? (
+          <div className="space-y-2 border-b px-4 py-3 text-xs text-muted-foreground sm:text-sm">
+            <div className="flex items-center justify-between gap-4">
+              <span>{indexingState.message}</span>
               {progressPercent !== null ? (
-                <Progress className="h-1.5" value={progressPercent} />
+                <span className="font-medium text-foreground">
+                  {progressPercent}%
+                </span>
               ) : null}
             </div>
-          ) : null}
-
-          <div className="space-y-2 border-b px-4 py-3 text-xs text-muted-foreground sm:text-sm">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div className="space-y-1">
-                <span className="text-foreground text-sm font-semibold uppercase tracking-wide">
-                  Përditësuar së fundmi:
-                  <time
-                    title={datasetValidity?.iso ?? "—"}
-                    dateTime={datasetValidity?.iso ?? undefined}
-                    className="font-medium text-foreground ml-1"
-                  >
-                    {datasetValidity?.display ?? "—"}
-                  </time>
-                </span>
-                <p>
-                  Data tregon vlerën më të fundit të fushës{" "}
-                  <span className="font-mono">E vlefshme nga</span> në datasetin{" "}
-                  <span className="font-mono">customs/tarrifs.json</span> të
-                  publikuar nga Dogana e Kosovës.
-                </p>
-              </div>
-
-            </div>
+            {progressPercent !== null ? (
+              <Progress className="h-1.5" value={progressPercent} />
+            ) : null}
           </div>
+        ) : null}
 
-          <VirtualizedTreeTable
-            columns={columns}
-            data={treeData}
-            loading={loading || isPending}
-            autoExpandAll
-          />
-        </CardContent>
-      </Card>
-    </section>
+        <div className="space-y-2 border-b px-4 py-3 text-xs text-muted-foreground sm:text-sm">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1">
+              <span className="text-foreground text-sm font-semibold uppercase tracking-wide">
+                Përditësuar së fundmi:
+                <time
+                  title={datasetValidity?.iso ?? "—"}
+                  dateTime={datasetValidity?.iso ?? undefined}
+                  className="font-medium text-foreground ml-1"
+                >
+                  {datasetValidity?.display ?? "—"}
+                </time>
+              </span>
+              <p>
+                Data tregon vlerën më të fundit të fushës{" "}
+                <span className="font-mono">E vlefshme nga</span> në datasetin{" "}
+                <span className="font-mono">customs/tarrifs.json</span> të
+                publikuar nga Dogana e Kosovës.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <VirtualizedTreeTable
+          columns={columns}
+          data={treeData}
+          loading={loading || isPending}
+          autoExpandAll
+        />
+      </CardContent>
+    </Card>
   );
 }
