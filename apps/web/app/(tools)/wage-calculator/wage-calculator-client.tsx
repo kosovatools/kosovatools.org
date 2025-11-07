@@ -37,8 +37,6 @@ const DEFAULT_VALUES: Pick<
 
 const DEFAULT_MODE: CalculationMode = "grossToNet";
 
-
-
 export function WageCalculatorClient() {
   const [mode, setMode] = useState<CalculationMode>(DEFAULT_MODE);
   const [grossPay, setGrossPay] = useState(DEFAULT_VALUES.grossPay);

@@ -615,64 +615,64 @@ export function EnergyFlowExplorer() {
               <tbody>
                 {showSnapshotSkeleton
                   ? Array.from({ length: 4 }).map((_, index) => (
-                    <tr
-                      key={`skeleton-${index}`}
-                      className="border-b border-border/40 last:border-0"
-                    >
-                      <td className="py-2 pr-4">
-                        <Skeleton className="h-4 w-40" />
-                        <Skeleton className="mt-2 h-3 w-16" />
-                      </td>
-                      <td className="py-2 pr-4 text-right">
-                        <Skeleton className="ml-auto h-4 w-24" />
-                      </td>
-                      <td className="py-2 pr-4 text-right">
-                        <Skeleton className="ml-auto h-4 w-24" />
-                      </td>
-                      <td className="py-2 text-right">
-                        <Skeleton className="ml-auto h-4 w-24" />
-                      </td>
-                    </tr>
-                  ))
-                  : neighbors.map((row) => (
-                    <tr
-                      key={row.code}
-                      className="border-b border-border/40 last:border-0"
-                    >
-                      <td className="py-2 pr-4">
-                        <div className="font-medium text-foreground">
-                          {row.country}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {row.code}
-                        </div>
-                      </td>
-                      <td className="py-2 pr-4 text-right">
-                        {row.hasData
-                          ? formatAuto(row.importMWh)
-                          : "Pa të dhëna"}
-                      </td>
-                      <td className="py-2 pr-4 text-right">
-                        {row.hasData
-                          ? formatAuto(row.exportMWh)
-                          : "Pa të dhëna"}
-                      </td>
-                      <td
-                        className={cn(
-                          "py-2 text-right font-semibold",
-                          row.hasData
-                            ? row.netMWh >= 0
-                              ? "text-destructive"
-                              : "text-emerald-600 dark:text-emerald-400"
-                            : "text-muted-foreground",
-                        )}
+                      <tr
+                        key={`skeleton-${index}`}
+                        className="border-b border-border/40 last:border-0"
                       >
-                        {row.hasData
-                          ? formatAuto(row.netMWh, { signed: true })
-                          : "Pa të dhëna"}
-                      </td>
-                    </tr>
-                  ))}
+                        <td className="py-2 pr-4">
+                          <Skeleton className="h-4 w-40" />
+                          <Skeleton className="mt-2 h-3 w-16" />
+                        </td>
+                        <td className="py-2 pr-4 text-right">
+                          <Skeleton className="ml-auto h-4 w-24" />
+                        </td>
+                        <td className="py-2 pr-4 text-right">
+                          <Skeleton className="ml-auto h-4 w-24" />
+                        </td>
+                        <td className="py-2 text-right">
+                          <Skeleton className="ml-auto h-4 w-24" />
+                        </td>
+                      </tr>
+                    ))
+                  : neighbors.map((row) => (
+                      <tr
+                        key={row.code}
+                        className="border-b border-border/40 last:border-0"
+                      >
+                        <td className="py-2 pr-4">
+                          <div className="font-medium text-foreground">
+                            {row.country}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {row.code}
+                          </div>
+                        </td>
+                        <td className="py-2 pr-4 text-right">
+                          {row.hasData
+                            ? formatAuto(row.importMWh)
+                            : "Pa të dhëna"}
+                        </td>
+                        <td className="py-2 pr-4 text-right">
+                          {row.hasData
+                            ? formatAuto(row.exportMWh)
+                            : "Pa të dhëna"}
+                        </td>
+                        <td
+                          className={cn(
+                            "py-2 text-right font-semibold",
+                            row.hasData
+                              ? row.netMWh >= 0
+                                ? "text-destructive"
+                                : "text-emerald-600 dark:text-emerald-400"
+                              : "text-muted-foreground",
+                          )}
+                        >
+                          {row.hasData
+                            ? formatAuto(row.netMWh, { signed: true })
+                            : "Pa të dhëna"}
+                        </td>
+                      </tr>
+                    ))}
               </tbody>
             </table>
           </div>

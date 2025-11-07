@@ -3,7 +3,6 @@
 import * as React from "react";
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   ReferenceLine,
@@ -39,6 +38,7 @@ import { Button } from "@workspace/ui/components/button";
 import {
   Card,
   CardContent,
+
   CardDescription,
   CardHeader,
   CardTitle,
@@ -48,6 +48,8 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import {
@@ -540,7 +542,7 @@ export function InflationDashboard({
 
               <ChartContainer
                 config={chartConfig}
-                className="w-full overflow-hidden rounded-lg border border-border/70"
+                className="w-full overflow-hidden"
               >
                 {hasData && chartData.length ? (
                   <LineChart
@@ -565,12 +567,7 @@ export function InflationDashboard({
                     {metric === "change" ? (
                       <ReferenceLine y={0} stroke="var(--border)" />
                     ) : null}
-                    <Legend
-                      formatter={(value) => {
-                        const label = chartConfig[value]?.label;
-                        return typeof label === "string" ? label : value;
-                      }}
-                    />
+                    <ChartLegend content={<ChartLegendContent />} />
                     <ChartTooltip
                       content={
                         <ChartTooltipContent

@@ -1,10 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Area, AreaChart, CartesianGrid, Legend, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
-  formatEuro,
   formatEuroCompact,
   getPeriodFormatter,
   type StackPeriodGrouping,
@@ -18,6 +17,8 @@ import {
 } from "@workspace/kas-data";
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
@@ -95,7 +96,7 @@ export function TradeChapterStackedChart({
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => formatEuro(value),
+    formatValue: (value) => formatEuroCompact(value),
   });
 
   if (!chartData.length || !keyMap.length) {
@@ -126,7 +127,6 @@ export function TradeChapterStackedChart({
         selectedKeys={selectedKeys}
         onSelectedKeysChange={onSelectedKeysChange}
         topCount={top}
-        formatTotal={(value) => formatEuro(value)}
         selectionLabel="Zgjidh kapitujt"
         searchPlaceholder="Kërko kapitujt..."
         includeOther={includeOther}
@@ -156,7 +156,7 @@ export function TradeChapterStackedChart({
               />
             }
           />
-          <Legend />
+          <ChartLegend content={<ChartLegendContent />} />
           {keyMap.map((entry) => (
             <Area
               key={entry.id}

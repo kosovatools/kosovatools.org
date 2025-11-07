@@ -129,9 +129,7 @@ export function CarImportTaxesClient() {
           </CardContent>
         </Card>
 
-        <CarImportTaxesResults
-          result={result}
-        />
+        <CarImportTaxesResults result={result} />
       </div>
 
       <Card>

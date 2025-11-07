@@ -13,15 +13,11 @@ export interface CarImportTaxesResultsProps {
   result: CarImportTaxesResult;
 }
 
-
-
 function formatAge(years: number): string {
   return years === 1 ? "1 vit" : `${years} vjet`;
 }
 
-export function CarImportTaxesResults({
-  result,
-}: CarImportTaxesResultsProps) {
+export function CarImportTaxesResults({ result }: CarImportTaxesResultsProps) {
   return (
     <article className="space-y-6">
       <Card>
@@ -86,10 +82,11 @@ export function CarImportTaxesResults({
               <dt className="text-muted-foreground">
                 Akciza{" "}
                 {result.excise.bracketLabel
-                  ? `(${result.excise.bracketLabel}${result.excise.rateLabel
-                    ? ` – ${result.excise.rateLabel}`
-                    : ""
-                  })`
+                  ? `(${result.excise.bracketLabel}${
+                      result.excise.rateLabel
+                        ? ` – ${result.excise.rateLabel}`
+                        : ""
+                    })`
                   : result.excise.amount === 0
                     ? "(përjashtim)"
                     : ""}

@@ -5,7 +5,6 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
-  Legend,
   Label,
   ReferenceLine,
   XAxis,
@@ -32,6 +31,8 @@ import {
 import {
   ChartContainer,
   ChartTooltip,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
@@ -118,7 +119,8 @@ export function TourismCountryStackedChart({
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => formatCount(value),
+    formatValue: (value) => `${formatCount(value)} vizitorë`,
+
   });
 
   const eventMarkers = useTimelineEventMarkers(
@@ -181,7 +183,6 @@ export function TourismCountryStackedChart({
         selectedKeys={selectedKeys}
         onSelectedKeysChange={onSelectedKeysChange}
         topCount={top}
-        formatTotal={(value) => formatCount(value)}
         selectionLabel="Zgjidh vendet"
         searchPlaceholder="Kërko vende..."
         includeOther={includeOther}
@@ -229,7 +230,7 @@ export function TourismCountryStackedChart({
               />
             }
           />
-          <Legend />
+          <ChartLegend content={<ChartLegendContent />} />
           {keyMap.map((entry) => (
             <Area
               key={entry.id}

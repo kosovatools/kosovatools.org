@@ -9,23 +9,23 @@ export const PERIOD_GROUPING_OPTIONS: ReadonlyArray<{
   id: PeriodGrouping;
   label: string;
 }> = [
-    { id: "monthly", label: "Mujor" },
-    { id: "quarterly", label: "Tremujor" },
-    { id: "yearly", label: "Vjetor" },
-    { id: "seasonal", label: "Sezonal" },
-  ];
+  { id: "monthly", label: "Mujor" },
+  { id: "quarterly", label: "Tremujor" },
+  { id: "yearly", label: "Vjetor" },
+  { id: "seasonal", label: "Sezonal" },
+];
 
 const DEFAULT_PERIOD_GROUPING: PeriodGrouping = "monthly";
 const QUARTER_PATTERN = /^(\d{4})-Q([1-4])$/;
 const SEASONAL_LABEL_PATTERN = /^(\d{4})-(winter|spring|summer|autumn)$/;
 
 const SEASON_ORDER: Record<"winter" | "spring" | "summer" | "autumn", number> =
-{
-  winter: 0,
-  spring: 1,
-  summer: 2,
-  autumn: 3,
-};
+  {
+    winter: 0,
+    spring: 1,
+    summer: 2,
+    autumn: 3,
+  };
 
 const SEASON_LABEL_MAP: Record<keyof typeof SEASON_ORDER, string> = {
   winter: "Dimër",
@@ -237,19 +237,11 @@ export function compareGroupedPeriods(
   switch (A.type) {
     case "monthly": {
       if (B.type !== "monthly") return a.localeCompare(b);
-      return (
-        A.year - B.year ||
-        A.month - B.month ||
-        a.localeCompare(b)
-      );
+      return A.year - B.year || A.month - B.month || a.localeCompare(b);
     }
     case "quarterly": {
       if (B.type !== "quarterly") return a.localeCompare(b);
-      return (
-        A.year - B.year ||
-        A.quarter - B.quarter ||
-        a.localeCompare(b)
-      );
+      return A.year - B.year || A.quarter - B.quarter || a.localeCompare(b);
     }
     case "yearly": {
       if (B.type !== "yearly") return a.localeCompare(b);
@@ -257,11 +249,7 @@ export function compareGroupedPeriods(
     }
     case "seasonal": {
       if (B.type !== "seasonal") return a.localeCompare(b);
-      return (
-        A.year - B.year ||
-        A.order - B.order ||
-        a.localeCompare(b)
-      );
+      return A.year - B.year || A.order - B.order || a.localeCompare(b);
     }
   }
 }

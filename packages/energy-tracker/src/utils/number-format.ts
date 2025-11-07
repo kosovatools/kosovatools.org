@@ -16,7 +16,6 @@ const DEFAULT_LARGE_DIGITS = {
   maximumFractionDigits: 1,
 } as const;
 
-
 type EnergyUnit = "MWh" | "GWh";
 
 type DigitOverrides = {

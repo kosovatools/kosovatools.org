@@ -49,17 +49,6 @@ export function useChartTooltipFormatters({
     [keys],
   );
 
-  const labelByKey = React.useMemo(
-    () =>
-      keys.reduce<Record<string, string>>((acc, entry) => {
-        if (entry.label) {
-          acc[entry.id] = entry.label;
-        }
-        return acc;
-      }, {}),
-    [keys],
-  );
-
   const labelFormatter = React.useCallback<LabelFormatter>(
     (rawLabel, payload) => {
       const items = Array.isArray(payload) ? payload : [];
@@ -85,7 +74,7 @@ export function useChartTooltipFormatters({
       const formattedTotal = formatTotal(total);
 
       return (
-        <div className="flex w-full items-center justify-between gap-2">
+        <div className="flex flex-col w-full items-center justify-between gap-2">
           <span>{rawLabel}</span>
           <span className="font-mono text-[0.7rem] font-semibold tracking-wide text-muted-foreground">
             {totalLabel ? `${totalLabel}: ${formattedTotal}` : formattedTotal}
@@ -126,12 +115,6 @@ export function useChartTooltipFormatters({
 
       const indicatorColor = cssVarColor ?? fallbackColor;
 
-      const displayName = key
-        ? (labelByKey[key] ?? (typeof name === "string" ? name : entry?.name))
-        : typeof name === "string"
-          ? name
-          : entry?.name;
-
       return (
         <div className="flex w-full items-center gap-2">
           <span
@@ -139,7 +122,6 @@ export function useChartTooltipFormatters({
             style={{ backgroundColor: indicatorColor }}
           />
           <div className="flex flex-1 items-center justify-between gap-2">
-            <span className="text-muted-foreground">{displayName}</span>
             <span className="text-foreground font-mono font-medium tabular-nums">
               {displayValue}
             </span>
@@ -147,7 +129,7 @@ export function useChartTooltipFormatters({
         </div>
       );
     },
-    [formatValue, labelByKey, missingValueLabel, paletteByKey],
+    [formatValue, missingValueLabel, paletteByKey],
   );
 
   return { formatter, labelFormatter };

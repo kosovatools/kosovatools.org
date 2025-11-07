@@ -4,7 +4,6 @@ import {
   Area,
   CartesianGrid,
   ComposedChart,
-  Legend,
   Line,
   XAxis,
   YAxis,
@@ -19,6 +18,8 @@ import type {
 import { formatDayLabel } from "./flow-service";
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
@@ -130,7 +131,7 @@ export function MonthlyFlowTrendChart({
             />
           }
         />
-        <Legend />
+        <ChartLegend content={<ChartLegendContent />} />
         <Area
           dataKey="imports"
           type="monotone"
@@ -238,7 +239,7 @@ export function HourlyFlowPatternChart({
             />
           }
         />
-        <Legend />
+        <ChartLegend content={<ChartLegendContent />} />
         <Area
           type="monotone"
           dataKey="netMWh"
@@ -303,7 +304,7 @@ export function DailyFlowChart({ data }: { data: EnergyFlowDailyPoint[] }) {
             />
           }
         />
-        <Legend />
+        <ChartLegend content={<ChartLegendContent />} />
         <Area
           dataKey="imports"
           type="monotone"

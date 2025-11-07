@@ -5,7 +5,7 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
-  Legend,
+
   Label,
   ReferenceLine,
   XAxis,
@@ -34,6 +34,8 @@ import {
 
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
@@ -226,7 +228,7 @@ export function FuelBalanceChart({ balances }: FuelBalanceChartProps) {
               />
             }
           />
-          <Legend />
+          <ChartLegend content={<ChartLegendContent />} />
           {keyMap.map((entry) => (
             <Area
               key={entry.id}

@@ -5,7 +5,6 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
-  Legend,
   Label,
   ReferenceLine,
   XAxis,
@@ -19,7 +18,6 @@ import {
   timelineEvents,
 } from "@workspace/kas-data";
 import {
-  formatEuro,
   formatEuroCompact,
   type StackPeriodGrouping,
   STACK_PERIOD_GROUPING_OPTIONS,
@@ -32,6 +30,8 @@ import {
 
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
@@ -109,7 +109,7 @@ export function ImportPartnersStackedChart({
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => formatEuro(value),
+    formatValue: (value) => formatEuroCompact(value),
   });
 
   const eventMarkers = useTimelineEventMarkers(
@@ -149,7 +149,6 @@ export function ImportPartnersStackedChart({
         selectedKeys={selectedKeys}
         onSelectedKeysChange={onSelectedKeysChange}
         topCount={top}
-        formatTotal={(value) => formatEuro(value)}
         selectionLabel="Zgjidh partnerët"
         searchPlaceholder="Kërko shtetet..."
         includeOther={includeOther}
@@ -197,7 +196,7 @@ export function ImportPartnersStackedChart({
               />
             }
           />
-          <Legend />
+          <ChartLegend content={<ChartLegendContent />} />
           {keyMap.map((entry) => (
             <Area
               key={entry.id}

@@ -310,7 +310,7 @@ function TurnoverByCategoryChart({
         label: "Qarkullimi",
       },
     ],
-    formatValue: formatEuro,
+    formatValue: formatEuroCompact,
   });
 
   const topRecords = React.useMemo(() => records.slice(0, 14), [records]);
@@ -391,7 +391,7 @@ function TurnoverByCityChart({ records }: { records: TurnoverCityRecord[] }) {
         label: "Qarkullimi",
       },
     ],
-    formatValue: formatEuro,
+    formatValue: formatEuroCompact,
   });
 
   const topRecords = React.useMemo(() => records.slice(0, 14), [records]);
@@ -479,8 +479,8 @@ function CategoriesOverYearsChart({
         label: entry.label,
         palette: entry.palette,
       })) ?? [],
-    formatValue: (value) => formatEuro(value),
-    formatTotal: (value) => formatEuro(value),
+    formatValue: (value) => formatEuroCompact(value),
+    formatTotal: (value) => formatEuroCompact(value),
     totalLabel: "Totali",
   });
 
@@ -502,7 +502,6 @@ function CategoriesOverYearsChart({
           selectedKeys={selectedKeys}
           onSelectedKeysChange={onSelectedKeysChange}
           topCount={CATEGORY_STACK_TOP}
-          formatTotal={formatEuro}
           selectionLabel="Zgjidh kategoritë"
           searchPlaceholder="Kërko kategoritë..."
           includeOther={includeOther}
@@ -541,9 +540,7 @@ function CategoriesOverYearsChart({
               />
             }
           />
-          <ChartLegend
-            content={<ChartLegendContent className="justify-end" />}
-          />
+          <ChartLegend content={<ChartLegendContent />} />
           {view.keyMap.map((entry) => (
             <Area
               key={entry.id}
@@ -602,8 +599,8 @@ function MonthlyCategoryStackedChart({
         label: entry.label,
         palette: entry.palette,
       })) ?? [],
-    formatValue: (value) => formatEuro(value),
-    formatTotal: (value) => formatEuro(value),
+    formatValue: (value) => formatEuroCompact(value),
+    formatTotal: (value) => formatEuroCompact(value),
     totalLabel: "Totali mujor",
   });
 
@@ -625,7 +622,6 @@ function MonthlyCategoryStackedChart({
           selectedKeys={selectedKeys}
           onSelectedKeysChange={onSelectedKeysChange}
           topCount={MONTHLY_STACK_TOP}
-          formatTotal={formatEuro}
           selectionLabel="Zgjidh kategoritë"
           searchPlaceholder="Kërko kategoritë..."
           includeOther={includeOther}
@@ -663,9 +659,7 @@ function MonthlyCategoryStackedChart({
               />
             }
           />
-          <ChartLegend
-            content={<ChartLegendContent className="justify-end" />}
-          />
+          <ChartLegend content={<ChartLegendContent />} />
           {view.keyMap.map((entry) => (
             <Area
               key={entry.id}
@@ -746,8 +740,8 @@ function TopCategoryByCityStackedChart({
         label: entry.label,
         palette: entry.palette,
       })) ?? [],
-    formatValue: (value) => formatEuro(value),
-    formatTotal: (value) => formatEuro(value),
+    formatValue: (value) => formatEuroCompact(value),
+    formatTotal: (value) => formatEuroCompact(value),
     totalLabel: "Totali",
   });
 
@@ -769,7 +763,6 @@ function TopCategoryByCityStackedChart({
           selectedKeys={selectedKeys}
           onSelectedKeysChange={onSelectedKeysChange}
           topCount={CITY_STACK_TOP}
-          formatTotal={formatEuro}
           selectionLabel="Zgjidh kategoritë kryesore"
           searchPlaceholder="Kërko kategoritë..."
           includeOther={includeOther}
@@ -807,9 +800,7 @@ function TopCategoryByCityStackedChart({
               />
             }
           />
-          <ChartLegend
-            content={<ChartLegendContent className="justify-end" />}
-          />
+          <ChartLegend content={<ChartLegendContent />} />
           {view.keyMap.map((entry) => (
             <Area
               key={entry.id}
@@ -1249,9 +1240,7 @@ export function TurnoverDashboard() {
         <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
           {datasetYear ? <span>Viti i referencës: {datasetYear}</span> : null}
           {totalTaxpayers !== null ? (
-            <span>
-              Tatimpagues në total: {formatCount(totalTaxpayers)}
-            </span>
+            <span>Tatimpagues në total: {formatCount(totalTaxpayers)}</span>
           ) : null}
           {yearRangeLabel ? (
             <span>Periudha e mbuluar: {yearRangeLabel}</span>

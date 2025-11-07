@@ -331,8 +331,8 @@ export function WarRecordsOverview({
           <Separator />
           <p className="text-sm text-muted-foreground">
             {formatCount(stats.ageInsights.minorsUnder18)} fëmijë dhe{" "}
-            {formatCount(stats.ageInsights.seniors65Plus)} persona mbi moshën
-            65 vjeç u humbën.
+            {formatCount(stats.ageInsights.seniors65Plus)} persona mbi moshën 65
+            vjeç u humbën.
           </p>
         </CardContent>
       </Card>

@@ -5,7 +5,6 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
-  Legend,
   Label,
   ReferenceLine,
   XAxis,
@@ -32,6 +31,8 @@ import {
 import {
   ChartContainer,
   ChartTooltip,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
@@ -231,7 +232,7 @@ export function TourismRegionCharts({ data }: { data: TourismRegionRecord[] }) {
               />
             }
           />
-          <Legend />
+          <ChartLegend content={<ChartLegendContent />} />
           {keyMap.map((entry) => (
             <Area
               key={entry.id}

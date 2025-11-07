@@ -4,7 +4,6 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
-  Legend,
   Label,
   ReferenceLine,
   XAxis,
@@ -30,6 +29,8 @@ import {
 import {
   ChartContainer,
   ChartTooltip,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltipContent,
   type ChartConfig,
 } from "@workspace/ui/components/chart";
@@ -138,11 +139,11 @@ export function ElectricityBalanceChart({
     const view =
       series.length > 0
         ? buildStackedChartView({
-            keys: SERIES_KEYS.slice(),
-            labelMap: LABEL_MAP,
-            series,
-            periodFormatter,
-          })
+          keys: SERIES_KEYS.slice(),
+          labelMap: LABEL_MAP,
+          series,
+          periodFormatter,
+        })
         : { chartData: [], keyMap: [], config: {} as ChartConfig };
 
     return {
@@ -244,11 +245,10 @@ export function ElectricityBalanceChart({
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-sm text-muted-foreground">
-            {`Periudha e fundit${
-              latestSummary?.periodLabel
-                ? ` (${latestSummary.periodLabel})`
-                : ""
-            }:`}{" "}
+            {`Periudha e fundit${latestSummary?.periodLabel
+              ? ` (${latestSummary.periodLabel})`
+              : ""
+              }:`}{" "}
             {summaryContent}
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -308,7 +308,7 @@ export function ElectricityBalanceChart({
                 />
               }
             />
-            <Legend />
+            <ChartLegend content={<ChartLegendContent />} />
             {keyMap.map((entry) => (
               <Area
                 key={entry.id}
@@ -372,11 +372,11 @@ export function ElectricityProductionBySourceChart({
     const view =
       series.length > 0
         ? buildStackedChartView({
-            keys: PRODUCTION_SERIES_KEYS.slice(),
-            labelMap: PRODUCTION_LABEL_MAP,
-            series,
-            periodFormatter,
-          })
+          keys: PRODUCTION_SERIES_KEYS.slice(),
+          labelMap: PRODUCTION_LABEL_MAP,
+          series,
+          periodFormatter,
+        })
         : { chartData: [], keyMap: [], config: {} as ChartConfig };
 
     return {
@@ -457,11 +457,10 @@ export function ElectricityProductionBySourceChart({
       <CardContent className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-sm text-muted-foreground">
-            {`Periudha e fundit${
-              latestSummary?.periodLabel
-                ? ` (${latestSummary.periodLabel})`
-                : ""
-            }:`}{" "}
+            {`Periudha e fundit${latestSummary?.periodLabel
+              ? ` (${latestSummary.periodLabel})`
+              : ""
+              }:`}{" "}
             {summaryContent}
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -521,7 +520,7 @@ export function ElectricityProductionBySourceChart({
                 />
               }
             />
-            <Legend />
+            <ChartLegend content={<ChartLegendContent />} />
             {keyMap.map((entry) => (
               <Area
                 key={entry.id}

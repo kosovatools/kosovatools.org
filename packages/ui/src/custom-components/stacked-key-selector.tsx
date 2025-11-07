@@ -23,7 +23,6 @@ export type StackedKeySelectorProps = {
   selectedKeys: string[];
   onSelectedKeysChange: (keys: string[]) => void;
   topCount: number;
-  formatTotal: (value: number) => string;
   selectionLabel: string;
   searchPlaceholder: string;
   includeOther: boolean;
@@ -39,7 +38,6 @@ export function StackedKeySelector({
   selectedKeys,
   onSelectedKeysChange,
   topCount,
-  formatTotal,
   selectionLabel,
   searchPlaceholder,
   includeOther,
@@ -246,16 +244,6 @@ export function StackedKeySelector({
                         />
                         <span className="truncate">{item.label}</span>
                       </span>
-                      <span
-                        className={cn(
-                          "ml-auto flex-none rounded-full px-2 py-0.5 font-mono text-[11px]",
-                          checked
-                            ? "bg-primary/10 text-primary"
-                            : "bg-muted text-muted-foreground",
-                        )}
-                      >
-                        {formatTotal(item.total)}
-                      </span>
                     </label>
                   </li>
                 );
@@ -345,7 +333,7 @@ export function StackedKeySelector({
                           ? "border-primary/40 bg-primary/10 text-primary"
                           : "hover:border-border hover:bg-muted",
                         otherDisabled &&
-                          "cursor-not-allowed border-transparent hover:bg-transparent",
+                        "cursor-not-allowed border-transparent hover:bg-transparent",
                       )}
                       aria-disabled={otherDisabled}
                     >
@@ -358,16 +346,6 @@ export function StackedKeySelector({
                           className="size-3.5 flex-none"
                         />
                         <span className="truncate">{item.label}</span>
-                      </span>
-                      <span
-                        className={cn(
-                          "ml-auto flex-none rounded-full px-2 py-0.5 font-mono text-[11px]",
-                          isExcluded
-                            ? "bg-primary/10 text-primary"
-                            : "bg-muted text-muted-foreground",
-                        )}
-                      >
-                        {formatTotal(item.total)}
                       </span>
                     </label>
                   </li>
