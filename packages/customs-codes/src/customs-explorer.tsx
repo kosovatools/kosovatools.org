@@ -59,6 +59,18 @@ export function CustomsExplorer() {
     250,
   );
   const codePrefix = debouncedId;
+  const idQueryRef = useRef(idQuery);
+  idQueryRef.current = idQuery;
+  const descQueryRef = useRef(descQuery);
+  descQueryRef.current = descQuery;
+  const codePrefixRef = useRef(codePrefix);
+  codePrefixRef.current = codePrefix;
+  const getIdQuery = useCallback(() => idQueryRef.current, [idQueryRef]);
+  const getDescQuery = useCallback(() => descQueryRef.current, [descQueryRef]);
+  const getCodePrefix = useCallback(
+    () => codePrefixRef.current,
+    [codePrefixRef],
+  );
   const toggleCodeFilter = useCallback(
     () => setCodeFilterOpen((previous) => !previous),
     [],
@@ -160,10 +172,10 @@ export function CustomsExplorer() {
   const columns = useMemo(
     () =>
       createCustomsColumns({
-        codePrefix,
-        idQuery,
+        getCodePrefix,
+        getIdQuery,
         onIdQueryChange: setIdQuery,
-        descQuery,
+        getDescQuery,
         onDescQueryChange: setDescQuery,
         isCodeFilterOpen: codeFilterOpen,
         onToggleCodeFilter: toggleCodeFilter,
@@ -172,10 +184,12 @@ export function CustomsExplorer() {
       }),
     [
       codeFilterOpen,
-      codePrefix,
       descFilterOpen,
-      descQuery,
-      idQuery,
+      getCodePrefix,
+      getDescQuery,
+      getIdQuery,
+      setDescQuery,
+      setIdQuery,
       toggleCodeFilter,
       toggleDescFilter,
     ],

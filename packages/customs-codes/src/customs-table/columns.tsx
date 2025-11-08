@@ -14,10 +14,10 @@ import { ExpandIcon } from "../expand-icon";
 import { highlightPrefix } from "../highlighting";
 
 type ColumnFactoryParams = {
-  codePrefix: string;
-  idQuery: string;
+  getCodePrefix: () => string;
+  getIdQuery: () => string;
   onIdQueryChange: (value: string) => void;
-  descQuery: string;
+  getDescQuery: () => string;
   onDescQueryChange: (value: string) => void;
   isCodeFilterOpen: boolean;
   onToggleCodeFilter: () => void;
@@ -26,10 +26,10 @@ type ColumnFactoryParams = {
 };
 
 export function createCustomsColumns({
-  codePrefix,
-  idQuery,
+  getCodePrefix,
+  getIdQuery,
   onIdQueryChange,
-  descQuery,
+  getDescQuery,
   onDescQueryChange,
   isCodeFilterOpen,
   onToggleCodeFilter,
@@ -38,29 +38,33 @@ export function createCustomsColumns({
 }: ColumnFactoryParams): ColumnDef<CustomsTreeNode>[] {
   return [
     {
-      header: () => (
-        <FilterableHeader
-          label="Kodi"
-          active={isCodeFilterOpen}
-          hasActiveFilter={Boolean(idQuery)}
-          onToggle={onToggleCodeFilter}
-        >
-          <Input
-            value={idQuery}
-            onChange={(event) => onIdQueryChange(event.currentTarget.value)}
-            placeholder="p.sh. 7208 ose 01"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label="Filtro sipas prefiksit të kodit"
-            className="h-8 w-full normal-case text-xs font-normal tracking-normal"
-          />
-        </FilterableHeader>
-      ),
+      header: () => {
+        const idQueryValue = getIdQuery();
+        return (
+          <FilterableHeader
+            label="Kodi"
+            active={isCodeFilterOpen}
+            hasActiveFilter={Boolean(idQueryValue)}
+            onToggle={onToggleCodeFilter}
+          >
+            <Input
+              value={idQueryValue}
+              onChange={(event) => onIdQueryChange(event.currentTarget.value)}
+              placeholder="p.sh. 7208 ose 01"
+              inputMode="numeric"
+              autoComplete="off"
+              aria-label="Filtro sipas prefiksit të kodit"
+              className="h-8 w-full normal-case text-xs font-normal tracking-normal"
+            />
+          </FilterableHeader>
+        );
+      },
       id: "code",
       accessorFn: (row) => row.code,
       cell: (info) => {
         const row = info.row;
         const value = info.getValue() as string;
+        const codePrefix = getCodePrefix();
         const renderedCode =
           codePrefix && value.startsWith(codePrefix)
             ? highlightPrefix(value, codePrefix)
@@ -93,23 +97,26 @@ export function createCustomsColumns({
       },
     },
     {
-      header: () => (
-        <FilterableHeader
-          label="Përshkrimi"
-          active={isDescFilterOpen}
-          hasActiveFilter={Boolean(descQuery)}
-          onToggle={onToggleDescFilter}
-        >
-          <Input
-            value={descQuery}
-            onChange={(event) => onDescQueryChange(event.currentTarget.value)}
-            placeholder='p.sh. "tub çeliku"'
-            autoComplete="off"
-            aria-label="Filtro sipas përshkrimit"
-            className="h-8 w-full normal-case text-xs font-normal tracking-normal"
-          />
-        </FilterableHeader>
-      ),
+      header: () => {
+        const descQueryValue = getDescQuery();
+        return (
+          <FilterableHeader
+            label="Përshkrimi"
+            active={isDescFilterOpen}
+            hasActiveFilter={Boolean(descQueryValue)}
+            onToggle={onToggleDescFilter}
+          >
+            <Input
+              value={descQueryValue}
+              onChange={(event) => onDescQueryChange(event.currentTarget.value)}
+              placeholder='p.sh. "tub çeliku"'
+              autoComplete="off"
+              aria-label="Filtro sipas përshkrimit"
+              className="h-8 w-full normal-case text-xs font-normal tracking-normal"
+            />
+          </FilterableHeader>
+        );
+      },
       id: "description",
       accessorKey: "description",
       cell: (info) => {
