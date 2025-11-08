@@ -5,7 +5,7 @@ import {
   type StackSeriesRow,
   type StackTotal,
   type StackPeriodGrouping,
-} from "@workspace/chart-utils";
+} from "@workspace/utils";
 import {
   type TradePartnerRecord,
   type TradeChapterYearRecord,

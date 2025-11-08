@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Info } from "lucide-react";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { DailyFlowChart, MonthlyFlowTrendChart } from "./energy-flow-chart";
 import {
@@ -28,6 +28,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@workspace/ui/components/alert";
+import { Button } from "@workspace/ui/components/button";
 import {
   Card,
   CardContent,
@@ -40,7 +41,7 @@ import { Skeleton } from "@workspace/ui/components/skeleton";
 import { Separator } from "@workspace/ui/components/separator";
 import { cn } from "@workspace/ui/lib/utils";
 import { formatAuto } from "./utils/number-format";
-import { formatPercent } from "@workspace/chart-utils";
+import { formatPercent } from "@workspace/utils";
 
 type NeighborRow = EnergyFlowSnapshot["neighbors"][number];
 type DailyRow = EnergyFlowDailyLatest["days"][number];
@@ -75,6 +76,60 @@ type ExplorerView = {
   topImportShare: number;
   topExportShare: number;
 };
+
+export function EnergyFlowExplorer() {
+  return (
+    <React.Suspense fallback={<EnergyFlowExplorerLoadingFallback />}>
+      <EnergyFlowExplorerErrorBoundary>
+        <EnergyFlowExplorerContent />
+      </EnergyFlowExplorerErrorBoundary>
+    </React.Suspense>
+  );
+}
+
+function EnergyFlowExplorerLoadingFallback() {
+  return <EnergyFlowExplorerSkeleton />;
+}
+
+class EnergyFlowExplorerErrorBoundary extends React.Component<
+  React.PropsWithChildren,
+  { error: Error | null }
+> {
+  state = { error: null as Error | null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  private handleRetry = () => {
+    this.setState({ error: null });
+  };
+
+  render() {
+    if (this.state.error) {
+      return (
+        <Card className="border-destructive/50 bg-destructive/5">
+          <CardHeader>
+            <CardTitle>Nuk u ngarkuan të dhënat</CardTitle>
+            <CardDescription>
+              Nuk arritëm të marrim flukset e energjisë nga ENTSO-E.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm text-destructive">
+              {this.state.error.message || "Ndodhi një gabim i papritur."}
+            </p>
+            <Button variant="outline" onClick={this.handleRetry}>
+              Provo përsëri
+            </Button>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 function selectTop<T>(
   entries: T[],
@@ -207,15 +262,16 @@ function buildExplorerView({
   };
 }
 
-export function EnergyFlowExplorer() {
-  const [selectedId, setSelectedId] = React.useState("");
-
-  const indexQuery = useQuery<EnergyFlowIndex>({
+function EnergyFlowExplorerContent() {
+  const { data: index } = useSuspenseQuery<EnergyFlowIndex, Error>({
     queryKey: ["energy-flow", "index"],
     queryFn: loadIndex,
   });
 
-  const dailyLatestQuery = useQuery<EnergyFlowDailyLatest | null>({
+  const { data: dailyLatest } = useSuspenseQuery<
+    EnergyFlowDailyLatest | null,
+    Error
+  >({
     queryKey: ["energy-flow", "daily-latest"],
     queryFn: async () => {
       try {
@@ -227,8 +283,14 @@ export function EnergyFlowExplorer() {
     },
   });
 
-  const index = indexQuery.data ?? null;
-  const dailyLatest = dailyLatestQuery.data ?? null;
+  const mostRecentMonthId = React.useMemo(() => {
+    if (!index?.months?.length) {
+      return "";
+    }
+    return index.months[index.months.length - 1]?.id ?? "";
+  }, [index]);
+
+  const [selectedId, setSelectedId] = React.useState(mostRecentMonthId);
 
   React.useEffect(() => {
     if (!index?.months?.length) {
@@ -252,11 +314,9 @@ export function EnergyFlowExplorer() {
     });
   }, [index]);
 
-  const monthlyQuery = useQuery<EnergyFlowSnapshot>({
+  const monthlyQuery = useSuspenseQuery<EnergyFlowSnapshot, Error>({
     queryKey: ["energy-flow", "monthly", selectedId],
     queryFn: () => loadMonthly(selectedId),
-    enabled: Boolean(selectedId),
-    placeholderData: keepPreviousData,
   });
 
   const snapshot = monthlyQuery.data ?? null;
@@ -271,18 +331,6 @@ export function EnergyFlowExplorer() {
       }),
     [index, snapshot, dailyLatest, selectedId],
   );
-
-  if (indexQuery.isError) {
-    return (
-      <Alert variant="destructive">
-        <Info className="h-4 w-4" />
-        <AlertTitle>Të dhënat nuk u ngarkuan</AlertTitle>
-        <AlertDescription>
-          Nuk arritëm të marrim indeksin e fluksit të energjisë nga ENTSO-E.
-        </AlertDescription>
-      </Alert>
-    );
-  }
 
   if (!derived) {
     return <EnergyFlowExplorerSkeleton />;
@@ -324,15 +372,13 @@ export function EnergyFlowExplorer() {
     );
   }
 
+  const isMonthlyFetching = monthlyQuery.isFetching;
   const monthlyStatusLabel =
-    monthlyQuery.isLoading && !snapshot
+    isMonthlyFetching && Boolean(selectedId)
       ? "Duke ngarkuar periudhën…"
-      : monthlyQuery.isFetching && snapshot
-        ? "Duke rifreskuar periudhën…"
-        : null;
+      : null;
 
-  const showSnapshotSkeleton =
-    !snapshot && (monthlyQuery.isLoading || monthlyQuery.isFetching);
+  const showSnapshotSkeleton = !snapshot && isMonthlyFetching;
 
   const monthlyErrorMessage = monthlyQuery.isError
     ? selectedMonth

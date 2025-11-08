@@ -24,7 +24,7 @@ import type {
   WageCalculatorResult,
 } from "../lib/wage-calculator";
 import { LinkProps, NodeProps } from "recharts/types/chart/Sankey";
-import { formatEuroWithCents } from "../../../chart-utils/src";
+import { formatEuroWithCents } from "../../../utils/src";
 
 export interface WageCalculatorResultsProps {
   result: WageCalculatorResult;

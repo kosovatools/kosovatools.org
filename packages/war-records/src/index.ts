@@ -16,3 +16,8 @@ export {
   AgeDistributionPlot,
   type AgeDistributionPlotProps,
 } from "./components/age-distribution-plot";
+
+export {
+  WAR_RECORDS_TIMEFRAME_LABEL,
+  buildWarRecordsDatasetSummary,
+} from "./lib/copy";

@@ -1,7 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import {
+  useSuspenseQuery,
+  type UseSuspenseQueryResult,
+} from "@tanstack/react-query";
 import {
   Area,
   AreaChart,
@@ -35,6 +38,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@workspace/ui/components/alert";
+import { Button } from "@workspace/ui/components/button";
 import {
   Card,
   CardContent,
@@ -50,7 +54,7 @@ import {
   formatEuroCompact,
   formatCount,
   getPeriodFormatter,
-} from "@workspace/chart-utils";
+} from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -98,6 +102,79 @@ type SliceColor = {
 
 type CategorySlice = TurnoverCategoryRecord & SliceColor;
 type CitySlice = TurnoverCityRecord & SliceColor;
+
+function TurnoverDashboardLoadingFallback() {
+  return (
+    <article className="space-y-12">
+      <header className="space-y-3">
+        <span className="inline-flex h-6 w-32 rounded-full bg-muted" />
+        <Skeleton className="h-10 w-72 max-w-full" />
+        <Skeleton className="h-4 w-[520px] max-w-full" />
+        <div className="flex flex-wrap gap-3">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+      </header>
+      <section className="space-y-6">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Card key={index}>
+            <CardHeader className="space-y-3">
+              <Skeleton className="h-5 w-40" />
+              <Skeleton className="h-4 w-64 max-w-full" />
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-[280px] w-full" />
+            </CardContent>
+            <CardFooter>
+              <Skeleton className="h-3 w-48" />
+            </CardFooter>
+          </Card>
+        ))}
+      </section>
+    </article>
+  );
+}
+
+class TurnoverDashboardErrorBoundary extends React.Component<
+  React.PropsWithChildren,
+  { error: Error | null }
+> {
+  state = { error: null as Error | null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  private handleRetry = () => {
+    this.setState({ error: null });
+  };
+
+  render() {
+    if (this.state.error) {
+      return (
+        <Card className="border-destructive/50 bg-destructive/5">
+          <CardHeader>
+            <CardTitle>Nuk arritëm të ngarkojmë të dhënat</CardTitle>
+            <CardDescription>
+              Grafiku i qarkullimit nuk është i disponueshëm aktualisht.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm text-destructive">
+              {this.state.error.message || "Ndodhi një gabim i papritur."}
+            </p>
+            <Button variant="outline" onClick={this.handleRetry}>
+              Provo përsëri
+            </Button>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 function buildColoredSlices<T extends { turnover: number }>(
   records: T[],
@@ -909,9 +986,8 @@ function ErrorState({ message }: { message: string }) {
 function CategorySection({
   query,
 }: {
-  query: UseQueryResult<CategoriesLastYear, Error>;
+  query: UseSuspenseQueryResult<CategoriesLastYear, Error>;
 }) {
-  const isLoading = query.isLoading || query.isPending;
   const isError = query.isError;
   const errorMessage =
     query.error instanceof Error
@@ -919,6 +995,7 @@ function CategorySection({
       : "Provoni përsëri më vonë.";
   const dataset = query.data;
   const year = dataset?.year;
+  const hasData = Boolean(dataset?.records.length);
 
   return (
     <React.Fragment>
@@ -931,16 +1008,15 @@ function CategorySection({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading && (
-          <div className="grid gap-4">
-            <Skeleton className="h-[28px] w-40" />
-            <Skeleton className="h-[420px] w-full" />
-          </div>
-        )}
-        {isError && !isLoading && <ErrorState message={errorMessage} />}
-        {!isLoading && !isError && dataset ? (
+        {isError ? (
+          <ErrorState message={errorMessage} />
+        ) : hasData && dataset ? (
           <TurnoverByCategoryChart records={dataset.records} />
-        ) : null}
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Nuk ka të dhëna për kategoritë kryesore të qarkullimit.
+          </p>
+        )}
       </CardContent>
       <CardFooter className="text-xs text-muted-foreground">
         Burimi: Ministria e Financave (MFK), llogaritje nga deklaratat e
@@ -953,9 +1029,8 @@ function CategorySection({
 function CitySection({
   query,
 }: {
-  query: UseQueryResult<CitiesLastYear, Error>;
+  query: UseSuspenseQueryResult<CitiesLastYear, Error>;
 }) {
-  const isLoading = query.isLoading || query.isPending;
   const isError = query.isError;
   const errorMessage =
     query.error instanceof Error
@@ -963,6 +1038,7 @@ function CitySection({
       : "Provoni përsëri më vonë.";
   const dataset = query.data;
   const year = dataset?.year;
+  const hasData = Boolean(dataset?.records.length);
 
   return (
     <React.Fragment>
@@ -975,16 +1051,15 @@ function CitySection({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading && (
-          <div className="grid gap-4">
-            <Skeleton className="h-[28px] w-32" />
-            <Skeleton className="h-[420px] w-full" />
-          </div>
-        )}
-        {isError && !isLoading && <ErrorState message={errorMessage} />}
-        {!isLoading && !isError && dataset ? (
+        {isError ? (
+          <ErrorState message={errorMessage} />
+        ) : hasData && dataset ? (
           <TurnoverByCityChart records={dataset.records} />
-        ) : null}
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Nuk ka të dhëna për komunat me qarkullimin më të lartë.
+          </p>
+        )}
       </CardContent>
       <CardFooter className="text-xs text-muted-foreground">
         Burimi: Ministria e Financave (MFK), llogaritje nga deklaratat e
@@ -997,9 +1072,8 @@ function CitySection({
 function CategoryTrendSection({
   query,
 }: {
-  query: UseQueryResult<CategoryOverYearsRecord[], Error>;
+  query: UseSuspenseQueryResult<CategoryOverYearsRecord[], Error>;
 }) {
-  const isLoading = query.isLoading || query.isPending;
   const isError = query.isError;
   const errorMessage =
     query.error instanceof Error
@@ -1019,21 +1093,15 @@ function CategoryTrendSection({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading && (
-          <div className="grid gap-4">
-            <Skeleton className="h-[24px] w-48" />
-            <Skeleton className="h-[360px] w-full" />
-          </div>
-        )}
-        {isError && !isLoading && <ErrorState message={errorMessage} />}
-        {!isLoading && !isError && hasData ? (
+        {isError ? (
+          <ErrorState message={errorMessage} />
+        ) : hasData ? (
           <CategoriesOverYearsChart records={records} />
-        ) : null}
-        {!isLoading && !isError && !hasData ? (
+        ) : (
           <p className="text-sm text-muted-foreground">
             Nuk ka të dhëna shumëvjeçare për t&apos;u paraqitur.
           </p>
-        ) : null}
+        )}
       </CardContent>
       <CardFooter className="text-xs text-muted-foreground">
         Burimi: Ministria e Financave (MFK), seritë e qarkullimit vjetor sipas
@@ -1046,9 +1114,8 @@ function CategoryTrendSection({
 function MonthlyCategorySection({
   query,
 }: {
-  query: UseQueryResult<MonthlyCategoryCityLastYear, Error>;
+  query: UseSuspenseQueryResult<MonthlyCategoryCityLastYear, Error>;
 }) {
-  const isLoading = query.isLoading || query.isPending;
   const isError = query.isError;
   const errorMessage =
     query.error instanceof Error
@@ -1068,21 +1135,19 @@ function MonthlyCategorySection({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading && (
-          <div className="grid gap-4">
-            <Skeleton className="h-[24px] w-40" />
-            <Skeleton className="h-[320px] w-full" />
-          </div>
-        )}
-        {isError && !isLoading && <ErrorState message={errorMessage} />}
-        {!isLoading && !isError && dataset && hasData ? (
+        {isError ? (
+          <ErrorState message={errorMessage} />
+        ) : dataset && hasData ? (
           <MonthlyCategoryStackedChart dataset={dataset} />
-        ) : null}
-        {!isLoading && !isError && dataset && !hasData ? (
+        ) : dataset ? (
           <p className="text-sm text-muted-foreground">
             Nuk ka të dhëna mujore për këtë periudhë.
           </p>
-        ) : null}
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            Nuk kemi të dhëna për të ndërtuar grafikun mujor.
+          </p>
+        )}
       </CardContent>
       <CardFooter className="text-xs text-muted-foreground">
         Burimi: Ministria e Financave (MFK), qarkullimi mujor sipas kategorisë
@@ -1095,9 +1160,8 @@ function MonthlyCategorySection({
 function TopCategoryByCitySection({
   query,
 }: {
-  query: UseQueryResult<TopCategoriesByCityRecord[], Error>;
+  query: UseSuspenseQueryResult<TopCategoriesByCityRecord[], Error>;
 }) {
-  const isLoading = query.isLoading || query.isPending;
   const isError = query.isError;
   const errorMessage =
     query.error instanceof Error
@@ -1172,21 +1236,13 @@ function TopCategoryByCitySection({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {isLoading && (
-          <div className="grid gap-4">
-            <Skeleton className="h-[24px] w-40" />
-            <Skeleton className="h-[48px] w-full" />
-            <Skeleton className="h-[360px] w-full" />
-          </div>
-        )}
-        {isError && !isLoading && <ErrorState message={errorMessage} />}
-        {!isLoading && !isError && !citySummaries.length ? (
+        {isError ? (
+          <ErrorState message={errorMessage} />
+        ) : !citySummaries.length ? (
           <p className="text-sm text-muted-foreground">
             Nuk ka të dhëna për kategoritë kryesuese sipas komunave.
           </p>
-        ) : null}
-
-        {!isLoading && !isError && citySummaries.length ? (
+        ) : (
           <div className="space-y-4">
             <div className="flex flex-wrap items-end gap-3">
               <div className="grid gap-2">
@@ -1230,7 +1286,7 @@ function TopCategoryByCitySection({
               </ChartContainer>
             )}
           </div>
-        ) : null}
+        )}
       </CardContent>
       <CardFooter className="text-xs text-muted-foreground">
         Burimi: Ministria e Financave (MFK), kategoritë kryesore të qarkullimit
@@ -1240,32 +1296,41 @@ function TopCategoryByCitySection({
   );
 }
 
-export function TurnoverDashboard() {
-  const categoriesQuery = useQuery<CategoriesLastYear>({
+function TurnoverDashboardContent() {
+  const categoriesQuery = useSuspenseQuery<CategoriesLastYear, Error>({
     queryKey: ["mfk", "turnover", "categories", "last-year"],
     queryFn: fetchCategoriesLastYear,
     staleTime: 6 * 60 * 1000,
   });
 
-  const citiesQuery = useQuery<CitiesLastYear>({
+  const citiesQuery = useSuspenseQuery<CitiesLastYear, Error>({
     queryKey: ["mfk", "turnover", "cities", "last-year"],
     queryFn: fetchCitiesLastYear,
     staleTime: 6 * 60 * 1000,
   });
 
-  const categoriesOverYearsQuery = useQuery<CategoryOverYearsRecord[]>({
+  const categoriesOverYearsQuery = useSuspenseQuery<
+    CategoryOverYearsRecord[],
+    Error
+  >({
     queryKey: ["mfk", "turnover", "categories", "over-years"],
     queryFn: fetchCategoriesOverYears,
     staleTime: 6 * 60 * 1000,
   });
 
-  const monthlyCategoryQuery = useQuery<MonthlyCategoryCityLastYear>({
+  const monthlyCategoryQuery = useSuspenseQuery<
+    MonthlyCategoryCityLastYear,
+    Error
+  >({
     queryKey: ["mfk", "turnover", "monthly", "category-city"],
     queryFn: fetchMonthlyCategoryCityLastYear,
     staleTime: 6 * 60 * 1000,
   });
 
-  const topCategoryByCityQuery = useQuery<TopCategoriesByCityRecord[]>({
+  const topCategoryByCityQuery = useSuspenseQuery<
+    TopCategoriesByCityRecord[],
+    Error
+  >({
     queryKey: ["mfk", "turnover", "top-category-city"],
     queryFn: fetchTopCategoryByCityOverYears,
     staleTime: 6 * 60 * 1000,
@@ -1347,5 +1412,15 @@ export function TurnoverDashboard() {
         </Card>
       </section>
     </article>
+  );
+}
+
+export function TurnoverDashboard() {
+  return (
+    <React.Suspense fallback={<TurnoverDashboardLoadingFallback />}>
+      <TurnoverDashboardErrorBoundary>
+        <TurnoverDashboardContent />
+      </TurnoverDashboardErrorBoundary>
+    </React.Suspense>
   );
 }

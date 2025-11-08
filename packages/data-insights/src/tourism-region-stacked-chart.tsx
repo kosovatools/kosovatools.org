@@ -27,7 +27,7 @@ import {
   DEFAULT_TIME_RANGE_OPTIONS,
   DEFAULT_TIME_RANGE,
   monthsFromRange,
-} from "@workspace/chart-utils";
+} from "@workspace/utils";
 
 import {
   ChartContainer,

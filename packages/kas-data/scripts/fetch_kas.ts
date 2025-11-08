@@ -31,6 +31,7 @@ import {
   fetchEnergyMonthly,
   fetchFuelTable,
   writeFuelCombinedDataset,
+  FuelDatasetResult,
 } from "./fetchers/energy";
 import { fetchImportsByPartner } from "./fetchers/imports";
 import { fetchTradeChaptersYearly, fetchTradeMonthly } from "./fetchers/trade";
@@ -43,8 +44,6 @@ type CliArgs = {
 };
 
 type FuelKey = keyof typeof FUEL_SPECS;
-
-type FuelDatasetResult = Awaited<ReturnType<typeof fetchFuelTable>>;
 
 export async function main(): Promise<void> {
   const argv = process.argv.slice(2);

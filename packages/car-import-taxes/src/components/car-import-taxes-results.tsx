@@ -1,4 +1,4 @@
-import { formatEuroWithCents, formatPercent } from "@workspace/chart-utils";
+import { formatEuroWithCents, formatPercent } from "@workspace/utils";
 import {
   Card,
   CardContent,

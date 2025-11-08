@@ -35,3 +35,18 @@ export {
 } from "./utils/time-range";
 export type { TimeRangeOption } from "./utils/time-range";
 export type { TimelineEvent, TimelineEventCategory } from "./types/timeline";
+export {
+  mergeSearchParams,
+  buildSearchString,
+  getSearchParamString,
+  getSearchParamNumber,
+} from "./utils/search-params";
+export type {
+  SearchParamEntry,
+  SearchParamUpdates,
+  SearchParamsLike,
+  SearchParamsReadable,
+  MergeSearchParamsOptions,
+  GetSearchParamNumberOptions,
+  GetSearchParamStringOptions,
+} from "./utils/search-params";

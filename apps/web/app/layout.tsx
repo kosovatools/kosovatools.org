@@ -6,6 +6,7 @@ import Script from "next/script";
 
 import "@workspace/ui/globals.css";
 
+import { GITHUB_REPO_URL } from "@/constants/links";
 import { Providers } from "@/components/providers";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -58,6 +59,8 @@ const themeInitScript = `
 })();
 `;
 
+const currentYear = new Date().getFullYear();
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -106,7 +109,7 @@ export default function RootLayout({
                 <div className="flex items-center gap-2 text-xs sm:text-sm">
                   <a
                     className="inline-flex items-center gap-2 rounded-full border border-border/60 px-2.5 py-1 font-medium transition hover:border-primary hover:text-primary"
-                    href="https://github.com/kosovatools/kosovatools.org"
+                    href={GITHUB_REPO_URL}
                     rel="noreferrer"
                     target="_blank"
                   >
@@ -119,6 +122,36 @@ export default function RootLayout({
             </header>
 
             <div className="flex-1">{children}</div>
+            <footer className="border-t border-border/60 bg-background/80">
+              <div className="mx-auto flex w-full max-w-[1500px] items-center justify-center px-6 py-8">
+                <div className="flex flex-col items-center gap-2 text-center text-base">
+                  <a
+                    className="flex items-center gap-1.5 text-xl font-semibold text-foreground transition hover:text-primary"
+                    href={GITHUB_REPO_URL}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    Ndërtuar me
+                    <span aria-label="zemër e kuqe" role="img">
+                      ❤️
+                    </span>
+                    në
+                    <span aria-label="flamuri i Kosovës" role="img">
+                      🇽🇰
+                    </span>
+                  </a>
+                  <a
+                    className="text-sm font-medium text-muted-foreground transition hover:text-primary"
+                    href="mailto:contact@kosovatools.org"
+                  >
+                    contact@kosovatools.org
+                  </a>
+                  <span className="text-sm text-muted-foreground">
+                    © {currentYear} Kosova Tools · Licensed under GPL
+                  </span>
+                </div>
+              </div>
+            </footer>
           </div>
         </Providers>
       </body>

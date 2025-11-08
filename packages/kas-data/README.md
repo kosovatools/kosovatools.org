@@ -13,7 +13,7 @@ Statistics PxWeb series for downstream visualisations.
   structured objects. Files may apply lightweight cleanup (unit conversion,
   label overrides) but avoid presentation logic.
 - `src/stacks/` — Domain wrappers (trade, fuels, tourism) that adapt dataset
-  records to the shared stack utilities in `@workspace/chart-utils`.
+  records to the shared stack utilities in `@workspace/utils`.
 
 ## Refreshing datasets
 
@@ -49,11 +49,11 @@ import {
   formatGeneratedAt,
 } from "@workspace/kas-data";
 
-import { monthsFromRange, getPeriodFormatter } from "@workspace/chart-utils";
+import { monthsFromRange, getPeriodFormatter } from "@workspace/utils";
 ```
 
 Stack helpers such as `buildPartnerStackSeries` and `buildFuelTypeStackSeries`
-call into `@workspace/chart-utils`' generic utilities so behaviour is consistent across
+call into `@workspace/utils`' generic utilities so behaviour is consistent across
 charts (windowing, “Other” buckets, label resolution). Each JSON snapshot now ships as
 `{ meta, records }` (or `{ meta, groups }` for CPI) so downstream code can surface table
 metadata without consulting a separate manifest. The shared `meta.dimensions` map exposes

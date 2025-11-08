@@ -25,6 +25,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
+import {
+  GITHUB_LICENSE_URL,
+  GITHUB_NEW_ISSUE_URL,
+  GITHUB_REPO_URL,
+} from "@/constants/links";
 
 const CandleIcon: LucideIcon = forwardRef<SVGSVGElement, LucideProps>(
   (props, ref) => <Icon ref={ref} iconNode={candlestick} {...props} />,
@@ -206,7 +211,7 @@ export default function Page() {
               Public License v3.{" "}
               <a
                 className="font-medium underline hover:text-primary"
-                href="https://github.com/kosovatools/kosovatools.org/blob/main/LICENSE"
+                href={GITHUB_LICENSE_URL}
                 rel="noreferrer"
                 target="_blank"
               >
@@ -223,11 +228,7 @@ export default function Page() {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <a
-                href="https://github.com/kosovatools/kosovatools.org"
-                rel="noreferrer"
-                target="_blank"
-              >
+              <a href={GITHUB_REPO_URL} rel="noreferrer" target="_blank">
                 Kontribuo në GitHub
               </a>
             </Button>
@@ -382,11 +383,7 @@ export default function Page() {
               className="w-full sm:w-auto sm:self-center"
               variant="secondary"
             >
-              <a
-                href="https://github.com/kosovatools/kosovatools.org/issues/new/choose"
-                rel="noreferrer"
-                target="_blank"
-              >
+              <a href={GITHUB_NEW_ISSUE_URL} rel="noreferrer" target="_blank">
                 Sugjero një ide
                 <ArrowRight aria-hidden className="ml-2 h-4 w-4" />
               </a>

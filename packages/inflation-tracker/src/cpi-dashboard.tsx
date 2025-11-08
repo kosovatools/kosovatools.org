@@ -28,7 +28,7 @@ import {
   PERIOD_GROUPING_OPTIONS,
   createNumberFormatter,
   type PeriodGrouping,
-} from "@workspace/chart-utils";
+} from "@workspace/utils";
 import {
   Alert,
   AlertDescription,

@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@workspace/chart-utils": "workspace:*",
+    "@workspace/utils": "workspace:*",
     "@workspace/kas-data": "workspace:*",
     "@workspace/ui": "workspace:*",
     "recharts": "3.3.0"

@@ -1,15 +1,23 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { useWindowVirtualizer } from "@tanstack/react-virtual";
 
-import { Button } from "@workspace/ui/components/button";
 import { cn } from "@workspace/ui/lib/utils";
 
 import { formatLabel } from "../lib/format";
 import type { MemorialVictim } from "../types";
 
 const FALLBACK_NAME = "Emër i panjohur";
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export type VictimListProps = {
   victims: MemorialVictim[];
@@ -17,8 +25,6 @@ export type VictimListProps = {
   hasMore?: boolean;
   isLoadingMore?: boolean;
   onLoadMore?: () => void;
-  onLoadAll?: () => void;
-  isLoadingAll?: boolean;
   className?: string;
 };
 
@@ -28,47 +34,67 @@ export function VictimList({
   hasMore = false,
   isLoadingMore = false,
   onLoadMore,
-  onLoadAll,
-  isLoadingAll = false,
   className,
 }: VictimListProps) {
-  const displayVictims = useMemo(() => victims, [victims]);
-  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
+  const [scrollMargin, setScrollMargin] = useState(0);
+
+  const updateScrollMargin = useCallback(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const node = listRef.current;
+    if (!node) {
+      setScrollMargin(0);
+      return;
+    }
+    const rect = node.getBoundingClientRect();
+    setScrollMargin(rect.top + window.scrollY);
+  }, []);
+
+  useIsomorphicLayoutEffect(() => {
+    updateScrollMargin();
+  }, [updateScrollMargin]);
 
   useEffect(() => {
-    if (!hasMore || !onLoadMore) {
+    if (typeof window === "undefined") {
       return;
     }
-
-    const node = loaderRef.current;
-    if (!node) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry?.isIntersecting && !isLoadingMore) {
-          onLoadMore();
-        }
-      },
-      {
-        rootMargin: "256px 0px 128px 0px",
-      },
-    );
-
-    observer.observe(node);
-
+    window.addEventListener("resize", updateScrollMargin);
     return () => {
-      observer.disconnect();
+      window.removeEventListener("resize", updateScrollMargin);
     };
-  }, [hasMore, isLoadingMore, onLoadMore, displayVictims.length]);
+  }, [updateScrollMargin]);
+
+  const rowVirtualizer = useWindowVirtualizer({
+    count: victims.length,
+    estimateSize: () => 100,
+    overscan: 10,
+    scrollMargin,
+  });
+
+  const virtualItems = rowVirtualizer.getVirtualItems();
+
+  useEffect(() => {
+    if (!hasMore || !onLoadMore || isLoadingMore) {
+      return;
+    }
+
+    const lastItem = virtualItems[virtualItems.length - 1];
+    if (!lastItem) {
+      return;
+    }
+
+    if (lastItem.index >= victims.length - 5) {
+      onLoadMore();
+    }
+  }, [virtualItems, hasMore, onLoadMore, isLoadingMore, victims.length]);
 
   return (
     <section className={cn("flex flex-col gap-6", className)}>
       <div className="flex flex-col gap-2 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
         <span>
-          Po shfaqen {displayVictims.length.toLocaleString("sq-AL")} emra nga{" "}
+          Po shfaqen {victims.length.toLocaleString("sq-AL")} emra nga{" "}
           {(totalRecords ?? victims.length).toLocaleString("sq-AL")}{" "}
           regjistrime.
         </span>
@@ -93,109 +119,125 @@ export function VictimList({
               Humanitarian Law Center (HLC)
             </a>
           </span>
-          {hasMore && onLoadAll ? (
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              onClick={onLoadAll}
-              disabled={isLoadingAll}
-            >
-              {isLoadingAll ? "Duke shkarkuar të gjitha…" : "Shfaq të gjithë"}
-            </Button>
-          ) : null}
         </div>
       </div>
 
-      <div className="space-y-2">
-        {displayVictims.map((victim, index) => {
-          const name =
-            victim.fullName ||
-            [victim.firstName, victim.lastName]
-              .filter((part) => part && part.trim().length > 0)
-              .join(" ") ||
-            FALLBACK_NAME;
+      <div ref={listRef}>
+        <div
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: "100%",
+            position: "relative",
+          }}
+        >
+          {virtualItems.map((virtualRow) => {
+            const victim = victims[virtualRow.index];
+            if (!victim) {
+              return null;
+            }
 
-          const locations = [
-            victim.placeOfIncident,
-            victim.placeOfBirth ? `lindi në ${victim.placeOfBirth}` : null,
-          ].filter(Boolean);
+            const index = virtualRow.index;
+            const name =
+              victim.fullName ||
+              [victim.firstName, victim.lastName]
+                .filter((part) => part && part.trim().length > 0)
+                .join(" ") ||
+              FALLBACK_NAME;
 
-          const isChild =
-            typeof victim.ageAtIncident === "number" &&
-            victim.ageAtIncident < 18;
-          const ageNode =
-            typeof victim.ageAtIncident === "number" ? (
-              <span
-                className={cn(
-                  "inline",
-                  isChild ? "font-semibold text-foreground" : undefined,
-                )}
+            const locations = [
+              victim.placeOfIncident,
+              victim.placeOfBirth ? `lindi në ${victim.placeOfBirth}` : null,
+            ].filter(Boolean);
+
+            const isChild =
+              typeof victim.ageAtIncident === "number" &&
+              victim.ageAtIncident < 18;
+            const ageNode =
+              typeof victim.ageAtIncident === "number" ? (
+                <span
+                  className={cn(
+                    "inline",
+                    isChild ? "font-semibold text-foreground" : undefined,
+                  )}
+                >
+                  {victim.ageAtIncident} vjeç
+                </span>
+              ) : null;
+
+            const metaSegments: ReactNode[] = [];
+            if (ageNode) metaSegments.push(ageNode);
+            if (victim.violation) {
+              metaSegments.push(formatLabel(victim.violation));
+            }
+            if (victim.civilianStatus) {
+              metaSegments.push(formatLabel(victim.civilianStatus));
+            }
+            if (victim.ethnicity) {
+              metaSegments.push(formatLabel(victim.ethnicity));
+            }
+
+            const key = [
+              victim.fullName,
+              victim.firstName,
+              victim.lastName,
+              victim.dateOfBirth,
+              victim.dateOfIncident,
+              index,
+            ]
+              .filter((value) => value !== null && value !== undefined)
+              .join("|");
+
+            return (
+              <div
+                key={virtualRow.key}
+                ref={rowVirtualizer.measureElement}
+                data-index={virtualRow.index}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  transform: `translateY(${virtualRow.start - scrollMargin}px)`,
+                  paddingBottom: "0.5rem",
+                }}
               >
-                {victim.ageAtIncident} vjeç
-              </span>
-            ) : null;
-
-          const metaSegments: ReactNode[] = [];
-          if (ageNode) metaSegments.push(ageNode);
-          if (victim.violation) {
-            metaSegments.push(formatLabel(victim.violation));
-          }
-          if (victim.civilianStatus) {
-            metaSegments.push(formatLabel(victim.civilianStatus));
-          }
-          if (victim.ethnicity) {
-            metaSegments.push(formatLabel(victim.ethnicity));
-          }
-
-          const key = [
-            victim.fullName,
-            victim.firstName,
-            victim.lastName,
-            victim.dateOfBirth,
-            victim.dateOfIncident,
-            index,
-          ]
-            .filter((value) => value !== null && value !== undefined)
-            .join("|");
-
-          return (
-            <p
-              key={key}
-              className="border-border/40 text-center text-sm leading-relaxed text-foreground md:text-base"
-            >
-              <span className="block font-semibold uppercase tracking-wide text-primary text-base md:text-xl">
-                {name.toLocaleUpperCase("sq-AL")}
-              </span>
-              <span className="mt-1 block text-xs uppercase tracking-wide text-muted-foreground md:text-sm">
-                {metaSegments.length > 0
-                  ? metaSegments.map((segment, segmentIndex) => (
-                      <span key={`${key}-meta-${segmentIndex}`}>
-                        {segmentIndex > 0 ? " • " : null}
-                        {segment}
-                      </span>
-                    ))
-                  : "Detaje të paplota"}
-              </span>
-              {victim.dateOfIncident ? (
-                <span className="mt-1 block text-xs text-muted-foreground md:text-sm">
-                  {new Date(victim.dateOfIncident).toLocaleDateString("sq-AL", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </span>
-              ) : null}
-              {locations.length > 0 ? (
-                <span className="mt-1 block text-xs text-muted-foreground md:text-sm">
-                  {locations.join(" • ")}
-                </span>
-              ) : null}
-            </p>
-          );
-        })}
+                <p className="border-border/40 text-center text-sm leading-relaxed text-foreground md:text-base">
+                  <span className="block font-semibold uppercase tracking-wide text-primary text-base md:text-xl">
+                    {name.toLocaleUpperCase("sq-AL")}
+                  </span>
+                  <span className="mt-1 block text-xs uppercase tracking-wide text-muted-foreground md:text-sm">
+                    {metaSegments.length > 0
+                      ? metaSegments.map((segment, segmentIndex) => (
+                          <span key={`${key}-meta-${segmentIndex}`}>
+                            {segmentIndex > 0 ? " • " : null}
+                            {segment}
+                          </span>
+                        ))
+                      : "Detaje të paplota"}
+                  </span>
+                  {victim.dateOfIncident ? (
+                    <span className="mt-1 block text-xs text-muted-foreground md:text-sm">
+                      {new Date(victim.dateOfIncident).toLocaleDateString(
+                        "sq-AL",
+                        {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        },
+                      )}
+                    </span>
+                  ) : null}
+                  {locations.length > 0 ? (
+                    <span className="mt-1 block text-xs text-muted-foreground md:text-sm">
+                      {locations.join(" • ")}
+                    </span>
+                  ) : null}
+                </p>
+              </div>
+            );
+          })}
+        </div>
       </div>
-      <div ref={loaderRef} className="h-px w-full" aria-hidden />
       {isLoadingMore ? (
         <p className="text-center text-xs text-muted-foreground">
           Duke ngarkuar më shumë emra…

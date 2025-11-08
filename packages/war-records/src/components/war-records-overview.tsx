@@ -11,10 +11,11 @@ import { Separator } from "@workspace/ui/components/separator";
 import { cn } from "@workspace/ui/lib/utils";
 
 import { crimeStats, findBreakdownCount } from "../data";
+import { buildWarRecordsDatasetSummary } from "../lib/copy";
 import { formatLabel } from "../lib/format";
 import { AgeDistributionPlot } from "./age-distribution-plot";
 import type { CrimeStats } from "../types";
-import { formatCount } from "@workspace/chart-utils";
+import { formatCount } from "@workspace/utils";
 
 type BreakdownListProps = {
   title: string;
@@ -101,11 +102,9 @@ export function WarRecordsOverview({
             </CardTitle>
           </div>
           <CardDescription className="max-w-3xl text-base leading-relaxed">
-            Arkivi dokumenton {formatCount(stats.totals.records)} persona të
-            vrarë, zhdukur ose të vdekur nga dhuna e luftës në Kosovë më 1998–
-            2000, sipas projektit Kosovo Memory Book të Humanitarian Law Center.
-            Statistikat ofrojnë një pasqyrë të plotë të humbjeve pa e
-            kategorizuar rolin ose statusin e secilit të regjistruar.
+            {buildWarRecordsDatasetSummary(stats.totals.records)} Statistikat
+            ofrojnë një pasqyrë të plotë të humbjeve pa e kategorizuar rolin ose
+            statusin e secilit të regjistruar.
           </CardDescription>
           <div className="rounded-lg border border-dashed border-border/70 bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
             Jo të gjithë të dokumentuarit janë vrarë. Përtej vrasjeve ka persona

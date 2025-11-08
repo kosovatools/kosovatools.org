@@ -1,4 +1,4 @@
-import { groupPeriod, type PeriodGrouping } from "@workspace/chart-utils";
+import { groupPeriod, type PeriodGrouping } from "@workspace/utils";
 import {
   cpiMeta,
   cpiMonthly,

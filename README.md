@@ -25,7 +25,7 @@ packages/
   inflation-tracker/  # CPI chart state + React components
   payroll/            # Net wage calculator domain logic
   public-wage-calculator/  # Public-sector salary engine and UI helpers
-  chart-utils/              # Cross-tool statistics/data helpers and formatters
+  utils/              # Cross-tool statistics/data helpers and formatters
   ui/                 # shadcn/ui + bespoke primitives shared across tools
   eslint-config/      # Workspace ESLint presets
   typescript-config/  # Shared tsconfig bases
@@ -55,7 +55,7 @@ The `@workspace/kas-data` package hosts Kosovo Agency of Statistics assets:
   downstream code can surface table names, units, and update timestamps without a
   separate manifest.
 
-Use `@workspace/chart-utils` for shared formatters, period helpers, and stack primitives. For project-wide data refresh, run `pnpm fetch-data` to execute every package’s `fetch-data` target.
+Use `@workspace/utils` for shared formatters, period helpers, and stack primitives. For project-wide data refresh, run `pnpm fetch-data` to execute every package’s `fetch-data` target.
 
 Scheduled pipelines now live in the `data.kosovatools.org` repository within the Kosova Tools GitHub org. That project ingests upstream sources, publishes JSON to https://data.kosovatools.org, and powers production consumers such as `@workspace/energy-tracker` and `@workspace/kas-data`.
 

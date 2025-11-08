@@ -1,7 +1,4 @@
-import {
-  createNumberFormatter,
-  type ValueFormatter,
-} from "@workspace/chart-utils";
+import { createNumberFormatter, type ValueFormatter } from "@workspace/utils";
 
 const LOCALE = "sq-AL";
 const DEFAULT_FALLBACK = "Pa të dhëna";

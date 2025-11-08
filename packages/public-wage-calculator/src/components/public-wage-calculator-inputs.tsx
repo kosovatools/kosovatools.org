@@ -1,6 +1,6 @@
 import { useMemo, type ChangeEvent } from "react";
 
-import { createNumberFormatter } from "@workspace/chart-utils";
+import { createNumberFormatter } from "@workspace/utils";
 import {
   Field,
   FieldContent,

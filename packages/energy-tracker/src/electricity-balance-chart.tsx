@@ -25,7 +25,7 @@ import {
   monthsFromRange,
   type StackPeriodGrouping,
   type TimeRangeOption,
-} from "@workspace/chart-utils";
+} from "@workspace/utils";
 
 import {
   ChartContainer,

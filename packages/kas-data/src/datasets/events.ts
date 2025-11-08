@@ -1,12 +1,5 @@
-let eventsData: unknown = [];
-try {
-  eventsData = (
-    await import("../../data/events.json", { with: { type: "json" } })
-  ).default;
-} catch {
-  eventsData = [];
-}
-import { type TimelineEvent } from "@workspace/chart-utils";
+import eventsData from "../../data/events.json" with { type: "json" };
+import { type TimelineEvent } from "@workspace/utils";
 
 const isTimelineEvent = (value: unknown): value is TimelineEvent => {
   if (!value || typeof value !== "object") return false;

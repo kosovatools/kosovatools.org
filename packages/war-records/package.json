@@ -15,8 +15,9 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@tanstack/react-virtual": "^3.13.12",
     "@workspace/ui": "workspace:*",
-    "@workspace/chart-utils": "workspace:*",
+    "@workspace/utils": "workspace:*",
     "recharts": "3.3.0"
   },
   "peerDependencies": {

@@ -5,7 +5,7 @@ import {
   type StackPeriodGrouping,
   type TimelineEvent,
   getPeriodFormatter,
-} from "@workspace/chart-utils";
+} from "@workspace/utils";
 
 type ChartDatum = {
   period: string;

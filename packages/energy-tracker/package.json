@@ -15,10 +15,10 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@workspace/chart-utils": "workspace:*",
     "@workspace/dataset-api": "workspace:*",
     "@workspace/kas-data": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "@workspace/utils": "workspace:*",
     "lucide-react": "^0.475.0",
     "recharts": "3.3.0"
   },
@@ -28,7 +28,7 @@
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "@tanstack/react-query": "^5.90.6",
+    "@tanstack/react-query": "^5.90.7",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@workspace/eslint-config": "workspace:*",

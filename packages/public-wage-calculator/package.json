@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@workspace/ui": "workspace:*",
-    "@workspace/chart-utils": "workspace:*"
+    "@workspace/utils": "workspace:*"
   },
   "peerDependencies": {
     "react": "^19.2.0",

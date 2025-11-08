@@ -1,23 +1,17 @@
 "use client";
 
 import * as React from "react";
-import {
-  CalendarClock,
-  Filter,
-  History,
-  Layers3,
-  PackageCheck,
-  Pill,
-  RefreshCcw,
-  Search,
-  SlidersHorizontal,
-} from "lucide-react";
-
+import { Filter, History, RefreshCcw, Search } from "lucide-react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   createCurrencyFormatter,
   createDateFormatter,
   formatCount,
-} from "@workspace/chart-utils";
+  getSearchParamNumber,
+  getSearchParamString,
+  mergeSearchParams,
+} from "@workspace/utils";
+import type { SearchParamUpdates } from "@workspace/utils";
 import { Button } from "@workspace/ui/components/button";
 import {
   Card,
@@ -33,15 +27,31 @@ import {
 } from "@workspace/ui/components/native-select";
 import { FilterableCombobox } from "@workspace/ui/custom-components/filterable-combobox";
 import { cn } from "@workspace/ui/lib/utils";
+import {
+  Field,
+  FieldContent,
+  FieldGroup,
+  FieldLabel,
+} from "@workspace/ui/components/field";
 
-import type {
-  DrugPriceRecord,
-  DrugPriceRecordsDataset,
-  DrugPriceSnapshot,
-  DrugPriceVersionsDataset,
-  DrugReferenceCountry,
-  DrugReferencePrices,
-} from "./types";
+import type { DrugPriceRecord, DrugPriceRecordsDataset } from "./types";
+import { loadDrugPriceRecords } from "./api";
+import {
+  PAGE_SIZE,
+  SEARCH_FIELD_OPTIONS,
+  SEARCH_FIELD_ACCESSORS,
+  SearchField,
+  isValidSearchField,
+  pageIndexToParam,
+} from "./constants";
+import {
+  buildSearchText,
+  createRecordId,
+  getReferenceSections,
+  hasExpandableDetails,
+} from "./utils/records";
+import { VersionHistoryTable } from "./components/version-history-table";
+import { ReferencePriceSection } from "./components/reference-price-section";
 
 const priceFormatter = createCurrencyFormatter("sq", "EUR", {
   minimumFractionDigits: 2,
@@ -58,22 +68,13 @@ const dateTimeFormatter = createDateFormatter("sq-AL", {
   dateStyle: "medium",
   timeStyle: "short",
 });
-const versionCollator = new Intl.Collator(undefined, {
-  numeric: true,
-  sensitivity: "base",
-});
-
-const PAGE_SIZES = [25, 50, 100] as const;
-
-const REFERENCE_PRICE_LABELS: Record<DrugReferenceCountry, string> = {
-  macedonia: "Maqedonia e Veriut",
-  montenegro: "Mali i Zi",
-  croatia: "Kroacia",
-  slovenia: "Sllovenia",
-  bulgaria: "Bullgaria",
-  estonia: "Estonia",
-  other: "Tjetër",
-};
+function getCurrentSearchString(): string {
+  if (typeof window === "undefined") {
+    return "";
+  }
+  const search = window.location.search;
+  return search.startsWith("?") ? search.slice(1) : search;
+}
 
 type EnrichedRecord = DrugPriceRecord & {
   id: string;
@@ -81,205 +82,237 @@ type EnrichedRecord = DrugPriceRecord & {
 };
 
 type DrugPriceExplorerProps = {
-  recordsDataset: DrugPriceRecordsDataset;
-  versionsDataset: DrugPriceVersionsDataset;
+  initialRecordsDataset?: DrugPriceRecordsDataset;
 };
 
-type ReferenceSection = {
-  title: string;
-  entries: Array<{ label: string; value: number }>;
-};
-
-type SummaryStatProps = {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  helper?: string;
-  className?: string;
-};
-
-function createRecordId(record: DrugPriceRecord, index: number): string {
-  const baseIdentifier =
-    record.authorization_number ??
-    (record.serial_number != null ? String(record.serial_number) : null) ??
-    record.product_name ??
-    "record";
-
-  return `${baseIdentifier}-${index}`;
-}
-
-function buildSearchText(record: DrugPriceRecord): string {
-  return [
-    record.product_name,
-    record.active_substance,
-    record.atc_code,
-    record.dose,
-    record.pharmaceutical_form,
-    record.packaging,
-    record.marketing_authorisation_holder,
-    record.manufacturer,
-    record.authorization_number,
-    record.latest_version,
-  ]
-    .map((value) => (value ?? "").toString().toLowerCase())
-    .join(" ");
-}
-
-function referenceEntries(map?: DrugReferencePrices | null) {
-  if (!map) return [] as Array<{ label: string; value: number }>;
-  return (Object.keys(REFERENCE_PRICE_LABELS) as Array<DrugReferenceCountry>)
-    .map((key) => {
-      const value = map[key];
-      if (value == null) return null;
-      return { label: REFERENCE_PRICE_LABELS[key], value };
-    })
-    .filter((entry): entry is { label: string; value: number } =>
-      Boolean(entry),
-    );
-}
-
-function getReferenceSections(record: DrugPriceRecord): ReferenceSection[] {
-  const sections: ReferenceSection[] = [];
-  const primary = referenceEntries(record.reference_prices);
-  if (primary.length) {
-    sections.push({
-      title: "Çmimet referente (primare)",
-      entries: primary,
-    });
-  }
-  const secondary = referenceEntries(record.reference_prices_secondary);
-  if (secondary.length) {
-    sections.push({
-      title: "Çmimet referente (sekondare)",
-      entries: secondary,
-    });
-  }
-  return sections;
-}
-
-function hasExpandableDetails(record: DrugPriceRecord): boolean {
+export function DrugPriceExplorer(props: DrugPriceExplorerProps = {}) {
   return (
-    (record.version_history?.length ?? 0) > 1 ||
-    Boolean(record.reference_prices) ||
-    Boolean(record.reference_prices_secondary)
+    <React.Suspense fallback={<ExplorerLoadingFallback />}>
+      <ExplorerErrorBoundary>
+        <DrugPriceExplorerContent {...props} />
+      </ExplorerErrorBoundary>
+    </React.Suspense>
   );
 }
 
-function SummaryStat({
-  icon,
-  label,
-  value,
-  helper,
-  className,
-}: SummaryStatProps) {
+function ExplorerLoadingFallback() {
   return (
-    <div
-      className={cn(
-        "rounded-xl border border-border/70 bg-background/90 p-3 shadow-sm",
-        className,
-      )}
-    >
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <div
-            className="rounded-md bg-primary/10 p-1.5 text-primary"
-            aria-hidden="true"
-          >
-            {icon}
-          </div>
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-            {label}
-          </p>
-        </div>
-        <p className="text-lg font-semibold leading-tight text-foreground sm:text-xl">
-          {value}
+    <Card>
+      <CardHeader>
+        <CardTitle>Po ngarkojmë të dhënat</CardTitle>
+        <CardDescription>
+          Lista e barnave dhe versionet përkatëse po përgatiten.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">
+          Kjo mund të zgjasë disa sekonda, sidomos herën e parë.
         </p>
-      </div>
-      {helper ? (
-        <p className="mt-2 text-[11px] leading-tight text-muted-foreground line-clamp-2">
-          {helper}
-        </p>
-      ) : null}
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 
-function VersionHistoryTable({ entries }: { entries: DrugPriceSnapshot[] }) {
-  if (!entries.length) {
-    return null;
+class ExplorerErrorBoundary extends React.Component<
+  React.PropsWithChildren,
+  { error: Error | null }
+> {
+  state = { error: null as Error | null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
   }
 
-  return (
-    <div className="overflow-x-auto">
-      <table className="min-w-[490px] text-sm">
-        <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
-          <tr>
-            <th className="px-3 py-2 text-left font-medium">V</th>
-            <th className="px-3 py-2 text-right font-medium">Shumicë</th>
-            <th className="px-3 py-2 text-right font-medium">Me marzhë</th>
-            <th className="px-3 py-2 text-right font-medium">Pakicë</th>
-            <th className="px-3 py-2 text-left font-medium">Vlen deri</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border">
-          {entries.map((entry) => (
-            <tr key={`${entry.version}-${entry.valid_until ?? "na"}`}>
-              <td className="px-3 py-2 font-medium">{entry.version}</td>
-              <td className="px-3 py-2 text-right">
-                {priceFormatter(entry.price_wholesale)}
-              </td>
-              <td className="px-3 py-2 text-right">
-                {priceFormatter(entry.price_with_margin)}
-              </td>
-              <td className="px-3 py-2 text-right">
-                {priceFormatter(entry.price_retail)}
-              </td>
-              <td className="px-3 py-2 text-left">
-                {shortDateFormatter(entry.valid_until)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+  private handleRetry = () => {
+    this.setState({ error: null });
+  };
+
+  render() {
+    if (this.state.error) {
+      return (
+        <Card className="border-destructive/50 bg-destructive/5">
+          <CardHeader>
+            <CardTitle>Nuk u ngarkuan të dhënat</CardTitle>
+            <CardDescription>
+              Provo të rifreskosh faqen ose kontrollo lidhjen me internetin.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <p className="text-sm text-destructive">
+              {this.state.error.message || "Ndodhi një gabim i papritur."}
+            </p>
+            <Button variant="outline" onClick={this.handleRetry}>
+              Provo përsëri
+            </Button>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return this.props.children;
+  }
 }
 
-function ReferencePriceSection({ section }: { section: ReferenceSection }) {
-  return (
-    <div className="space-y-2">
-      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-        {section.title}
-      </p>
-      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-        {section.entries.map((entry) => (
-          <div
-            key={`${section.title}-${entry.label}`}
-            className="flex items-center justify-between rounded-md border bg-muted/30 px-3 py-2 text-sm"
-          >
-            <span className="text-muted-foreground">{entry.label}</span>
-            <span className="font-medium">{priceFormatter(entry.value)}</span>
-          </div>
-        ))}
-      </div>
-    </div>
+function DrugPriceExplorerContent({
+  initialRecordsDataset,
+}: DrugPriceExplorerProps = {}) {
+  const [searchParamsSnapshot, setSearchParamsSnapshot] = React.useState(() =>
+    getCurrentSearchString(),
   );
-}
+  const searchParamsRef = React.useRef(searchParamsSnapshot);
 
-export function DrugPriceExplorer({
-  recordsDataset,
-  versionsDataset,
-}: DrugPriceExplorerProps) {
-  const [search, setSearch] = React.useState("");
-  const [versionFilter, setVersionFilter] = React.useState<string | null>(null);
-  const [formFilter, setFormFilter] = React.useState<string | null>(null);
-  const [validUntilFilter, setValidUntilFilter] = React.useState<string | null>(
-    null,
+  React.useEffect(() => {
+    searchParamsRef.current = searchParamsSnapshot;
+  }, [searchParamsSnapshot]);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+    const syncFromLocation = () => {
+      const nextSearch = getCurrentSearchString();
+      if (nextSearch !== searchParamsRef.current) {
+        searchParamsRef.current = nextSearch;
+        setSearchParamsSnapshot(nextSearch);
+      }
+    };
+    syncFromLocation();
+    window.addEventListener("popstate", syncFromLocation);
+    return () => {
+      window.removeEventListener("popstate", syncFromLocation);
+    };
+  }, []);
+
+  const urlState = React.useMemo(() => {
+    const params = new URLSearchParams(searchParamsSnapshot);
+    const searchValue = getSearchParamString(params, "search") ?? "";
+    const versionValue = getSearchParamString(params, "version") ?? null;
+    const formValue = getSearchParamString(params, "form") ?? null;
+    const rawSearchField = getSearchParamString(params, "searchField");
+    const normalizedSearchField =
+      rawSearchField && isValidSearchField(rawSearchField)
+        ? rawSearchField
+        : null;
+    const rawPageIndex = getSearchParamNumber(params, "page", {
+      integer: true,
+      min: 0,
+    });
+    const normalizedPageIndex =
+      typeof rawPageIndex === "number" && rawPageIndex >= 0 ? rawPageIndex : 0;
+
+    return {
+      search: searchValue,
+      version: versionValue,
+      form: formValue,
+      searchField: normalizedSearchField,
+      pageIndex: normalizedPageIndex,
+      needsPageIndexNormalization:
+        rawPageIndex != null && rawPageIndex !== normalizedPageIndex,
+      needsSearchFieldNormalization:
+        rawSearchField != null && rawSearchField !== normalizedSearchField,
+    };
+  }, [searchParamsSnapshot]);
+
+  const [search, setSearch] = React.useState(urlState.search);
+  const [versionFilter, setVersionFilter] = React.useState<string | null>(
+    urlState.version,
   );
-  const [pageSize, setPageSize] = React.useState<(typeof PAGE_SIZES)[number]>(
-    PAGE_SIZES[0],
+  const [formFilter, setFormFilter] = React.useState<string | null>(
+    urlState.form,
   );
-  const [pageIndex, setPageIndex] = React.useState(0);
+  const [searchField, setSearchField] = React.useState<SearchField | null>(
+    urlState.searchField,
+  );
+  const [pageIndex, setPageIndex] = React.useState(urlState.pageIndex);
+  const resultsRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    setSearch(urlState.search);
+  }, [urlState.search]);
+
+  React.useEffect(() => {
+    setVersionFilter(urlState.version);
+  }, [urlState.version]);
+
+  React.useEffect(() => {
+    setFormFilter(urlState.form);
+  }, [urlState.form]);
+
+  React.useEffect(() => {
+    setSearchField(urlState.searchField);
+  }, [urlState.searchField]);
+
+  React.useEffect(() => {
+    setPageIndex(urlState.pageIndex);
+  }, [urlState.pageIndex]);
+
+  const updateUrlState = React.useCallback((updates: SearchParamUpdates) => {
+    const nextParams = mergeSearchParams(searchParamsRef.current, updates);
+    const queryString = nextParams.toString();
+    searchParamsRef.current = queryString;
+    setSearchParamsSnapshot(queryString);
+    if (typeof window !== "undefined") {
+      const pathname = window.location.pathname;
+      const nextUrl = queryString ? `${pathname}?${queryString}` : pathname;
+      window.history.replaceState({}, "", nextUrl);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (urlState.needsPageIndexNormalization) {
+      updateUrlState({
+        page: pageIndexToParam(urlState.pageIndex),
+      });
+    }
+  }, [
+    updateUrlState,
+    urlState.needsPageIndexNormalization,
+    urlState.pageIndex,
+  ]);
+
+  React.useEffect(() => {
+    if (urlState.needsSearchFieldNormalization) {
+      updateUrlState({
+        searchField: urlState.searchField,
+      });
+    }
+  }, [
+    updateUrlState,
+    urlState.needsSearchFieldNormalization,
+    urlState.searchField,
+  ]);
+
+  const applyFilterUpdates = React.useCallback(
+    (updates: SearchParamUpdates, resetPage = false) => {
+      if (resetPage && pageIndex !== 0) {
+        setPageIndex(0);
+      }
+      const nextUpdates = resetPage ? { ...updates, page: null } : updates;
+      updateUrlState(nextUpdates);
+    },
+    [pageIndex, updateUrlState],
+  );
+
+  const scrollToResultsTop = React.useCallback(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    window.requestAnimationFrame(() => {
+      resultsRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }, []);
+
+  const { data: recordsDataset } = useSuspenseQuery<
+    DrugPriceRecordsDataset,
+    Error
+  >({
+    queryKey: ["drug-price-records"],
+    queryFn: loadDrugPriceRecords,
+    initialData: initialRecordsDataset,
+  });
 
   const records = React.useMemo<EnrichedRecord[]>(
     () =>
@@ -288,25 +321,7 @@ export function DrugPriceExplorer({
         id: createRecordId(record, index),
         searchText: buildSearchText(record),
       })),
-    [recordsDataset.records],
-  );
-
-  const sortedVersions = React.useMemo(
-    () =>
-      [...versionsDataset.versions].sort((a, b) =>
-        versionCollator.compare(b.version, a.version),
-      ),
-    [versionsDataset.versions],
-  );
-
-  const versionOptions = React.useMemo(
-    () =>
-      sortedVersions.map((version) => ({
-        value: version.version,
-        label: `Versioni ${version.version}`,
-        notes: `${formatCount(version.record_count)} produkte`,
-      })),
-    [sortedVersions],
+    [recordsDataset],
   );
 
   const formOptions = React.useMemo(() => {
@@ -330,27 +345,22 @@ export function DrugPriceExplorer({
       }));
   }, [records]);
 
-  const validUntilOptions = React.useMemo(() => {
-    const values = new Set<string>();
-    for (const record of records) {
-      if (record.valid_until) {
-        values.add(record.valid_until);
-      }
-    }
-    return [...values]
-      .sort((a, b) => b.localeCompare(a))
-      .map((value) => ({
-        value,
-        label: longDateFormatter(value),
-      }));
-  }, [records]);
-
   const normalizedSearch = search.trim().toLowerCase();
 
   const filteredRecords = React.useMemo(() => {
     return records.filter((record) => {
-      if (normalizedSearch && !record.searchText.includes(normalizedSearch)) {
-        return false;
+      if (normalizedSearch) {
+        if (searchField) {
+          const accessor = SEARCH_FIELD_ACCESSORS[searchField];
+          const candidate = accessor(record);
+          const normalizedCandidate =
+            candidate == null ? "" : candidate.toString().toLowerCase();
+          if (!normalizedCandidate.includes(normalizedSearch)) {
+            return false;
+          }
+        } else if (!record.searchText.includes(normalizedSearch)) {
+          return false;
+        }
       }
       if (versionFilter && record.latest_version !== versionFilter) {
         return false;
@@ -358,28 +368,24 @@ export function DrugPriceExplorer({
       if (formFilter && record.pharmaceutical_form !== formFilter) {
         return false;
       }
-      if (validUntilFilter && record.valid_until !== validUntilFilter) {
-        return false;
-      }
       return true;
     });
-  }, [records, normalizedSearch, versionFilter, formFilter, validUntilFilter]);
+  }, [records, normalizedSearch, searchField, versionFilter, formFilter]);
 
-  React.useEffect(() => {
-    setPageIndex(0);
-  }, [normalizedSearch, versionFilter, formFilter, validUntilFilter]);
-
-  React.useEffect(() => {
-    setPageIndex((current) => {
-      const totalPages = Math.max(
-        1,
-        Math.ceil(filteredRecords.length / pageSize) || 1,
-      );
-      return Math.min(current, totalPages - 1);
-    });
-  }, [filteredRecords.length, pageSize]);
+  const pageSize = PAGE_SIZE;
 
   const totalPages = Math.max(1, Math.ceil(filteredRecords.length / pageSize));
+
+  React.useEffect(() => {
+    const maxPageIndex = Math.max(totalPages - 1, 0);
+    if (pageIndex > maxPageIndex) {
+      setPageIndex(maxPageIndex);
+      updateUrlState({
+        page: pageIndexToParam(maxPageIndex),
+      });
+    }
+  }, [pageIndex, totalPages, updateUrlState]);
+
   const startIndex = filteredRecords.length ? pageIndex * pageSize + 1 : 0;
   const endIndex = Math.min(filteredRecords.length, (pageIndex + 1) * pageSize);
 
@@ -392,114 +398,92 @@ export function DrugPriceExplorer({
     (normalizedSearch ? 1 : 0) +
     (versionFilter ? 1 : 0) +
     (formFilter ? 1 : 0) +
-    (validUntilFilter ? 1 : 0);
+    (normalizedSearch && searchField ? 1 : 0);
 
-  const clearFilters = () => {
+  const clearFilters = React.useCallback(() => {
     setSearch("");
     setVersionFilter(null);
     setFormFilter(null);
-    setValidUntilFilter(null);
+    setSearchField(null);
+    applyFilterUpdates(
+      {
+        search: null,
+        version: null,
+        form: null,
+        searchField: null,
+      },
+      true,
+    );
+  }, [applyFilterUpdates]);
+
+  const handleFormFilterChange = (value: string | null) => {
+    const nextValue = value || null;
+    setFormFilter(nextValue);
+    applyFilterUpdates({ form: nextValue }, true);
   };
 
-  const totalProducts = records.length;
-  const uniqueSubstances = React.useMemo(() => {
-    const values = new Set<string>();
-    for (const record of records) {
-      if (record.active_substance) {
-        values.add(record.active_substance);
-      }
-    }
-    return values.size;
-  }, [records]);
+  const handleSearchInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const value = event.target.value;
+    setSearch(value);
+    applyFilterUpdates({ search: value || null }, true);
+  };
 
-  const uniqueHolders = React.useMemo(() => {
-    const values = new Set<string>();
-    for (const record of records) {
-      if (record.marketing_authorisation_holder) {
-        values.add(record.marketing_authorisation_holder);
-      }
-    }
-    return values.size;
-  }, [records]);
+  const handleSearchFieldChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const value = event.target.value;
+    const nextField =
+      value && isValidSearchField(value) ? (value as SearchField) : null;
+    setSearchField(nextField);
+    applyFilterUpdates({ searchField: nextField }, true);
+  };
 
-  const latestVersion = sortedVersions[0] ?? null;
+  const handlePreviousPage = () => {
+    if (pageIndex === 0) return;
+    const nextIndex = Math.max(pageIndex - 1, 0);
+    setPageIndex(nextIndex);
+    updateUrlState({
+      page: pageIndexToParam(nextIndex),
+    });
+    scrollToResultsTop();
+  };
+
+  const handleNextPage = () => {
+    const maxPageIndex = Math.max(totalPages - 1, 0);
+    if (pageIndex >= maxPageIndex) return;
+    const nextIndex = Math.min(pageIndex + 1, maxPageIndex);
+    setPageIndex(nextIndex);
+    updateUrlState({
+      page: pageIndexToParam(nextIndex),
+    });
+    scrollToResultsTop();
+  };
 
   const datasetGeneratedAt = dateTimeFormatter(recordsDataset.generated_at);
 
   return (
     <div className="space-y-6">
-      <section className="space-y-4">
-        <header className="space-y-2">
-          <p className="text-sm font-medium text-primary">
-            Ministria e Shëndetësisë · Çmimet referuese
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight">
-            Barnat e licencuara dhe çmimet e miratuara
-          </h1>
-          <p className="max-w-3xl text-sm text-muted-foreground">
-            Kërko dhe filtro listën e barnave të importuara ose të prodhuara në
-            Kosovë për të parë çmimet me shumicë, marzhën e lejuar dhe çmimin me
-            pakicë sipas versioneve të publikuara të Ministrisë së Shëndetësisë.
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Dataseti u gjenerua më {datasetGeneratedAt}. Çdo rresht shfaq çmimet
-            më të fundit për produktin përkatës dhe historikun e versioneve.
-          </p>
-        </header>
-        <div className="space-y-3 lg:grid md:grid-cols-4 lg:gap-4 lg:space-y-0">
-          <SummaryStat
-            className="lg:h-full"
-            icon={<Pill className="size-5" aria-hidden="true" />}
-            label="Produkte të listuara"
-            value={formatCount(totalProducts)}
-            helper="Çmimet e fundit në euro"
-          />
-          <SummaryStat
-            className="lg:h-full"
-            icon={<Layers3 className="size-5" aria-hidden="true" />}
-            label="Substanca aktive"
-            value={formatCount(uniqueSubstances)}
-            helper="Rreshtat unikë me përbërje"
-          />
-          <SummaryStat
-            className="lg:h-full"
-            icon={<PackageCheck className="size-5" aria-hidden="true" />}
-            label="Mbajtësit e autorizimit"
-            value={formatCount(uniqueHolders)}
-            helper="Operatorë të licencuar"
-          />
-          <SummaryStat
-            className="lg:h-full"
-            icon={<CalendarClock className="size-5" aria-hidden="true" />}
-            label="Versioni më i ri"
-            value={latestVersion ? latestVersion.version : "n/a"}
-            helper={
-              latestVersion?.valid_until_values?.length
-                ? `Vlefshmëria: ${latestVersion.valid_until_values
-                  .map((value) => shortDateFormatter(value))
-                  .join(", ")}`
-                : "Pa datë të raportuar"
-            }
-          />
-        </div>
-      </section>
       <div>
         <h3 className="text-lg font-semibold">Tabela e çmimeve</h3>
         <p className="text-sm text-muted-foreground">
           Çmimet shfaqen në euro dhe përditësohen sipas versionit më të fundit
           të publikuar.
         </p>
+        <p className="text-xs text-muted-foreground">
+          Dataseti u gjenerua më {datasetGeneratedAt}. Çdo rresht shfaq çmimet
+          më të fundit për produktin përkatës dhe historikun e versioneve.
+        </p>
       </div>
       <section className="space-y-6">
-        <div className="space-y-4 rounded-lg border p-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-semibold">Filtro produktet</h2>
-              <p className="text-sm text-muted-foreground">
-                Kombino kërkimin me versionin dhe formatin farmaceutik.
-              </p>
-            </div>
-            {appliedFilters > 0 ? (
+        <FieldGroup className="gap-6 border-y border-border/70 py-4">
+          {appliedFilters > 0 ? (
+            <div className="flex items-center justify-between gap-3 text-sm text-muted-foreground">
+              <div className="inline-flex items-center gap-2 text-xs font-medium uppercase tracking-wide">
+                <Filter className="size-3.5" aria-hidden="true" />
+                {appliedFilters} filtra aktiv
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -509,14 +493,52 @@ export function DrugPriceExplorer({
                 <RefreshCcw className="size-4" aria-hidden="true" />
                 Pastro filtrat
               </Button>
-            ) : null}
-          </div>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Forma farmaceutike</label>
+            </div>
+          ) : null}
+          <Field
+            orientation="vertical"
+            className="gap-2 md:flex-row md:items-center"
+          >
+            <FieldLabel className="text-sm font-medium">
+              Kërko produktin
+            </FieldLabel>
+            <FieldContent className="flex-row flex-1">
+              <div className="relative flex-1 min-w-[200px]">
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={search}
+                  onChange={handleSearchInputChange}
+                  placeholder="Emri, substanca ose mbajtësi i autorizimit"
+                  className="pl-9"
+                />
+              </div>
+              <NativeSelect
+                value={searchField ?? ""}
+                onChange={handleSearchFieldChange}
+                className="w-full sm:w-[200px]"
+              >
+                <NativeSelectOption value="">
+                  Të gjitha fushat
+                </NativeSelectOption>
+                {SEARCH_FIELD_OPTIONS.map((option) => (
+                  <NativeSelectOption key={option.value} value={option.value}>
+                    {option.label}
+                  </NativeSelectOption>
+                ))}
+              </NativeSelect>
+            </FieldContent>
+          </Field>
+          <Field
+            orientation="vertical"
+            className="gap-2 md:flex-row md:items-center"
+          >
+            <FieldLabel className="text-sm font-medium">
+              Forma farmaceutike
+            </FieldLabel>
+            <FieldContent className="flex-1 min-w-[220px]">
               <FilterableCombobox
                 value={formFilter}
-                onValueChange={setFormFilter}
+                onValueChange={handleFormFilterChange}
                 options={formOptions}
                 placeholder="Të gjitha format"
                 searchPlaceholder="Kërko formatin..."
@@ -524,102 +546,10 @@ export function DrugPriceExplorer({
                 triggerClassName="h-10"
                 disabled={!formOptions.length}
               />
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium">E vlefshme deri</label>
-              <NativeSelect
-                value={validUntilFilter ?? ""}
-                onChange={(event) =>
-                  setValidUntilFilter(event.target.value || null)
-                }
-                className="w-full"
-              >
-                <NativeSelectOption value="">
-                  Të gjitha datat
-                </NativeSelectOption>
-                {validUntilOptions.map((option) => (
-                  <NativeSelectOption key={option.value} value={option.value}>
-                    {option.label}
-                  </NativeSelectOption>
-                ))}
-              </NativeSelect>
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Kërko produktin</label>
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Emri, substanca ose mbajtësi i autorizimit"
-                  className="pl-9"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="space-y-3">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2 text-sm">
-                <span>Rreshta për faqe</span>
-                <NativeSelect
-                  value={String(pageSize)}
-                  onChange={(event) =>
-                    setPageSize(
-                      Number.parseInt(
-                        event.target.value,
-                        10,
-                      ) as (typeof PAGE_SIZES)[number],
-                    )
-                  }
-                >
-                  {PAGE_SIZES.map((size) => (
-                    <NativeSelectOption key={size} value={String(size)}>
-                      {size}
-                    </NativeSelectOption>
-                  ))}
-                </NativeSelect>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setPageIndex((index) => Math.max(index - 1, 0))
-                  }
-                  disabled={pageIndex === 0}
-                >
-                  Më parë
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    setPageIndex((index) =>
-                      Math.min(index + 1, Math.max(totalPages - 1, 0)),
-                    )
-                  }
-                  disabled={pageIndex >= totalPages - 1}
-                >
-                  Tjetra
-                </Button>
-              </div>
-              <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium uppercase tracking-wide">
-                  <Filter className="size-3.5" aria-hidden="true" />
-                  {appliedFilters > 0
-                    ? `${appliedFilters} filtra aktiv`
-                    : "Asnjë filtër aktiv"}
-                </div>
-                <span>
-                  Duke shfaqur {startIndex || 0}-{endIndex} nga{" "}
-                  {formatCount(filteredRecords.length)} produkte.
-                </span>
-              </div>
-            </div>
-          </div>
-
+            </FieldContent>
+          </Field>
+        </FieldGroup>
+        <div ref={resultsRef} className="space-y-3">
           {paginatedRecords.length ? (
             <>
               <div className="hidden overflow-hidden rounded-lg border sm:block">
@@ -751,11 +681,14 @@ export function DrugPriceExplorer({
                                   <div className="mt-4 space-y-4">
                                     <VersionHistoryTable
                                       entries={record.version_history}
+                                      formatPrice={priceFormatter}
+                                      formatDate={shortDateFormatter}
                                     />
                                     {sections.map((section) => (
                                       <ReferencePriceSection
                                         key={`${record.id}-${section.title}`}
                                         section={section}
+                                        formatPrice={priceFormatter}
                                       />
                                     ))}
                                   </div>
@@ -887,11 +820,14 @@ export function DrugPriceExplorer({
                           <div className="mt-3 space-y-3 text-xs">
                             <VersionHistoryTable
                               entries={record.version_history}
+                              formatPrice={priceFormatter}
+                              formatDate={shortDateFormatter}
                             />
                             {sections.map((section) => (
                               <ReferencePriceSection
                                 key={`${record.id}-${section.title}-mobile`}
                                 section={section}
+                                formatPrice={priceFormatter}
                               />
                             ))}
                           </div>
@@ -900,6 +836,30 @@ export function DrugPriceExplorer({
                     </div>
                   );
                 })}
+              </div>
+              <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
+                <span className="text-sm text-muted-foreground">
+                  Duke shfaqur {startIndex || 0}-{endIndex} nga{" "}
+                  {formatCount(filteredRecords.length)} produkte.
+                </span>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handlePreviousPage}
+                    disabled={pageIndex === 0}
+                  >
+                    Më parë
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleNextPage}
+                    disabled={pageIndex >= totalPages - 1}
+                  >
+                    Tjetra
+                  </Button>
+                </div>
               </div>
             </>
           ) : (

@@ -18,7 +18,7 @@
     "stub-data": "tsx scripts/stub_data.ts --dir data"
   },
   "dependencies": {
-    "@workspace/chart-utils": "workspace:*"
+    "@workspace/utils": "workspace:*"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",

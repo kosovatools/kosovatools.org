@@ -5,8 +5,8 @@
     "paths": {
       "@workspace/ui": ["../ui/src/index.ts"],
       "@workspace/ui/*": ["../ui/src/*"],
-      "@workspace/chart-utils": ["../chart-utils/src/index.ts"],
-      "@workspace/chart-utils/*": ["../chart-utils/src/*"],
+      "@workspace/utils": ["../utils/src/index.ts"],
+      "@workspace/utils/*": ["../utils/src/*"],
       "@workspace/kas-data": ["../kas-data/src/index.ts"],
       "@workspace/kas-data/*": ["../kas-data/src/*"]
     }

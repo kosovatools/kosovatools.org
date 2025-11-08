@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 
-import {
-  DrugPriceExplorer,
-  loadDrugPriceRecords,
-  loadDrugPriceVersions,
-} from "@workspace/drug-prices";
+import { DrugPriceExplorer } from "@workspace/drug-prices";
+import ReactQueryProvider from "@/components/react-query-provider";
 
 export const metadata: Metadata = {
   title: "Çmimet e barnave të Ministrisë së Shëndetësisë",
@@ -37,16 +34,31 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function DrugPricesPage() {
-  const [recordsDataset, versionsDataset] = await Promise.all([
-    loadDrugPriceRecords(),
-    loadDrugPriceVersions(),
-  ]);
-
+export default function DrugPricesPage() {
   return (
-    <DrugPriceExplorer
-      recordsDataset={recordsDataset}
-      versionsDataset={versionsDataset}
-    />
+    <div className="space-y-6">
+      <section className="space-y-4">
+        <header className="space-y-2">
+          <p className="text-sm font-medium text-primary">
+            Ministria e Shëndetësisë · Çmimet referuese
+          </p>
+          <h1 className="text-3xl font-semibold tracking-tight">
+            Barnat e licencuara dhe çmimet e miratuara
+          </h1>
+          <p className="max-w-3xl text-sm text-muted-foreground">
+            Kërko dhe filtro listën e barnave të importuara ose të prodhuara në
+            Kosovë për të parë çmimet me shumicë, marzhën e lejuar dhe çmimin me
+            pakicë sipas versioneve të publikuara të Ministrisë së Shëndetësisë.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Të dhënat rifreskohen pas çdo publikimi të ri dhe janë të
+            disponueshme për ta ndarë si lidhje me filtrat aktivë.
+          </p>
+        </header>
+      </section>
+      <ReactQueryProvider>
+        <DrugPriceExplorer />
+      </ReactQueryProvider>
+    </div>
   );
 }

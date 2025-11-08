@@ -9,7 +9,7 @@ import {
   formatEuroCompact,
   getPeriodFormatter,
   type StackPeriodGrouping,
-} from "@workspace/chart-utils";
+} from "@workspace/utils";
 import { createLabelMap, tradeChaptersYearly } from "@workspace/kas-data";
 import {
   ChartContainer,

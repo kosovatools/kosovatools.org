@@ -13,7 +13,7 @@ import {
   type PolicyFormState,
   type PublicWageCalculationMode,
 } from "@workspace/public-wage-calculator";
-import { formatCount, formatEuroWithCents } from "@workspace/chart-utils";
+import { formatCount, formatEuroWithCents } from "@workspace/utils";
 import {
   Card,
   CardContent,

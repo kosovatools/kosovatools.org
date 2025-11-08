@@ -10,7 +10,7 @@ import {
 } from "../lib/utils";
 import { runPxDatasetPipeline } from "../pipeline/px-dataset";
 import { writeJson } from "../lib/io";
-
+export type FuelDatasetResult = Awaited<ReturnType<typeof fetchFuelTable>>;
 type EnergyValues = {
   production_thermal_gwh: number | null;
   production_hydro_gwh: number | null;
@@ -258,12 +258,7 @@ export async function fetchFuelTable(
 export async function writeFuelCombinedDataset(
   outDir: string,
   generatedAt: string,
-  datasets: Partial<
-    Record<
-      keyof typeof FUEL_SPECS,
-      { meta: unknown; records: Omit<FuelRecord, "fuel">[] } | null | undefined
-    >
-  >,
+  datasets: Partial<Record<keyof typeof FUEL_SPECS, FuelDatasetResult>>,
 ) {
   const records: FuelRecord[] = [];
   const fuelOptions: Array<{ key: keyof typeof FUEL_SPECS; label: string }> =

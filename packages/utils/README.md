@@ -1,4 +1,4 @@
-# `@workspace/chart-utils`
+# `@workspace/utils`
 
 Utility primitives that power Kosova Tools visualisations. The package now
 focuses on typed helpers for formatting values, grouping periods, computing
@@ -27,7 +27,7 @@ import {
   monthsFromRange,
   DEFAULT_TIME_RANGE,
   DEFAULT_TIME_RANGE_OPTIONS,
-} from "@workspace/chart-utils";
+} from "@workspace/utils";
 ```
 
 Use `@workspace/kas-data` when you need the KAS datasets or domain-specific
@@ -35,6 +35,6 @@ stack wrappers.
 
 ## Maintenance
 
-- Lint: `pnpm --filter @workspace/chart-utils lint`
-- Type-check: `pnpm --filter @workspace/chart-utils typecheck`
+- Lint: `pnpm --filter @workspace/utils lint`
+- Type-check: `pnpm --filter @workspace/utils typecheck`
 - Add new helpers with clear documentation and keep exports typed.

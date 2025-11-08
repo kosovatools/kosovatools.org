@@ -18,7 +18,7 @@ import {
   calculateWageBreakdown,
   type JobType,
 } from "@workspace/payroll";
-import { formatEuroWithCents, formatPercent } from "@workspace/chart-utils";
+import { formatEuroWithCents, formatPercent } from "@workspace/utils";
 
 const DEFAULT_VALUES: Pick<
   WageCalculatorInputsProps,
