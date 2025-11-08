@@ -25,6 +25,12 @@
       "@workspace/drug-prices/*": ["../../packages/drug-prices/src/*"],
       "@workspace/payroll": ["../../packages/payroll/src/index.ts"],
       "@workspace/payroll/*": ["../../packages/payroll/src/*"],
+      "@workspace/prishtina-building-permits": [
+        "../../packages/prishtina-building-permits/src/index.ts"
+      ],
+      "@workspace/prishtina-building-permits/*": [
+        "../../packages/prishtina-building-permits/src/*"
+      ],
       "@workspace/war-records": ["../../packages/war-records/src/index.ts"],
       "@workspace/war-records/*": ["../../packages/war-records/src/*"],
       "@workspace/ui/*": ["../../packages/ui/src/*"]

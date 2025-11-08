@@ -6,6 +6,7 @@ import {
   BarChart3,
   Building2,
   Car,
+  Hammer,
   HandCoins,
   LineChart,
   Icon,
@@ -123,6 +124,15 @@ const tools: ToolCard[] = [
     cta: "Llogarit kostot",
     icon: Car,
     category: "Transport",
+  },
+  {
+    name: "Lejet e ndërtimit të Prishtinës",
+    href: "/prishtina-building-permits",
+    description:
+      "Shfleto lejet e ndërtimit të publikuara nga Komuna e Prishtinës, filtro sipas lagjes, destinimit ose pronarit",
+    cta: "Shiko lejet",
+    icon: Hammer,
+    category: "Administrata publike",
   },
   {
     name: "Pagat e shërbyesve civilë",
