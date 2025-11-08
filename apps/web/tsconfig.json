@@ -21,6 +21,8 @@
       ],
       "@workspace/data-insights": ["../../packages/data-insights/src/index.ts"],
       "@workspace/data-insights/*": ["../../packages/data-insights/src/*"],
+      "@workspace/drug-prices": ["../../packages/drug-prices/src/index.ts"],
+      "@workspace/drug-prices/*": ["../../packages/drug-prices/src/*"],
       "@workspace/payroll": ["../../packages/payroll/src/index.ts"],
       "@workspace/payroll/*": ["../../packages/payroll/src/*"],
       "@workspace/war-records": ["../../packages/war-records/src/index.ts"],

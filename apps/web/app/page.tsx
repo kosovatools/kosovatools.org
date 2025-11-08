@@ -10,6 +10,7 @@ import {
   LineChart,
   Icon,
   PackageSearch,
+  Pill,
   TrendingUp,
   Zap,
   type LucideIcon,
@@ -144,6 +145,15 @@ const tools: ToolCard[] = [
     cta: "Analizo rrjedhat e energjisë",
     icon: Zap,
     category: "Energjia",
+  },
+  {
+    name: "Çmimet e barnave",
+    href: "/drug-prices",
+    description:
+      "Kërko barnat e licencuara nga Ministria e Shëndetësisë, shiko çmimet referuese të shumicës/pakicës dhe krahaso versionet e publikimeve.",
+    cta: "Hulumto çmimet",
+    icon: Pill,
+    category: "Shëndetësia",
   },
   {
     name: "Regjistrat e luftës",

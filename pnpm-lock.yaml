@@ -54,6 +54,9 @@ importers:
       '@workspace/dataset-api':
         specifier: workspace:*
         version: link:../../packages/dataset-api
+      '@workspace/drug-prices':
+        specifier: workspace:*
+        version: link:../../packages/drug-prices
       '@workspace/economic-activity':
         specifier: workspace:*
         version: link:../../packages/economic-activity
@@ -283,6 +286,46 @@ importers:
       eslint:
         specifier: ^9.39.1
         version: 9.39.1(jiti@2.6.1)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/drug-prices:
+    dependencies:
+      '@workspace/chart-utils':
+        specifier: workspace:*
+        version: link:../chart-utils
+      '@workspace/dataset-api':
+        specifier: workspace:*
+        version: link:../dataset-api
+      '@workspace/ui':
+        specifier: workspace:*
+        version: link:../ui
+      lucide-react:
+        specifier: ^0.475.0
+        version: 0.475.0(react@19.2.0)
+    devDependencies:
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      '@workspace/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^9.39.1
+        version: 9.39.1(jiti@2.6.1)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
