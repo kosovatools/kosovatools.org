@@ -91,9 +91,9 @@ export function VictimList({
     }
   }, [virtualItems, hasMore, onLoadMore, isLoadingMore, victims.length]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const height = useMemo(
     () => rowVirtualizer.getTotalSize(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [rowVirtualizer, victims.length],
   );
   return (
@@ -214,11 +214,11 @@ export function VictimList({
                   <span className="mt-1 block text-xs uppercase tracking-wide text-muted-foreground md:text-sm">
                     {metaSegments.length > 0
                       ? metaSegments.map((segment, segmentIndex) => (
-                          <span key={`${key}-meta-${segmentIndex}`}>
-                            {segmentIndex > 0 ? " • " : null}
-                            {segment}
-                          </span>
-                        ))
+                        <span key={`${key}-meta-${segmentIndex}`}>
+                          {segmentIndex > 0 ? " • " : null}
+                          {segment}
+                        </span>
+                      ))
                       : "Detaje të paplota"}
                   </span>
                   {victim.dateOfIncident ? (
