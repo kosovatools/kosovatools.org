@@ -10,7 +10,7 @@ import type {
 } from "./types";
 
 const MINISEARCH_HIGHLIGHT_TEMPLATE =
-  '<span class="bg-amber-200 rounded px-0.5">$&</span>';
+  '<span class="bg-amber-200 text-gray-900 rounded px-0.5">$&</span>';
 const INDEX_CHUNK_SIZE = 2_000;
 const customsDataset = createDatasetApi({ prefix: "customs" });
 const CUSTOMS_TARRIFS_PATH = "tarrifs.json";

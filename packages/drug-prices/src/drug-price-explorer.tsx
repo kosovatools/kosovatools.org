@@ -12,7 +12,12 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 
-import { createCurrencyFormatter, formatCount } from "@workspace/chart-utils";
+import {
+  createCurrencyFormatter,
+  createDateFormatter,
+  formatCount,
+} from "@workspace/chart-utils";
+import type { DateInput } from "@workspace/chart-utils";
 import { Button } from "@workspace/ui/components/button";
 import {
   Card,
@@ -42,13 +47,13 @@ const priceFormatter = createCurrencyFormatter("sq", "EUR", {
   maximumFractionDigits: 3,
 });
 
-const shortDateFormatter = new Intl.DateTimeFormat("sq-AL", {
+const shortDateFormatter = createDateFormatter("sq-AL", {
   dateStyle: "medium",
 });
-const longDateFormatter = new Intl.DateTimeFormat("sq-AL", {
+const longDateFormatter = createDateFormatter("sq-AL", {
   dateStyle: "long",
 });
-const dateTimeFormatter = new Intl.DateTimeFormat("sq-AL", {
+const dateTimeFormatter = createDateFormatter("sq-AL", {
   dateStyle: "medium",
   timeStyle: "short",
 });
@@ -92,25 +97,11 @@ type SummaryStatProps = {
 };
 
 function formatDate(
-  value: string | null | undefined,
+  value: DateInput,
   mode: "short" | "long" = "short",
 ): string {
-  if (!value) return "—";
-  const timestamp = Date.parse(value);
-  if (Number.isNaN(timestamp)) {
-    return value;
-  }
   const formatter = mode === "long" ? longDateFormatter : shortDateFormatter;
-  return formatter.format(new Date(timestamp));
-}
-
-function formatDateTime(value: string | null | undefined): string {
-  if (!value) return "—";
-  const timestamp = Date.parse(value);
-  if (Number.isNaN(timestamp)) {
-    return value;
-  }
-  return dateTimeFormatter.format(new Date(timestamp));
+  return formatter(value);
 }
 
 function createRecordId(record: DrugPriceRecord, index: number): string {
@@ -422,7 +413,7 @@ export function DrugPriceExplorer({
 
   const latestVersion = sortedVersions[0] ?? null;
 
-  const datasetGeneratedAt = formatDateTime(recordsDataset.generated_at);
+  const datasetGeneratedAt = dateTimeFormatter(recordsDataset.generated_at);
 
   return (
     <div className="space-y-12">

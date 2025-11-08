@@ -186,7 +186,7 @@ export default function Page() {
   );
 
   return (
-    <main className="flex flex-col gap-24 px-6 py-16 sm:py-24">
+    <main className="flex flex-col gap-24 px-3 sm:px-6 py-16 sm:py-24">
       <section className="mx-auto grid w-full max-w-[1500px] gap-12 text-center lg:grid-cols-12 lg:items-center lg:gap-16 lg:text-left">
         <div className="flex flex-col items-center gap-8 lg:col-span-7 lg:items-start">
           <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1 text-xs font-medium uppercase tracking-wide text-primary">
