@@ -39,7 +39,7 @@ export function OptionSelector<T extends SelectorOptionValue>({
           {label}
         </span>
       ) : null}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {options.map((option) => {
           const optionValue = option.key;
           const active = value === optionValue;
