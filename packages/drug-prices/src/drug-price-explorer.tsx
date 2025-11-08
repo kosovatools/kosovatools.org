@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   CalendarClock,
+  Filter,
   History,
   Layers3,
   PackageCheck,
@@ -17,7 +18,6 @@ import {
   createDateFormatter,
   formatCount,
 } from "@workspace/chart-utils";
-import type { DateInput } from "@workspace/chart-utils";
 import { Button } from "@workspace/ui/components/button";
 import {
   Card,
@@ -32,6 +32,7 @@ import {
   NativeSelectOption,
 } from "@workspace/ui/components/native-select";
 import { FilterableCombobox } from "@workspace/ui/custom-components/filterable-combobox";
+import { cn } from "@workspace/ui/lib/utils";
 
 import type {
   DrugPriceRecord,
@@ -94,15 +95,8 @@ type SummaryStatProps = {
   label: string;
   value: string;
   helper?: string;
+  className?: string;
 };
-
-function formatDate(
-  value: DateInput,
-  mode: "short" | "long" = "short",
-): string {
-  const formatter = mode === "long" ? longDateFormatter : shortDateFormatter;
-  return formatter(value);
-}
 
 function createRecordId(record: DrugPriceRecord, index: number): string {
   const baseIdentifier =
@@ -171,25 +165,42 @@ function hasExpandableDetails(record: DrugPriceRecord): boolean {
   );
 }
 
-function SummaryStat({ icon, label, value, helper }: SummaryStatProps) {
+function SummaryStat({
+  icon,
+  label,
+  value,
+  helper,
+  className,
+}: SummaryStatProps) {
   return (
-    <Card>
-      <CardContent className="flex items-start gap-4 p-4">
-        <div
-          className="rounded-full bg-primary/10 p-2 text-primary"
-          aria-hidden="true"
-        >
-          {icon}
+    <div
+      className={cn(
+        "rounded-xl border border-border/70 bg-background/90 p-3 shadow-sm",
+        className,
+      )}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <div
+            className="rounded-md bg-primary/10 p-1.5 text-primary"
+            aria-hidden="true"
+          >
+            {icon}
+          </div>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+            {label}
+          </p>
         </div>
-        <div className="space-y-1">
-          <p className="text-sm font-medium text-muted-foreground">{label}</p>
-          <p className="text-2xl font-semibold tracking-tight">{value}</p>
-          {helper ? (
-            <p className="text-xs text-muted-foreground">{helper}</p>
-          ) : null}
-        </div>
-      </CardContent>
-    </Card>
+        <p className="text-lg font-semibold leading-tight text-foreground sm:text-xl">
+          {value}
+        </p>
+      </div>
+      {helper ? (
+        <p className="mt-2 text-[11px] leading-tight text-muted-foreground line-clamp-2">
+          {helper}
+        </p>
+      ) : null}
+    </div>
   );
 }
 
@@ -200,14 +211,14 @@ function VersionHistoryTable({ entries }: { entries: DrugPriceSnapshot[] }) {
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-[560px] text-sm">
+      <table className="min-w-[490px] text-sm">
         <thead className="bg-muted/40 text-xs uppercase tracking-wide text-muted-foreground">
           <tr>
-            <th className="px-3 py-2 text-left font-medium">Versioni</th>
+            <th className="px-3 py-2 text-left font-medium">V</th>
             <th className="px-3 py-2 text-right font-medium">Shumicë</th>
             <th className="px-3 py-2 text-right font-medium">Me marzhë</th>
             <th className="px-3 py-2 text-right font-medium">Pakicë</th>
-            <th className="px-3 py-2 text-left font-medium">Vlefshmëria</th>
+            <th className="px-3 py-2 text-left font-medium">Vlen deri</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border">
@@ -224,7 +235,7 @@ function VersionHistoryTable({ entries }: { entries: DrugPriceSnapshot[] }) {
                 {priceFormatter(entry.price_retail)}
               </td>
               <td className="px-3 py-2 text-left">
-                {formatDate(entry.valid_until)}
+                {shortDateFormatter(entry.valid_until)}
               </td>
             </tr>
           ))}
@@ -330,7 +341,7 @@ export function DrugPriceExplorer({
       .sort((a, b) => b.localeCompare(a))
       .map((value) => ({
         value,
-        label: formatDate(value, "long"),
+        label: longDateFormatter(value),
       }));
   }, [records]);
 
@@ -416,7 +427,7 @@ export function DrugPriceExplorer({
   const datasetGeneratedAt = dateTimeFormatter(recordsDataset.generated_at);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-6">
       <section className="space-y-4">
         <header className="space-y-2">
           <p className="text-sm font-medium text-primary">
@@ -435,40 +446,50 @@ export function DrugPriceExplorer({
             më të fundit për produktin përkatës dhe historikun e versioneve.
           </p>
         </header>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="space-y-3 lg:grid md:grid-cols-4 lg:gap-4 lg:space-y-0">
           <SummaryStat
+            className="lg:h-full"
             icon={<Pill className="size-5" aria-hidden="true" />}
             label="Produkte të listuara"
             value={formatCount(totalProducts)}
             helper="Çmimet e fundit në euro"
           />
           <SummaryStat
+            className="lg:h-full"
             icon={<Layers3 className="size-5" aria-hidden="true" />}
             label="Substanca aktive"
             value={formatCount(uniqueSubstances)}
             helper="Rreshtat unikë me përbërje"
           />
           <SummaryStat
+            className="lg:h-full"
             icon={<PackageCheck className="size-5" aria-hidden="true" />}
             label="Mbajtësit e autorizimit"
             value={formatCount(uniqueHolders)}
             helper="Operatorë të licencuar"
           />
           <SummaryStat
+            className="lg:h-full"
             icon={<CalendarClock className="size-5" aria-hidden="true" />}
             label="Versioni më i ri"
             value={latestVersion ? latestVersion.version : "n/a"}
             helper={
               latestVersion?.valid_until_values?.length
                 ? `Vlefshmëria: ${latestVersion.valid_until_values
-                    .map((value) => formatDate(value))
-                    .join(", ")}`
+                  .map((value) => shortDateFormatter(value))
+                  .join(", ")}`
                 : "Pa datë të raportuar"
             }
           />
         </div>
       </section>
-
+      <div>
+        <h3 className="text-lg font-semibold">Tabela e çmimeve</h3>
+        <p className="text-sm text-muted-foreground">
+          Çmimet shfaqen në euro dhe përditësohen sipas versionit më të fundit
+          të publikuar.
+        </p>
+      </div>
       <section className="space-y-6">
         <div className="space-y-4 rounded-lg border p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -491,30 +512,6 @@ export function DrugPriceExplorer({
             ) : null}
           </div>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Kërko produktin</label>
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Emri, substanca ose mbajtësi i autorizimit"
-                  className="pl-9"
-                />
-              </div>
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium">Versioni</label>
-              <FilterableCombobox
-                value={versionFilter}
-                onValueChange={setVersionFilter}
-                options={versionOptions}
-                placeholder="Të gjitha versionet"
-                searchPlaceholder="Kërko versionin..."
-                emptyMessage="Nuk u gjet asnjë version"
-                triggerClassName="h-10"
-              />
-            </div>
             <div className="space-y-1">
               <label className="text-sm font-medium">Forma farmaceutike</label>
               <FilterableCombobox
@@ -547,30 +544,22 @@ export function DrugPriceExplorer({
                 ))}
               </NativeSelect>
             </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-            <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium uppercase tracking-wide">
-              <SlidersHorizontal className="size-3.5" aria-hidden="true" />
-              {appliedFilters > 0
-                ? `${appliedFilters} filtra aktiv`
-                : "Asnjë filtër aktiv"}
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Kërko produktin</label>
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Emri, substanca ose mbajtësi i autorizimit"
+                  className="pl-9"
+                />
+              </div>
             </div>
-            <span>
-              Duke shfaqur {startIndex || 0}-{endIndex} nga{" "}
-              {formatCount(filteredRecords.length)} produkte.
-            </span>
           </div>
         </div>
-
         <div className="space-y-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-lg font-semibold">Tabela e çmimeve</h3>
-              <p className="text-sm text-muted-foreground">
-                Çmimet shfaqen në euro dhe përditësohen sipas versionit më të
-                fundit të publikuar.
-              </p>
-            </div>
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-2 text-sm">
                 <span>Rreshta për faqe</span>
@@ -615,6 +604,18 @@ export function DrugPriceExplorer({
                 >
                   Tjetra
                 </Button>
+              </div>
+              <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium uppercase tracking-wide">
+                  <Filter className="size-3.5" aria-hidden="true" />
+                  {appliedFilters > 0
+                    ? `${appliedFilters} filtra aktiv`
+                    : "Asnjë filtër aktiv"}
+                </div>
+                <span>
+                  Duke shfaqur {startIndex || 0}-{endIndex} nga{" "}
+                  {formatCount(filteredRecords.length)} produkte.
+                </span>
               </div>
             </div>
           </div>
@@ -730,7 +731,7 @@ export function DrugPriceExplorer({
                               </p>
                               <div className="text-sm">
                                 <p className="font-medium">
-                                  {formatDate(record.valid_until, "long")}
+                                  {longDateFormatter(record.valid_until)}
                                 </p>
                                 <p className="text-xs text-muted-foreground">
                                   {record.authorization_number ??
@@ -772,90 +773,110 @@ export function DrugPriceExplorer({
               <div className="space-y-3 sm:hidden">
                 {paginatedRecords.map((record) => {
                   const sections = getReferenceSections(record);
+                  const mobileStats = [
+                    {
+                      key: "wholesale",
+                      label: "Shumicë",
+                      value: priceFormatter(record.price_wholesale),
+                      highlight: false,
+                    },
+                    {
+                      key: "margin",
+                      label: "Me marzhë",
+                      value: priceFormatter(record.price_with_margin),
+                      highlight: false,
+                    },
+                    {
+                      key: "retail",
+                      label: "Pakicë",
+                      value: priceFormatter(record.price_retail),
+                      highlight: false,
+                    },
+                    {
+                      key: "valid",
+                      label: "Vlen deri",
+                      value: longDateFormatter(record.valid_until),
+                      highlight: true,
+                    },
+                  ] as const;
                   return (
                     <div
                       key={`${record.id}-card`}
                       className="space-y-3 rounded-lg border bg-card p-4 shadow-sm"
                     >
-                      <div>
+                      <div className="space-y-2">
                         <p className="text-base font-semibold">
                           {record.product_name}
                         </p>
-                        <p className="text-sm text-muted-foreground">
-                          {record.active_substance ?? "—"}
-                        </p>
-                      </div>
-                      <dl className="grid gap-3 text-sm">
-                        <div className="space-y-0.5">
-                          <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            ATC
-                          </dt>
-                          <dd className="font-medium break-words">
-                            {record.atc_code ?? "—"}
-                          </dd>
-                        </div>
-                        <div className="space-y-0.5">
-                          <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Doza
-                          </dt>
-                          <dd className="font-medium break-words">
-                            {record.dose ?? "—"}
-                          </dd>
-                        </div>
-                        <div className="space-y-0.5">
-                          <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Forma
-                          </dt>
-                          <dd className="font-medium break-words">
-                            {record.pharmaceutical_form ?? "—"}
-                          </dd>
-                        </div>
-                        <div className="space-y-0.5">
-                          <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Paketimi
-                          </dt>
-                          <dd className="font-medium break-words">
-                            {record.packaging ?? "—"}
-                          </dd>
-                        </div>
-                        <div className="space-y-0.5">
-                          <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Autoriteti
-                          </dt>
-                          <dd className="font-medium break-words">
+                        <div className="space-y-1">
+                          <p className="text-sm text-muted-foreground">
+                            {record.active_substance ?? "—"}
+                          </p>
+                          <p className="text-xs text-muted-foreground break-words">
                             {record.marketing_authorisation_holder ?? "—"}
-                          </dd>
+                          </p>
                         </div>
-                        <div className="space-y-0.5">
-                          <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                            Vlefshmëria
-                          </dt>
-                          <dd className="font-medium break-words">
-                            {formatDate(record.valid_until, "long")}
-                          </dd>
+                      </div>
+                      <dl className="grid gap 2 text-sm">
+                        <div className="flex flex-wrap gap-4">
+                          <div className="min-w-[45%] flex-1 space-y-0.5">
+                            <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                              ATC
+                            </dt>
+                            <dd className="font-medium break-words">
+                              {record.atc_code ?? "—"}
+                            </dd>
+                          </div>
+                          <div className="min-w-[45%] flex-1 space-y-0.5">
+                            <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                              Doza
+                            </dt>
+                            <dd className="font-medium break-words">
+                              {record.dose ?? "—"}
+                            </dd>
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap gap-4">
+                          <div className="min-w-[45%] flex-1 space-y-0.5">
+                            <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                              Forma
+                            </dt>
+                            <dd className="font-medium break-words">
+                              {record.pharmaceutical_form ?? "—"}
+                            </dd>
+                          </div>
+                          <div className="min-w-[45%] flex-1 space-y-0.5">
+                            <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                              Paketimi
+                            </dt>
+                            <dd className="font-medium break-words">
+                              {record.packaging ?? "—"}
+                            </dd>
+                          </div>
                         </div>
                       </dl>
-                      <div className="rounded-md border bg-muted/40 p-3 text-sm">
-                        <div className="flex items-center justify-between">
-                          <span className="text-muted-foreground">Shumicë</span>
-                          <span className="font-medium">
-                            {priceFormatter(record.price_wholesale)}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-muted-foreground">
-                            Me marzhë
-                          </span>
-                          <span className="font-medium">
-                            {priceFormatter(record.price_with_margin)}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-muted-foreground">Pakicë</span>
-                          <span className="font-semibold text-foreground">
-                            {priceFormatter(record.price_retail)}
-                          </span>
-                        </div>
+                      <div className="divide-y divide-border rounded-xl border bg-muted/30 text-sm">
+                        {mobileStats.map((stat) => (
+                          <div
+                            key={`${record.id}-${stat.key}`}
+                            className={cn(
+                              "flex items-center justify-between gap-4 px-3 py-2",
+                              stat.highlight && "bg-primary/5",
+                            )}
+                          >
+                            <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                              {stat.label}
+                            </span>
+                            <span
+                              className={cn(
+                                "text-base font-semibold text-foreground",
+                                stat.highlight && "text-primary",
+                              )}
+                            >
+                              {stat.value}
+                            </span>
+                          </div>
+                        ))}
                       </div>
                       {hasExpandableDetails(record) ? (
                         <details className="rounded-lg border bg-muted/30 px-3 py-2 text-sm">
@@ -894,57 +915,6 @@ export function DrugPriceExplorer({
           )}
         </div>
       </section>
-
-      {sortedVersions.length ? (
-        <section className="space-y-4">
-          <div>
-            <h2 className="text-2xl font-semibold">Versionet e publikuara</h2>
-            <p className="text-sm text-muted-foreground">
-              Çdo version përfaqëson një workbook të Ministrisë së Shëndetësisë
-              dhe ruan numrin e produkteve të përpunuara.
-            </p>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {sortedVersions.map((version) => (
-              <Card key={version.version}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">
-                      Versioni {version.version}
-                    </CardTitle>
-                    <span className="text-xs text-muted-foreground">
-                      {formatDate(version.valid_until_values?.[0])}
-                    </span>
-                  </div>
-                  <CardDescription>
-                    {version.record_count
-                      ? `${formatCount(version.record_count)} produkte`
-                      : "Pa numërim"}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2 text-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Burimi</span>
-                    <span className="font-medium">{version.source_file}</span>
-                  </div>
-                  {version.valid_until_values?.length ? (
-                    <div>
-                      <p className="text-muted-foreground">Vlefshmëria</p>
-                      <ul className="mt-1 text-sm text-foreground">
-                        {version.valid_until_values.map((date) => (
-                          <li key={`${version.version}-${date}`}>
-                            {formatDate(date, "long")}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : null}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-      ) : null}
     </div>
   );
 }
