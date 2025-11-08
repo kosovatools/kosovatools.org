@@ -5,6 +5,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -90,6 +91,11 @@ export function VictimList({
     }
   }, [virtualItems, hasMore, onLoadMore, isLoadingMore, victims.length]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const height = useMemo(
+    () => rowVirtualizer.getTotalSize(),
+    [rowVirtualizer, victims.length],
+  );
   return (
     <section className={cn("flex flex-col gap-6", className)}>
       <div className="flex flex-col gap-2 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
@@ -125,7 +131,7 @@ export function VictimList({
       <div ref={listRef}>
         <div
           style={{
-            height: `${rowVirtualizer.getTotalSize()}px`,
+            height: `${height}px`,
             width: "100%",
             position: "relative",
           }}
