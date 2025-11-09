@@ -1,10 +1,10 @@
 import * as React from "react";
 
 import {
-  groupStackPeriod,
-  type StackPeriodGrouping,
+  PeriodGrouping,
   type TimelineEvent,
   getPeriodFormatter,
+  groupPeriod,
 } from "@workspace/utils";
 
 type ChartDatum = {
@@ -22,7 +22,7 @@ export type ChartEventMarker = {
 
 export function useTimelineEventMarkers(
   data: ChartDatum[],
-  grouping: StackPeriodGrouping,
+  grouping: PeriodGrouping,
   events: TimelineEvent[] = [],
 ): ChartEventMarker[] {
   return React.useMemo(() => {
@@ -43,7 +43,7 @@ export function useTimelineEventMarkers(
     >();
 
     for (const event of events) {
-      const groupedPeriod = groupStackPeriod(event.period, grouping);
+      const groupedPeriod = groupPeriod(event.period, grouping);
       if (!periodSet.has(groupedPeriod)) {
         continue;
       }

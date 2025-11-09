@@ -22,7 +22,7 @@ KAS fetch scripts live in `@workspace/kas-data`.
 ```ts
 import {
   formatEuro,
-  STACK_PERIOD_GROUPING_OPTIONS,
+  PERIOD_GROUPING_OPTIONS,
   getPeriodFormatter,
   monthsFromRange,
   DEFAULT_TIME_RANGE,

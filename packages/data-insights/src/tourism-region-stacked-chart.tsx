@@ -20,8 +20,8 @@ import {
 import {
   buildStackSeries,
   formatCount,
-  type StackPeriodGrouping,
-  STACK_PERIOD_GROUPING_OPTIONS,
+  type PeriodGrouping,
+  PERIOD_GROUPING_OPTIONS,
   getPeriodFormatter,
   type TimeRangeOption,
   DEFAULT_TIME_RANGE_OPTIONS,
@@ -86,7 +86,7 @@ export function TourismRegionCharts() {
   }, [group]);
 
   const [periodGrouping, setPeriodGrouping] =
-    React.useState<StackPeriodGrouping>("yearly");
+    React.useState<PeriodGrouping>("yearly");
 
   const [range, setRange] = React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
@@ -200,7 +200,7 @@ export function TourismRegionCharts() {
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={STACK_PERIOD_GROUPING_OPTIONS}
+          options={PERIOD_GROUPING_OPTIONS}
           label="Perioda"
         />
         <OptionSelector

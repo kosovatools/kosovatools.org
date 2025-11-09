@@ -19,11 +19,11 @@ import {
 import {
   DEFAULT_TIME_RANGE,
   DEFAULT_TIME_RANGE_OPTIONS,
-  STACK_PERIOD_GROUPING_OPTIONS,
   getPeriodFormatter,
-  groupStackPeriod,
+  groupPeriod,
   monthsFromRange,
-  type StackPeriodGrouping,
+  PERIOD_GROUPING_OPTIONS,
+  PeriodGrouping,
   type TimeRangeOption,
 } from "@workspace/utils";
 
@@ -69,7 +69,7 @@ export function ElectricityBalanceChart() {
   const chartMargin = { top: 56, right: 0, left: 0, bottom: 0 };
 
   const [periodGrouping, setPeriodGrouping] =
-    useState<StackPeriodGrouping>("seasonal");
+    useState<PeriodGrouping>("seasonal");
 
   const [range, setRange] = useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
@@ -214,7 +214,7 @@ export function ElectricityBalanceChart() {
             <OptionSelector
               value={periodGrouping}
               onChange={(value) => setPeriodGrouping(value)}
-              options={STACK_PERIOD_GROUPING_OPTIONS}
+              options={PERIOD_GROUPING_OPTIONS}
               label="Perioda"
             />
             <OptionSelector
@@ -299,7 +299,7 @@ export function ElectricityProductionBySourceChart({
   const chartMargin = { top: 56, right: 0, left: 0, bottom: 0 };
 
   const [periodGrouping, setPeriodGrouping] =
-    useState<StackPeriodGrouping>("seasonal");
+    useState<PeriodGrouping>("seasonal");
 
   const [range, setRange] = useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
@@ -427,7 +427,7 @@ export function ElectricityProductionBySourceChart({
             <OptionSelector
               value={periodGrouping}
               onChange={(value) => setPeriodGrouping(value)}
-              options={STACK_PERIOD_GROUPING_OPTIONS}
+              options={PERIOD_GROUPING_OPTIONS}
               label="Perioda"
             />
             <OptionSelector
@@ -503,7 +503,7 @@ export function ElectricityProductionBySourceChart({
 
 function aggregateByGrouping(
   records: ElectricityRecord[],
-  grouping: StackPeriodGrouping,
+  grouping: PeriodGrouping,
 ) {
   const buckets = new Map<
     string,
@@ -517,7 +517,7 @@ function aggregateByGrouping(
   const order: string[] = [];
 
   for (const record of records) {
-    const period = groupStackPeriod(record.period, grouping);
+    const period = groupPeriod(record.period, grouping);
     if (!buckets.has(period)) {
       buckets.set(period, {
         importTotal: 0,
@@ -558,7 +558,7 @@ function aggregateByGrouping(
 
 function aggregateProductionByGrouping(
   records: ElectricityRecord[],
-  grouping: StackPeriodGrouping,
+  grouping: PeriodGrouping,
 ) {
   const buckets = new Map<
     string,
@@ -571,7 +571,7 @@ function aggregateProductionByGrouping(
   const order: string[] = [];
 
   for (const record of records) {
-    const period = groupStackPeriod(record.period, grouping);
+    const period = groupPeriod(record.period, grouping);
     if (!buckets.has(period)) {
       buckets.set(period, { thermal: 0, hydro: 0, windSolar: 0 });
       order.push(period);

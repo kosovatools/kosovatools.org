@@ -4,7 +4,7 @@ import {
   type StackBuildResult,
   type StackSeriesRow,
   type StackTotal,
-  type StackPeriodGrouping,
+  type PeriodGrouping,
 } from "@workspace/utils";
 import {
   tourismCountry,
@@ -25,7 +25,7 @@ export type CountryStackOptions = {
   metric?: TourismMetric;
   selectedKeys?: string[];
   excludedKeys?: string[];
-  periodGrouping?: StackPeriodGrouping;
+  periodGrouping?: PeriodGrouping;
 };
 
 function accessorsForMetric(metric: TourismMetric) {
@@ -88,7 +88,7 @@ export type RegionStackSeries = StackSeriesRow<string>;
 export type RegionStackOptions = {
   months?: number;
   group?: RegionVisitorGroup;
-  periodGrouping?: StackPeriodGrouping;
+  periodGrouping?: PeriodGrouping;
 };
 
 const regionAccessors = {

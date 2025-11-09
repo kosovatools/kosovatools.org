@@ -4,7 +4,7 @@ import {
   type StackBuildResult,
   type StackSeriesRow,
   type StackTotal,
-  type StackPeriodGrouping,
+  type PeriodGrouping,
 } from "@workspace/utils";
 import {
   type TradePartnerRecord,
@@ -23,7 +23,7 @@ export type PartnerStackOptions = {
   includeOther?: boolean;
   selectedKeys?: string[];
   excludedKeys?: string[];
-  periodGrouping?: StackPeriodGrouping;
+  periodGrouping?: PeriodGrouping;
   labelForKey?: (key: string) => string;
 };
 

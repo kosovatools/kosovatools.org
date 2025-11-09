@@ -20,9 +20,9 @@ import {
 } from "@workspace/kas-data";
 import {
   buildStackSeries,
-  type StackPeriodGrouping,
+  type PeriodGrouping,
   formatCount,
-  STACK_PERIOD_GROUPING_OPTIONS,
+  PERIOD_GROUPING_OPTIONS,
   getPeriodFormatter,
   type TimeRangeOption,
   DEFAULT_TIME_RANGE_OPTIONS,
@@ -70,7 +70,7 @@ export function FuelBalanceChart() {
   const [metric, setMetric] = React.useState<FuelMetric>(defaultMetric);
 
   const [periodGrouping, setPeriodGrouping] =
-    React.useState<StackPeriodGrouping>("monthly");
+    React.useState<PeriodGrouping>("monthly");
   const [range, setRange] = React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
   const monthsLimit = monthsFromRange(range);
 
@@ -175,7 +175,7 @@ export function FuelBalanceChart() {
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={STACK_PERIOD_GROUPING_OPTIONS}
+          options={PERIOD_GROUPING_OPTIONS}
           label="Perioda"
         />
         <OptionSelector

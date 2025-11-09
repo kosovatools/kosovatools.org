@@ -1,14 +1,10 @@
 import {
-  PERIOD_GROUPING_OPTIONS,
   buildGroupedPeriodList,
   groupPeriod,
-  type PeriodFormatter,
-  type PeriodFormatterOptions,
   type PeriodGrouping,
 } from "./period";
 
 type MaybeNumber = number | null | undefined;
-export type StackPeriodGrouping = PeriodGrouping;
 
 type StackAccessors<TRecord, TKey extends string> = {
   period: (record: TRecord) => string;
@@ -26,7 +22,7 @@ export type StackOptions<TKey extends string> = {
   sortComparator?: (a: StackTotal<TKey>, b: StackTotal<TKey>) => number;
   labelForKey?: (key: TKey) => string;
   otherLabel?: string;
-  periodGrouping?: StackPeriodGrouping;
+  periodGrouping?: PeriodGrouping;
 };
 
 export type StackTotal<TKey extends string> = {
@@ -39,17 +35,6 @@ export type StackSeriesRow<TKey extends string> = {
   period: string;
   values: Record<TKey | "Other", number>;
 };
-
-export type StackPeriodFormatter = PeriodFormatter;
-export type StackPeriodFormatterOptions = PeriodFormatterOptions;
-export const STACK_PERIOD_GROUPING_OPTIONS = PERIOD_GROUPING_OPTIONS;
-
-export function groupStackPeriod(
-  period: string,
-  grouping: StackPeriodGrouping = "monthly",
-): string {
-  return groupPeriod(period, grouping);
-}
 
 export type StackBuildResult<TKey extends string> = {
   keys: Array<TKey | "Other">;
@@ -181,7 +166,7 @@ export function buildStackSeries<TRecord, TKey extends string>(
   for (const r of records) {
     const p = accessors.period(r);
     if (!periodSet.has(p)) continue;
-    const gp = groupStackPeriod(p, grouping);
+    const gp = groupPeriod(p, grouping);
     (byGrouped.get(gp) ?? byGrouped.set(gp, []).get(gp)!).push(r);
   }
 

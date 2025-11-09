@@ -13,7 +13,6 @@
   "scripts": {
     "lint": "eslint src scripts --max-warnings 0",
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
-    "typecheck:scripts": "tsc --project tsconfig.node.json --noEmit",
     "fetch-data": "tsx scripts/fetch_kas.ts --out data",
     "stub-data": "tsx scripts/stub_data.ts --dir data"
   },

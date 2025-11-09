@@ -4,7 +4,7 @@ import {
   type StackBuildResult,
   type StackSeriesRow,
   type StackTotal,
-  type StackPeriodGrouping,
+  type PeriodGrouping,
 } from "@workspace/utils";
 import {
   fuelDataset,
@@ -25,7 +25,7 @@ export type FuelTypeStackOptions = {
   metric?: FuelMetric;
   includeOther?: boolean;
   selectedKeys?: FuelKey[];
-  periodGrouping?: StackPeriodGrouping;
+  periodGrouping?: PeriodGrouping;
 };
 
 const DEFAULT_METRIC: FuelMetric = "ready_for_market";

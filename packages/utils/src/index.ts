@@ -1,19 +1,11 @@
 export * from "./formatters";
 
 export type {
-  StackPeriodGrouping,
-  StackPeriodFormatter,
-  StackPeriodFormatterOptions,
   StackBuildResult,
   StackSeriesRow,
   StackTotal,
 } from "./utils/stack";
-export {
-  groupStackPeriod,
-  STACK_PERIOD_GROUPING_OPTIONS,
-  buildStackSeries,
-  summarizeStackTotals,
-} from "./utils/stack";
+export { buildStackSeries, summarizeStackTotals } from "./utils/stack";
 export {
   PERIOD_GROUPING_OPTIONS,
   groupPeriod,

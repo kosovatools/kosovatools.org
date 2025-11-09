@@ -8,7 +8,7 @@ import {
   summarizeStackTotals,
   formatEuroCompact,
   getPeriodFormatter,
-  type StackPeriodGrouping,
+  type PeriodGrouping,
 } from "@workspace/utils";
 import { createLabelMap, tradeChaptersYearly } from "@workspace/kas-data";
 import {
@@ -37,7 +37,7 @@ const FLOW_OPTIONS: ReadonlyArray<SelectorOptionDefinition<ChartMode>> = [
   { key: "imports", label: "Importet (CIF)" },
 ];
 
-const PERIOD_GROUPING: StackPeriodGrouping = "yearly";
+const PERIOD_GROUPING: PeriodGrouping = "yearly";
 
 type ChapterStackRecord = {
   period: string;
