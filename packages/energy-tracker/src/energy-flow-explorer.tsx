@@ -6,19 +6,19 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { DailyFlowChart, MonthlyFlowTrendChart } from "./energy-flow-chart";
 import {
-  formatDayLabel,
-  formatMonthLabel,
   formatPeriodLabel,
-  formatTimestamp,
-  indexToMonthlyPoints,
   loadIndex,
   loadLatestDaily,
   loadMonthly,
 } from "./flow-service";
+import {
+  formatDayLabel,
+  formatMonthLabel,
+  formatTimestamp,
+} from "./date-formatters";
 import type {
   EnergyFlowDailyLatest,
   EnergyFlowIndex,
-  EnergyFlowMonthlyPoint,
   EnergyFlowSnapshot,
 } from "./types";
 import { EnergyFlowExplorerSkeleton } from "./energy-flow-explorer-skeleton";
@@ -57,7 +57,6 @@ type ExplorerView = {
   availableMonths: EnergyFlowIndex["months"];
   selectedMonth: EnergyFlowIndex["months"][number] | null;
   generatedLabel: string | null;
-  monthlyPoints: EnergyFlowMonthlyPoint[];
   periodLabel: string | null;
   totals: FlowTotals;
   neighbors: NeighborRow[];
@@ -167,8 +166,6 @@ function buildExplorerView({
   const selectedMonth =
     availableMonths.find((month) => month.id === selectedId) ?? null;
   const generatedLabel = formatTimestamp(index.generatedAt);
-  const monthlyPoints = indexToMonthlyPoints(index);
-
   const totals: FlowTotals = snapshot?.totals ?? {
     importMWh: 0,
     exportMWh: 0,
@@ -241,7 +238,6 @@ function buildExplorerView({
     availableMonths,
     selectedMonth,
     generatedLabel,
-    monthlyPoints,
     periodLabel,
     totals,
     neighbors,
@@ -340,7 +336,6 @@ function EnergyFlowExplorerContent() {
     availableMonths,
     selectedMonth,
     generatedLabel,
-    monthlyPoints,
     periodLabel,
     dailyData,
     totalImports,
@@ -487,7 +482,7 @@ function EnergyFlowExplorerContent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <MonthlyFlowTrendChart data={monthlyPoints} />
+          <MonthlyFlowTrendChart data={availableMonths} />
         </CardContent>
       </Card>
       <Card>

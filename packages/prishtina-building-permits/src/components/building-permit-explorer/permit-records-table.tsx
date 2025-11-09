@@ -96,7 +96,11 @@ export function PermitRecordsTable({
                 </td>
                 <td className="px-3 py-3 align-top text-xs">
                   <div className="space-y-2">
-                    <InfoRow label="Katesia" value={record.storeys} fallback="—" />
+                    <InfoRow
+                      label="Katesia"
+                      value={record.storeys}
+                      fallback="—"
+                    />
                     <InfoRow
                       label="Lagjja"
                       value={record.neighbourhood}
@@ -105,11 +109,9 @@ export function PermitRecordsTable({
                   </div>
                 </td>
                 <td className="px-3 py-3 align-top">
-                  {
-                    record.total_floor_area_m2 != null
-                      ? `${areaFormatter(record.total_floor_area_m2)} m²`
-                      : "—"
-                  }
+                  {record.total_floor_area_m2 != null
+                    ? `${areaFormatter(record.total_floor_area_m2)} m²`
+                    : "—"}
                 </td>
                 <td className="px-3 py-3 align-top text-xs">
                   <InfoRow
@@ -184,9 +186,7 @@ function InfoRow({
   const displayValue = hasValue && trimmedValue ? trimmedValue : fallback;
   const trimmedTooltipContent = tooltipContent?.trim() ?? "";
   const showTooltip =
-    hasValue &&
-    Boolean(tooltipContentLabel) &&
-    Boolean(trimmedTooltipContent);
+    hasValue && Boolean(tooltipContentLabel) && Boolean(trimmedTooltipContent);
 
   return (
     <p className="flex items-start gap-1.5">

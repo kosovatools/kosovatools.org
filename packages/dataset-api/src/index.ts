@@ -154,3 +154,39 @@ export function createDatasetApi(options: DatasetApiOptions = {}): DatasetApi {
     fetchJson,
   };
 }
+
+export type DatasetFetcher = <T>(
+  path: DatasetPath,
+  init?: RequestInit,
+) => Promise<T>;
+
+export type DatasetFetcherOptions = Omit<DatasetApiOptions, "prefix"> & {
+  label?: string;
+};
+
+export function createDatasetFetcher(
+  prefix: DatasetPath,
+  options: DatasetFetcherOptions = {},
+): DatasetFetcher {
+  const { label, ...apiOptions } = options;
+  const api = createDatasetApi({ ...apiOptions, prefix });
+  const labelText =
+    label ??
+    (Array.isArray(prefix)
+      ? prefix.map((segment) => String(segment)).join("/")
+      : toPathString(prefix));
+
+  return async function datasetFetcher<T>(
+    path: DatasetPath,
+    init?: RequestInit,
+  ): Promise<T> {
+    try {
+      return await api.fetchJson<T>(path, init);
+    } catch (error) {
+      if (error instanceof Error) {
+        error.message = `[dataset:${labelText}] ${error.message}`;
+      }
+      throw error;
+    }
+  };
+}

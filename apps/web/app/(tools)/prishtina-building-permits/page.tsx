@@ -29,8 +29,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Lejet e ndërtimit të Komunës së Prishtinës",
-    description:
-      "Filtroni lejet sipas pronarit, projektuesit ose destinimit.",
+    description: "Filtroni lejet sipas pronarit, projektuesit ose destinimit.",
   },
 };
 

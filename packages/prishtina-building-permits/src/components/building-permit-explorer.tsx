@@ -95,9 +95,8 @@ function BuildingPermitExplorerContent({
   const { data: index } = useSuspenseQuery({
     queryKey: ["prishtina-building-permits", "index"],
     queryFn: loadBuildingPermitsIndex,
-    staleTime: Infinity
+    staleTime: Infinity,
   });
-
 
   const [selectedYear, setSelectedYear] = React.useState<number>(() => {
     if (defaultYear) {
@@ -127,11 +126,11 @@ function BuildingPermitExplorerContent({
       }
       return index.years[0]?.year ?? current;
     });
-  }, [(index.years), defaultYear]);
+  }, [index.years, defaultYear]);
 
-  const selectedSummary = index.years.find((entry) => entry.year === selectedYear)
-
-
+  const selectedSummary = index.years.find(
+    (entry) => entry.year === selectedYear,
+  );
 
   const { data: dataset } = useQuery({
     queryKey: [
@@ -139,12 +138,9 @@ function BuildingPermitExplorerContent({
       "dataset",
       selectedSummary?.records_file,
     ],
-    queryFn: () =>
-      loadBuildingPermitsYear(
-        selectedSummary!.records_file
-      ),
+    queryFn: () => loadBuildingPermitsYear(selectedSummary!.records_file),
     staleTime: Infinity,
-    enabled: !!selectedSummary
+    enabled: !!selectedSummary,
   });
 
   if (!dataset || !selectedSummary) {
@@ -169,10 +165,7 @@ function BuildingPermitExplorerContent({
         onYearChange={setSelectedYear}
         sortedYears={index.years}
       />
-      <PermitFiltersCard
-        dataset={dataset}
-        selectedSummary={selectedSummary}
-      />
+      <PermitFiltersCard dataset={dataset} selectedSummary={selectedSummary} />
     </div>
   );
 }

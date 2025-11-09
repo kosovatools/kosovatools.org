@@ -12,10 +12,10 @@ import {
 import type {
   EnergyFlowDailyPoint,
   EnergyFlowHourlyEntry,
-  EnergyFlowMonthlyPoint,
+  EnergyFlowIndex,
 } from "./types";
 
-import { formatDayLabel } from "./flow-service";
+import { formatDayLabel, formatMonthLabel } from "./date-formatters";
 import {
   ChartContainer,
   ChartLegend,
@@ -82,7 +82,7 @@ const hourlyFlowTooltipKeys = [
 export function MonthlyFlowTrendChart({
   data,
 }: {
-  data: EnergyFlowMonthlyPoint[];
+  data: EnergyFlowIndex["months"];
 }) {
   const chartConfig = energyFlowChartConfig;
 
@@ -104,9 +104,12 @@ export function MonthlyFlowTrendChart({
     );
   }
 
-  const chartData = data.map((point) => ({
-    ...point,
-    label: point.label ?? point.id,
+  const chartData = data.map((month) => ({
+    ...month,
+    label: formatMonthLabel(month.periodStart),
+    imports: month.totals.importMWh,
+    exports: month.totals.exportMWh,
+    net: month.totals.netMWh,
   }));
 
   return (

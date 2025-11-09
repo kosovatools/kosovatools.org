@@ -187,7 +187,8 @@ export function PermitFiltersCard({
             <span className="font-semibold text-foreground">
               {formatCount(filteredRecords.length)}
             </span>{" "}
-            nga {formatCount(dataset.record_count)} leje të vitit {dataset.year}.
+            nga {formatCount(dataset.record_count)} leje të vitit {dataset.year}
+            .
           </div>
           <div className="space-x-4">
             <span>

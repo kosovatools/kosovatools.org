@@ -2,19 +2,19 @@ export { EnergyFlowExplorer } from "./energy-flow-explorer";
 export { EnergyFlowExplorerSkeleton } from "./energy-flow-explorer-skeleton";
 export {
   formatPeriodLabel,
-  formatMonthLabel,
-  formatTimestamp,
-  formatDayLabel,
-  indexToMonthlyPoints,
   loadIndex,
   loadLatestDaily,
   loadMonthly,
 } from "./flow-service";
+export {
+  formatMonthLabel,
+  formatTimestamp,
+  formatDayLabel,
+} from "./date-formatters";
 export type {
   EnergyFlowDailyLatest,
   EnergyFlowDailyPoint,
   EnergyFlowIndex,
-  EnergyFlowMonthlyPoint,
   EnergyFlowResult,
   EnergyFlowSnapshot,
   EnergyFlowTotals,

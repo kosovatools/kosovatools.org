@@ -1,6 +1,6 @@
 import Dexie, { type Table } from "dexie";
 import MiniSearch from "minisearch";
-import { createDatasetApi } from "@workspace/dataset-api";
+import { createDatasetFetcher } from "@workspace/dataset-api";
 
 import type {
   CustomsFlatRow,
@@ -12,7 +12,11 @@ import type {
 const MINISEARCH_HIGHLIGHT_TEMPLATE =
   '<span class="bg-amber-200 text-gray-900 rounded px-0.5">$&</span>';
 const INDEX_CHUNK_SIZE = 2_000;
-const customsDataset = createDatasetApi({ prefix: "customs" });
+const DATASET_PREFIX = ["customs"] as const;
+const fetchCustomsDataset = createDatasetFetcher(DATASET_PREFIX, {
+  label: "customs-codes",
+  defaultInit: { cache: "no-cache", mode: "cors" },
+});
 const CUSTOMS_TARRIFS_PATH = "tarrifs.json";
 
 function parseValidFromTimestamp(
@@ -107,13 +111,8 @@ export class CustomsDataService {
         message: "Duke ngarkuar të dhënat e tarifave...",
       });
 
-      const data = await customsDataset.fetchJson<CustomsRecord[]>(
-        CUSTOMS_TARRIFS_PATH,
-        {
-          cache: "no-cache",
-          mode: "cors",
-        },
-      );
+      const data =
+        await fetchCustomsDataset<CustomsRecord[]>(CUSTOMS_TARRIFS_PATH);
 
       const total = data.length;
       if (total === 0) {
@@ -127,36 +126,12 @@ export class CustomsDataService {
         message: `Duke indeksuar 0 / ${formatNumber(total)} rreshta...`,
       });
 
-      const normalized: CustomsRecord[] = data.map((entry) => ({
-        code: entry.code == null ? "" : String(entry.code),
-        description: entry.description == null ? "" : String(entry.description),
-        percentage: Number.isFinite(Number(entry.percentage))
-          ? Number(entry.percentage)
-          : 0,
-        cefta: Number.isFinite(Number(entry.cefta)) ? Number(entry.cefta) : 0,
-        msa: Number.isFinite(Number(entry.msa)) ? Number(entry.msa) : 0,
-        trmtl: Number.isFinite(Number(entry.trmtl)) ? Number(entry.trmtl) : 0,
-        tvsh: Number.isFinite(Number(entry.tvsh)) ? Number(entry.tvsh) : 0,
-        excise: Number.isFinite(Number(entry.excise))
-          ? Number(entry.excise)
-          : 0,
-        validFrom: entry.validFrom ?? "",
-        uomCode: (entry.uomCode ?? null) as string | null,
-        fileUrl: entry.fileUrl ?? null,
-        importMeasure: entry.importMeasure ?? null,
-        exportMeasure: entry.exportMeasure ?? null,
-      }));
-
       await db.transaction("rw", db.customs, async () => {
         await db.customs.clear();
-        for (
-          let start = 0;
-          start < normalized.length;
-          start += INDEX_CHUNK_SIZE
-        ) {
-          const chunk = normalized.slice(start, start + INDEX_CHUNK_SIZE);
+        for (let start = 0; start < data.length; start += INDEX_CHUNK_SIZE) {
+          const chunk = data.slice(start, start + INDEX_CHUNK_SIZE);
           await db.customs.bulkAdd(chunk);
-          const loaded = Math.min(start + chunk.length, normalized.length);
+          const loaded = Math.min(start + chunk.length, data.length);
           onProgress?.({
             phase: "indexing",
             loaded,

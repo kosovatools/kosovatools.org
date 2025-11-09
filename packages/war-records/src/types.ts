@@ -26,8 +26,6 @@ export type CrimeStats = {
 };
 
 export type MemorialVictim = {
-  firstName: string | null;
-  lastName: string | null;
   fullName: string | null;
   gender: string | null;
   ethnicity: string | null;

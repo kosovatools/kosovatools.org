@@ -204,7 +204,7 @@ export function CustomsExplorer() {
       : null;
 
   return (
-    <Card className="overflow-hidden gap-0 py-0 border-b-0 rounded-b-none">
+    <Card className="overflow-hidden gap-0 py-0">
       <CardContent className="p-0 ">
         {indexingState ? (
           <div className="space-y-2 border-b px-4 py-3 text-xs text-muted-foreground sm:text-sm">
@@ -235,12 +235,6 @@ export function CustomsExplorer() {
                   {datasetValidity?.display ?? "—"}
                 </time>
               </span>
-              <p>
-                Data tregon vlerën më të fundit të fushës{" "}
-                <span className="font-mono">E vlefshme nga</span> në datasetin{" "}
-                <span className="font-mono">customs/tarrifs.json</span> të
-                publikuar nga Dogana e Kosovës.
-              </p>
             </div>
           </div>
         </div>

@@ -42,16 +42,6 @@ export type EnergyFlowDailyLatest = {
   days: EnergyFlowDailyPoint[];
 };
 
-export type EnergyFlowMonthlyPoint = {
-  id: string;
-  label: string;
-  periodStart: string;
-  periodEnd: string;
-  imports: number;
-  exports: number;
-  net: number;
-};
-
 export type EnergyFlowHourlyEntry = {
   hour: number;
   importMWh: number;

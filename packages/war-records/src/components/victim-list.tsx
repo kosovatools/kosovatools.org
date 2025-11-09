@@ -1,14 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef } from "react";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 
 import { cn } from "@workspace/ui/lib/utils";
@@ -17,8 +10,6 @@ import { formatLabel } from "../lib/format";
 import type { MemorialVictim } from "../types";
 
 const FALLBACK_NAME = "Emër i panjohur";
-const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export type VictimListProps = {
   victims: MemorialVictim[];
@@ -31,53 +22,40 @@ export type VictimListProps = {
 
 export function VictimList({
   victims,
-  totalRecords,
   hasMore = false,
   isLoadingMore = false,
   onLoadMore,
   className,
 }: VictimListProps) {
   const listRef = useRef<HTMLDivElement | null>(null);
-  const [scrollMargin, setScrollMargin] = useState(0);
-
-  const updateScrollMargin = useCallback(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    const node = listRef.current;
-    if (!node) {
-      setScrollMargin(0);
-      return;
-    }
-    const rect = node.getBoundingClientRect();
-    setScrollMargin(rect.top + window.scrollY);
-  }, []);
-
-  useIsomorphicLayoutEffect(() => {
-    updateScrollMargin();
-  }, [updateScrollMargin]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    window.addEventListener("resize", updateScrollMargin);
-    return () => {
-      window.removeEventListener("resize", updateScrollMargin);
-    };
-  }, [updateScrollMargin]);
+  const canLoadMore = Boolean(hasMore && onLoadMore);
+  const loadRequestedRef = useRef(false);
+  const wasLoadingMoreRef = useRef(isLoadingMore);
 
   const rowVirtualizer = useWindowVirtualizer({
-    count: victims.length,
+    count: canLoadMore ? victims.length + 1 : victims.length,
     estimateSize: () => 100,
     overscan: 10,
-    scrollMargin,
+    scrollMargin: listRef.current?.offsetTop ?? 0,
   });
 
   const virtualItems = rowVirtualizer.getVirtualItems();
 
   useEffect(() => {
-    if (!hasMore || !onLoadMore || isLoadingMore) {
+    if (!canLoadMore) {
+      loadRequestedRef.current = false;
+      wasLoadingMoreRef.current = isLoadingMore;
+      return;
+    }
+
+    if (wasLoadingMoreRef.current && !isLoadingMore) {
+      loadRequestedRef.current = false;
+    }
+    wasLoadingMoreRef.current = isLoadingMore;
+  }, [canLoadMore, isLoadingMore]);
+
+  useEffect(() => {
+    if (!canLoadMore || isLoadingMore || loadRequestedRef.current) {
       return;
     }
 
@@ -86,48 +64,16 @@ export function VictimList({
       return;
     }
 
-    if (lastItem.index >= victims.length - 5) {
-      onLoadMore();
+    if (lastItem.index >= victims.length) {
+      loadRequestedRef.current = true;
+      onLoadMore?.();
     }
-  }, [virtualItems, hasMore, onLoadMore, isLoadingMore, victims.length]);
+  }, [canLoadMore, isLoadingMore, onLoadMore, virtualItems, victims.length]);
 
-  const height = useMemo(
-    () => rowVirtualizer.getTotalSize(),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [rowVirtualizer, victims.length],
-  );
+  const height = rowVirtualizer.getTotalSize();
+
   return (
     <section className={cn("flex flex-col gap-6", className)}>
-      <div className="flex flex-col gap-2 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
-        <span>
-          Po shfaqen {victims.length.toLocaleString("sq-AL")} emra nga{" "}
-          {(totalRecords ?? victims.length).toLocaleString("sq-AL")}{" "}
-          regjistrime.
-        </span>
-        <div className="flex items-center justify-between gap-3 md:justify-end">
-          <span>
-            Burimi:{" "}
-            <a
-              href="https://www.kosovomemorybook.org/"
-              className="text-primary underline-offset-2 hover:underline"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Kosovo Memory Book
-            </a>{" "}
-            –{" "}
-            <a
-              href="https://www.hlc-kosovo.org/en"
-              className="text-muted-primary underline-offset-2 hover:underline"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Humanitarian Law Center (HLC)
-            </a>
-          </span>
-        </div>
-      </div>
-
       <div ref={listRef}>
         <div
           style={{
@@ -137,18 +83,39 @@ export function VictimList({
           }}
         >
           {virtualItems.map((virtualRow) => {
+            const isLoaderRow =
+              canLoadMore && virtualRow.index >= victims.length;
+            if (isLoaderRow) {
+              return (
+                <div
+                  key={virtualRow.key}
+                  data-index={virtualRow.index}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: `${virtualRow.size}px`,
+                    transform: `translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin}px)`,
+                    paddingBottom: "0.5rem",
+                  }}
+                >
+                  <p className="text-center text-xs text-muted-foreground md:text-sm">
+                    {isLoadingMore
+                      ? "Duke ngarkuar më shumë emra…"
+                      : "Lëviz edhe pak për të ngarkuar më shumë emra"}
+                  </p>
+                </div>
+              );
+            }
+
             const victim = victims[virtualRow.index];
             if (!victim) {
               return null;
             }
 
             const index = virtualRow.index;
-            const name =
-              victim.fullName ||
-              [victim.firstName, victim.lastName]
-                .filter((part) => part && part.trim().length > 0)
-                .join(" ") ||
-              FALLBACK_NAME;
+            const name = victim.fullName || FALLBACK_NAME;
 
             const locations = [
               victim.placeOfIncident,
@@ -184,8 +151,6 @@ export function VictimList({
 
             const key = [
               victim.fullName,
-              victim.firstName,
-              victim.lastName,
               victim.dateOfBirth,
               victim.dateOfIncident,
               index,
@@ -203,7 +168,7 @@ export function VictimList({
                   top: 0,
                   left: 0,
                   width: "100%",
-                  transform: `translateY(${virtualRow.start - scrollMargin}px)`,
+                  transform: `translateY(${virtualRow.start - rowVirtualizer.options.scrollMargin}px)`,
                   paddingBottom: "0.5rem",
                 }}
               >
@@ -214,11 +179,11 @@ export function VictimList({
                   <span className="mt-1 block text-xs uppercase tracking-wide text-muted-foreground md:text-sm">
                     {metaSegments.length > 0
                       ? metaSegments.map((segment, segmentIndex) => (
-                        <span key={`${key}-meta-${segmentIndex}`}>
-                          {segmentIndex > 0 ? " • " : null}
-                          {segment}
-                        </span>
-                      ))
+                          <span key={`${key}-meta-${segmentIndex}`}>
+                            {segmentIndex > 0 ? " • " : null}
+                            {segment}
+                          </span>
+                        ))
                       : "Detaje të paplota"}
                   </span>
                   {victim.dateOfIncident ? (

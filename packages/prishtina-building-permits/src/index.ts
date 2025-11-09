@@ -5,10 +5,7 @@ export type {
   BuildingPermitsYearSummary,
 } from "./types";
 
-export {
-  loadBuildingPermitsIndex,
-  loadBuildingPermitsYear,
-} from "./api";
+export { loadBuildingPermitsIndex, loadBuildingPermitsYear } from "./api";
 
 export {
   BuildingPermitExplorer,

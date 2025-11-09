@@ -99,13 +99,17 @@ export function DatasetSummaryCard({
           ) : null}
           {selectedSummary.header_row ? (
             <div>
-              <dt className="font-medium text-foreground">Rreshti i titullit</dt>
+              <dt className="font-medium text-foreground">
+                Rreshti i titullit
+              </dt>
               <dd>Rreshti {selectedSummary.header_row}</dd>
             </div>
           ) : null}
           {selectedSummary.excel_columns?.length ? (
             <div>
-              <dt className="font-medium text-foreground">Kolonat e Excel-it</dt>
+              <dt className="font-medium text-foreground">
+                Kolonat e Excel-it
+              </dt>
               <dd>{selectedSummary.excel_columns.join(", ")}</dd>
             </div>
           ) : null}
