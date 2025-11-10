@@ -51,9 +51,8 @@ export function useChartTooltipFormatters({
 
   const labelFormatter = React.useCallback<LabelFormatter>(
     (rawLabel, payload) => {
-      const items = Array.isArray(payload) ? payload : [];
-      const relevantItems = items.filter(
-        (item) => item && keySet.has(String(item.dataKey)),
+      const relevantItems = payload.filter((item) =>
+        keySet.has(String(item.dataKey)),
       );
 
       if (relevantItems.length <= 1) {
@@ -61,9 +60,6 @@ export function useChartTooltipFormatters({
       }
 
       const total = relevantItems.reduce((sum, item) => {
-        if (!item || !keySet.has(String(item.dataKey))) {
-          return sum;
-        }
         const nextValue =
           typeof item.value === "number" && Number.isFinite(item.value)
             ? item.value
@@ -101,7 +97,7 @@ export function useChartTooltipFormatters({
               : NaN;
 
       const displayValue = Number.isFinite(numericValue)
-        ? formatValue(numericValue as number)
+        ? formatValue(numericValue)
         : missingValueLabel;
 
       const cssVarColor = key ? `var(--color-${key})` : undefined;

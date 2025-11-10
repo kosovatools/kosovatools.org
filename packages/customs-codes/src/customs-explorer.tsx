@@ -89,7 +89,7 @@ export function CustomsExplorer() {
 
   useEffect(() => {
     setLoading(true);
-    (async () => {
+    void (async () => {
       try {
         await CustomsDataService.initializeData({
           force: false,
@@ -141,7 +141,7 @@ export function CustomsExplorer() {
     if (!initialized) return;
     let cancelled = false;
 
-    (async () => {
+    void (async () => {
       try {
         setLoading(true);
 

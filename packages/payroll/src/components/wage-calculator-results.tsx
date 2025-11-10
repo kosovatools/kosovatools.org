@@ -26,6 +26,39 @@ import type {
 import { LinkProps, NodeProps } from "recharts/types/chart/Sankey";
 import { formatEuroWithCents } from "../../../utils/src";
 
+type SankeyTooltipPayload = {
+  source?: { name?: string };
+  target?: { name?: string };
+  name?: string;
+};
+
+type SankeyTooltipFormatter = NonNullable<
+  React.ComponentProps<typeof ChartTooltipContent>["formatter"]
+>;
+
+type SankeyNodePayload = NodeProps["payload"] & {
+  fill?: string;
+  stroke?: string;
+};
+
+type SankeyLinkPayload = LinkProps["payload"] & {
+  color?: string;
+};
+
+function coerceNumericValue(value: unknown): number | null {
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : null;
+  }
+  if (Array.isArray(value) && value.length > 0) {
+    return coerceNumericValue(value[0]);
+  }
+  if (typeof value === "string") {
+    const parsed = Number.parseFloat(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+}
+
 export interface WageCalculatorResultsProps {
   result: WageCalculatorResult;
   inverseResult?: NetToGrossResult;
@@ -46,7 +79,9 @@ function SummaryItem({ label, value }: { label: string; value: string }) {
 }
 
 function SankeyNodeWithLabel({ x, y, width, height, payload }: NodeProps) {
-  const fill = "var(--muted)";
+  const { fill, stroke } = payload as SankeyNodePayload;
+  const fillColor = typeof fill === "string" ? fill : "var(--muted)";
+  const strokeColor = typeof stroke === "string" ? stroke : fillColor;
   const amountValue =
     typeof payload.value === "number" && Number.isFinite(payload.value)
       ? Math.max(payload.value, 0)
@@ -71,7 +106,9 @@ function SankeyNodeWithLabel({ x, y, width, height, payload }: NodeProps) {
         y={adjustedY}
         width={adjustedWidth}
         height={adjustedHeight}
-        fill={fill}
+        fill={fillColor}
+        stroke={strokeColor}
+        strokeOpacity={0.2}
         rx={3}
         ry={3}
         style={{ cursor: "default" }}
@@ -132,8 +169,10 @@ function SankeyLinkWithLabel({
   sourceControlX,
   targetControlX,
   linkWidth,
+  payload,
 }: LinkProps) {
-  const strokeColor = "var(--muted-foreground)";
+  const inferredColor =
+    (payload as SankeyLinkPayload)?.color ?? "var(--muted-foreground)";
 
   return (
     <g>
@@ -142,8 +181,8 @@ function SankeyLinkWithLabel({
   M${sourceX},${sourceY}
   C${sourceControlX},${sourceY} ${targetControlX},${targetY} ${targetX},${targetY}`}
         fill="none"
-        stroke={strokeColor}
-        strokeOpacity={0.4}
+        stroke={inferredColor}
+        strokeOpacity={0.5}
         strokeWidth={linkWidth}
         strokeLinecap="butt"
       />
@@ -271,6 +310,43 @@ function WageCalculatorResults({
 
   const hasFlow = sankeyLinks.length > 0;
 
+  const sankeyTooltipFormatter = React.useCallback<SankeyTooltipFormatter>(
+    (value, _name, entry) => {
+      const numericValue = coerceNumericValue(value) ?? 0;
+      const payload = entry?.payload as
+        | (SankeyTooltipPayload & { color?: string })
+        | undefined;
+      const sourceName = payload?.source?.name;
+      const targetName = payload?.target?.name;
+      const label =
+        sourceName && targetName
+          ? `${sourceName} → ${targetName}`
+          : (payload?.name ?? "Rrjedha");
+      const indicatorColor =
+        (typeof entry?.color === "string" ? entry.color : undefined) ??
+        (typeof payload?.color === "string" ? payload.color : undefined) ??
+        "var(--border)";
+
+      return (
+        <div className="flex w-full items-center gap-2">
+          <span
+            className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
+            style={{ backgroundColor: indicatorColor }}
+          />
+          <div className="flex flex-1 flex-col gap-1">
+            <span className="text-foreground font-mono font-semibold tabular-nums">
+              {formatCurrency(Math.max(numericValue, 0))}
+            </span>
+            <span className="text-[0.65rem] uppercase tracking-wide text-muted-foreground">
+              {label}
+            </span>
+          </div>
+        </div>
+      );
+    },
+    [formatCurrency],
+  );
+
   return (
     <Card className={cn("h-full min-w-0", className)}>
       <CardHeader>
@@ -342,30 +418,7 @@ function WageCalculatorResults({
                       <ChartTooltipContent
                         indicator="dot"
                         labelFormatter={() => "Rrjedha e pagës"}
-                        formatter={(value, _name, entry) => {
-                          const numericValue =
-                            typeof value === "number"
-                              ? value
-                              : Number.parseFloat(String(value ?? 0));
-                          const payload = entry?.payload as
-                            | {
-                                source?: { name?: string };
-                                target?: { name?: string };
-                                name?: string;
-                              }
-                            | undefined;
-                          const sourceName = payload?.source?.name;
-                          const targetName = payload?.target?.name;
-                          const label =
-                            sourceName && targetName
-                              ? `${sourceName} → ${targetName}`
-                              : payload?.name || "Rrjedha";
-
-                          return [
-                            formatCurrency(Math.max(numericValue, 0)),
-                            label,
-                          ];
-                        }}
+                        formatter={sankeyTooltipFormatter}
                       />
                     }
                   />

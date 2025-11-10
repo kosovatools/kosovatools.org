@@ -39,7 +39,7 @@ function toStackRecords(
     fuel: e.fuel,
     value:
       typeof e[metric] === "number" && Number.isFinite(e[metric])
-        ? (e[metric] as number)
+        ? e[metric]
         : 0,
   }));
 }

@@ -269,7 +269,13 @@ export function WarRecordsClient() {
         totalRecords={totalRecords}
         hasMore={canAutoLoadMore}
         isLoadingMore={isFetchingNextPage}
-        onLoadMore={canAutoLoadMore ? () => fetchNextPage() : undefined}
+        onLoadMore={
+          canAutoLoadMore
+            ? () => {
+                void fetchNextPage();
+              }
+            : undefined
+        }
       />
     </div>
   );

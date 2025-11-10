@@ -97,7 +97,7 @@ export function FuelBalanceChart() {
         allowedKeys: fuelKeys,
         includeOther: false,
         periodGrouping,
-        labelForKey: (key) => fuelLabelMap[key as FuelKey] ?? key,
+        labelForKey: (key) => fuelLabelMap[key] ?? key,
       },
     );
 
@@ -168,7 +168,7 @@ export function FuelBalanceChart() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <OptionSelector
           value={metric}
-          onChange={(value) => setMetric(value as FuelMetric)}
+          onChange={(value) => setMetric(value)}
           options={metricOptions}
           label="Metrika"
         />

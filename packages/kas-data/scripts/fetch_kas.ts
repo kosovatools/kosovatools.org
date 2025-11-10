@@ -138,7 +138,7 @@ export async function main(): Promise<void> {
 
   if (partners) {
     await runTask("Imports by Partner", () =>
-      fetchImportsByPartner(outDir, partners!, started),
+      fetchImportsByPartner(outDir, partners, started),
     );
   }
 

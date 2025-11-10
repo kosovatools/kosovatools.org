@@ -44,6 +44,21 @@ import {
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 
+const DEFAULT_GROUP_LABEL = "Total";
+
+const getVisitorGroupLabelText = (
+  label: React.ReactNode | null | undefined,
+  fallback = DEFAULT_GROUP_LABEL,
+) => {
+  if (typeof label === "string") {
+    return label;
+  }
+  if (typeof label === "number") {
+    return String(label);
+  }
+  return fallback;
+};
+
 const visitorGroupOptions: SelectorOptionDefinition<
   TourismRegionRecord["visitor_group"]
 >[] =
@@ -182,18 +197,15 @@ export function TourismRegionCharts() {
   const groupLabel =
     visitorGroupOptions.find((option) => option.key === group)?.label ??
     visitorGroupOptions[0]?.label ??
-    "Total";
-  const groupLabelText =
-    typeof groupLabel === "string" ? groupLabel : String(groupLabel ?? "Total");
+    DEFAULT_GROUP_LABEL;
+  const groupLabelText = getVisitorGroupLabelText(groupLabel);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-4">
         <OptionSelector
           value={group}
-          onChange={(value) =>
-            setGroup(value as TourismRegionRecord["visitor_group"])
-          }
+          onChange={(value) => setGroup(value)}
           options={visitorGroupOptions}
           label="Grupi i vizitorëve"
         />

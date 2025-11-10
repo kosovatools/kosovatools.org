@@ -107,11 +107,23 @@ export async function requestJson(
     try {
       return { ok: true, json: text ? JSON.parse(text) : {} };
     } catch (err) {
+      const parseErrorMessage =
+        err instanceof Error
+          ? err.message
+          : typeof err === "string"
+            ? err
+            : typeof err === "number" ||
+                typeof err === "boolean" ||
+                typeof err === "bigint"
+              ? String(err)
+              : typeof err === "symbol"
+                ? err.toString()
+                : JSON.stringify(err ?? {});
       return {
         ok: false,
         status: res.status,
         statusText: res.statusText,
-        text: `invalid json: ${err}`,
+        text: `invalid json: ${parseErrorMessage}`,
       };
     }
   } catch (err) {
@@ -273,10 +285,12 @@ export function metaFindVarCode(
   enqueue(matchers);
   if (!ordered.length) return null;
 
-  const normalize = (value: unknown) =>
-    String(value ?? "")
-      .trim()
-      .toLowerCase();
+  const normalize = (value: unknown) => {
+    if (typeof value === "string") return value.trim().toLowerCase();
+    if (typeof value === "number" || typeof value === "bigint")
+      return String(value).trim().toLowerCase();
+    return "";
+  };
 
   const lookupString = (candidate: VarMatcher) => {
     if (typeof candidate === "string") {
@@ -466,7 +480,7 @@ export function tableLookupFromValueCube(
   }
   const sizes = dimDetails.map((detail) => detail.ordToValue.length);
   if (!sizes.every((size) => Number.isInteger(size) && size > 0)) return null;
-  const strides = Array(sizes.length).fill(1);
+  const strides: number[] = Array.from({ length: sizes.length }, () => 1);
   for (let i = sizes.length - 2; i >= 0; i -= 1) {
     const nextStride = strides[i + 1] ?? 1;
     const nextSize = sizes[i + 1] ?? 1;

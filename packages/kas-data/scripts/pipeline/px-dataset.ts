@@ -386,15 +386,14 @@ export async function runPxDatasetPipeline<
       });
       if (Array.isArray(recordResult)) {
         for (const entry of recordResult) {
-          if (entry && typeof entry === "object")
-            records.push(entry as RecordShape);
+          if (entry && typeof entry === "object") records.push(entry);
           else if (entry !== null && entry !== undefined)
             throw new PxError(
               `${datasetId}: createRecord returned invalid array entry`,
             );
         }
       } else if (recordResult && typeof recordResult === "object") {
-        records.push(recordResult as RecordShape);
+        records.push(recordResult);
       } else if (recordResult !== null && recordResult !== undefined) {
         throw new PxError(`${datasetId}: createRecord returned invalid value`);
       }

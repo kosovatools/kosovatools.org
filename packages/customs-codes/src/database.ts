@@ -74,6 +74,7 @@ function getDb(): CustomsDatabase {
 }
 
 type MiniSearchHit = { id: string; highlight?: string | null };
+type DescriptionIndexDocument = Pick<CustomsRecord, "code" | "description">;
 
 type InitializeOptions = {
   force?: boolean;
@@ -81,7 +82,8 @@ type InitializeOptions = {
 };
 
 export class CustomsDataService {
-  private static descriptionIndex: MiniSearch | null = null;
+  private static descriptionIndex: MiniSearch<DescriptionIndexDocument> | null =
+    null;
 
   static async initializeData({
     force = false,
@@ -165,29 +167,34 @@ export class CustomsDataService {
     }
   }
 
-  private static async ensureDescriptionIndex(): Promise<MiniSearch> {
+  private static async ensureDescriptionIndex(): Promise<
+    MiniSearch<DescriptionIndexDocument>
+  > {
     if (this.descriptionIndex) return this.descriptionIndex;
 
     const db = getDb();
     const data = await db.customs.orderBy("code").toArray();
+    const documents: DescriptionIndexDocument[] = data.map((row) => ({
+      code: row.code,
+      description: row.description ?? "",
+    }));
 
-    const index = new MiniSearch({
+    const index = new MiniSearch<DescriptionIndexDocument>({
       fields: ["description"],
       storeFields: ["description"],
       idField: "code",
-      extractField: (doc, fieldName) => doc[fieldName] || "",
+      extractField: (doc, fieldName) => {
+        const key = fieldName as keyof DescriptionIndexDocument;
+        const value = doc[key];
+        return typeof value === "string" ? value : "";
+      },
       searchOptions: {
         fuzzy: false,
         prefix: true,
       },
     });
 
-    index.addAll(
-      data.map((row) => ({
-        code: row.code,
-        description: row.description,
-      })),
-    );
+    index.addAll(documents);
 
     this.descriptionIndex = index;
     return index;
@@ -393,7 +400,9 @@ export class CustomsDataService {
     return results.map((result) => {
       let highlight: string | null = null;
       if (result.terms) {
-        let description = result.description || "";
+        const initialDescription =
+          typeof result.description === "string" ? result.description : "";
+        let description = initialDescription;
         result.terms.forEach((term) => {
           const regex = new RegExp(`\\b${term}\\b`, "gi");
           description = description.replace(
@@ -404,7 +413,8 @@ export class CustomsDataService {
 
         highlight = description;
       }
-      return { id: result.id, highlight };
+      const id = typeof result.id === "string" ? result.id : String(result.id);
+      return { id, highlight };
     });
   }
 

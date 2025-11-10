@@ -124,7 +124,7 @@ export function describePxSources(
   const urls: string[] = [];
   for (const parts of sourcePaths) {
     if (!parts || !parts.length) continue;
-    const normalizedParts = parts as readonly string[];
+    const normalizedParts = parts;
     const last = normalizedParts[normalizedParts.length - 1];
     if (!last) continue;
     tableLabels.push(normalizeTableLabel(last));
@@ -136,13 +136,15 @@ export function describePxSources(
 }
 
 export function jsonStringify(obj: unknown): string {
-  return JSON.stringify(obj, (_key, value) => value ?? null, 2);
+  return JSON.stringify(obj, (_key, value: unknown) => value ?? null, 2);
 }
 
 export function coerceNumber(value: unknown): number | null {
   if (value === null || value === undefined) return null;
   if (typeof value === "number") return Number(value);
-  const str = String(value).trim();
+  if (typeof value === "bigint") return Number(value);
+  if (typeof value !== "string") return null;
+  const str = value.trim();
   if (!str || [".", "..", "...", "-"].includes(str)) return null;
   const cleaned = str.replace(/\u00a0/g, "").replace(/,/g, "");
   const num = Number(cleaned);

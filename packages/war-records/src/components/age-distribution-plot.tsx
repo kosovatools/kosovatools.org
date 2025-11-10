@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, type ComponentProps } from "react";
 import { cn } from "@workspace/ui/lib/utils";
 
 import {
@@ -16,8 +16,18 @@ export type AgeDistributionPlotProps = {
   className?: string;
 };
 
+type AgeDistributionPoint = {
+  age: number;
+  count: number;
+};
+
 const MIN_POINT_RADIUS = 4;
 const MAX_POINT_RADIUS = 16;
+
+type ChartTooltipContentProps = ComponentProps<typeof ChartTooltipContent>;
+type ChartLabelFormatter = NonNullable<
+  ChartTooltipContentProps["labelFormatter"]
+>;
 
 const chartConfig = {
   count: {
@@ -30,7 +40,7 @@ export function AgeDistributionPlot({
   data,
   className,
 }: AgeDistributionPlotProps) {
-  const points = useMemo(() => {
+  const points = useMemo<AgeDistributionPoint[]>(() => {
     return Object.entries(data)
       .map(([age, count]) => ({ age: Number(age), count: Number(count) }))
       .filter((point) => Number.isFinite(point.age) && point.count > 0)
@@ -67,6 +77,29 @@ export function AgeDistributionPlot({
   }
   if (!xTicks.includes(firstPoint.age)) xTicks.unshift(firstPoint.age);
   if (!xTicks.includes(lastPoint.age)) xTicks.push(lastPoint.age);
+
+  const formatAgeLabel: ChartLabelFormatter = (value, payload) => {
+    const chartPoint = payload?.[0]?.payload as
+      | AgeDistributionPoint
+      | undefined;
+    const sourceAge = chartPoint?.age;
+    const fallbackValue =
+      typeof value === "number"
+        ? value
+        : typeof value === "string"
+          ? Number.parseFloat(value)
+          : Number.NaN;
+    const fallbackAge = Number.isFinite(fallbackValue) ? fallbackValue : null;
+    const fallbackLabel = typeof value === "string" ? value : "";
+    const formattedAge =
+      typeof sourceAge === "number"
+        ? sourceAge.toLocaleString("sq-AL")
+        : fallbackAge !== null
+          ? fallbackAge.toLocaleString("sq-AL")
+          : fallbackLabel;
+
+    return `Mosha: ${formattedAge}`;
+  };
 
   const renderDot = (props: {
     cx?: number;
@@ -150,14 +183,7 @@ export function AgeDistributionPlot({
                 Number(value).toLocaleString("sq-AL"),
                 " Regjistrime",
               ]}
-              labelFormatter={(value, payload) => {
-                const age = payload?.[0]?.payload?.age;
-                const formattedAge =
-                  typeof age === "number"
-                    ? age.toLocaleString("sq-AL")
-                    : String(age ?? value);
-                return `Mosha: ${formattedAge}`;
-              }}
+              labelFormatter={formatAgeLabel}
             />
           }
         />

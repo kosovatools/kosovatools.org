@@ -434,8 +434,7 @@ function DrugPriceExplorerContent({
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const value = event.target.value;
-    const nextField =
-      value && isValidSearchField(value) ? (value as SearchField) : null;
+    const nextField = value && isValidSearchField(value) ? value : null;
     setSearchField(nextField);
     applyFilterUpdates({ searchField: nextField }, true);
   };

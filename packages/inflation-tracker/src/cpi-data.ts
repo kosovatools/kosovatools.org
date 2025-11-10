@@ -50,7 +50,7 @@ const combinePercentageChanges = (values: number[]): number | null => {
 
 const findFirstFinite = (series: readonly CpiSeriesPoint[]) => {
   for (const point of series) {
-    if (isFiniteNumber(point.value)) return point.value as number;
+    if (isFiniteNumber(point.value)) return point.value;
   }
   return null;
 };
@@ -58,7 +58,7 @@ const findFirstFinite = (series: readonly CpiSeriesPoint[]) => {
 const findLastFinite = (series: readonly CpiSeriesPoint[]) => {
   for (let index = series.length - 1; index >= 0; index -= 1) {
     const value = series[index]?.value;
-    if (isFiniteNumber(value)) return value as number;
+    if (isFiniteNumber(value)) return value;
   }
   return null;
 };

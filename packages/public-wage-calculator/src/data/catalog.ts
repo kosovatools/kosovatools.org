@@ -20,7 +20,6 @@ import sherbimiKorrektuesIKosoves from "../../data/coefficients/sherbimi-korrekt
 import sistemiGjyqesor from "../../data/coefficients/sistemi-gjyqesor.json" assert { type: "json" };
 import sistemiProkurorial from "../../data/coefficients/sistemi-prokurorial.json" assert { type: "json" };
 import zjarrefikesit from "../../data/coefficients/zjarrefikesit.json" assert { type: "json" };
-import type { PositionCoefficient } from "../types";
 import { assertPositionCoefficientArray } from "../lib/validation";
 
 const coefficientGroups = [
@@ -51,4 +50,4 @@ const coefficientGroups = [
 const coefficientsRaw = coefficientGroups.flat();
 assertPositionCoefficientArray(coefficientsRaw);
 
-export const COEFFICIENT_CATALOG = coefficientsRaw as PositionCoefficient[];
+export const COEFFICIENT_CATALOG = coefficientsRaw;

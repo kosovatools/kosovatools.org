@@ -190,8 +190,16 @@ export function HourlyFlowPatternChart({
   });
 
   const hourlyLabelFormatter = useCallback<typeof tooltip.labelFormatter>(
-    (label, payload) =>
-      tooltip.labelFormatter(`UTC ${String(label ?? "")}`, payload),
+    (label, payload) => {
+      const normalizedLabel =
+        label == null
+          ? ""
+          : typeof label === "string" || typeof label === "number"
+            ? String(label)
+            : "";
+
+      return tooltip.labelFormatter(`UTC ${normalizedLabel}`, payload);
+    },
     [tooltip],
   );
 

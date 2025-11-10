@@ -22,6 +22,6 @@ export function formatMoney(value: unknown): string {
       maximumFractionDigits: 2,
     });
   } catch {
-    return String(value);
+    return typeof value === "string" ? value : "—";
   }
 }

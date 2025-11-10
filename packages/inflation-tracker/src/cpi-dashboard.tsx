@@ -532,7 +532,7 @@ export function InflationDashboard({
                         dataKey={key}
                         name={
                           typeof chartConfig[key]?.label === "string"
-                            ? (chartConfig[key]?.label as string)
+                            ? chartConfig[key]?.label
                             : undefined
                         }
                         stroke={`var(--color-${key})`}

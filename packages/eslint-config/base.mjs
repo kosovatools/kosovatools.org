@@ -13,13 +13,16 @@ import globals from "globals";
  * */
 export const config = defineConfig([
   js.configs.recommended,
-  eslintConfigPrettier,
-  ...tseslint.configs.recommended,
+  tseslint.configs.recommendedTypeChecked,
   {
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.node,
+      },
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
       },
     },
   },
@@ -36,5 +39,14 @@ export const config = defineConfig([
       onlyWarn,
     },
   },
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", "dist"]),
+  eslintConfigPrettier,
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "next-env.d.ts",
+    "dist",
+    "eslint.config.mjs",
+    "postcss.config.mjs",
+  ]),
 ]);

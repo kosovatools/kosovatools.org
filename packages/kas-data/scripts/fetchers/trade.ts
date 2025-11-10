@@ -10,7 +10,6 @@ import {
   buildValuePairs,
   extractTimeCodes,
   readCubeMetadata,
-  type PxMeta,
 } from "../lib/pxweb";
 import {
   createMeta,
@@ -71,7 +70,7 @@ export async function fetchTradeChaptersYearly(
   generatedAt: string,
 ) {
   const parts = PATHS.trade_chapters_yearly;
-  const meta = (await pxGetMeta(parts)) as PxMeta;
+  const meta = await pxGetMeta(parts);
   const chapterVar = requireVariable(
     meta,
     "Chapter",

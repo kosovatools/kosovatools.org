@@ -197,9 +197,7 @@ export function buildStackSeries<TRecord, TKey extends string>(
   const labelMap = Object.fromEntries(
     keys.map((k) => [
       k,
-      k === "Other"
-        ? otherLabel
-        : (options.labelForKey?.(k as TKey) ?? (k as string)),
+      k === "Other" ? otherLabel : (options.labelForKey?.(k) ?? (k as string)),
     ]),
   ) as Record<TKey | "Other", string>;
 
