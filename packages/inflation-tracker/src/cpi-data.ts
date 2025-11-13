@@ -45,7 +45,7 @@ const average = (values: number[]): number | null => {
 const combinePercentageChanges = (values: number[]): number | null => {
   if (!values.length) return null;
   const product = values.reduce((acc, value) => acc * (1 + value / 100), 1);
-  return (product - 1) * 100;
+  return product - 1;
 };
 
 const findFirstFinite = (series: readonly CpiSeriesPoint[]) => {
@@ -181,21 +181,12 @@ export function aggregateCpiSeries(
 
 export function computeCpiRangeChange(
   series: readonly CpiSeriesPoint[],
-  metric: CpiMetric,
 ): number | null {
   if (!series.length) return null;
-  if (metric === "index") {
-    const first = findFirstFinite(series);
-    const last = findLastFinite(series);
-    if (first == null || last == null || first === 0) return null;
-    return ((last - first) / first) * 100;
-  }
-
-  const values = series
-    .map((point) => point.value)
-    .filter((value): value is number => isFiniteNumber(value));
-  if (!values.length) return null;
-  return combinePercentageChanges(values);
+  const first = findFirstFinite(series);
+  const last = findLastFinite(series);
+  if (first == null || last == null || first === 0) return null;
+  return (last - first) / first;
 }
 
 function buildSeriesByGroup(records: readonly CpiRecord[]) {

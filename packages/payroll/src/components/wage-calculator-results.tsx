@@ -15,7 +15,7 @@ import {
 } from "@workspace/ui/components/chart";
 import {
   createChromaPalette,
-  type PaletteColor,
+  resolvePaletteColor,
 } from "@workspace/ui/lib/chart-palette";
 import { cn } from "@workspace/ui/lib/utils";
 
@@ -202,27 +202,9 @@ function WageCalculatorResults({
     inverseResult !== undefined && inverseResult.targetNetPay > 0;
 
   const palette = React.useMemo(() => createChromaPalette(6), []);
-  const fallbackPalette = React.useMemo<PaletteColor[]>(
-    () => [
-      { light: "#0ea5e9", dark: "#38bdf8" },
-      { light: "#2563eb", dark: "#60a5fa" },
-      { light: "#16a34a", dark: "#4ade80" },
-      { light: "#f97316", dark: "#fb923c" },
-      { light: "#dc2626", dark: "#f87171" },
-      { light: "#9333ea", dark: "#c084fc" },
-    ],
-    [],
-  );
-
-  const fallbackColor = React.useMemo<PaletteColor>(
-    () => fallbackPalette[0] ?? { light: "#0ea5e9", dark: "#38bdf8" },
-    [fallbackPalette],
-  );
-
   const resolveColor = React.useCallback(
-    (index: number) =>
-      palette[index] ?? fallbackPalette[index] ?? fallbackColor,
-    [palette, fallbackPalette, fallbackColor],
+    (index: number) => resolvePaletteColor(palette, index),
+    [palette],
   );
 
   const chartConfig = React.useMemo<ChartConfig>(() => {

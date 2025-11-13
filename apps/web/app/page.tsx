@@ -12,6 +12,7 @@ import {
   Icon,
   PackageSearch,
   Pill,
+  Plane,
   TrendingUp,
   Zap,
   type LucideIcon,
@@ -126,6 +127,15 @@ const tools: ToolCard[] = [
     category: "Transport",
   },
   {
+    name: "Statistikat e aviacionit",
+    href: "/aviation-stats",
+    description:
+      "Shiko hyrjet/daljet e pasagjerëve dhe numrin e fluturimeve mujore nga aeroporti i Kosovës.",
+    cta: "Analizo trafikun ajror",
+    icon: Plane,
+    category: "Transport",
+  },
+  {
     name: "Lejet e ndërtimit të Prishtinës",
     href: "/prishtina-building-permits",
     description:
@@ -181,25 +191,24 @@ const tools: ToolCard[] = [
   },
 ];
 
-export default function Page() {
-  const groupedTools = tools.reduce<
-    Array<{ category: string; tools: ToolCard[] }>
-  >((acc, tool) => {
-    const existingGroup = acc.find((entry) => entry.category === tool.category);
+const groupedTools = tools.reduce<
+  Array<{ category: string; tools: ToolCard[] }>
+>((acc, tool) => {
+  const existingGroup = acc.find((entry) => entry.category === tool.category);
 
-    if (existingGroup) {
-      existingGroup.tools.push(tool);
-      return acc;
-    }
-
-    acc.push({ category: tool.category, tools: [tool] });
+  if (existingGroup) {
+    existingGroup.tools.push(tool);
     return acc;
-  }, []);
-  const totalTools = tools.length;
-  const toolCategories = Array.from(
-    new Set(tools.map((tool) => tool.category)),
-  );
+  }
 
+  acc.push({ category: tool.category, tools: [tool] });
+  return acc;
+}, []);
+
+const totalTools = tools.length;
+const toolCategories = Array.from(new Set(tools.map((tool) => tool.category)));
+
+export default function Page() {
   return (
     <main className="flex flex-col gap-24 px-3 sm:px-6 py-16 sm:py-24">
       <section className="mx-auto grid w-full max-w-[1500px] gap-12 text-center lg:grid-cols-12 lg:items-center lg:gap-16 lg:text-left">

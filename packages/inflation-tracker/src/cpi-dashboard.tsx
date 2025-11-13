@@ -27,6 +27,7 @@ import {
   getPeriodFormatter,
   PERIOD_GROUPING_OPTIONS,
   createNumberFormatter,
+  formatSignedPercent,
   type PeriodGrouping,
 } from "@workspace/utils";
 import {
@@ -52,6 +53,7 @@ import {
 } from "@workspace/ui/components/chart";
 import {
   createChromaPalette,
+  resolvePaletteColor,
   type PaletteColor,
 } from "@workspace/ui/lib/chart-palette";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
@@ -77,6 +79,8 @@ type SeriesEntry = {
   color: PaletteColor;
   latest: CpiSeriesPoint | null;
   previous: CpiSeriesPoint | null;
+  indexLatest: CpiSeriesPoint | null;
+  indexPrevious: CpiSeriesPoint | null;
   cumulative: number | null;
 };
 
@@ -85,8 +89,8 @@ type SummaryRow = {
   label: string;
   latestValue: number | null;
   latestLabel: string | null;
-  previousValue: number | null;
   cumulative: number | null;
+  indexChange: number | null;
 };
 
 const RANGE_OPTIONS: Array<{ key: RangeOption; label: string }> = [
@@ -127,15 +131,7 @@ function formatMetricValue(value: number | null, metric: Metric): string {
   }
   return metric === "index"
     ? decimalFormatter(value)
-    : `${decimalFormatter(value)}%`;
-}
-
-function formatPercentChange(value: number | null): string {
-  if (value == null || !Number.isFinite(value)) {
-    return "—";
-  }
-  const sign = value > 0 ? "+" : value < 0 ? "−" : "±";
-  return `${sign}${decimalFormatter(Math.abs(value))}%`;
+    : formatSignedPercent(value);
 }
 
 function findLatestPoint(series: CpiSeriesPoint[]): CpiSeriesPoint | null {
@@ -307,23 +303,41 @@ export function InflationDashboard({
       }
 
       const palette = createChromaPalette(Math.max(validCodes.length, 2));
-      const fallbackColor = { light: "#6d4dd3", dark: "#9a78ff" };
 
       const entries: SeriesEntry[] = validCodes.map((code, index) => {
         const group = cpiGroupNodesByCode[code];
         const displayLabel = group ? group.name : code;
 
-        const paletteColor = palette[index % palette.length] ?? fallbackColor;
-        const baseSeries = getCpiSeriesForMetric(metric, code)?.series ?? [];
-        const monthlyLimited = limitCpiMonthlySeries(baseSeries, range);
+        const paletteIndex = palette.length ? index % palette.length : index;
+        const paletteColor = resolvePaletteColor(palette, paletteIndex);
+        const metricSeries = getCpiSeriesForMetric(metric, code)?.series ?? [];
+        const metricLimited = limitCpiMonthlySeries(metricSeries, range);
         const aggregated = aggregateCpiSeries(
-          monthlyLimited,
+          metricLimited,
           periodGrouping,
           metric,
         );
         const latest = findLatestPoint(aggregated);
         const previous = findPreviousPoint(aggregated, latest);
-        const cumulative = computeCpiRangeChange(monthlyLimited, metric);
+        const indexSeries =
+          metric === "index"
+            ? metricSeries
+            : (getCpiSeriesForMetric("index", code)?.series ?? []);
+        const indexLimited =
+          metric === "index"
+            ? metricLimited
+            : limitCpiMonthlySeries(indexSeries, range);
+        const indexAggregated =
+          metric === "index"
+            ? aggregated
+            : aggregateCpiSeries(indexLimited, periodGrouping, "index");
+        const indexLatest =
+          metric === "index" ? latest : findLatestPoint(indexAggregated);
+        const indexPrevious =
+          metric === "index"
+            ? previous
+            : findPreviousPoint(indexAggregated, indexLatest);
+        const cumulative = computeCpiRangeChange(indexLimited);
 
         return {
           code,
@@ -332,6 +346,8 @@ export function InflationDashboard({
           color: paletteColor,
           latest,
           previous,
+          indexLatest,
+          indexPrevious,
           cumulative,
         };
       });
@@ -363,8 +379,8 @@ export function InflationDashboard({
         acc[entry.code] = {
           label: entry.label,
           theme: {
-            light: entry.color.light ?? fallbackColor.light,
-            dark: entry.color.dark ?? fallbackColor.dark,
+            light: entry.color.light,
+            dark: entry.color.dark,
           },
         };
         return acc;
@@ -374,13 +390,24 @@ export function InflationDashboard({
         const latestLabel = entry.latest
           ? periodFormatter(entry.latest.period)
           : null;
+        const changeSeries: CpiSeriesPoint[] = [];
+        if (entry.indexPrevious) {
+          changeSeries.push(entry.indexPrevious);
+        }
+        if (entry.indexLatest) {
+          changeSeries.push(entry.indexLatest);
+        }
+        const indexChange =
+          changeSeries.length === 2
+            ? computeCpiRangeChange(changeSeries)
+            : null;
         return {
           code: entry.code,
           label: entry.label,
           latestValue: entry.latest?.value ?? null,
           latestLabel,
-          previousValue: entry.previous?.value ?? null,
           cumulative: entry.cumulative,
+          indexChange,
         };
       });
 
@@ -412,10 +439,7 @@ export function InflationDashboard({
 
   const tooltip = useChartTooltipFormatters({
     keys: tooltipKeys,
-    formatValue: (value: number) =>
-      metric === "index"
-        ? decimalFormatter(value)
-        : `${decimalFormatter(value)}%`,
+    formatValue: (v) => formatMetricValue(v, metric),
   });
 
   const handleSelectionChange = React.useCallback(
@@ -555,24 +579,8 @@ export function InflationDashboard({
                     row.latestValue,
                     metric,
                   );
-                  const cumulativeLabel = formatPercentChange(row.cumulative);
-
-                  let changeLabel = "—";
-                  if (metric === "index") {
-                    if (
-                      row.latestValue != null &&
-                      row.previousValue != null &&
-                      row.previousValue !== 0
-                    ) {
-                      const change =
-                        ((row.latestValue - row.previousValue) /
-                          Math.abs(row.previousValue)) *
-                        100;
-                      changeLabel = formatPercentChange(change);
-                    }
-                  } else {
-                    changeLabel = formatPercentChange(row.latestValue);
-                  }
+                  const cumulativeLabel = formatSignedPercent(row.cumulative);
+                  const changeLabel = formatSignedPercent(row.indexChange);
 
                   return (
                     <div

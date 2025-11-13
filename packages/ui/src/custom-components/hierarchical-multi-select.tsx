@@ -185,17 +185,15 @@ export function HierarchicalMultiSelect({
         const descendantIds = descendants.get(node.id) ?? [];
 
         const isChecked = selectedSet.has(node.id);
-        let isIndeterminate = false;
-        if (!isChecked && descendantIds.length) {
-          let selectedCount = 0;
+        let selectedCount = 0;
+        if (descendantIds.length) {
           for (const descendant of descendantIds) {
             if (selectedSet.has(descendant)) {
               selectedCount += 1;
             }
           }
-          isIndeterminate =
-            selectedCount > 0 && selectedCount < descendantIds.length;
         }
+        const isIndeterminate = !isChecked && selectedCount > 0;
 
         return (
           <li key={node.id} className="flex min-w-0 flex-col gap-1">
@@ -209,7 +207,7 @@ export function HierarchicalMultiSelect({
               )}
               style={{ paddingLeft: depth * 16 }}
               role="checkbox"
-              aria-checked={isChecked}
+              aria-checked={isIndeterminate ? "mixed" : isChecked}
               aria-label={node.label}
               tabIndex={0}
               onClick={(event) => {

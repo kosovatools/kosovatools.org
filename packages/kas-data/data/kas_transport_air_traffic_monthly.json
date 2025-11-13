@@ -1,0 +1,43 @@
+{
+  "meta": {
+    "id": "kas_transport_air_traffic_monthly",
+    "generated_at": "2025-11-13T20:18:41.212Z",
+    "updated_at": null,
+    "time": {
+      "key": "period",
+      "granularity": "monthly",
+      "first": "2012-01",
+      "last": "2025-08",
+      "count": 164
+    },
+    "fields": [
+      {
+        "key": "passengers_inbound",
+        "label": "Inbound passengers",
+        "unit": "people"
+      },
+      {
+        "key": "passengers_outbound",
+        "label": "Outbound passengers",
+        "unit": "people"
+      },
+      {
+        "key": "flights",
+        "label": "Flights",
+        "unit": "flights"
+      }
+    ],
+    "metrics": ["passengers_inbound", "passengers_outbound", "flights"],
+    "dimensions": {},
+    "unit": null,
+    "source": "Data derived from Table 04, Table 05, Table 06 in Transport",
+    "source_urls": [
+      "ASKdata/Transport/Monthly indicators/4.numri i udhetareve hyres.px",
+      "ASKdata/Transport/Monthly indicators/5.numri i udhetareve dales.px",
+      "ASKdata/Transport/Monthly indicators/6. numri i fluturimeve te realizuara.px"
+    ],
+    "title": null,
+    "notes": []
+  },
+  "records": []
+}

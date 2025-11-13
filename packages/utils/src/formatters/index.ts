@@ -122,6 +122,13 @@ export const formatPercent = createNumberFormatter("sq", {
   maximumFractionDigits: 1,
 });
 
+export const formatSignedPercent = createNumberFormatter("sq", {
+  style: "percent",
+  maximumFractionDigits: 1,
+  minimumFractionDigits: 0,
+  signDisplay: "always",
+});
+
 export function createDateFormatter(
   locale: string,
   options: Intl.DateTimeFormatOptions,

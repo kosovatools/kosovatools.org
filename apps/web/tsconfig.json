@@ -7,6 +7,10 @@
       "@/*": ["./*"],
       "@workspace/customs-codes": ["../../packages/customs-codes/src/index.ts"],
       "@workspace/customs-codes/*": ["../../packages/customs-codes/src/*"],
+      "@workspace/aviation-stats": [
+        "../../packages/aviation-stats/src/index.ts"
+      ],
+      "@workspace/aviation-stats/*": ["../../packages/aviation-stats/src/*"],
       "@workspace/car-import-taxes": [
         "../../packages/car-import-taxes/src/index.ts"
       ],

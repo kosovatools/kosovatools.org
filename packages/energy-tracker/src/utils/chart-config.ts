@@ -1,10 +1,13 @@
-import { createChromaPalette } from "@workspace/ui/lib/chart-palette";
+import {
+  createChromaPalette,
+  resolvePaletteColor,
+} from "@workspace/ui/lib/chart-palette";
 
 const palette = createChromaPalette(5);
 
 export const energyFlowPalettes = {
-  imports: palette[0]!,
-  exports: palette[1]!,
+  imports: resolvePaletteColor(palette, 0),
+  exports: resolvePaletteColor(palette, 1),
   net: { light: "#dc2626", dark: "#f87171" },
   negative: { light: "#16a34a", dark: "#34d399" },
 } as const;

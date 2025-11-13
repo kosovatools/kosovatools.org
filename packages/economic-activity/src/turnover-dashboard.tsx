@@ -69,7 +69,10 @@ import {
   StackedKeySelector,
   type StackedKeyTotal,
 } from "@workspace/ui/custom-components/stacked-key-selector";
-import { createChromaPalette } from "@workspace/ui/lib/chart-palette";
+import {
+  createChromaPalette,
+  resolvePaletteColor,
+} from "@workspace/ui/lib/chart-palette";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 import {
@@ -184,13 +187,12 @@ function buildColoredSlices<T extends { turnover: number }>(
   }
 
   const palette = createChromaPalette(records.length);
-  const fallbackPaletteColor = palette.at(-1);
 
   return records.map((record, index) => {
-    const paletteColor = palette[index] ?? fallbackPaletteColor;
-    const fill = paletteColor?.light ?? PIE_FALLBACK_COLOR;
+    const paletteColor = resolvePaletteColor(palette, index);
+    const fill = paletteColor.light || PIE_FALLBACK_COLOR;
     const stroke =
-      paletteColor?.dark ?? paletteColor?.light ?? PIE_FALLBACK_COLOR;
+      paletteColor.dark || paletteColor.light || PIE_FALLBACK_COLOR;
     return {
       ...record,
       fill,

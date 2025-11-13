@@ -10,6 +10,7 @@ const staticRoutes = [
   "customs-codes",
   "car-import-taxes",
   "data-insights",
+  "aviation-stats",
   "inflation-tracker",
   "economic-activity",
   "war-records",

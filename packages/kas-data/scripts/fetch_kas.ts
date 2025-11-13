@@ -36,6 +36,7 @@ import {
 import { fetchImportsByPartner } from "./fetchers/imports";
 import { fetchTradeChaptersYearly, fetchTradeMonthly } from "./fetchers/trade";
 import { fetchTourismCountry, fetchTourismRegion } from "./fetchers/tourism";
+import { fetchAirTransportMonthly } from "./fetchers/transport";
 
 type CliArgs = {
   out: string | null;
@@ -133,6 +134,9 @@ export async function main(): Promise<void> {
 
   await runTask("Tourism Region", () => fetchTourismRegion(outDir, started));
   await runTask("Tourism Country", () => fetchTourismCountry(outDir, started));
+  await runTask("Air Transport", () =>
+    fetchAirTransportMonthly(outDir, started),
+  );
 
   await runTask("CPI Monthly", () => fetchCpiMonthly(outDir, started));
 

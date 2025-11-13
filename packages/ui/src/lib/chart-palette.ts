@@ -14,6 +14,15 @@ const DEFAULT_ANCHORS = [
 
 const FALLBACK_COLOR = DEFAULT_ANCHORS[0] ?? chroma.oklch(0.65, 0.22, 41.116);
 
+const DEFAULT_FALLBACK_COLOR: PaletteColor = {
+  light: FALLBACK_COLOR.hex(),
+  dark: FALLBACK_COLOR.brighten(0.6).hex(),
+};
+
+const DEFAULT_RESERVE_PALETTE = createChromaPalette(
+  Math.max(DEFAULT_ANCHORS.length, 6),
+);
+
 type PaletteOptions = {
   anchors?: Color[];
   padding?: number;
@@ -61,4 +70,31 @@ export function createChromaPalette(
       dark: dark.hex(),
     };
   });
+}
+
+/**
+ * Resolve a palette color safely with optional fallbacks and a default reserve palette.
+ */
+export function resolvePaletteColor(
+  palette: PaletteColor[],
+  index: number,
+  fallback?: PaletteColor,
+): PaletteColor {
+  if (!Number.isInteger(index) || index < 0) {
+    return fallback ?? DEFAULT_RESERVE_PALETTE[0] ?? DEFAULT_FALLBACK_COLOR;
+  }
+
+  const resolved = palette[index];
+  if (resolved) {
+    return resolved;
+  }
+
+  if (fallback) {
+    return fallback;
+  }
+
+  return (
+    DEFAULT_RESERVE_PALETTE[index % DEFAULT_RESERVE_PALETTE.length] ??
+    DEFAULT_FALLBACK_COLOR
+  );
 }

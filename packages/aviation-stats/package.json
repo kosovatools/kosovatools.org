@@ -1,5 +1,5 @@
 {
-  "name": "@workspace/drug-prices",
+  "name": "@workspace/aviation-stats",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -15,18 +15,16 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@workspace/dataset-api": "workspace:*",
+    "@workspace/kas-data": "workspace:*",
     "@workspace/ui": "workspace:*",
     "@workspace/utils": "workspace:*",
-    "lucide-react": "^0.475.0"
+    "recharts": "3.3.0"
   },
   "peerDependencies": {
-    "@tanstack/react-query": "^5.90.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "@tanstack/react-query": "^5.90.8",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@workspace/eslint-config": "workspace:*",

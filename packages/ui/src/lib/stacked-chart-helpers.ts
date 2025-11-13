@@ -1,6 +1,7 @@
 import type { ChartConfig } from "@workspace/ui/components/chart";
 import {
   createChromaPalette,
+  resolvePaletteColor,
   type PaletteColor,
 } from "@workspace/ui/lib/chart-palette";
 
@@ -60,11 +61,7 @@ export function buildStackedChartView({
         dark: "var(--muted-foreground)",
       };
     } else {
-      paletteEntry = palette[paletteIndex] ??
-        palette.at(-1) ?? {
-          light: "#6d4dd3",
-          dark: "#9a78ff",
-        };
+      paletteEntry = resolvePaletteColor(palette, paletteIndex);
       paletteIndex += 1;
     }
 

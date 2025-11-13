@@ -8,14 +8,16 @@ type TooltipKeyEntry = {
   id: string;
   palette: PaletteColor;
   label?: string;
+  unit?: string | null;
 };
 
 type TooltipFormatterOptions = {
-  keys: TooltipKeyEntry[];
+  keys: TooltipKeyEntry[] | Readonly<TooltipKeyEntry[]>;
   formatValue: (value: number) => string;
-  formatTotal?: (value: number) => string;
+  formatTotal?: (value: number, unit?: string | null) => string;
   totalLabel?: string;
   missingValueLabel?: string;
+  defaultUnit?: string | null;
 };
 
 type ChartTooltipContentProps = React.ComponentProps<
@@ -31,6 +33,7 @@ export function useChartTooltipFormatters({
   formatTotal = formatValue,
   totalLabel = "Totali",
   missingValueLabel = "Pa të dhëna",
+  defaultUnit = null,
 }: TooltipFormatterOptions): {
   formatter: ValueFormatter;
   labelFormatter: LabelFormatter;
@@ -40,14 +43,27 @@ export function useChartTooltipFormatters({
     [keys],
   );
 
-  const paletteByKey = React.useMemo(
-    () =>
-      keys.reduce<Record<string, PaletteColor>>((acc, entry) => {
-        acc[entry.id] = entry.palette;
-        return acc;
-      }, {}),
-    [keys],
+  const baseUnit = React.useMemo(
+    () => sanitizeUnit(defaultUnit),
+    [defaultUnit],
   );
+
+  const unitByKey = React.useMemo<Record<string, string | null>>(() => {
+    const mapping: Record<string, string | null> = {};
+    for (const entry of keys) {
+      const entryUnit = sanitizeUnit(entry.unit);
+      mapping[entry.id] = entryUnit ?? baseUnit ?? null;
+    }
+    return mapping;
+  }, [baseUnit, keys]);
+
+  const paletteByKey = React.useMemo<Record<string, PaletteColor>>(() => {
+    const mapping: Record<string, PaletteColor> = {};
+    for (const entry of keys) {
+      mapping[entry.id] = entry.palette;
+    }
+    return mapping;
+  }, [keys]);
 
   const labelFormatter = React.useCallback<LabelFormatter>(
     (rawLabel, payload) => {
@@ -59,26 +75,58 @@ export function useChartTooltipFormatters({
         return rawLabel;
       }
 
-      const total = relevantItems.reduce((sum, item) => {
+      const groupedTotals = relevantItems.reduce<
+        Map<string | null, { total: number; count: number }>
+      >((acc, item) => {
+        const key = String(item.dataKey);
+        const unitKey = unitByKey[key] ?? null;
+        const entry = acc.get(unitKey) ?? { total: 0, count: 0 };
         const nextValue =
           typeof item.value === "number" && Number.isFinite(item.value)
             ? item.value
             : null;
-        return nextValue != null ? sum + nextValue : sum;
-      }, 0);
+        acc.set(unitKey, {
+          total: entry.total + (nextValue ?? 0),
+          count: entry.count + 1,
+        });
+        return acc;
+      }, new Map<string | null, { total: number; count: number }>());
 
-      const formattedTotal = formatTotal(total);
+      const totalsToDisplay = Array.from(groupedTotals.entries())
+        .map(([unit, info]) => ({ unit, ...info }))
+        .filter((entry) => entry.count > 1);
+
+      if (!totalsToDisplay.length) {
+        return rawLabel;
+      }
 
       return (
         <div className="flex flex-col w-full items-center justify-between gap-2">
           <span>{rawLabel}</span>
-          <span className="font-mono text-[0.7rem] font-semibold tracking-wide text-muted-foreground">
-            {totalLabel ? `${totalLabel}: ${formattedTotal}` : formattedTotal}
-          </span>
+          {totalsToDisplay.map(({ unit, total }, index) => {
+            const formattedTotal = formatTotal(total, unit);
+            const labelParts = [
+              totalLabel,
+              typeof unit === "string" && unit.length ? `(${unit})` : null,
+            ].filter(Boolean);
+            const displayLabel = labelParts.join(" ");
+            const text = displayLabel
+              ? `${displayLabel}: ${formattedTotal}`
+              : formattedTotal;
+
+            return (
+              <span
+                key={unit ?? `unit-${index}`}
+                className="font-mono text-[0.7rem] font-semibold tracking-wide text-muted-foreground"
+              >
+                {text}
+              </span>
+            );
+          })}
         </div>
       );
     },
-    [formatTotal, keySet, totalLabel],
+    [formatTotal, keySet, totalLabel, unitByKey],
   );
 
   const formatter = React.useCallback<ValueFormatter>(
@@ -102,11 +150,13 @@ export function useChartTooltipFormatters({
 
       const cssVarColor = key ? `var(--color-${key})` : undefined;
 
+      const paletteColor: PaletteColor | undefined = key
+        ? paletteByKey[key]
+        : undefined;
       const fallbackColor =
         (typeof entry?.color === "string" ? entry.color : undefined) ??
-        (key
-          ? (paletteByKey[key]?.light ?? paletteByKey[key]?.dark)
-          : undefined) ??
+        paletteColor?.light ??
+        paletteColor?.dark ??
         "var(--border)";
 
       const indicatorColor = cssVarColor ?? fallbackColor;
@@ -129,4 +179,12 @@ export function useChartTooltipFormatters({
   );
 
   return { formatter, labelFormatter };
+}
+
+function sanitizeUnit(input?: string | null): string | null {
+  if (typeof input !== "string") {
+    return null;
+  }
+  const trimmed = input.trim();
+  return trimmed.length ? trimmed : null;
 }

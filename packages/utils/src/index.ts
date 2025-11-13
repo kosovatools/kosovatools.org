@@ -4,6 +4,7 @@ export type {
   StackBuildResult,
   StackSeriesRow,
   StackTotal,
+  StackOptions,
 } from "./utils/stack";
 export { buildStackSeries, summarizeStackTotals } from "./utils/stack";
 export {
@@ -13,6 +14,7 @@ export {
   getPeriodFormatter,
   sortGroupedPeriods,
   groupingToApproxMonths,
+  parseYearMonth,
 } from "./utils/period";
 export type {
   PeriodGrouping,

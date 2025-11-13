@@ -36,6 +36,24 @@ export const PATHS = {
     "Treguesit mujorë",
     "tab02.px",
   ],
+  transport_air_passengers_inbound: [
+    "ASKdata",
+    "Transport",
+    "Monthly indicators",
+    "4.numri i udhetareve hyres.px",
+  ],
+  transport_air_passengers_outbound: [
+    "ASKdata",
+    "Transport",
+    "Monthly indicators",
+    "5.numri i udhetareve dales.px",
+  ],
+  transport_air_flights: [
+    "ASKdata",
+    "Transport",
+    "Monthly indicators",
+    "6. numri i fluturimeve te realizuara.px",
+  ],
   cpi_change: [
     "ASKdata",
     "Prices",
