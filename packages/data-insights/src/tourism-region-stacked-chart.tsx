@@ -1,18 +1,9 @@
 "use client";
 
 import * as React from "react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import {
-  tourismRegion,
-  type TourismRegionRecord,
-} from "@workspace/kas-data";
+import { tourismRegion, type TourismRegionRecord } from "@workspace/kas-data";
 import { useStackChartState, getPeriodFormatter } from "@workspace/utils";
 
 import {

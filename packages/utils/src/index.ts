@@ -29,6 +29,7 @@ export {
   monthsFromRange,
   DEFAULT_TIME_RANGE_OPTIONS,
   DEFAULT_TIME_RANGE,
+  limitTimeRangeOptions,
 } from "./utils/time-range";
 export type { TimeRangeOption } from "./utils/time-range";
 export { aggregateSeriesByPeriod } from "./utils/series";

@@ -4,6 +4,7 @@ import {
   sanitizeValue,
   type StackChartSpec,
   getPeriodGroupingOptions,
+  limitTimeRangeOptions,
 } from "@workspace/utils";
 import { airTransportMonthly } from "@workspace/kas-data";
 
@@ -19,6 +20,13 @@ const dimensionLabels: Readonly<
   inbound: "Pasagjerë hyrës",
   outbound: "Pasagjerë dalës",
 };
+
+const periodGroupingOptions = getPeriodGroupingOptions(
+  airTransportMonthly.meta.time.granularity,
+);
+const timeRangeOptions = limitTimeRangeOptions(
+  airTransportMonthly.meta.time.count,
+);
 
 export const airPassengerStackChartSpec: StackChartSpec<PassengerStackRecord> =
   {
@@ -48,9 +56,8 @@ export const airPassengerStackChartSpec: StackChartSpec<PassengerStackRecord> =
       timeRange: DEFAULT_TIME_RANGE,
       includeOther: false,
     },
-    periodGroupingOptions: getPeriodGroupingOptions(
-      airTransportMonthly.meta.time.granularity,
-    ),
+    periodGroupingOptions,
+    timeRangeOptions,
     controls: {
       allowPeriodGrouping: true,
       allowTimeRange: true,

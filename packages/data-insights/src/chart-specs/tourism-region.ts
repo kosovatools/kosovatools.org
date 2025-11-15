@@ -4,6 +4,7 @@ import {
   sanitizeValue,
   type StackChartSpec,
   getPeriodGroupingOptions,
+  limitTimeRangeOptions,
 } from "@workspace/utils";
 import {
   tourismRegion,
@@ -15,6 +16,7 @@ const regionLabelMap = createLabelMap(tourismRegion.meta.dimensions.region);
 const periodGroupingOptions = getPeriodGroupingOptions(
   tourismRegion.meta.time.granularity,
 );
+const timeRangeOptions = limitTimeRangeOptions(tourismRegion.meta.time.count);
 
 export const tourismRegionStackChartSpec: StackChartSpec<TourismRegionRecord> =
   {
@@ -46,6 +48,7 @@ export const tourismRegionStackChartSpec: StackChartSpec<TourismRegionRecord> =
       includeOther: false,
     },
     periodGroupingOptions,
+    timeRangeOptions,
     controls: {
       allowPeriodGrouping: true,
       allowTimeRange: true,

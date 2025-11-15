@@ -30,6 +30,7 @@ import {
   getPeriodGroupingOptions,
   formatNumber,
   formatSignedPercent,
+  limitTimeRangeOptions,
   type PeriodGrouping,
 } from "@workspace/utils";
 import {
@@ -96,13 +97,17 @@ type SummaryRow = {
   indexChange: number | null;
 };
 
-const RANGE_OPTIONS: Array<{ key: RangeOption; label: string }> = [
+const BASE_RANGE_OPTIONS: ReadonlyArray<{ key: RangeOption; label: string }> = [
   { key: 12, label: "12 muaj" },
   { key: 24, label: "24 muaj" },
   { key: 60, label: "5 vjet" },
   { key: 120, label: "10 vjet" },
   { key: "all", label: "Gjithë seria" },
 ];
+const RANGE_OPTIONS = limitTimeRangeOptions<RangeOption>(
+  cpiMeta.time.count,
+  BASE_RANGE_OPTIONS,
+);
 
 const CPI_PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(
   cpiMeta.time.granularity,

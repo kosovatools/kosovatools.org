@@ -4,6 +4,7 @@ import {
   type StackChartSpec,
   getPeriodGroupingOptions,
   type ValueFormatter,
+  limitTimeRangeOptions,
 } from "@workspace/utils";
 import { electricityDataset, createLabelMap } from "@workspace/kas-data";
 import { formatAuto } from "../utils/number-format";
@@ -14,6 +15,12 @@ const DEFAULT_ENERGY_UNIT: "GWh" | "MWh" =
 
 const formatEnergy: ValueFormatter = (value) =>
   formatAuto(value, { inputUnit: DEFAULT_ENERGY_UNIT });
+const periodGroupingOptions = getPeriodGroupingOptions(
+  electricityDataset.meta.time.granularity,
+);
+const timeRangeOptions = limitTimeRangeOptions(
+  electricityDataset.meta.time.count,
+);
 
 export type ElectricityBalanceFlow = "production" | "import";
 
@@ -56,9 +63,8 @@ export const electricityBalanceStackChartSpec: StackChartSpec<ElectricityBalance
       timeRange: DEFAULT_TIME_RANGE,
       includeOther: false,
     },
-    periodGroupingOptions: getPeriodGroupingOptions(
-      electricityDataset.meta.time.granularity,
-    ),
+    periodGroupingOptions,
+    timeRangeOptions,
     controls: {
       allowPeriodGrouping: true,
       allowTimeRange: true,
@@ -111,9 +117,8 @@ export const electricityProductionStackChartSpec: StackChartSpec<ElectricityProd
       timeRange: DEFAULT_TIME_RANGE,
       includeOther: false,
     },
-    periodGroupingOptions: getPeriodGroupingOptions(
-      electricityDataset.meta.time.granularity,
-    ),
+    periodGroupingOptions,
+    timeRangeOptions,
     controls: {
       allowPeriodGrouping: true,
       allowTimeRange: true,

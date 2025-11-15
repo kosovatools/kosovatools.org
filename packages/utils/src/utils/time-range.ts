@@ -32,3 +32,36 @@ export const DEFAULT_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> = [
 ];
 
 export const DEFAULT_TIME_RANGE: TimeRangeOption = 36;
+
+export function limitTimeRangeOptions<
+  TOption extends TimeRangeOption = TimeRangeOption,
+>(
+  availablePeriods: number | null | undefined,
+  options?: ReadonlyArray<TimeRangeDefinition<TOption>>,
+): ReadonlyArray<TimeRangeDefinition<TOption>> {
+  const baseOptions =
+    options ??
+    (DEFAULT_TIME_RANGE_OPTIONS as ReadonlyArray<TimeRangeDefinition<TOption>>);
+
+  if (
+    availablePeriods == null ||
+    !Number.isFinite(availablePeriods) ||
+    availablePeriods <= 0
+  ) {
+    return baseOptions;
+  }
+
+  const maxPeriods = Math.floor(availablePeriods);
+  const limited = baseOptions.filter(
+    (option) => typeof option.key !== "number" || option.key <= maxPeriods,
+  );
+
+  if (limited.some((option) => typeof option.key === "number")) {
+    return limited;
+  }
+
+  const fallback = baseOptions.filter(
+    (option) => typeof option.key !== "number",
+  );
+  return fallback.length ? fallback : limited;
+}

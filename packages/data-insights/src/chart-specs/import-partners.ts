@@ -4,6 +4,7 @@ import {
   sanitizeValue,
   type StackChartSpec,
   getPeriodGroupingOptions,
+  limitTimeRangeOptions,
 } from "@workspace/utils";
 import {
   importsByPartner,
@@ -16,6 +17,9 @@ const partnerLabelMap = createLabelMap(
 );
 const periodGroupingOptions = getPeriodGroupingOptions(
   importsByPartner.meta.time.granularity,
+);
+const timeRangeOptions = limitTimeRangeOptions(
+  importsByPartner.meta.time.count,
 );
 
 export const importPartnersStackChartSpec: StackChartSpec<TradePartnerRecord> =
@@ -48,6 +52,7 @@ export const importPartnersStackChartSpec: StackChartSpec<TradePartnerRecord> =
       includeOther: true,
     },
     periodGroupingOptions,
+    timeRangeOptions,
     controls: {
       allowPeriodGrouping: true,
       allowTimeRange: true,

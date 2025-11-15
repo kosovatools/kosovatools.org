@@ -5,6 +5,7 @@ import {
   type StackChartSpec,
   getPeriodGroupingOptions,
   type ValueFormatter,
+  limitTimeRangeOptions,
 } from "@workspace/utils";
 import {
   fuelDataset,
@@ -17,6 +18,7 @@ const fuelLabelMap = createLabelMap(fuelDataset.meta.dimensions.fuel);
 const periodGroupingOptions = getPeriodGroupingOptions(
   fuelDataset.meta.time.granularity,
 );
+const timeRangeOptions = limitTimeRangeOptions(fuelDataset.meta.time.count);
 
 const formatTonnes: ValueFormatter = (value) =>
   `${formatCountValue(value)} tonë`;
@@ -94,6 +96,7 @@ export const fuelBalanceStackChartSpec: StackChartSpec<FuelBalanceRecord> = {
     includeOther: false,
   },
   periodGroupingOptions,
+  timeRangeOptions,
   controls: {
     allowMetricSelection: true,
     allowPeriodGrouping: true,
