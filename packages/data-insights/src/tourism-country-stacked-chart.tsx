@@ -1,17 +1,9 @@
 "use client";
 
 import * as React from "react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Label,
-  ReferenceLine,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { timelineEvents, tourismCountry } from "@workspace/kas-data";
+import { tourismCountry } from "@workspace/kas-data";
 import { useStackChartState, getPeriodFormatter } from "@workspace/utils";
 
 import {
@@ -28,7 +20,6 @@ import {
   SelectorOptionDefinition,
 } from "@workspace/ui/custom-components/option-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
-import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 import { formatCountValue } from "./formatters";
 import { tourismCountryStackChartSpec } from "./chart-specs";
@@ -118,12 +109,6 @@ export function TourismCountryStackedChart({
       (metric.formatters.total ?? metric.formatters.value)(value),
   });
 
-  const eventMarkers = useTimelineEventMarkers(
-    chartData as Array<{ period: string; periodLabel: string }>,
-    periodGrouping,
-    timelineEvents,
-  );
-
   if (!chartData.length || !keyMap.length) {
     return (
       <ChartContainer config={config}>
@@ -185,23 +170,6 @@ export function TourismCountryStackedChart({
             }
             axisLine={false}
           />
-          {eventMarkers.map((event) => (
-            <ReferenceLine
-              key={event.id}
-              x={event.x}
-              stroke="var(--muted-foreground)"
-              strokeDasharray="3 3"
-              ifOverflow="extendDomain"
-            >
-              <Label
-                value={event.label}
-                position="top"
-                fill="var(--muted-foreground)"
-                fontSize={10}
-                offset={4}
-              />
-            </ReferenceLine>
-          ))}
           <ChartTooltip
             content={
               <ChartTooltipContent

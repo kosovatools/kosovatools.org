@@ -5,14 +5,11 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
-  Label,
-  ReferenceLine,
   XAxis,
   YAxis,
 } from "recharts";
 
 import {
-  timelineEvents,
   tourismRegion,
   type TourismRegionRecord,
 } from "@workspace/kas-data";
@@ -31,7 +28,6 @@ import {
   type SelectorOptionDefinition,
 } from "@workspace/ui/custom-components/option-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
-import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 import { formatCountValue } from "./formatters";
 import { tourismRegionStackChartSpec } from "./chart-specs";
 
@@ -137,12 +133,6 @@ export function TourismRegionCharts() {
     formatTotal: formatCountValue,
   });
 
-  const eventMarkers = useTimelineEventMarkers(
-    chartData as Array<{ period: string; periodLabel: string }>,
-    periodGrouping,
-    timelineEvents,
-  );
-
   if (!chartData.length || !keyMap.length) {
     return (
       <ChartContainer config={{}}>
@@ -206,23 +196,6 @@ export function TourismRegionCharts() {
             tickFormatter={formatCountValue}
             axisLine={false}
           />
-          {eventMarkers.map((event) => (
-            <ReferenceLine
-              key={event.id}
-              x={event.x}
-              stroke="var(--muted-foreground)"
-              strokeDasharray="3 3"
-              ifOverflow="extendDomain"
-            >
-              <Label
-                value={event.label}
-                position="top"
-                fill="var(--muted-foreground)"
-                fontSize={10}
-                offset={4}
-              />
-            </ReferenceLine>
-          ))}
           <ChartTooltip
             content={
               <ChartTooltipContent

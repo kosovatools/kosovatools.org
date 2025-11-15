@@ -77,6 +77,13 @@
     "summary": "Kosova vendos masa të jashtëzakonshme për përballjen me pandeminë COVID-19."
   },
   {
+    "id": "covid-pandemic-impact",
+    "title": "Pandemia COVID-19",
+    "period": "2020-04",
+    "category": "public_health",
+    "summary": "Izolimet e gjera dhe kufizimet e lëvizjes ndërpresin aktivitetin ekonomik dhe ndikojnë në tregjet e punës."
+  },
+  {
     "id": "avdullah-hoti-government",
     "title": "Qeveria Avdullah Hoti",
     "period": "2020-06",
@@ -89,6 +96,20 @@
     "period": "2021-03",
     "category": "government_change",
     "summary": "Qeveria Kurti II formohet pas zgjedhjeve të parakohshme."
+  },
+  {
+    "id": "ukraine-war-2022",
+    "title": "Lufta në Ukrainë",
+    "period": "2022-02",
+    "category": "security",
+    "summary": "Pushtimi i shkallës së plotë i Ukrainës nga Rusia rrit pasigurinë gjeopolitike dhe çmimet e energjisë që ndikojnë edhe ekonomitë e Ballkanit."
+  },
+  {
+    "id": "eu-funds-freeze-2023",
+    "title": "BE pezullon fonde për Kosovën",
+    "period": "2023-06",
+    "category": "other",
+    "summary": "Bashkimi Evropian vendos masa ndëshkuese duke ngrirë një pjesë të fondeve dhe programeve për Kosovën për shkak të tensioneve në veri."
   },
   {
     "id": "banjska-attack",

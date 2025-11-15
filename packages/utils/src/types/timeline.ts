@@ -9,6 +9,6 @@ export type TimelineEvent = {
   title: string;
   period: string;
   category: TimelineEventCategory;
-  summary?: string;
-  date?: string;
+  summary: string;
+  date: string;
 };

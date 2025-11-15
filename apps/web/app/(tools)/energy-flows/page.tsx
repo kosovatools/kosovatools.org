@@ -76,7 +76,7 @@ export default function EnergyFlowsPage() {
             {unitLabel}.
           </span>
         </div>
-        <ElectricityProductionBySourceChart data={electricityDataset.records} />
+        <ElectricityProductionBySourceChart />
       </section>
       <ReactQueryProvider>
         <EnergyFlowExplorer />

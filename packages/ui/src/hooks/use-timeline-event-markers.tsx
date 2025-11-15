@@ -15,6 +15,7 @@ type ChartDatum = {
 export type ChartEventMarker = {
   id: string;
   x: string;
+  offset: number;
   label: string;
   description?: string;
   details?: string;
@@ -65,9 +66,10 @@ export function useTimelineEventMarkers(
       });
     }
 
-    return Array.from(markers.values()).map((entry) => ({
+    return Array.from(markers.values()).map((entry, i) => ({
       id: entry.id,
       x: entry.x,
+      offset: -(i % 6) * 12 - 5,
       label: entry.titles[0] ?? entry.id,
       description:
         entry.descriptions.length === 1

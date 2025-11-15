@@ -202,7 +202,7 @@ export function FuelBalanceChart() {
                 position="top"
                 fill="var(--muted-foreground)"
                 fontSize={10}
-                offset={4}
+                offset={event.offset}
               />
             </ReferenceLine>
           ))}

@@ -3,6 +3,7 @@
 import * as React from "react";
 import {
   CartesianGrid,
+  Label,
   Line,
   LineChart,
   ReferenceLine,
@@ -22,7 +23,7 @@ import {
   type CpiMetric,
   type CpiSeriesPoint,
 } from "./cpi-data";
-import { cpiMeta } from "@workspace/kas-data";
+import { cpiMeta, timelineEvents } from "@workspace/kas-data";
 import {
   sortGroupedPeriods,
   getPeriodFormatter,
@@ -63,6 +64,7 @@ import {
   type HierarchicalNode,
 } from "@workspace/ui/custom-components/hierarchical-multi-select";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 
 type Metric = CpiMetric;
 type RangeOption = 12 | 24 | 60 | 120 | "all";
@@ -450,6 +452,11 @@ export function InflationDashboard({
     keys: tooltipKeys,
     formatValue: (v) => formatMetricValue(v, metric),
   });
+  const eventMarkers = useTimelineEventMarkers(
+    chartData as Array<{ period: string; periodLabel: string }>,
+    periodGrouping,
+    timelineEvents,
+  );
 
   const handleSelectionChange = React.useCallback(
     (codes: string[]) => {
@@ -552,6 +559,23 @@ export function InflationDashboard({
                     {metric === "change" ? (
                       <ReferenceLine y={0} stroke="var(--border)" />
                     ) : null}
+                    {eventMarkers.map((event) => (
+                      <ReferenceLine
+                        key={event.id}
+                        x={event.x}
+                        stroke="var(--muted-foreground)"
+                        strokeDasharray="3 3"
+                        ifOverflow="extendDomain"
+                      >
+                        <Label
+                          value={event.label}
+                          position="top"
+                          fill="var(--muted-foreground)"
+                          fontSize={10}
+                          offset={event.offset}
+                        />
+                      </ReferenceLine>
+                    ))}
                     <ChartLegend content={<ChartLegendContent />} />
                     <ChartTooltip
                       content={
