@@ -7,11 +7,11 @@ import { Filter, X } from "lucide-react";
 
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
-import { formatDate, formatPercent } from "../formatters";
 import type { CustomsTreeNode } from "../types";
 
 import { ExpandIcon } from "../expand-icon";
 import { highlightPrefix } from "../highlighting";
+import { formatDate, formatPercent } from "@workspace/utils";
 
 type ColumnFactoryParams = {
   getCodePrefix: () => string;
@@ -172,7 +172,7 @@ export function createCustomsColumns({
       header: () => <ColumnHeaderLabel>E vlefshme nga</ColumnHeaderLabel>,
       accessorKey: "validFrom",
       cell: (info) => (
-        <span className="text-xs">{formatDate(info.getValue())}</span>
+        <span className="text-xs">{formatDate(info.getValue() as string)}</span>
       ),
     },
   ];

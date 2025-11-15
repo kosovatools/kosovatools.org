@@ -14,21 +14,22 @@ import {
 import {
   airTransportMonthly,
   airTransportSeries,
-  buildAirPassengerStack,
   type AirTransportSeriesPoint,
 } from "@workspace/kas-data";
 import {
+  aggregateSeriesByPeriod,
   DEFAULT_TIME_RANGE,
   DEFAULT_TIME_RANGE_OPTIONS,
-  createDateFormatter,
-  createNumberFormatter,
   formatCount,
-  PERIOD_GROUPING_OPTIONS,
+  formatDate,
+  formatNumber,
+  getPeriodGroupingOptions,
   formatPeriodLabel,
   formatSignedPercent,
   getPeriodFormatter,
   monthsFromRange,
   parseYearMonth,
+  sanitizeValue,
   type PeriodGrouping,
   type TimeRangeOption,
 } from "@workspace/utils";
@@ -57,26 +58,24 @@ import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip
 
 const LOCALE = "sq-AL";
 
-const averagePassengersFormatter = createNumberFormatter(LOCALE, {
-  maximumFractionDigits: 1,
-  minimumFractionDigits: 0,
-});
-
-const updatedAtFormatter = createDateFormatter(
-  LOCALE,
-  {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  },
-  { fallback: "" },
-);
+const averagePassengersFormatter = (value: number | null | undefined) =>
+  formatNumber(
+    value,
+    {
+      maximumFractionDigits: 1,
+      minimumFractionDigits: 0,
+    },
+    { fallback: "—" },
+  );
 
 const monthlyPeriodFormatter = getPeriodFormatter("monthly", {
   locale: LOCALE,
 });
 
 const palette = createChromaPalette(3);
+const periodGroupingOptions = getPeriodGroupingOptions(
+  airTransportMonthly.meta.time.granularity,
+);
 
 type SeriesDefinition = {
   id: "inbound" | "outbound" | "flights";
@@ -117,6 +116,14 @@ const chartConfig: ChartConfig = seriesDefinitions.reduce(
   }),
   {} as ChartConfig,
 );
+
+type ChartRow = {
+  period: string;
+  periodLabel: string;
+  inbound: number;
+  outbound: number;
+  flights: number;
+};
 
 const recordIndex = new Map(
   airTransportSeries.map((record, index) => [record.period, index]),
@@ -301,26 +308,45 @@ export function AviationDashboard() {
     () => getPeriodFormatter(periodGrouping, { locale: LOCALE }),
     [periodGrouping],
   );
-  const passengerStack = useMemo(
-    () =>
-      buildAirPassengerStack({
-        months: monthsLimit,
-        periodGrouping,
-      }),
-    [monthsLimit, periodGrouping],
-  );
-  const chartSeries = passengerStack.series;
-  const flightsByPeriod = passengerStack.flightsByPeriod;
-  const coverageLabel = useMemo(() => {
-    if (!chartSeries.length) return null;
-    const first = chartSeries[0]?.period;
-    const last = chartSeries.at(-1)?.period;
-    if (!first || !last) return null;
-    return `${chartPeriodFormatter(first)} – ${chartPeriodFormatter(last)}`;
-  }, [chartPeriodFormatter, chartSeries]);
-  const latestPeriodLabel = chartSeries.length
-    ? chartPeriodFormatter(chartSeries.at(-1)!.period)
-    : null;
+  const { chartData, coverageLabel, latestPeriodLabel } = useMemo(() => {
+    const limitedRecords =
+      typeof monthsLimit === "number"
+        ? airTransportSeries.slice(-monthsLimit)
+        : airTransportSeries;
+
+    const aggregated = aggregateTransportByGrouping(
+      limitedRecords,
+      periodGrouping,
+    );
+
+    if (!aggregated.length) {
+      return {
+        chartData: [] as ChartRow[],
+        coverageLabel: null,
+        latestPeriodLabel: null,
+      };
+    }
+
+    const first = aggregated[0]?.period ?? null;
+    const last = aggregated.at(-1)?.period ?? null;
+
+    const chartData: ChartRow[] = aggregated.map((row) => ({
+      period: row.period,
+      periodLabel: chartPeriodFormatter(row.period),
+      inbound: row.inboundTotal,
+      outbound: row.outboundTotal,
+      flights: row.flightsTotal,
+    }));
+
+    return {
+      chartData,
+      coverageLabel:
+        first && last
+          ? `${chartPeriodFormatter(first)} – ${chartPeriodFormatter(last)}`
+          : null,
+      latestPeriodLabel: last ? chartPeriodFormatter(last) : null,
+    };
+  }, [chartPeriodFormatter, monthsLimit, periodGrouping]);
 
   const {
     formatter: tooltipValueFormatter,
@@ -331,20 +357,9 @@ export function AviationDashboard() {
     defaultUnit: "pasagjerë",
   });
 
-  const chartData = useMemo(() => {
-    if (!chartSeries.length) return [];
-    return chartSeries.map((row) => ({
-      period: row.period,
-      periodLabel: chartPeriodFormatter(row.period),
-      inbound: row.values.inbound ?? 0,
-      outbound: row.values.outbound ?? 0,
-      flights: flightsByPeriod[row.period] ?? 0,
-    }));
-  }, [chartPeriodFormatter, chartSeries, flightsByPeriod]);
-
   const summaryCards = useMemo(() => buildSummaryCards(), []);
 
-  const updatedLabel = formatUpdatedAt(airTransportMonthly.meta.updated_at);
+  const updatedLabel = formatDate(airTransportMonthly.meta.updated_at);
 
   return (
     <div className="flex flex-col gap-6">
@@ -394,7 +409,7 @@ export function AviationDashboard() {
             <OptionSelector
               value={periodGrouping}
               onChange={setPeriodGrouping}
-              options={PERIOD_GROUPING_OPTIONS}
+              options={periodGroupingOptions}
               label="Periudha"
             />
             <OptionSelector
@@ -517,12 +532,6 @@ export function AviationDashboard() {
   );
 }
 
-function formatUpdatedAt(value: string | null | undefined): string | null {
-  if (!value) return null;
-  const formatted = updatedAtFormatter(value);
-  return formatted && formatted.trim().length ? formatted : null;
-}
-
 type SummaryCardProps = Omit<SummaryCardData, "id">;
 
 function SummaryCard({
@@ -563,4 +572,45 @@ function SummaryCard({
       </CardContent>
     </Card>
   );
+}
+
+type TransportAggregateRow = {
+  period: string;
+  inboundTotal: number;
+  outboundTotal: number;
+  flightsTotal: number;
+};
+
+function aggregateTransportByGrouping(
+  records: readonly AirTransportSeriesPoint[],
+  grouping: PeriodGrouping,
+): TransportAggregateRow[] {
+  const aggregated = aggregateSeriesByPeriod<
+    AirTransportSeriesPoint,
+    "inboundTotal" | "outboundTotal" | "flightsTotal"
+  >(records, {
+    getPeriod: (record) => record.period,
+    grouping,
+    fields: [
+      {
+        key: "inboundTotal",
+        getValue: (record) => sanitizeValue(record.inbound, 0),
+      },
+      {
+        key: "outboundTotal",
+        getValue: (record) => sanitizeValue(record.outbound, 0),
+      },
+      {
+        key: "flightsTotal",
+        getValue: (record) => sanitizeValue(record.flights, 0),
+      },
+    ],
+  });
+
+  return aggregated.map((row) => ({
+    period: row.period,
+    inboundTotal: row.inboundTotal ?? 0,
+    outboundTotal: row.outboundTotal ?? 0,
+    flightsTotal: row.flightsTotal ?? 0,
+  }));
 }

@@ -234,6 +234,9 @@ importers:
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
+      '@workspace/utils':
+        specifier: workspace:*
+        version: link:../utils
       dexie:
         specifier: ^4.2.1
         version: 4.2.1
@@ -600,6 +603,9 @@ importers:
       '@workspace/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
+      '@workspace/utils':
+        specifier: workspace:*
+        version: link:../utils
       eslint:
         specifier: ^9.39.1
         version: 9.39.1(jiti@2.6.1)

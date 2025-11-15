@@ -4,12 +4,13 @@ import * as React from "react";
 import { Filter, History, RefreshCcw, Search } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
-  createCurrencyFormatter,
-  createDateFormatter,
   formatCount,
+  formatCurrency,
+  formatDate,
   getSearchParamNumber,
   getSearchParamString,
   mergeSearchParams,
+  type DateInput,
 } from "@workspace/utils";
 import type { SearchParamUpdates } from "@workspace/utils";
 import { Button } from "@workspace/ui/components/button";
@@ -53,21 +54,11 @@ import {
 import { VersionHistoryTable } from "./components/version-history-table";
 import { ReferencePriceSection } from "./components/reference-price-section";
 
-const priceFormatter = createCurrencyFormatter("sq", "EUR", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 3,
-});
-
-const shortDateFormatter = createDateFormatter("sq-AL", {
-  dateStyle: "medium",
-});
-const longDateFormatter = createDateFormatter("sq-AL", {
-  dateStyle: "long",
-});
-const dateTimeFormatter = createDateFormatter("sq-AL", {
-  dateStyle: "medium",
-  timeStyle: "short",
-});
+const dateTimeFormatter = (value: DateInput) =>
+  formatDate(value, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
 function getCurrentSearchString(): string {
   if (typeof window === "undefined") {
     return "";
@@ -630,7 +621,7 @@ function DrugPriceExplorerContent({
                                     Shumicë
                                   </span>
                                   <span className="font-medium">
-                                    {priceFormatter(record.price_wholesale)}
+                                    {formatCurrency(record.price_wholesale)}
                                   </span>
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -638,7 +629,7 @@ function DrugPriceExplorerContent({
                                     Me marzhë
                                   </span>
                                   <span className="font-medium">
-                                    {priceFormatter(record.price_with_margin)}
+                                    {formatCurrency(record.price_with_margin)}
                                   </span>
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -646,7 +637,7 @@ function DrugPriceExplorerContent({
                                     Pakicë
                                   </span>
                                   <span className="font-semibold text-foreground">
-                                    {priceFormatter(record.price_retail)}
+                                    {formatCurrency(record.price_retail)}
                                   </span>
                                 </div>
                               </div>
@@ -660,7 +651,7 @@ function DrugPriceExplorerContent({
                               </p>
                               <div className="text-sm">
                                 <p className="font-medium">
-                                  {longDateFormatter(record.valid_until)}
+                                  {formatDate(record.valid_until)}
                                 </p>
                                 <p className="text-xs text-muted-foreground">
                                   {record.authorization_number ??
@@ -680,14 +671,11 @@ function DrugPriceExplorerContent({
                                   <div className="mt-4 space-y-4">
                                     <VersionHistoryTable
                                       entries={record.version_history}
-                                      formatPrice={priceFormatter}
-                                      formatDate={shortDateFormatter}
                                     />
                                     {sections.map((section) => (
                                       <ReferencePriceSection
                                         key={`${record.id}-${section.title}`}
                                         section={section}
-                                        formatPrice={priceFormatter}
                                       />
                                     ))}
                                   </div>
@@ -709,25 +697,25 @@ function DrugPriceExplorerContent({
                     {
                       key: "wholesale",
                       label: "Shumicë",
-                      value: priceFormatter(record.price_wholesale),
+                      value: formatCurrency(record.price_wholesale),
                       highlight: false,
                     },
                     {
                       key: "margin",
                       label: "Me marzhë",
-                      value: priceFormatter(record.price_with_margin),
+                      value: formatCurrency(record.price_with_margin),
                       highlight: false,
                     },
                     {
                       key: "retail",
                       label: "Pakicë",
-                      value: priceFormatter(record.price_retail),
+                      value: formatCurrency(record.price_retail),
                       highlight: false,
                     },
                     {
                       key: "valid",
                       label: "Vlen deri",
-                      value: longDateFormatter(record.valid_until),
+                      value: formatDate(record.valid_until),
                       highlight: true,
                     },
                   ] as const;
@@ -819,14 +807,11 @@ function DrugPriceExplorerContent({
                           <div className="mt-3 space-y-3 text-xs">
                             <VersionHistoryTable
                               entries={record.version_history}
-                              formatPrice={priceFormatter}
-                              formatDate={shortDateFormatter}
                             />
                             {sections.map((section) => (
                               <ReferencePriceSection
                                 key={`${record.id}-${section.title}-mobile`}
                                 section={section}
-                                formatPrice={priceFormatter}
                               />
                             ))}
                           </div>

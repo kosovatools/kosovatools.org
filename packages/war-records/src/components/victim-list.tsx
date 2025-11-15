@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 
 import { cn } from "@workspace/ui/lib/utils";
+import { formatDate } from "@workspace/utils";
 
 import { formatLabel } from "../lib/format";
 import type { MemorialVictim } from "../types";
@@ -188,14 +189,11 @@ export function VictimList({
                   </span>
                   {victim.dateOfIncident ? (
                     <span className="mt-1 block text-xs text-muted-foreground md:text-sm">
-                      {new Date(victim.dateOfIncident).toLocaleDateString(
-                        "sq-AL",
-                        {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        },
-                      )}
+                      {formatDate(victim.dateOfIncident, {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
                     </span>
                   ) : null}
                   {locations.length > 0 ? (

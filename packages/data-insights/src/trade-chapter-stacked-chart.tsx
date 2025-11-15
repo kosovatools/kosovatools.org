@@ -6,9 +6,10 @@ import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   buildStackSeries,
   summarizeStackTotals,
-  formatEuroCompact,
   getPeriodFormatter,
+  sanitizeValue,
   type PeriodGrouping,
+  formatCurrency,
 } from "@workspace/utils";
 import { createLabelMap, tradeChaptersYearly } from "@workspace/kas-data";
 import {
@@ -57,9 +58,6 @@ const chapterLabelMap = createLabelMap(
 
 const labelForChapter = (key: string) => chapterLabelMap[key] ?? key;
 
-const sanitizeValue = (value: number | null | undefined): number =>
-  typeof value === "number" && Number.isFinite(value) ? value : 0;
-
 export function TradeChapterStackedChart({
   top = DEFAULT_TOP_CHAPTERS,
 }: {
@@ -74,6 +72,7 @@ export function TradeChapterStackedChart({
       chapter: record.chapter,
       value: sanitizeValue(
         mode === "exports" ? record.exports : record.imports,
+        0,
       ),
     }));
   }, [mode]);
@@ -129,7 +128,7 @@ export function TradeChapterStackedChart({
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => formatEuroCompact(value),
+    formatValue: formatCurrency,
   });
 
   if (!chartData.length || !keyMap.length) {
@@ -181,7 +180,7 @@ export function TradeChapterStackedChart({
           />
           <YAxis
             width="auto"
-            tickFormatter={(value) => formatEuroCompact(value as number)}
+            tickFormatter={(v) => formatCurrency(v as number)}
             axisLine={false}
           />
           <ChartTooltip

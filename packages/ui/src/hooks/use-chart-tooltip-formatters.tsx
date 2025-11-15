@@ -43,19 +43,13 @@ export function useChartTooltipFormatters({
     [keys],
   );
 
-  const baseUnit = React.useMemo(
-    () => sanitizeUnit(defaultUnit),
-    [defaultUnit],
-  );
-
   const unitByKey = React.useMemo<Record<string, string | null>>(() => {
     const mapping: Record<string, string | null> = {};
     for (const entry of keys) {
-      const entryUnit = sanitizeUnit(entry.unit);
-      mapping[entry.id] = entryUnit ?? baseUnit ?? null;
+      mapping[entry.id] = entry.unit ?? defaultUnit ?? null;
     }
     return mapping;
-  }, [baseUnit, keys]);
+  }, [defaultUnit, keys]);
 
   const paletteByKey = React.useMemo<Record<string, PaletteColor>>(() => {
     const mapping: Record<string, PaletteColor> = {};
@@ -179,12 +173,4 @@ export function useChartTooltipFormatters({
   );
 
   return { formatter, labelFormatter };
-}
-
-function sanitizeUnit(input?: string | null): string | null {
-  if (typeof input !== "string") {
-    return null;
-  }
-  const trimmed = input.trim();
-  return trimmed.length ? trimmed : null;
 }

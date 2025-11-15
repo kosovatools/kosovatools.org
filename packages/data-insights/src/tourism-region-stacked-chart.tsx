@@ -19,9 +19,9 @@ import {
 } from "@workspace/kas-data";
 import {
   buildStackSeries,
-  formatCount,
+  sanitizeValue,
   type PeriodGrouping,
-  PERIOD_GROUPING_OPTIONS,
+  getPeriodGroupingOptions,
   getPeriodFormatter,
   type TimeRangeOption,
   DEFAULT_TIME_RANGE_OPTIONS,
@@ -43,6 +43,7 @@ import {
 } from "@workspace/ui/custom-components/option-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
+import { formatCountValue } from "./formatters";
 
 const DEFAULT_GROUP_LABEL = "Total";
 
@@ -86,9 +87,10 @@ const regionLabelMap = createLabelMap(tourismRegion.meta.dimensions.region);
 
 const labelForRegion = (key: string) => regionLabelMap[key] ?? key;
 
-const sanitizeValue = (value: number | null | undefined): number =>
-  typeof value === "number" && Number.isFinite(value) ? value : 0;
 const data = tourismRegion.records;
+const periodGroupingOptions = getPeriodGroupingOptions(
+  tourismRegion.meta.time.granularity,
+);
 
 export function TourismRegionCharts() {
   const [group, setGroup] =
@@ -118,7 +120,7 @@ export function TourismRegionCharts() {
     return filteredRecords.map((record) => ({
       period: record.period,
       region: record.region,
-      value: sanitizeValue(record.visitors),
+      value: sanitizeValue(record.visitors, 0),
     }));
   }, [filteredRecords]);
 
@@ -174,8 +176,8 @@ export function TourismRegionCharts() {
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => formatCount(value),
-    formatTotal: (value) => formatCount(value),
+    formatValue: formatCountValue,
+    formatTotal: formatCountValue,
   });
 
   const eventMarkers = useTimelineEventMarkers(
@@ -212,7 +214,7 @@ export function TourismRegionCharts() {
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={PERIOD_GROUPING_OPTIONS}
+          options={periodGroupingOptions}
           label="Perioda"
         />
         <OptionSelector
@@ -227,7 +229,7 @@ export function TourismRegionCharts() {
         <p className="text-xs text-muted-foreground">
           Periudha e fundit ({latestSummary.periodLabel}):{" "}
           <span className="font-medium text-foreground">
-            {formatCount(latestSummary.total)}
+            {formatCountValue(latestSummary.total)}
           </span>{" "}
           {groupLabelText.toLowerCase()} vizitorë në të gjitha rajonet.
         </p>
@@ -244,7 +246,7 @@ export function TourismRegionCharts() {
           />
           <YAxis
             width="auto"
-            tickFormatter={(value) => formatCount(value as number)}
+            tickFormatter={formatCountValue}
             axisLine={false}
           />
           {eventMarkers.map((event) => (

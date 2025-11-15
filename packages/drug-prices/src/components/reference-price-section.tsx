@@ -1,16 +1,11 @@
-import * as React from "react";
-
+import { formatCurrency } from "@workspace/utils";
 import type { ReferenceSection } from "../utils/records";
 
 type ReferencePriceSectionProps = {
   section: ReferenceSection;
-  formatPrice: (value: number | null | undefined) => string;
 };
 
-export function ReferencePriceSection({
-  section,
-  formatPrice,
-}: ReferencePriceSectionProps) {
+export function ReferencePriceSection({ section }: ReferencePriceSectionProps) {
   return (
     <div className="space-y-2">
       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -23,7 +18,7 @@ export function ReferencePriceSection({
             className="flex items-center justify-between rounded-md border bg-muted/30 px-3 py-2 text-sm"
           >
             <span className="text-muted-foreground">{entry.label}</span>
-            <span className="font-medium">{formatPrice(entry.value)}</span>
+            <span className="font-medium">{formatCurrency(entry.value)}</span>
           </div>
         ))}
       </div>

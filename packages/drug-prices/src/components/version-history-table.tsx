@@ -1,18 +1,10 @@
-import * as React from "react";
-
 import type { DrugPriceSnapshot } from "../types";
-
+import { formatCurrency, formatDate } from "@workspace/utils";
 type VersionHistoryTableProps = {
   entries: DrugPriceSnapshot[];
-  formatPrice: (value: number | null | undefined) => string;
-  formatDate: (value: string | null | undefined) => string;
 };
 
-export function VersionHistoryTable({
-  entries,
-  formatPrice,
-  formatDate,
-}: VersionHistoryTableProps) {
+export function VersionHistoryTable({ entries }: VersionHistoryTableProps) {
   if (!entries.length) {
     return null;
   }
@@ -34,13 +26,13 @@ export function VersionHistoryTable({
             <tr key={`${entry.version}-${entry.valid_until ?? "na"}`}>
               <td className="px-3 py-2 font-medium">{entry.version}</td>
               <td className="px-3 py-2 text-right">
-                {formatPrice(entry.price_wholesale)}
+                {formatCurrency(entry.price_wholesale)}
               </td>
               <td className="px-3 py-2 text-right">
-                {formatPrice(entry.price_with_margin)}
+                {formatCurrency(entry.price_with_margin)}
               </td>
               <td className="px-3 py-2 text-right">
-                {formatPrice(entry.price_retail)}
+                {formatCurrency(entry.price_retail)}
               </td>
               <td className="px-3 py-2 text-left">
                 {formatDate(entry.valid_until)}

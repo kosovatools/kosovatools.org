@@ -18,7 +18,7 @@ import {
   calculateWageBreakdown,
   type JobType,
 } from "@workspace/payroll";
-import { formatEuroWithCents, formatPercent } from "@workspace/utils";
+import { formatCurrency, formatPercent } from "@workspace/utils";
 
 const DEFAULT_VALUES: Pick<
   WageCalculatorInputsProps,
@@ -116,7 +116,7 @@ export function WageCalculatorClient() {
         <WageCalculatorResults
           result={activeResult}
           inverseResult={mode === "netToGross" ? inverseBreakdown : undefined}
-          formatCurrency={formatEuroWithCents}
+          formatCurrency={(value) => formatCurrency(value)}
           formatPercentage={formatPercent}
         />
       </div>

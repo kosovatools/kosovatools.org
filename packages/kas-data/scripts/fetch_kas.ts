@@ -90,6 +90,7 @@ export async function main(): Promise<void> {
 
   await fs.mkdir(outDir, { recursive: true });
   const started = new Date().toISOString();
+  const failedTasks: string[] = [];
 
   const runTask = async <T>(
     name: string,
@@ -102,6 +103,7 @@ export async function main(): Promise<void> {
         `! ${name} download failed:`,
         error instanceof Error ? error.message : error,
       );
+      failedTasks.push(name);
       return null;
     }
   };
@@ -144,6 +146,11 @@ export async function main(): Promise<void> {
     await runTask("Imports by Partner", () =>
       fetchImportsByPartner(outDir, partners, started),
     );
+  }
+
+  if (failedTasks.length > 0) {
+    const label = failedTasks.length === 1 ? "dataset" : "datasets";
+    throw new PxError(`Failed to fetch ${label}: ${failedTasks.join(", ")}`);
   }
 
   console.log(

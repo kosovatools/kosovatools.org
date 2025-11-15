@@ -9,9 +9,25 @@ import type {
 } from "recharts/types/component/DefaultTooltipContent";
 import type { TooltipContentProps } from "recharts/types/component/Tooltip";
 import { cn } from "../lib/utils";
+import { formatNumber } from "@workspace/utils";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
+
+function formatTooltipValue(value: ValueType | null | undefined): string {
+  if (typeof value === "number") {
+    return formatNumber(value);
+  }
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? formatNumber(parsed) : value;
+  }
+  if (Array.isArray(value) && value.length) {
+    const parsed = Number(value[0]);
+    return Number.isFinite(parsed) ? formatNumber(parsed) : formatNumber(null);
+  }
+  return formatNumber(null);
+}
 
 export type ChartConfig = Record<
   string,
@@ -264,9 +280,7 @@ function ChartTooltipContent({
                       </div>
                       {item.value != null && (
                         <span className="text-foreground font-mono font-medium tabular-nums">
-                          {typeof item.value === "number"
-                            ? item.value.toLocaleString()
-                            : String(item.value)}
+                          {formatTooltipValue(item.value)}
                         </span>
                       )}
                     </div>

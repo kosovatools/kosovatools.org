@@ -1,6 +1,5 @@
-import { createNumberFormatter, type ValueFormatter } from "@workspace/utils";
+import { formatNumber } from "@workspace/utils";
 
-const LOCALE = "sq-AL";
 const DEFAULT_FALLBACK = "Pa të dhëna";
 
 const DEFAULT_SMALL_DIGITS = {
@@ -34,8 +33,6 @@ type FormatEnergyAutoOptions = {
   largeUnitDigits?: DigitOverrides;
 };
 
-const numberFormatterCache = new Map<string, ValueFormatter>();
-
 function normalise(value: number | string | null | undefined): number | null {
   if (value == null) return null;
   const numeric =
@@ -60,26 +57,6 @@ function resolveDigits(
     minimumFractionDigits,
     maximumFractionDigits,
   };
-}
-
-function getFormatter(signed: boolean, digits: RequiredDigits): ValueFormatter {
-  const key = [
-    signed ? "signed" : "unsigned",
-    digits.minimumFractionDigits,
-    digits.maximumFractionDigits,
-  ].join(":");
-
-  let formatter = numberFormatterCache.get(key);
-  if (!formatter) {
-    formatter = createNumberFormatter(LOCALE, {
-      minimumFractionDigits: digits.minimumFractionDigits,
-      maximumFractionDigits: digits.maximumFractionDigits,
-      signDisplay: signed ? "always" : "auto",
-    });
-    numberFormatterCache.set(key, formatter);
-  }
-
-  return formatter;
 }
 
 function toUnitLabel(useGWh: boolean): EnergyUnit {
@@ -108,10 +85,17 @@ export function formatEnergyAuto(
   const digits = useGWh
     ? resolveDigits(DEFAULT_LARGE_DIGITS, largeUnitDigits)
     : resolveDigits(DEFAULT_SMALL_DIGITS, smallUnitDigits);
-  const formatter = getFormatter(signed, digits);
   const baseValue = useGWh ? valueInMWh / 1_000 : valueInMWh;
 
-  const formatted = formatter(baseValue);
+  const formatted = formatNumber(
+    baseValue,
+    {
+      minimumFractionDigits: digits.minimumFractionDigits,
+      maximumFractionDigits: digits.maximumFractionDigits,
+      signDisplay: signed ? "always" : "auto",
+    },
+    { fallback },
+  );
   return includeUnit ? `${formatted} ${toUnitLabel(useGWh)}` : formatted;
 }
 

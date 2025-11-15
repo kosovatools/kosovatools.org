@@ -1,6 +1,6 @@
 import { useMemo, type ChangeEvent } from "react";
 
-import { createNumberFormatter } from "@workspace/utils";
+import { formatNumber } from "@workspace/utils";
 import {
   Field,
   FieldContent,
@@ -54,10 +54,15 @@ const PREMIUM_LABELS: Record<
   },
 };
 
-const coefficientFormatter = createNumberFormatter("sq-AL", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 3,
-});
+const coefficientFormatter = (value: number | null | undefined) =>
+  formatNumber(
+    value,
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 3,
+    },
+    { fallback: "—" },
+  );
 
 export interface PublicWageCalculatorInputsProps {
   mode: CalculationMode;

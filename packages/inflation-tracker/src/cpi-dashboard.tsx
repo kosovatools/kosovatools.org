@@ -22,11 +22,12 @@ import {
   type CpiMetric,
   type CpiSeriesPoint,
 } from "./cpi-data";
+import { cpiMeta } from "@workspace/kas-data";
 import {
   sortGroupedPeriods,
   getPeriodFormatter,
-  PERIOD_GROUPING_OPTIONS,
-  createNumberFormatter,
+  getPeriodGroupingOptions,
+  formatNumber,
   formatSignedPercent,
   type PeriodGrouping,
 } from "@workspace/utils";
@@ -101,6 +102,10 @@ const RANGE_OPTIONS: Array<{ key: RangeOption; label: string }> = [
   { key: "all", label: "Gjithë seria" },
 ];
 
+const CPI_PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(
+  cpiMeta.time.granularity,
+);
+
 const METRIC_OPTIONS: Array<{
   key: Metric;
   label: string;
@@ -120,10 +125,12 @@ const METRIC_OPTIONS: Array<{
   },
 ];
 
-const decimalFormatter = createNumberFormatter("sq", {
-  minimumFractionDigits: 1,
-  maximumFractionDigits: 1,
-});
+const decimalFormatter = (value: number | null | undefined) =>
+  formatNumber(
+    value,
+    { minimumFractionDigits: 1, maximumFractionDigits: 1 },
+    { fallback: "—" },
+  );
 
 function formatMetricValue(value: number | null, metric: Metric): string {
   if (value == null || !Number.isFinite(value)) {
@@ -227,9 +234,11 @@ export function InflationDashboard({
 
   React.useEffect(() => {
     if (
-      !PERIOD_GROUPING_OPTIONS.some((option) => option.key === periodGrouping)
+      !CPI_PERIOD_GROUPING_OPTIONS.some(
+        (option) => option.key === periodGrouping,
+      )
     ) {
-      setPeriodGrouping("monthly");
+      setPeriodGrouping(CPI_PERIOD_GROUPING_OPTIONS[0]?.key ?? "monthly");
     }
   }, [periodGrouping]);
 
@@ -502,7 +511,7 @@ export function InflationDashboard({
                 <OptionSelector
                   value={periodGrouping}
                   onChange={setPeriodGrouping}
-                  options={PERIOD_GROUPING_OPTIONS}
+                  options={CPI_PERIOD_GROUPING_OPTIONS}
                   label="Perioda"
                 />
                 <OptionSelector
@@ -531,11 +540,14 @@ export function InflationDashboard({
                     <YAxis
                       width="auto"
                       axisLine={false}
+                      tickMargin={12}
+                      tickLine={false}
                       tickFormatter={(value) =>
                         metric === "index"
                           ? decimalFormatter(value as number)
-                          : `${decimalFormatter(value as number)}%`
+                          : formatSignedPercent(value as number)
                       }
+                      allowDecimals={metric !== "index"}
                     />
                     {metric === "change" ? (
                       <ReferenceLine y={0} stroke="var(--border)" />

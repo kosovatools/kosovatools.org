@@ -17,13 +17,14 @@ import {
   timelineEvents,
 } from "@workspace/kas-data";
 import {
+  aggregateSeriesByPeriod,
   DEFAULT_TIME_RANGE,
   DEFAULT_TIME_RANGE_OPTIONS,
   getPeriodFormatter,
-  groupPeriod,
+  getPeriodGroupingOptions,
   monthsFromRange,
-  PERIOD_GROUPING_OPTIONS,
-  PeriodGrouping,
+  sanitizeValue,
+  type PeriodGrouping,
   type TimeRangeOption,
 } from "@workspace/utils";
 
@@ -64,6 +65,9 @@ const ENERGY_UNIT: ElectricityUnit =
   electricityDataset.meta.unit === "MWh" ? "MWh" : "GWh";
 
 const data = electricityDataset.records;
+const periodGroupingOptions = getPeriodGroupingOptions(
+  electricityDataset.meta.time.granularity,
+);
 export function ElectricityBalanceChart() {
   const chartClassName = "w-full aspect-[4/3] sm:aspect-video";
   const chartMargin = { top: 56, right: 0, left: 0, bottom: 0 };
@@ -214,7 +218,7 @@ export function ElectricityBalanceChart() {
             <OptionSelector
               value={periodGrouping}
               onChange={(value) => setPeriodGrouping(value)}
-              options={PERIOD_GROUPING_OPTIONS}
+              options={periodGroupingOptions}
               label="Perioda"
             />
             <OptionSelector
@@ -427,7 +431,7 @@ export function ElectricityProductionBySourceChart({
             <OptionSelector
               value={periodGrouping}
               onChange={(value) => setPeriodGrouping(value)}
-              options={PERIOD_GROUPING_OPTIONS}
+              options={periodGroupingOptions}
               label="Perioda"
             />
             <OptionSelector
@@ -505,98 +509,90 @@ function aggregateByGrouping(
   records: ElectricityRecord[],
   grouping: PeriodGrouping,
 ) {
-  const buckets = new Map<
-    string,
-    {
-      importTotal: number;
-      exportTotal: number;
-      productionTotal: number;
-      grossAvailableTotal: number;
-    }
-  >();
-  const order: string[] = [];
-
-  for (const record of records) {
-    const period = groupPeriod(record.period, grouping);
-    if (!buckets.has(period)) {
-      buckets.set(period, {
-        importTotal: 0,
-        exportTotal: 0,
-        productionTotal: 0,
-        grossAvailableTotal: 0,
-      });
-      order.push(period);
-    }
-    const bucket = buckets.get(period)!;
-    const importValue = toNumber(record.import_gwh);
-    const exportValue = toNumber(record.export_gwh);
-    const productionValue = toNumber(record.production_gwh);
-
-    bucket.importTotal += importValue;
-    bucket.exportTotal += exportValue;
-    bucket.productionTotal += productionValue;
-
-    const grossAvailable =
-      record.gross_available_gwh != null
-        ? toNumber(record.gross_available_gwh)
-        : productionValue + importValue - exportValue;
-
-    bucket.grossAvailableTotal += grossAvailable;
-  }
-
-  return order.map((period) => {
-    const bucket = buckets.get(period)!;
-    return {
-      period,
-      importTotal: bucket.importTotal,
-      exportTotal: bucket.exportTotal,
-      productionTotal: bucket.productionTotal,
-      grossAvailableTotal: bucket.grossAvailableTotal,
-    };
+  const aggregated = aggregateSeriesByPeriod<
+    ElectricityRecord,
+    "importTotal" | "exportTotal" | "productionTotal" | "grossAvailableTotal"
+  >(records, {
+    getPeriod: (record) => record.period,
+    grouping,
+    fields: [
+      {
+        key: "importTotal",
+        getValue: (record) => sanitizeValue(record.import_gwh, 0),
+      },
+      {
+        key: "exportTotal",
+        getValue: (record) => sanitizeValue(record.export_gwh, 0),
+      },
+      {
+        key: "productionTotal",
+        getValue: (record) => sanitizeValue(record.production_gwh, 0),
+      },
+      {
+        key: "grossAvailableTotal",
+        getValue: (record) => {
+          const gross = sanitizeValue(record.gross_available_gwh);
+          if (gross != null) {
+            return gross;
+          }
+          const production = sanitizeValue(record.production_gwh, 0);
+          const imports = sanitizeValue(record.import_gwh, 0);
+          const exports = sanitizeValue(record.export_gwh, 0);
+          return production + imports - exports;
+        },
+      },
+    ],
   });
+
+  return aggregated.map((row) => ({
+    period: row.period,
+    importTotal: row.importTotal ?? 0,
+    exportTotal: row.exportTotal ?? 0,
+    productionTotal: row.productionTotal ?? 0,
+    grossAvailableTotal: row.grossAvailableTotal ?? 0,
+  }));
 }
 
 function aggregateProductionByGrouping(
   records: ElectricityRecord[],
   grouping: PeriodGrouping,
 ) {
-  const buckets = new Map<
-    string,
-    {
-      thermal: number;
-      hydro: number;
-      windSolar: number;
-    }
-  >();
-  const order: string[] = [];
+  const aggregated = aggregateSeriesByPeriod<
+    ElectricityRecord,
+    "thermalTotal" | "hydroTotal" | "windSolarTotal"
+  >(records, {
+    getPeriod: (record) => record.period,
+    grouping,
+    fields: [
+      {
+        key: "thermalTotal",
+        getValue: (record) => sanitizeValue(record.production_thermal_gwh, 0),
+      },
+      {
+        key: "hydroTotal",
+        getValue: (record) => sanitizeValue(record.production_hydro_gwh, 0),
+      },
+      {
+        key: "windSolarTotal",
+        getValue: (record) =>
+          sanitizeValue(record.production_wind_solar_gwh, 0),
+      },
+    ],
+  });
 
-  for (const record of records) {
-    const period = groupPeriod(record.period, grouping);
-    if (!buckets.has(period)) {
-      buckets.set(period, { thermal: 0, hydro: 0, windSolar: 0 });
-      order.push(period);
-    }
-    const bucket = buckets.get(period)!;
-    bucket.thermal += toNumber(record.production_thermal_gwh);
-    bucket.hydro += toNumber(record.production_hydro_gwh);
-    bucket.windSolar += toNumber(record.production_wind_solar_gwh);
-  }
-
-  return order.map((period) => {
-    const bucket = buckets.get(period)!;
-    const total = bucket.thermal + bucket.hydro + bucket.windSolar;
+  return aggregated.map((row) => {
+    const thermal = row.thermalTotal ?? 0;
+    const hydro = row.hydroTotal ?? 0;
+    const windSolar = row.windSolarTotal ?? 0;
+    const total = thermal + hydro + windSolar;
     return {
-      period,
-      thermalTotal: bucket.thermal,
-      hydroTotal: bucket.hydro,
-      windSolarTotal: bucket.windSolar,
+      period: row.period,
+      thermalTotal: thermal,
+      hydroTotal: hydro,
+      windSolarTotal: windSolar,
       total,
     };
   });
-}
-
-function toNumber(value: number | null | undefined): number {
-  return typeof value === "number" && Number.isFinite(value) ? value : 0;
 }
 
 function buildLatestSummary(

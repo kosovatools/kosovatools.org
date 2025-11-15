@@ -1,4 +1,4 @@
-import { formatEuroWithCents, formatPercent } from "@workspace/utils";
+import { formatCurrency, formatPercent } from "@workspace/utils";
 import {
   Card,
   CardContent,
@@ -67,7 +67,7 @@ export function CarImportTaxesResults({ result }: CarImportTaxesResultsProps) {
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Vlera CIF</dt>
               <dd className="font-medium text-foreground">
-                {formatEuroWithCents(result.cifValue)}
+                {formatCurrency(result.cifValue)}
               </dd>
             </div>
             <div className="flex items-center justify-between">
@@ -75,7 +75,7 @@ export function CarImportTaxesResults({ result }: CarImportTaxesResultsProps) {
                 Detyrimi doganor ({formatPercent(result.customsDuty.rate)})
               </dt>
               <dd className="font-medium text-foreground">
-                {formatEuroWithCents(result.customsDuty.amount)}
+                {formatCurrency(result.customsDuty.amount)}
               </dd>
             </div>
             <div className="flex items-center justify-between">
@@ -92,27 +92,27 @@ export function CarImportTaxesResults({ result }: CarImportTaxesResultsProps) {
                     : ""}
               </dt>
               <dd className="font-medium text-foreground">
-                {formatEuroWithCents(result.excise.amount)}
+                {formatCurrency(result.excise.amount)}
               </dd>
             </div>
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">
-                Baza e TVSH-së ({formatEuroWithCents(result.vat.base)}) ×{" "}
+                Baza e TVSH-së ({formatCurrency(result.vat.base)}) ×{" "}
                 {formatPercent(result.vat.rate)}
               </dt>
               <dd className="font-medium text-foreground">
-                {formatEuroWithCents(result.vat.amount)}
+                {formatCurrency(result.vat.amount)}
               </dd>
             </div>
           </dl>
           <div className="rounded-lg border border-border/70 bg-muted/40 p-4 text-sm">
             <div className="flex items-center justify-between font-semibold">
               <span>Totali i taksave të importit</span>
-              <span>{formatEuroWithCents(result.importTaxesTotal)}</span>
+              <span>{formatCurrency(result.importTaxesTotal)}</span>
             </div>
             <div className="mt-2 flex items-center justify-between text-muted-foreground">
               <span>Kostoja totale e mbërritjes</span>
-              <span>{formatEuroWithCents(result.landingCost)}</span>
+              <span>{formatCurrency(result.landingCost)}</span>
             </div>
           </div>
         </CardContent>
@@ -130,20 +130,20 @@ export function CarImportTaxesResults({ result }: CarImportTaxesResultsProps) {
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Taksa ekologjike</dt>
               <dd className="font-medium text-foreground">
-                {formatEuroWithCents(result.registrationFees.ecoTax)}
+                {formatCurrency(result.registrationFees.ecoTax)}
               </dd>
             </div>
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Taksa rrugore/registrim</dt>
               <dd className="font-medium text-foreground">
-                {formatEuroWithCents(result.registrationFees.roadTax)}
+                {formatCurrency(result.registrationFees.roadTax)}
               </dd>
             </div>
             {result.registrationFees.otherFees > 0 ? (
               <div className="flex items-center justify-between">
                 <dt className="text-muted-foreground">Tarifa të tjera</dt>
                 <dd className="font-medium text-foreground">
-                  {formatEuroWithCents(result.registrationFees.otherFees)}
+                  {formatCurrency(result.registrationFees.otherFees)}
                 </dd>
               </div>
             ) : null}
@@ -151,11 +151,11 @@ export function CarImportTaxesResults({ result }: CarImportTaxesResultsProps) {
           <div className="rounded-lg border border-border/70 bg-muted/40 p-4 text-sm">
             <div className="flex items-center justify-between font-semibold">
               <span>Totali i regjistrimit fillestar</span>
-              <span>{formatEuroWithCents(result.registrationFees.total)}</span>
+              <span>{formatCurrency(result.registrationFees.total)}</span>
             </div>
             <div className="mt-2 flex items-center justify-between text-muted-foreground">
               <span>Shpenzimi i vitit të parë (me taksat e importit)</span>
-              <span>{formatEuroWithCents(result.firstYearTotalOutlay)}</span>
+              <span>{formatCurrency(result.firstYearTotalOutlay)}</span>
             </div>
           </div>
         </CardContent>

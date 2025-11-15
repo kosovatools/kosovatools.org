@@ -91,8 +91,6 @@ export class CustomsDataService {
   }: InitializeOptions = {}): Promise<boolean> {
     if (typeof window === "undefined") return false;
 
-    const formatNumber = (value: number) => value.toLocaleString(undefined);
-
     try {
       const db = getDb();
       const existing = await db.customs.count();
@@ -101,7 +99,7 @@ export class CustomsDataService {
           phase: "cached",
           loaded: existing,
           total: existing,
-          message: `U gjetën ${formatNumber(existing)} rreshta ekzistues.`,
+          message: `U gjetën ${existing} rreshta ekzistues.`,
         });
         return false;
       }
@@ -125,7 +123,7 @@ export class CustomsDataService {
         phase: "indexing",
         loaded: 0,
         total,
-        message: `Duke indeksuar 0 / ${formatNumber(total)} rreshta...`,
+        message: `Duke indeksuar 0 / ${total} rreshta...`,
       });
 
       await db.transaction("rw", db.customs, async () => {
@@ -138,9 +136,7 @@ export class CustomsDataService {
             phase: "indexing",
             loaded,
             total,
-            message: `Duke indeksuar ${formatNumber(loaded)} / ${formatNumber(
-              total,
-            )} rreshta...`,
+            message: `Duke indeksuar ${loaded} / ${total} rreshta...`,
           });
         }
       });

@@ -50,8 +50,7 @@ import {
 import {
   buildStackSeries,
   summarizeStackTotals,
-  formatEuro,
-  formatEuroCompact,
+  formatCurrency,
   formatCount,
   getPeriodFormatter,
 } from "@workspace/utils";
@@ -88,6 +87,26 @@ const CATEGORY_STACK_TOP = 6;
 const MONTHLY_STACK_TOP = 6;
 const CITY_STACK_TOP = 5;
 const PIE_FALLBACK_COLOR = "hsl(var(--primary))";
+
+function toChartNumeric(value: unknown): number | null {
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : null;
+  }
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  if (Array.isArray(value) && value.length) {
+    const parsed = Number(value[0]);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+}
+
+function formatTurnoverValue(value: unknown): string {
+  const numeric = toChartNumeric(value);
+  return formatCurrency(numeric, { compact: true });
+}
 
 type StackedView = ReturnType<typeof buildStackedChartView>;
 
@@ -225,18 +244,7 @@ function usePieTooltipFormatter<T extends SliceColor>({
 
       const label = getLabel(slice, fallbackName) ?? "";
 
-      const numericValue =
-        typeof value === "number"
-          ? value
-          : typeof value === "string"
-            ? Number(value)
-            : Array.isArray(value) && value.length
-              ? Number(value[0])
-              : NaN;
-
-      const formattedValue = Number.isFinite(numericValue)
-        ? formatEuroCompact(numericValue)
-        : "-";
+      const formattedValue = formatTurnoverValue(value);
 
       return (
         <div className="flex w-full items-center gap-2">
@@ -258,21 +266,7 @@ function usePieTooltipFormatter<T extends SliceColor>({
 }
 
 function renderPieSliceLabel({ value }: PieLabelRenderProps) {
-  if (typeof value === "number") {
-    return formatEuroCompact(value);
-  }
-
-  if (typeof value === "string") {
-    const parsed = Number(value);
-    return formatEuroCompact(Number.isFinite(parsed) ? parsed : null);
-  }
-
-  if (Array.isArray(value) && value.length) {
-    const parsed = Number(value[0]);
-    return formatEuroCompact(Number.isFinite(parsed) ? parsed : null);
-  }
-
-  return formatEuroCompact(null);
+  return formatTurnoverValue(value);
 }
 
 type PieLegendSlice = {
@@ -308,7 +302,7 @@ function PieLegendList<T extends PieLegendSlice>({
               <span className="font-medium leading-none">{label}</span>
             </div>
             <span className="font-mono text-muted-foreground">
-              {formatEuroCompact(slice.turnover)}
+              {formatTurnoverValue(slice.turnover)}
             </span>
           </div>
         );
@@ -633,8 +627,8 @@ function CategoriesOverYearsChart({
         label: entry.label,
         palette: entry.palette,
       })) ?? [],
-    formatValue: (value) => formatEuroCompact(value),
-    formatTotal: (value) => formatEuroCompact(value),
+    formatValue: formatTurnoverValue,
+    formatTotal: formatTurnoverValue,
     totalLabel: "Totali",
   });
 
@@ -682,7 +676,7 @@ function CategoriesOverYearsChart({
           <YAxis
             width="auto"
             tickFormatter={(value: number | string) =>
-              formatEuroCompact(Number(value))
+              formatTurnoverValue(value)
             }
           />
           <ChartTooltip
@@ -753,8 +747,8 @@ function MonthlyCategoryStackedChart({
         label: entry.label,
         palette: entry.palette,
       })) ?? [],
-    formatValue: (value) => formatEuroCompact(value),
-    formatTotal: (value) => formatEuroCompact(value),
+    formatValue: formatTurnoverValue,
+    formatTotal: formatTurnoverValue,
     totalLabel: "Totali mujor",
   });
 
@@ -802,7 +796,7 @@ function MonthlyCategoryStackedChart({
           <YAxis
             width="auto"
             tickFormatter={(value: number | string) =>
-              formatEuroCompact(Number(value))
+              formatTurnoverValue(value)
             }
           />
           <ChartTooltip
@@ -895,8 +889,8 @@ function TopCategoryByCityStackedChart({
         label: entry.label,
         palette: entry.palette,
       })) ?? [],
-    formatValue: (value) => formatEuroCompact(value),
-    formatTotal: (value) => formatEuroCompact(value),
+    formatValue: formatTurnoverValue,
+    formatTotal: formatTurnoverValue,
     totalLabel: "Totali",
   });
 
@@ -944,7 +938,7 @@ function TopCategoryByCityStackedChart({
           <YAxis
             width="auto"
             tickFormatter={(value: number | string) =>
-              formatEuroCompact(Number(value))
+              formatTurnoverValue(value)
             }
           />
           <ChartTooltip
@@ -1269,7 +1263,7 @@ function TopCategoryByCitySection({
                 <div className="text-xs text-muted-foreground">
                   Totali ({selectedSummary.yearCount} vite):{" "}
                   <span className="font-semibold text-foreground">
-                    {formatEuro(selectedSummary.turnover)}
+                    {formatCurrency(selectedSummary.turnover)}
                   </span>
                 </div>
               ) : null}

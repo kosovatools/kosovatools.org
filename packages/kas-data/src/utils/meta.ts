@@ -1,4 +1,5 @@
 import type { DatasetMeta } from "../types/dataset";
+import { formatDate } from "@workspace/utils";
 
 type KeyLabelOption<TKey extends string = string> = Readonly<{
   key: TKey;
@@ -9,19 +10,21 @@ export type LabelMap<TKey extends string = string> = ReadonlyMap<TKey, string>;
 
 export function formatGeneratedAt(
   generatedAt?: string | null,
-  locale = "sq",
+  locale = "sq-AL",
   fallback = "E panjohur",
 ): string {
-  if (!generatedAt) return fallback;
-  const parsed = new Date(generatedAt);
-  if (Number.isNaN(parsed.getTime())) return fallback;
-  return parsed.toLocaleString(locale, {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatDate(
+    generatedAt ?? null,
+    {
+      locale,
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    },
+    { fallback, preserveInputOnInvalid: false },
+  );
 }
 
 export function describeDatasetSource(

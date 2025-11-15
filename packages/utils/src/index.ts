@@ -1,4 +1,6 @@
 export * from "./formatters";
+export { sanitizeValue, isFiniteNumber } from "./utils/number";
+export type { NumericInput } from "./utils/number";
 
 export type {
   StackBuildResult,
@@ -8,7 +10,7 @@ export type {
 } from "./utils/stack";
 export { buildStackSeries, summarizeStackTotals } from "./utils/stack";
 export {
-  PERIOD_GROUPING_OPTIONS,
+  getPeriodGroupingOptions,
   groupPeriod,
   formatPeriodLabel,
   getPeriodFormatter,
@@ -18,6 +20,7 @@ export {
 } from "./utils/period";
 export type {
   PeriodGrouping,
+  PeriodGroupingOption,
   PeriodFormatter,
   PeriodFormatterOptions,
 } from "./utils/period";
@@ -28,6 +31,11 @@ export {
   DEFAULT_TIME_RANGE,
 } from "./utils/time-range";
 export type { TimeRangeOption } from "./utils/time-range";
+export { aggregateSeriesByPeriod } from "./utils/series";
+export type {
+  SeriesAggregationField,
+  SeriesAggregationMode,
+} from "./utils/series";
 export type { TimelineEvent, TimelineEventCategory } from "./types/timeline";
 export {
   mergeSearchParams,

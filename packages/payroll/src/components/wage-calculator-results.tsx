@@ -24,7 +24,7 @@ import type {
   WageCalculatorResult,
 } from "../lib/wage-calculator";
 import { LinkProps, NodeProps } from "recharts/types/chart/Sankey";
-import { formatEuroWithCents } from "../../../utils/src";
+import { formatCurrency } from "@workspace/utils";
 
 type SankeyTooltipPayload = {
   source?: { name?: string };
@@ -152,7 +152,7 @@ function SankeyNodeWithLabel({ x, y, width, height, payload }: NodeProps) {
                 color: "var(--muted-foreground)",
               }}
             >
-              {formatEuroWithCents(amountValue)}
+              {formatCurrency(amountValue)}
             </span>
           ) : null}
         </div>

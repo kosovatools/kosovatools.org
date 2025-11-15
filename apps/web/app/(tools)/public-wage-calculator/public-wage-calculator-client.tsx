@@ -13,7 +13,7 @@ import {
   type PolicyFormState,
   type PublicWageCalculationMode,
 } from "@workspace/public-wage-calculator";
-import { formatCount, formatEuroWithCents } from "@workspace/utils";
+import { formatCount, formatCurrency } from "@workspace/utils";
 import {
   Card,
   CardContent,
@@ -183,8 +183,6 @@ export function PublicWageCalculatorClient() {
   const handleAllowanceRemove = (id: string) => {
     setAllowances((prev) => prev.filter((item) => item.id !== id));
   };
-
-  const formatCurrency = (value: number) => formatEuroWithCents(value);
 
   return (
     <article className="space-y-8">

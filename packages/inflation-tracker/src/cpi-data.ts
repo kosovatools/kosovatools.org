@@ -1,4 +1,9 @@
-import { groupPeriod, type PeriodGrouping } from "@workspace/utils";
+import {
+  aggregateSeriesByPeriod,
+  isFiniteNumber,
+  sanitizeValue,
+  type PeriodGrouping,
+} from "@workspace/utils";
 import {
   cpiMeta,
   cpiMonthly,
@@ -27,26 +32,8 @@ export type CpiGroupNode = {
   parentCode: string | null;
   children: CpiGroupNode[];
 };
-const sanitizeValue = (value: number | null | undefined): number | null =>
-  isFiniteNumber(value) ? value : null;
-
-const isFiniteNumber = (value: unknown): value is number =>
-  typeof value === "number" && Number.isFinite(value);
-
 const byPeriod = (a: CpiSeriesPoint, b: CpiSeriesPoint) =>
   a.period.localeCompare(b.period);
-
-const average = (values: number[]): number | null => {
-  if (!values.length) return null;
-  const sum = values.reduce((acc, value) => acc + value, 0);
-  return sum / values.length;
-};
-
-const combinePercentageChanges = (values: number[]): number | null => {
-  if (!values.length) return null;
-  const product = values.reduce((acc, value) => acc * (1 + value / 100), 1);
-  return product - 1;
-};
 
 const findFirstFinite = (series: readonly CpiSeriesPoint[]) => {
   for (const point of series) {
@@ -157,26 +144,25 @@ export function aggregateCpiSeries(
   if (!series.length) return [];
   if (grouping === "monthly") return [...series];
 
-  const grouped = new Map<string, number[]>();
-  const order: string[] = [];
+  const aggregated = aggregateSeriesByPeriod<CpiSeriesPoint, CpiMetric>(
+    series,
+    {
+      getPeriod: (point) => point.period,
+      grouping,
+      fields: [
+        {
+          key: metric,
+          getValue: (point) => point.value,
+          mode: metric === "index" ? "average" : "compoundChange",
+        },
+      ],
+    },
+  );
 
-  series.forEach((point) => {
-    const key = groupPeriod(point.period, grouping);
-    if (!grouped.has(key)) {
-      grouped.set(key, []);
-      order.push(key);
-    }
-    if (isFiniteNumber(point.value)) {
-      grouped.get(key)!.push(point.value);
-    }
-  });
-
-  return order.map((period) => {
-    const values = grouped.get(period) ?? [];
-    const value =
-      metric === "index" ? average(values) : combinePercentageChanges(values);
-    return { period, value };
-  });
+  return aggregated.map((row) => ({
+    period: row.period,
+    value: row[metric] ?? null,
+  }));
 }
 
 export function computeCpiRangeChange(

@@ -20,14 +20,15 @@ import {
 import {
   buildStackSeries,
   summarizeStackTotals,
-  formatEuroCompact,
+  sanitizeValue,
   type PeriodGrouping,
-  PERIOD_GROUPING_OPTIONS,
+  getPeriodGroupingOptions,
   getPeriodFormatter,
   type TimeRangeOption,
   DEFAULT_TIME_RANGE_OPTIONS,
   DEFAULT_TIME_RANGE,
   monthsFromRange,
+  formatCurrency,
 } from "@workspace/utils";
 
 import {
@@ -64,9 +65,9 @@ const partnerLabelMap = createLabelMap(
 );
 
 const labelForPartner = (key: string) => partnerLabelMap[key] ?? key;
-
-const sanitizeValue = (value: number | null | undefined): number =>
-  typeof value === "number" && Number.isFinite(value) ? value : 0;
+const periodGroupingOptions = getPeriodGroupingOptions(
+  importsByPartner.meta.time.granularity,
+);
 
 export function ImportPartnersStackedChart({
   data,
@@ -87,7 +88,7 @@ export function ImportPartnersStackedChart({
     return data.map((record) => ({
       period: record.period,
       partner: record.partner,
-      value: sanitizeValue(record.imports),
+      value: sanitizeValue(record.imports, 0),
     }));
   }, [data]);
 
@@ -151,7 +152,7 @@ export function ImportPartnersStackedChart({
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => formatEuroCompact(value),
+    formatValue: formatCurrency,
   });
 
   const eventMarkers = useTimelineEventMarkers(
@@ -176,7 +177,7 @@ export function ImportPartnersStackedChart({
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={PERIOD_GROUPING_OPTIONS}
+          options={periodGroupingOptions}
           label="Perioda"
         />
         <OptionSelector
@@ -209,7 +210,7 @@ export function ImportPartnersStackedChart({
           />
           <YAxis
             width="auto"
-            tickFormatter={(value) => formatEuroCompact(value as number)}
+            tickFormatter={(v) => formatCurrency(v as number)}
             axisLine={false}
           />
           {eventMarkers.map((event) => (

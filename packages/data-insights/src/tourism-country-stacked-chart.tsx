@@ -19,9 +19,9 @@ import {
 import {
   buildStackSeries,
   summarizeStackTotals,
-  formatCount,
+  sanitizeValue,
   type PeriodGrouping,
-  PERIOD_GROUPING_OPTIONS,
+  getPeriodGroupingOptions,
   getPeriodFormatter,
   type TimeRangeOption,
   DEFAULT_TIME_RANGE_OPTIONS,
@@ -42,6 +42,7 @@ import { OptionSelector } from "@workspace/ui/custom-components/option-selector"
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
+import { formatCountValue } from "./formatters";
 
 const DEFAULT_TOP_COUNTRIES = 5;
 
@@ -65,9 +66,10 @@ const countryLabelMap = createLabelMap(tourismCountry.meta.dimensions.country);
 
 const labelForCountry = (key: string) => countryLabelMap[key] ?? key;
 
-const sanitizeValue = (value: number | null | undefined): number =>
-  typeof value === "number" && Number.isFinite(value) ? value : 0;
 const data = tourismCountry.records;
+const periodGroupingOptions = getPeriodGroupingOptions(
+  tourismCountry.meta.time.granularity,
+);
 export function TourismCountryStackedChart({
   top = DEFAULT_TOP_COUNTRIES,
 }: {
@@ -94,7 +96,7 @@ export function TourismCountryStackedChart({
     return data.map((record) => ({
       period: record.period,
       country: record.country,
-      value: sanitizeValue(record[metric]),
+      value: sanitizeValue(record[metric], 0),
     }));
   }, [metric]);
 
@@ -158,7 +160,7 @@ export function TourismCountryStackedChart({
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => formatCount(value),
+    formatValue: formatCountValue,
   });
 
   const eventMarkers = useTimelineEventMarkers(
@@ -189,7 +191,7 @@ export function TourismCountryStackedChart({
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={PERIOD_GROUPING_OPTIONS}
+          options={periodGroupingOptions}
           label="Perioda"
         />
         <OptionSelector
@@ -222,7 +224,7 @@ export function TourismCountryStackedChart({
           />
           <YAxis
             width="auto"
-            tickFormatter={(value) => formatCount(value as number)}
+            tickFormatter={formatCountValue}
             axisLine={false}
           />
           {eventMarkers.map((event) => (

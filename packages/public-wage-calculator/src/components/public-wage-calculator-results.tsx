@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { Separator } from "@workspace/ui/components/separator";
+import { formatNumber as formatNumberIntl } from "@workspace/utils";
 
 import type {
   CalcResponse,
@@ -93,7 +94,7 @@ export function PublicWageCalculatorResults({
   selectedPosition,
   policy,
   formatCurrency,
-  formatNumber = (value) => value.toLocaleString("sq-AL"),
+  formatNumber = (value) => formatNumberIntl(value),
 }: PublicWageCalculatorResultsProps) {
   if (!result) {
     return (
@@ -370,10 +371,14 @@ export function PublicWageCalculatorResults({
                 const valueText = item.source
                   ? item.source.type === "fixed"
                     ? formatCurrency(item.source.value)
-                    : `${item.source.value.toLocaleString("sq-AL", {
-                        maximumFractionDigits: 2,
-                        minimumFractionDigits: 0,
-                      })}%`
+                    : `${formatNumberIntl(
+                        item.source.value,
+                        {
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 0,
+                        },
+                        { fallback: "—" },
+                      )}%`
                   : null;
                 const baseText = item.source
                   ? ALLOWANCE_TYPE_DESCRIPTIONS[item.source.type]

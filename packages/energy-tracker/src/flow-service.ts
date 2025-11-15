@@ -1,4 +1,5 @@
 import { createDatasetFetcher } from "@workspace/dataset-api";
+import { formatDate } from "@workspace/utils";
 
 import type {
   EnergyFlowDailyLatest,
@@ -34,11 +35,24 @@ export function formatPeriodLabel(start: string, end: string): string {
     return "Periudhë e panjohur";
   }
 
-  const formatter = new Intl.DateTimeFormat("sq-AL", {
+  const options = {
     day: "2-digit",
     month: "short",
     year: "numeric",
+  } as const;
+
+  const formattedStart = formatDate(startDate, options, {
+    fallback: "",
+    preserveInputOnInvalid: false,
+  });
+  const formattedEnd = formatDate(endDate, options, {
+    fallback: "",
+    preserveInputOnInvalid: false,
   });
 
-  return `${formatter.format(startDate)} → ${formatter.format(endDate)}`;
+  if (!formattedStart || !formattedEnd) {
+    return "Periudhë e panjohur";
+  }
+
+  return `${formattedStart} → ${formattedEnd}`;
 }

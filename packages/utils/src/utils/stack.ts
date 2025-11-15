@@ -3,13 +3,12 @@ import {
   groupPeriod,
   type PeriodGrouping,
 } from "./period";
-
-type MaybeNumber = number | null | undefined;
+import { sanitizeValue, type NumericInput } from "./number";
 
 type StackAccessors<TRecord, TKey extends string> = {
   period: (record: TRecord) => string;
   key: (record: TRecord) => TKey;
-  value: (record: TRecord) => MaybeNumber;
+  value: (record: TRecord) => NumericInput;
 };
 
 export type StackOptions<TKey extends string> = {
@@ -50,8 +49,7 @@ const byTotalDesc = <TKey extends string>(
   b: StackTotal<TKey>,
 ) => b.total - a.total;
 
-const toNumber = (value: MaybeNumber): number =>
-  typeof value === "number" && Number.isFinite(value) ? value : 0;
+const toNumber = (value: NumericInput): number => sanitizeValue(value, 0);
 
 const emptyBuildResult = <TKey extends string>(): StackBuildResult<TKey> => ({
   keys: [],

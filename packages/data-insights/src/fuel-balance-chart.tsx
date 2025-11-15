@@ -21,8 +21,8 @@ import {
 import {
   buildStackSeries,
   type PeriodGrouping,
-  formatCount,
-  PERIOD_GROUPING_OPTIONS,
+  sanitizeValue,
+  getPeriodGroupingOptions,
   getPeriodFormatter,
   type TimeRangeOption,
   DEFAULT_TIME_RANGE_OPTIONS,
@@ -41,6 +41,7 @@ import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import { formatCountValue } from "./formatters";
 
 const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";
 const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
@@ -57,15 +58,15 @@ const fuelStackAccessors = {
   value: (record: FuelStackRecord) => record.value,
 };
 
-const sanitizeValue = (value: number | null | undefined): number =>
-  typeof value === "number" && Number.isFinite(value) ? value : 0;
-
 const defaultMetric = "ready_for_market";
 const metricOptions = fuelDataset.meta.fields;
 const metricLabelMap = createLabelMap(metricOptions);
 const fuelLabelMap = createLabelMap(fuelDataset.meta.dimensions.fuel);
 const fuelKeys = Object.keys(fuelLabelMap) as FuelKey[];
 const balances = fuelDataset.records;
+const periodGroupingOptions = getPeriodGroupingOptions(
+  fuelDataset.meta.time.granularity,
+);
 export function FuelBalanceChart() {
   const [metric, setMetric] = React.useState<FuelMetric>(defaultMetric);
 
@@ -79,7 +80,7 @@ export function FuelBalanceChart() {
     return balances.map((balance) => ({
       period: balance.period,
       fuel: balance.fuel,
-      value: sanitizeValue(balance[metric]),
+      value: sanitizeValue(balance[metric], 0),
     }));
   }, [metric]);
 
@@ -111,8 +112,8 @@ export function FuelBalanceChart() {
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => `${formatCount(value)} tonë`,
-    formatTotal: (value) => `${formatCount(value)} tonë`,
+    formatValue: (value) => `${formatCountValue(value)} tonë`,
+    formatTotal: (value) => `${formatCountValue(value)} tonë`,
   });
 
   const eventMarkers = useTimelineEventMarkers(
@@ -160,7 +161,7 @@ export function FuelBalanceChart() {
       : String(metricLabelNode ?? metric);
   const summaryDisplay =
     latestSummary && latestSummary.total != null
-      ? `${formatCount(latestSummary.total)} tonë`
+      ? `${formatCountValue(latestSummary.total)} tonë`
       : "Të dhënat mungojnë";
 
   return (
@@ -175,7 +176,7 @@ export function FuelBalanceChart() {
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={PERIOD_GROUPING_OPTIONS}
+          options={periodGroupingOptions}
           label="Perioda"
         />
         <OptionSelector
@@ -217,7 +218,7 @@ export function FuelBalanceChart() {
           />
           <YAxis
             width="auto"
-            tickFormatter={(value) => formatCount(value as number)}
+            tickFormatter={formatCountValue}
             axisLine={false}
           />
           {eventMarkers.map((event) => (

@@ -8,9 +8,9 @@ KAS fetch scripts live in `@workspace/kas-data`.
 ## What lives here
 
 - `src/formatters/` — `Intl`-based formatters with null-safe wrappers such as
-  `formatEuro`, `formatEuroCompact`, and `formatCount`.
+  `formatCurrency`, `formatNumber`, and `formatCount`.
 - `src/utils/period.ts` — period parsing, grouping, and labelling helpers plus
-  `PERIOD_GROUPING_OPTIONS` and `sortGroupedPeriods`.
+  `getPeriodGroupingOptions` and `sortGroupedPeriods`.
 - `src/utils/stack.ts` — generic stack builders used by domain wrappers in
   `@workspace/kas-data` (e.g., `buildStackSeries`, `summarizeStackTotals`,
   `getPeriodFormatter`).
@@ -21,8 +21,9 @@ KAS fetch scripts live in `@workspace/kas-data`.
 
 ```ts
 import {
-  formatEuro,
-  PERIOD_GROUPING_OPTIONS,
+  formatCurrency,
+  formatNumber,
+  getPeriodGroupingOptions,
   getPeriodFormatter,
   monthsFromRange,
   DEFAULT_TIME_RANGE,

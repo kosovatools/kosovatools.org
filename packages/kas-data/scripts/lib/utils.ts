@@ -9,12 +9,7 @@ export type DimensionOption = {
   label: string;
 };
 
-export type TimeGranularity =
-  | "yearly"
-  | "quarterly"
-  | "monthly"
-  | "weekly"
-  | "daily";
+export type TimeGranularity = "yearly" | "quarterly" | "monthly" | "daily";
 
 export type Meta = {
   id: string;

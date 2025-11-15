@@ -2,6 +2,7 @@
 
 import { useMemo, type ComponentProps } from "react";
 import { cn } from "@workspace/ui/lib/utils";
+import { formatNumber } from "@workspace/utils";
 
 import {
   ChartContainer,
@@ -93,9 +94,17 @@ export function AgeDistributionPlot({
     const fallbackLabel = typeof value === "string" ? value : "";
     const formattedAge =
       typeof sourceAge === "number"
-        ? sourceAge.toLocaleString("sq-AL")
+        ? formatNumber(
+            sourceAge,
+            { maximumFractionDigits: 0 },
+            { fallback: fallbackLabel },
+          )
         : fallbackAge !== null
-          ? fallbackAge.toLocaleString("sq-AL")
+          ? formatNumber(
+              fallbackAge,
+              { maximumFractionDigits: 0 },
+              { fallback: fallbackLabel },
+            )
           : fallbackLabel;
 
     return `Mosha: ${formattedAge}`;
@@ -180,7 +189,10 @@ export function AgeDistributionPlot({
             <ChartTooltipContent
               indicator="dot"
               formatter={(value) => [
-                Number(value).toLocaleString("sq-AL"),
+                formatNumber(
+                  typeof value === "number" ? value : Number(value),
+                  { maximumFractionDigits: 0 },
+                ),
                 " Regjistrime",
               ]}
               labelFormatter={formatAgeLabel}

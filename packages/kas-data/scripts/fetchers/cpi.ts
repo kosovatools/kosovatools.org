@@ -115,7 +115,9 @@ function mergeCpiRecords(
   }
 
   for (const entry of changeDataset.records) {
-    ensureRecord(entry.period, entry.group).change = entry.value ?? null;
+    const raw = entry.value;
+    const normalized = typeof raw === "number" ? raw / 100 : (raw ?? null);
+    ensureRecord(entry.period, entry.group).change = normalized;
   }
 
   return Array.from(recordMap.values()).sort((a, b) => {

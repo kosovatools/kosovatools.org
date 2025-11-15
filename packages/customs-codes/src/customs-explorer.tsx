@@ -13,6 +13,7 @@ import { Card, CardContent } from "@workspace/ui/components/card";
 import { Progress } from "@workspace/ui/components/progress";
 import { CustomsDataService } from "./database";
 import type { CustomsTreeNode, InitializationProgress } from "./types";
+import { formatDate } from "@workspace/utils";
 
 import { createCustomsColumns } from "./customs-table/columns";
 import { VirtualizedTreeTable } from "./virtualized-tree-table";
@@ -21,12 +22,6 @@ type DatasetValidity = {
   iso: string;
   display: string;
 };
-
-const datasetDateFormatter = new Intl.DateTimeFormat("sq-AL", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-});
 
 function useDebouncedValue<T>(value: T, delayMs: number): T {
   const [debounced, setDebounced] = useState(value);
@@ -112,7 +107,15 @@ export function CustomsExplorer() {
             latestValidFromDate
               ? {
                   iso: latestValidFromDate.toISOString(),
-                  display: datasetDateFormatter.format(latestValidFromDate),
+                  display: formatDate(
+                    latestValidFromDate,
+                    {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    },
+                    { fallback: "—", preserveInputOnInvalid: false },
+                  ),
                 }
               : null,
           );

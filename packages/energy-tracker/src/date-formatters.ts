@@ -1,26 +1,25 @@
-import { createDateFormatter } from "@workspace/utils";
+import { formatDate, type DateFormatter } from "@workspace/utils";
 
-export const formatMonthLabel = createDateFormatter(
-  "sq-AL",
-  { month: "long", year: "numeric" },
-  { fallback: "E panjohur" },
-);
+export const formatMonthLabel: DateFormatter = (value) =>
+  formatDate(
+    value,
+    { month: "long", year: "numeric" },
+    { fallback: "E panjohur" },
+  );
 
-export const formatTimestamp = createDateFormatter(
-  "sq-AL",
-  {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZoneName: "short",
-  },
-  { fallback: "E panjohur" },
-);
+export const formatTimestamp: DateFormatter = (value) =>
+  formatDate(
+    value,
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZoneName: "short",
+    },
+    { fallback: "E panjohur" },
+  );
 
-export const formatDayLabel = createDateFormatter(
-  "sq-AL",
-  { day: "2-digit", month: "short" },
-  { fallback: "" },
-);
+export const formatDayLabel: DateFormatter = (value) =>
+  formatDate(value, { day: "2-digit", month: "short" }, { fallback: "" });

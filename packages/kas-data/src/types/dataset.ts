@@ -9,12 +9,7 @@ export type DimensionOption<TKey extends string = string> = Readonly<{
   label: string;
 }>;
 
-export type TimeGranularity =
-  | "yearly"
-  | "quarterly"
-  | "monthly"
-  | "weekly"
-  | "daily";
+export type TimeGranularity = "yearly" | "quarterly" | "monthly" | "daily";
 
 export type DatasetMeta<
   TFieldKey extends string = string,

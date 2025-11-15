@@ -124,9 +124,9 @@ export default function RootLayout({
             <div className="flex-1">{children}</div>
             <footer className="border-t border-border/60 bg-background/80">
               <div className="mx-auto flex w-full max-w-[1500px] items-center justify-center px-6 py-8">
-                <div className="flex flex-col items-center gap-2 text-center text-base">
+                <div className="flex flex-col items-center gap-2 text-center text-sm sm:text-base">
                   <a
-                    className="flex items-center gap-1.5 text-xl font-semibold text-foreground transition hover:text-primary"
+                    className="flex items-center gap-1.5 text-lg font-semibold text-foreground transition hover:text-primary sm:text-xl"
                     href={GITHUB_REPO_URL}
                     rel="noreferrer"
                     target="_blank"
@@ -141,12 +141,12 @@ export default function RootLayout({
                     </span>
                   </a>
                   <a
-                    className="text-sm font-medium text-muted-foreground transition hover:text-primary"
+                    className="text-xs font-medium text-muted-foreground transition hover:text-primary sm:text-sm"
                     href="mailto:contact@kosovatools.org"
                   >
                     contact@kosovatools.org
                   </a>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-xs text-muted-foreground sm:text-sm">
                     © {currentYear} Kosova Tools · Licensed under GPL
                   </span>
                 </div>
