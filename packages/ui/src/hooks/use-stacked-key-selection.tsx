@@ -25,6 +25,17 @@ type UseStackedKeySelectionResult = {
   resetSelection: () => void;
 };
 
+function areKeyArraysEqual(a: string[], b: string[]): boolean {
+  if (a === b) return true;
+  if (a.length !== b.length) return false;
+  for (let index = 0; index < a.length; index += 1) {
+    if (a[index] !== b[index]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 export function useStackedKeySelection({
   totals,
   topCount,
@@ -39,6 +50,8 @@ export function useStackedKeySelection({
     const limit = Math.max(1, Math.min(topCount, totals.length));
     return totals.slice(0, limit).map((item) => item.key);
   }, [totals, topCount]);
+
+  const previousDefaultKeysRef = React.useRef(defaultKeys);
 
   const [selectedKeys, setSelectedKeys] = React.useState<string[]>(() => {
     if (initialSelectedKeys?.length) {
@@ -62,6 +75,13 @@ export function useStackedKeySelection({
   });
 
   React.useEffect(() => {
+    const previousDefaultKeys = previousDefaultKeysRef.current;
+    previousDefaultKeysRef.current = defaultKeys;
+    const defaultKeysChanged = !areKeyArraysEqual(
+      previousDefaultKeys,
+      defaultKeys,
+    );
+
     if (!totals.length) {
       setSelectedKeys((current) => (current.length ? [] : current));
       setExcludedKeys((current) => (current.length ? [] : current));
@@ -72,21 +92,31 @@ export function useStackedKeySelection({
 
     setSelectedKeys((current) => {
       const filtered = current.filter((key) => validKeys.has(key));
+      let nextSelection: string[];
+
       if (filtered.length === current.length) {
         if (current.length) {
-          return current;
-        }
-        if (initialSelectedKeys?.length) {
+          nextSelection = current;
+        } else if (initialSelectedKeys?.length) {
           const fallback = initialSelectedKeys.filter((key) =>
             validKeys.has(key),
           );
-          if (fallback.length) {
-            return fallback;
-          }
+          nextSelection = fallback.length ? fallback : defaultKeys;
+        } else {
+          nextSelection = defaultKeys;
         }
+      } else {
+        nextSelection = filtered.length ? filtered : defaultKeys;
+      }
+
+      if (
+        defaultKeysChanged &&
+        areKeyArraysEqual(current, previousDefaultKeys)
+      ) {
         return defaultKeys;
       }
-      return filtered.length ? filtered : defaultKeys;
+
+      return nextSelection;
     });
 
     setExcludedKeys((current) => {

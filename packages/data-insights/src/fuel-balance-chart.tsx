@@ -11,24 +11,8 @@ import {
   YAxis,
 } from "recharts";
 
-import {
-  fuelDataset,
-  timelineEvents,
-  createLabelMap,
-  type FuelKey,
-  type FuelMetric,
-} from "@workspace/kas-data";
-import {
-  buildStackSeries,
-  type PeriodGrouping,
-  sanitizeValue,
-  getPeriodGroupingOptions,
-  getPeriodFormatter,
-  type TimeRangeOption,
-  DEFAULT_TIME_RANGE_OPTIONS,
-  DEFAULT_TIME_RANGE,
-  monthsFromRange,
-} from "@workspace/utils";
+import { fuelDataset, timelineEvents, type FuelKey } from "@workspace/kas-data";
+import { useStackChartState, getPeriodFormatter } from "@workspace/utils";
 
 import {
   ChartContainer,
@@ -42,65 +26,42 @@ import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { formatCountValue } from "./formatters";
+import { fuelBalanceStackChartSpec } from "./chart-specs";
 
 const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";
 const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
 
-type FuelStackRecord = {
-  period: string;
-  fuel: FuelKey;
-  value: number;
-};
-
-const fuelStackAccessors = {
-  period: (record: FuelStackRecord) => record.period,
-  key: (record: FuelStackRecord) => record.fuel,
-  value: (record: FuelStackRecord) => record.value,
-};
-
-const defaultMetric = "ready_for_market";
-const metricOptions = fuelDataset.meta.fields;
-const metricLabelMap = createLabelMap(metricOptions);
-const fuelLabelMap = createLabelMap(fuelDataset.meta.dimensions.fuel);
-const fuelKeys = Object.keys(fuelLabelMap) as FuelKey[];
+const spec = fuelBalanceStackChartSpec;
 const balances = fuelDataset.records;
-const periodGroupingOptions = getPeriodGroupingOptions(
-  fuelDataset.meta.time.granularity,
-);
+const fuelKeys =
+  fuelDataset.meta.dimensions.fuel?.map((option) => option.key as FuelKey) ??
+  [];
+
 export function FuelBalanceChart() {
-  const [metric, setMetric] = React.useState<FuelMetric>(defaultMetric);
-
-  const [periodGrouping, setPeriodGrouping] =
-    React.useState<PeriodGrouping>("monthly");
-  const [range, setRange] = React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
-  const monthsLimit = monthsFromRange(range);
-
-  const stackRecords = React.useMemo<FuelStackRecord[]>(() => {
-    if (!balances.length) return [];
-    return balances.map((balance) => ({
-      period: balance.period,
-      fuel: balance.fuel,
-      value: sanitizeValue(balance[metric], 0),
-    }));
-  }, [metric]);
+  const {
+    metric,
+    metricKey,
+    setMetricKey,
+    metricOptions,
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    buildSeries,
+  } = useStackChartState(spec);
 
   const { chartData, keyMap, config } = React.useMemo(() => {
-    if (!stackRecords.length || !fuelKeys.length) {
+    if (!balances.length || !fuelKeys.length) {
       return { chartData: [], keyMap: [], config: {} };
     }
 
-    const { keys, series, labelMap } = buildStackSeries(
-      stackRecords,
-      fuelStackAccessors,
-      {
-        months: monthsLimit,
-        selectedKeys: fuelKeys,
-        allowedKeys: fuelKeys,
-        includeOther: false,
-        periodGrouping,
-        labelForKey: (key) => fuelLabelMap[key] ?? key,
-      },
-    );
+    const { keys, series, labelMap } = buildSeries(balances, {
+      selectedKeys: fuelKeys,
+      allowedKeys: fuelKeys,
+      includeOther: false,
+    });
 
     return buildStackedChartView({
       keys,
@@ -108,7 +69,7 @@ export function FuelBalanceChart() {
       series,
       periodFormatter: getPeriodFormatter(periodGrouping),
     });
-  }, [stackRecords, monthsLimit, periodGrouping]);
+  }, [periodGrouping, buildSeries]);
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
@@ -154,23 +115,27 @@ export function FuelBalanceChart() {
     );
   }
 
-  const metricLabelNode = metricLabelMap[metric] ?? metric;
   const metricLabelText =
-    typeof metricLabelNode === "string"
-      ? metricLabelNode
-      : String(metricLabelNode ?? metric);
+    typeof metric.label === "string" ? metric.label : String(metric.label);
   const summaryDisplay =
     latestSummary && latestSummary.total != null
-      ? `${formatCountValue(latestSummary.total)} tonë`
+      ? (
+          metric.formatters.summary ??
+          metric.formatters.total ??
+          metric.formatters.value
+        )(latestSummary.total)
       : "Të dhënat mungojnë";
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <OptionSelector
-          value={metric}
-          onChange={(value) => setMetric(value)}
-          options={metricOptions}
+          value={metricKey}
+          onChange={(value) => setMetricKey(value)}
+          options={metricOptions.map((entry) => ({
+            key: entry.key,
+            label: entry.label,
+          }))}
           label="Metrika"
         />
         <OptionSelector
@@ -180,9 +145,9 @@ export function FuelBalanceChart() {
           label="Perioda"
         />
         <OptionSelector
-          value={range}
-          onChange={setRange}
-          options={DEFAULT_TIME_RANGE_OPTIONS}
+          value={timeRange}
+          onChange={setTimeRange}
+          options={timeRangeOptions}
           label="Intervali"
         />
       </div>
@@ -218,7 +183,10 @@ export function FuelBalanceChart() {
           />
           <YAxis
             width="auto"
-            tickFormatter={formatCountValue}
+            tickFormatter={(value) =>
+              metric.formatters.axis?.(value as number) ??
+              formatCountValue(value as number)
+            }
             axisLine={false}
           />
           {eventMarkers.map((event) => (

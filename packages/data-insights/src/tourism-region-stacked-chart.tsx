@@ -14,20 +14,9 @@ import {
 import {
   timelineEvents,
   tourismRegion,
-  createLabelMap,
   type TourismRegionRecord,
 } from "@workspace/kas-data";
-import {
-  buildStackSeries,
-  sanitizeValue,
-  type PeriodGrouping,
-  getPeriodGroupingOptions,
-  getPeriodFormatter,
-  type TimeRangeOption,
-  DEFAULT_TIME_RANGE_OPTIONS,
-  DEFAULT_TIME_RANGE,
-  monthsFromRange,
-} from "@workspace/utils";
+import { useStackChartState, getPeriodFormatter } from "@workspace/utils";
 
 import {
   ChartContainer,
@@ -44,6 +33,7 @@ import {
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 import { formatCountValue } from "./formatters";
+import { tourismRegionStackChartSpec } from "./chart-specs";
 
 const DEFAULT_GROUP_LABEL = "Total";
 
@@ -70,27 +60,8 @@ const visitorGroupOptions: SelectorOptionDefinition<
 
 const DEFAULT_GROUP = "total";
 const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
-
-type RegionStackRecord = {
-  period: string;
-  region: string;
-  value: number;
-};
-
-const regionAccessors = {
-  period: (record: RegionStackRecord) => record.period,
-  key: (record: RegionStackRecord) => record.region,
-  value: (record: RegionStackRecord) => record.value,
-};
-
-const regionLabelMap = createLabelMap(tourismRegion.meta.dimensions.region);
-
-const labelForRegion = (key: string) => regionLabelMap[key] ?? key;
-
+const spec = tourismRegionStackChartSpec;
 const data = tourismRegion.records;
-const periodGroupingOptions = getPeriodGroupingOptions(
-  tourismRegion.meta.time.granularity,
-);
 
 export function TourismRegionCharts() {
   const [group, setGroup] =
@@ -102,12 +73,15 @@ export function TourismRegionCharts() {
     }
   }, [group]);
 
-  const [periodGrouping, setPeriodGrouping] =
-    React.useState<PeriodGrouping>("yearly");
-
-  const [range, setRange] = React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
-
-  const monthsLimit = monthsFromRange(range);
+  const {
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    buildSeries,
+  } = useStackChartState(spec);
 
   const filteredRecords = React.useMemo(
     () =>
@@ -115,29 +89,12 @@ export function TourismRegionCharts() {
     [group],
   );
 
-  const stackRecords = React.useMemo<RegionStackRecord[]>(() => {
-    if (!filteredRecords.length) return [];
-    return filteredRecords.map((record) => ({
-      period: record.period,
-      region: record.region,
-      value: sanitizeValue(record.visitors, 0),
-    }));
-  }, [filteredRecords]);
-
   const { chartData, keyMap, config } = React.useMemo(() => {
-    if (!stackRecords.length) {
+    if (!filteredRecords.length) {
       return { chartData: [], keyMap: [], config: {} };
     }
 
-    const { keys, series, labelMap } = buildStackSeries(
-      stackRecords,
-      regionAccessors,
-      {
-        months: monthsLimit,
-        periodGrouping,
-        labelForKey: labelForRegion,
-      },
-    );
+    const { keys, series, labelMap } = buildSeries(filteredRecords);
 
     return buildStackedChartView({
       keys,
@@ -145,7 +102,7 @@ export function TourismRegionCharts() {
       series,
       periodFormatter: getPeriodFormatter(periodGrouping),
     });
-  }, [stackRecords, monthsLimit, periodGrouping]);
+  }, [filteredRecords, buildSeries, periodGrouping]);
 
   const latestSummary = React.useMemo<{
     periodLabel: string;
@@ -218,9 +175,9 @@ export function TourismRegionCharts() {
           label="Perioda"
         />
         <OptionSelector
-          value={range}
-          onChange={setRange}
-          options={DEFAULT_TIME_RANGE_OPTIONS}
+          value={timeRange}
+          onChange={setTimeRange}
+          options={timeRangeOptions}
           label="Intervali"
         />
       </div>

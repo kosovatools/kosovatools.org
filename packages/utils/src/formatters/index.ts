@@ -150,6 +150,18 @@ export function formatCurrency(
   return formatNumber(value, finalOptions, formatterOptions);
 }
 
+export function formatCurrencyCompact(
+  value: NumericInput,
+  options: CurrencyFormatOptions = {},
+  formatterOptions: FormatterOptions = {},
+) {
+  return formatCurrency(
+    value,
+    { ...options, notation: "compact" },
+    formatterOptions,
+  );
+}
+
 export const formatCount = createValueFormatter({
   maximumFractionDigits: 0,
 });

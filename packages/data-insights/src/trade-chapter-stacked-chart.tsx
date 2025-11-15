@@ -3,15 +3,8 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import {
-  buildStackSeries,
-  summarizeStackTotals,
-  getPeriodFormatter,
-  sanitizeValue,
-  type PeriodGrouping,
-  formatCurrency,
-} from "@workspace/utils";
-import { createLabelMap, tradeChaptersYearly } from "@workspace/kas-data";
+import { useStackChartState, getPeriodFormatter } from "@workspace/utils";
+import { tradeChaptersYearly } from "@workspace/kas-data";
 import {
   ChartContainer,
   ChartLegend,
@@ -27,68 +20,43 @@ import {
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
+import { tradeChaptersStackChartSpec } from "./chart-specs";
 
-const DEFAULT_TOP_CHAPTERS = 6;
+const spec = tradeChaptersStackChartSpec;
+const DEFAULT_TOP_CHAPTERS = spec.defaults.top ?? 6;
 const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
-
-type ChartMode = "exports" | "imports";
-
-const FLOW_OPTIONS: ReadonlyArray<SelectorOptionDefinition<ChartMode>> = [
-  { key: "exports", label: "Eksportet (FOB)" },
-  { key: "imports", label: "Importet (CIF)" },
-];
-
-const PERIOD_GROUPING: PeriodGrouping = "yearly";
-
-type ChapterStackRecord = {
-  period: string;
-  chapter: string;
-  value: number;
-};
-
-const chapterAccessors = {
-  period: (record: ChapterStackRecord) => record.period,
-  key: (record: ChapterStackRecord) => record.chapter,
-  value: (record: ChapterStackRecord) => record.value,
-};
 const data = tradeChaptersYearly.records;
-const chapterLabelMap = createLabelMap(
-  tradeChaptersYearly.meta.dimensions.chapter,
-);
-
-const labelForChapter = (key: string) => chapterLabelMap[key] ?? key;
 
 export function TradeChapterStackedChart({
   top = DEFAULT_TOP_CHAPTERS,
 }: {
   top?: number;
 }) {
-  const [mode, setMode] = React.useState<ChartMode>("exports");
+  const {
+    metric,
+    metricKey,
+    setMetricKey,
+    metricOptions,
+    buildSeries,
+    summarizeTotals,
+    periodGrouping,
+  } = useStackChartState(spec);
 
-  const stackRecords = React.useMemo<ChapterStackRecord[]>(() => {
-    if (!data.length) return [];
-    return data.map((record) => ({
-      period: record.period,
-      chapter: record.chapter,
-      value: sanitizeValue(
-        mode === "exports" ? record.exports : record.imports,
-        0,
-      ),
-    }));
-  }, [mode]);
-
-  const totals = React.useMemo(
+  const metricSelectorOptions = React.useMemo<
+    ReadonlyArray<SelectorOptionDefinition<string>>
+  >(
     () =>
-      summarizeStackTotals(stackRecords, chapterAccessors, {
-        periodGrouping: PERIOD_GROUPING,
-        labelForKey: labelForChapter,
-      }),
-    [stackRecords],
+      metricOptions.map((entry) => ({
+        key: entry.key,
+        label: entry.label,
+      })),
+    [metricOptions],
   );
+
+  const totals = React.useMemo(() => summarizeTotals(data), [summarizeTotals]);
 
   const {
     selectedKeys,
-    setSelectedKeys,
     includeOther,
     onIncludeOtherChange,
     excludedKeys,
@@ -101,34 +69,37 @@ export function TradeChapterStackedChart({
   });
 
   const { chartData, keyMap, config } = React.useMemo(() => {
-    if (!stackRecords.length) {
+    if (!data.length) {
       return { chartData: [], keyMap: [], config: {} };
     }
 
-    const { keys, series, labelMap } = buildStackSeries(
-      stackRecords,
-      chapterAccessors,
-      {
-        top,
-        includeOther,
-        selectedKeys,
-        excludedKeys,
-        periodGrouping: PERIOD_GROUPING,
-        labelForKey: labelForChapter,
-      },
-    );
+    const { keys, series, labelMap } = buildSeries(data, {
+      top,
+      includeOther,
+      selectedKeys,
+      excludedKeys,
+    });
 
     return buildStackedChartView({
       keys,
       labelMap,
       series,
-      periodFormatter: getPeriodFormatter(PERIOD_GROUPING),
+      periodFormatter: getPeriodFormatter(periodGrouping),
     });
-  }, [stackRecords, top, includeOther, selectedKeys, excludedKeys]);
+  }, [
+    top,
+    includeOther,
+    selectedKeys,
+    excludedKeys,
+    periodGrouping,
+    buildSeries,
+  ]);
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: formatCurrency,
+    formatValue: metric.formatters.value,
+    formatTotal: (value) =>
+      (metric.formatters.total ?? metric.formatters.value)(value),
   });
 
   if (!chartData.length || !keyMap.length) {
@@ -144,13 +115,10 @@ export function TradeChapterStackedChart({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap gap-4">
-        <OptionSelector<ChartMode>
-          value={mode}
-          onChange={(nextMode) => {
-            setMode(nextMode);
-            setSelectedKeys([]);
-          }}
-          options={FLOW_OPTIONS}
+        <OptionSelector
+          value={metricKey}
+          onChange={(nextKey) => setMetricKey(nextKey)}
+          options={metricSelectorOptions}
           label="Fluksi"
         />
       </div>
@@ -180,7 +148,10 @@ export function TradeChapterStackedChart({
           />
           <YAxis
             width="auto"
-            tickFormatter={(v) => formatCurrency(v as number)}
+            tickFormatter={(value) =>
+              metric.formatters.axis?.(value as number) ??
+              metric.formatters.value(value as number)
+            }
             axisLine={false}
           />
           <ChartTooltip

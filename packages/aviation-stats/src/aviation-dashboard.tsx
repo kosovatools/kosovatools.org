@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   Area,
   AreaChart,
@@ -18,20 +18,16 @@ import {
 } from "@workspace/kas-data";
 import {
   aggregateSeriesByPeriod,
-  DEFAULT_TIME_RANGE,
-  DEFAULT_TIME_RANGE_OPTIONS,
   formatCount,
   formatDate,
   formatNumber,
-  getPeriodGroupingOptions,
   formatPeriodLabel,
   formatSignedPercent,
   getPeriodFormatter,
-  monthsFromRange,
   parseYearMonth,
   sanitizeValue,
   type PeriodGrouping,
-  type TimeRangeOption,
+  useStackChartState,
 } from "@workspace/utils";
 import {
   ChartContainer,
@@ -49,12 +45,15 @@ import {
 } from "@workspace/ui/components/card";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
-  createChromaPalette,
-  resolvePaletteColor,
-  type PaletteColor,
-} from "@workspace/ui/lib/chart-palette";
+  buildStackedChartView,
+  type StackedChartView,
+} from "@workspace/ui/lib/stacked-chart-helpers";
 import { cn } from "@workspace/ui/lib/utils";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
+import {
+  airPassengerStackChartSpec,
+  type PassengerStackRecord,
+} from "./chart-specs";
 
 const LOCALE = "sq-AL";
 
@@ -71,59 +70,6 @@ const averagePassengersFormatter = (value: number | null | undefined) =>
 const monthlyPeriodFormatter = getPeriodFormatter("monthly", {
   locale: LOCALE,
 });
-
-const palette = createChromaPalette(3);
-const periodGroupingOptions = getPeriodGroupingOptions(
-  airTransportMonthly.meta.time.granularity,
-);
-
-type SeriesDefinition = {
-  id: "inbound" | "outbound" | "flights";
-  label: string;
-  palette: PaletteColor;
-  unit?: string;
-};
-
-const seriesDefinitions: ReadonlyArray<SeriesDefinition> = [
-  {
-    id: "inbound",
-    label: "Pasagjerë hyrës",
-    palette: resolvePaletteColor(palette, 0),
-  },
-  {
-    id: "outbound",
-    label: "Pasagjerë dalës",
-    palette: resolvePaletteColor(palette, 1),
-  },
-  {
-    id: "flights",
-    label: "Fluturime",
-    palette: resolvePaletteColor(palette, 2),
-    unit: "fluturime",
-  },
-];
-
-const chartConfig: ChartConfig = seriesDefinitions.reduce(
-  (acc, entry) => ({
-    ...acc,
-    [entry.id]: {
-      label: entry.label,
-      theme: {
-        light: entry.palette.light,
-        dark: entry.palette.dark,
-      },
-    },
-  }),
-  {} as ChartConfig,
-);
-
-type ChartRow = {
-  period: string;
-  periodLabel: string;
-  inbound: number;
-  outbound: number;
-  flights: number;
-};
 
 const recordIndex = new Map(
   airTransportSeries.map((record, index) => [record.period, index]),
@@ -193,6 +139,23 @@ function averagePassengersPerFlight(
   if (flights == null || flights === 0) return null;
   const totalPassengers = (inbound ?? 0) + (outbound ?? 0);
   return totalPassengers > 0 ? totalPassengers / flights : null;
+}
+
+function buildPassengerStackRecords(
+  records: typeof airTransportMonthly.records,
+): PassengerStackRecord[] {
+  return records.flatMap((record) => [
+    {
+      period: record.period,
+      direction: "inbound" as const,
+      passengers: sanitizeValue(record.passengers_inbound),
+    },
+    {
+      period: record.period,
+      direction: "outbound" as const,
+      passengers: sanitizeValue(record.passengers_outbound),
+    },
+  ]);
 }
 
 type SummaryCardData = {
@@ -300,61 +263,146 @@ function formatSignedPercentChange(value: number | null): string | undefined {
 }
 
 export function AviationDashboard() {
-  const [range, setRange] = useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
-  const [periodGrouping, setPeriodGrouping] =
-    useState<PeriodGrouping>("monthly");
-  const monthsLimit = monthsFromRange(range);
+  const {
+    metric,
+    metricKey,
+    setMetricKey,
+    metricOptions,
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    monthsLimit,
+    buildSeries,
+  } = useStackChartState(airPassengerStackChartSpec);
+
   const chartPeriodFormatter = useMemo(
     () => getPeriodFormatter(periodGrouping, { locale: LOCALE }),
     [periodGrouping],
   );
-  const { chartData, coverageLabel, latestPeriodLabel } = useMemo(() => {
-    const limitedRecords =
-      typeof monthsLimit === "number"
-        ? airTransportSeries.slice(-monthsLimit)
-        : airTransportSeries;
 
-    const aggregated = aggregateTransportByGrouping(
-      limitedRecords,
-      periodGrouping,
-    );
+  const sortedMonthlyRecords = useMemo(
+    () =>
+      airTransportMonthly.records
+        .slice()
+        .sort((a, b) => a.period.localeCompare(b.period)),
+    [],
+  );
 
-    if (!aggregated.length) {
-      return {
-        chartData: [] as ChartRow[],
-        coverageLabel: null,
-        latestPeriodLabel: null,
-      };
+  const limitedMonthlyRecords = useMemo(() => {
+    if (typeof monthsLimit === "number") {
+      return sortedMonthlyRecords.slice(-monthsLimit);
     }
+    return sortedMonthlyRecords;
+  }, [sortedMonthlyRecords, monthsLimit]);
 
-    const first = aggregated[0]?.period ?? null;
-    const last = aggregated.at(-1)?.period ?? null;
+  const sortedSeriesRecords = useMemo(
+    () =>
+      airTransportSeries
+        .slice()
+        .sort((a, b) => a.period.localeCompare(b.period)),
+    [],
+  );
 
-    const chartData: ChartRow[] = aggregated.map((row) => ({
-      period: row.period,
-      periodLabel: chartPeriodFormatter(row.period),
-      inbound: row.inboundTotal,
-      outbound: row.outboundTotal,
-      flights: row.flightsTotal,
-    }));
+  const limitedSeriesRecords = useMemo(() => {
+    if (typeof monthsLimit === "number") {
+      return sortedSeriesRecords.slice(-monthsLimit);
+    }
+    return sortedSeriesRecords;
+  }, [sortedSeriesRecords, monthsLimit]);
 
-    return {
-      chartData,
-      coverageLabel:
-        first && last
-          ? `${chartPeriodFormatter(first)} – ${chartPeriodFormatter(last)}`
-          : null,
-      latestPeriodLabel: last ? chartPeriodFormatter(last) : null,
-    };
-  }, [chartPeriodFormatter, monthsLimit, periodGrouping]);
+  const passengerRecords = useMemo<PassengerStackRecord[]>(
+    () => buildPassengerStackRecords(limitedMonthlyRecords),
+    [limitedMonthlyRecords],
+  );
+
+  type StackChartViewState = Pick<
+    StackedChartView,
+    "chartData" | "config" | "keyMap"
+  > & {
+    coverageLabel: string | null;
+    latestPeriodLabel: string | null;
+  };
+
+  const { chartData, coverageLabel, latestPeriodLabel, config, keyMap } =
+    useMemo<StackChartViewState>(() => {
+      if (!passengerRecords.length) {
+        return {
+          chartData: [],
+          coverageLabel: null,
+          latestPeriodLabel: null,
+          config: {} as ChartConfig,
+          keyMap: [],
+        };
+      }
+
+      const { keys, series, labelMap } = buildSeries(passengerRecords, {
+        includeOther: false,
+      });
+
+      const aggregated = aggregateTransportByGrouping(
+        limitedSeriesRecords,
+        periodGrouping,
+      );
+
+      const flightsByPeriod = aggregated.reduce<Record<string, number>>(
+        (acc, row) => {
+          acc[row.period] = row.flightsTotal;
+          return acc;
+        },
+        {},
+      );
+
+      const view = buildStackedChartView({
+        keys,
+        labelMap,
+        series,
+        periodFormatter: chartPeriodFormatter,
+      });
+
+      const chartData = view.chartData.map((row) => {
+        const periodKey =
+          typeof row.period === "string"
+            ? row.period
+            : String(row.period ?? "");
+        return {
+          ...row,
+          flights: flightsByPeriod[periodKey] ?? 0,
+        };
+      });
+
+      const first = aggregated[0]?.period ?? null;
+      const last = aggregated.at(-1)?.period ?? null;
+
+      return {
+        chartData,
+        coverageLabel:
+          first && last
+            ? `${chartPeriodFormatter(first)} – ${chartPeriodFormatter(last)}`
+            : null,
+        latestPeriodLabel: last ? chartPeriodFormatter(last) : null,
+        config: view.config,
+        keyMap: view.keyMap,
+      };
+    }, [
+      passengerRecords,
+      buildSeries,
+      limitedSeriesRecords,
+      periodGrouping,
+      chartPeriodFormatter,
+    ]);
 
   const {
     formatter: tooltipValueFormatter,
     labelFormatter: tooltipLabelFormatter,
   } = useChartTooltipFormatters({
-    keys: seriesDefinitions,
-    formatValue: (value) => formatCount(value),
-    defaultUnit: "pasagjerë",
+    keys: keyMap,
+    formatValue: metric.formatters.value,
+    formatTotal: (value) =>
+      (metric.formatters.total ?? metric.formatters.value)(value),
+    defaultUnit: metric.unitLabel ?? "pasagjerë",
   });
 
   const summaryCards = useMemo(() => buildSummaryCards(), []);
@@ -407,22 +455,31 @@ export function AviationDashboard() {
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
             <OptionSelector
+              value={metricKey}
+              onChange={setMetricKey}
+              options={metricOptions.map((entry) => ({
+                key: entry.key,
+                label: entry.label,
+              }))}
+              label="Metrika"
+            />
+            <OptionSelector
               value={periodGrouping}
               onChange={setPeriodGrouping}
               options={periodGroupingOptions}
               label="Periudha"
             />
             <OptionSelector
-              value={range}
-              onChange={setRange}
-              options={DEFAULT_TIME_RANGE_OPTIONS}
+              value={timeRange}
+              onChange={setTimeRange}
+              options={timeRangeOptions}
               label="Intervali"
             />
           </div>
         </CardHeader>
         <CardContent>
           {chartData.length ? (
-            <ChartContainer config={chartConfig} className="h-[420px] w-full">
+            <ChartContainer config={config} className="h-[420px] w-full">
               <AreaChart
                 data={chartData}
                 margin={{ top: 0, right: 0, bottom: 8, left: 0 }}
@@ -485,31 +542,24 @@ export function AviationDashboard() {
                   }
                 />
                 <ChartLegend content={<ChartLegendContent />} />
-                <Area
-                  type="monotone"
-                  dataKey="inbound"
-                  name="Pasagjerë hyrës"
-                  stroke="var(--color-inbound)"
-                  fill="var(--color-inbound)"
-                  fillOpacity={0.3}
-                  stackId="passengers"
-                  yAxisId="passengers"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="outbound"
-                  name="Pasagjerë dalës"
-                  stroke="var(--color-outbound)"
-                  fill="var(--color-outbound)"
-                  fillOpacity={0.3}
-                  stackId="passengers"
-                  yAxisId="passengers"
-                />
+                {keyMap.map((entry) => (
+                  <Area
+                    key={entry.id}
+                    type="monotone"
+                    dataKey={entry.id}
+                    name={entry.label}
+                    stroke={`var(--color-${entry.id})`}
+                    fill={`var(--color-${entry.id})`}
+                    fillOpacity={0.3}
+                    stackId="passengers"
+                    yAxisId="passengers"
+                  />
+                ))}
                 <Line
                   type="monotone"
                   dataKey="flights"
                   name="Fluturime"
-                  stroke="var(--color-flights)"
+                  stroke="var(--primary)"
                   strokeWidth={2}
                   dot={false}
                   yAxisId="flights"

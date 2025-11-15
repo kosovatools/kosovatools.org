@@ -12,9 +12,9 @@ import {
 
 import {
   type ElectricityRecord,
-  createLabelMap,
   electricityDataset,
   timelineEvents,
+  createLabelMap,
 } from "@workspace/kas-data";
 import {
   aggregateSeriesByPeriod,
@@ -26,6 +26,7 @@ import {
   sanitizeValue,
   type PeriodGrouping,
   type TimeRangeOption,
+  useStackChartState,
 } from "@workspace/utils";
 
 import {
@@ -44,21 +45,21 @@ import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-
 
 import { formatAuto } from "./utils/number-format";
 import { Fragment, useMemo, useState } from "react";
+import {
+  electricityBalanceStackChartSpec,
+  type ElectricityBalanceStackRecord,
+} from "./chart-specs/electricity";
 
-const SERIES_KEYS = ["production_gwh", "import_gwh"] as const;
 const labelMap = createLabelMap(electricityDataset.meta.fields);
-
+const EXPORT_LABEL = labelMap.export_gwh ?? "Eksporti";
+const NET_IMPORT_LABEL = "Import neto";
+const NET_EXPORT_LABEL = "Eksport neto";
 const PRODUCTION_TOTAL_LABEL = labelMap.production_gwh;
-
 const PRODUCTION_SERIES_KEYS = [
   "production_thermal_gwh",
   "production_hydro_gwh",
   "production_wind_solar_gwh",
 ] as const;
-
-const EXPORT_LABEL = labelMap.export_gwh;
-const NET_IMPORT_LABEL = "Import neto";
-const NET_EXPORT_LABEL = "Eksport neto";
 
 type ElectricityUnit = "GWh" | "MWh";
 const ENERGY_UNIT: ElectricityUnit =
@@ -68,41 +69,69 @@ const data = electricityDataset.records;
 const periodGroupingOptions = getPeriodGroupingOptions(
   electricityDataset.meta.time.granularity,
 );
+
 export function ElectricityBalanceChart() {
   const chartClassName = "w-full aspect-[4/3] sm:aspect-video";
   const chartMargin = { top: 56, right: 0, left: 0, bottom: 0 };
 
-  const [periodGrouping, setPeriodGrouping] =
-    useState<PeriodGrouping>("seasonal");
+  const {
+    metric,
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    buildSeries,
+  } = useStackChartState(electricityBalanceStackChartSpec);
 
-  const [range, setRange] = useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
+  const monthsLimit = monthsFromRange(timeRange);
 
-  const monthsLimit = monthsFromRange(range);
+  const sortedRecords = useMemo(
+    () => data.slice().sort((a, b) => a.period.localeCompare(b.period)),
+    [],
+  );
+
+  const limitedRecords = useMemo(() => {
+    if (typeof monthsLimit === "number") {
+      return sortedRecords.slice(-monthsLimit);
+    }
+    return sortedRecords;
+  }, [sortedRecords, monthsLimit]);
 
   const { chartData, keyMap, config, latestSummary } = useMemo(() => {
-    const periodFormatter = getPeriodFormatter(periodGrouping);
-
-    const sorted = data
-      .slice()
-      .sort((a, b) => a.period.localeCompare(b.period));
-    const limitedRecords =
-      typeof monthsLimit === "number" ? sorted.slice(-monthsLimit) : sorted;
-
     const aggregated = aggregateByGrouping(limitedRecords, periodGrouping);
 
-    const series = aggregated.map((row) => ({
-      period: row.period,
-      values: {
-        production_gwh: row.productionTotal,
-        import_gwh: row.importTotal,
-      },
-    }));
+    const stackRecords: ElectricityBalanceStackRecord[] = aggregated.flatMap(
+      (row) => [
+        {
+          period: row.period,
+          flow: "production",
+          value: row.productionTotal,
+        },
+        {
+          period: row.period,
+          flow: "import",
+          value: row.importTotal,
+        },
+      ],
+    );
+
+    const {
+      keys,
+      series,
+      labelMap: stackLabelMap,
+    } = buildSeries(stackRecords, {
+      includeOther: false,
+    });
+
+    const periodFormatter = getPeriodFormatter(periodGrouping);
 
     const view =
       series.length > 0
         ? buildStackedChartView({
-            keys: SERIES_KEYS.slice(),
-            labelMap: labelMap,
+            keys,
+            labelMap: stackLabelMap,
             series,
             periodFormatter,
           })
@@ -114,12 +143,13 @@ export function ElectricityBalanceChart() {
       config: view.config,
       latestSummary: buildLatestSummary(aggregated, periodFormatter),
     };
-  }, [monthsLimit, periodGrouping]);
+  }, [limitedRecords, periodGrouping, buildSeries]);
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: (value) => formatAuto(value, { inputUnit: ENERGY_UNIT }),
-    formatTotal: (value) => formatAuto(value, { inputUnit: ENERGY_UNIT }),
+    formatValue: metric.formatters.value,
+    formatTotal: (value) =>
+      (metric.formatters.total ?? metric.formatters.value)(value),
   });
 
   const eventMarkers = useTimelineEventMarkers(
@@ -222,9 +252,9 @@ export function ElectricityBalanceChart() {
               label="Perioda"
             />
             <OptionSelector
-              value={range}
-              onChange={setRange}
-              options={DEFAULT_TIME_RANGE_OPTIONS}
+              value={timeRange}
+              onChange={setTimeRange}
+              options={timeRangeOptions}
               label="Intervali"
             />
           </div>

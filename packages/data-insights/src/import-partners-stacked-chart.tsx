@@ -11,25 +11,8 @@ import {
   YAxis,
 } from "recharts";
 
-import {
-  timelineEvents,
-  createLabelMap,
-  type TradePartnerRecord,
-  importsByPartner,
-} from "@workspace/kas-data";
-import {
-  buildStackSeries,
-  summarizeStackTotals,
-  sanitizeValue,
-  type PeriodGrouping,
-  getPeriodGroupingOptions,
-  getPeriodFormatter,
-  type TimeRangeOption,
-  DEFAULT_TIME_RANGE_OPTIONS,
-  DEFAULT_TIME_RANGE,
-  monthsFromRange,
-  formatCurrency,
-} from "@workspace/utils";
+import { timelineEvents, type TradePartnerRecord } from "@workspace/kas-data";
+import { useStackChartState, getPeriodFormatter } from "@workspace/utils";
 
 import {
   ChartContainer,
@@ -40,34 +23,18 @@ import {
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
-import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import {
+  OptionSelector,
+  type SelectorOptionDefinition,
+} from "@workspace/ui/custom-components/option-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
+import { importPartnersStackChartSpec } from "./chart-specs";
 
-const DEFAULT_TOP_PARTNERS = 5;
+const spec = importPartnersStackChartSpec;
+const DEFAULT_TOP_PARTNERS = spec.defaults.top ?? 5;
 const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
-
-type PartnerStackRecord = {
-  period: string;
-  partner: string;
-  value: number;
-};
-
-const partnerAccessors = {
-  period: (record: PartnerStackRecord) => record.period,
-  key: (record: PartnerStackRecord) => record.partner,
-  value: (record: PartnerStackRecord) => record.value,
-};
-
-const partnerLabelMap = createLabelMap(
-  importsByPartner.meta.dimensions.partner,
-);
-
-const labelForPartner = (key: string) => partnerLabelMap[key] ?? key;
-const periodGroupingOptions = getPeriodGroupingOptions(
-  importsByPartner.meta.time.granularity,
-);
 
 export function ImportPartnersStackedChart({
   data,
@@ -76,30 +43,24 @@ export function ImportPartnersStackedChart({
   data: readonly TradePartnerRecord[];
   top?: number;
 }) {
-  const [periodGrouping, setPeriodGrouping] =
-    React.useState<PeriodGrouping>("yearly");
-
-  const [range, setRange] = React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
-
-  const monthsLimit = monthsFromRange(range);
-
-  const stackRecords = React.useMemo<PartnerStackRecord[]>(() => {
-    if (!data.length) return [];
-    return data.map((record) => ({
-      period: record.period,
-      partner: record.partner,
-      value: sanitizeValue(record.imports, 0),
-    }));
-  }, [data]);
+  const {
+    metric,
+    metricKey,
+    setMetricKey,
+    metricOptions,
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    buildSeries,
+    summarizeTotals,
+  } = useStackChartState(spec);
 
   const totals = React.useMemo(
-    () =>
-      summarizeStackTotals(stackRecords, partnerAccessors, {
-        months: monthsLimit,
-        periodGrouping,
-        labelForKey: labelForPartner,
-      }),
-    [stackRecords, monthsLimit, periodGrouping],
+    () => summarizeTotals(data),
+    [summarizeTotals, data],
   );
 
   const {
@@ -112,27 +73,31 @@ export function ImportPartnersStackedChart({
   } = useStackedKeySelection({
     totals,
     topCount: top,
-    initialIncludeOther: true,
+    initialIncludeOther: spec.defaults.includeOther ?? true,
   });
 
+  const metricSelectorOptions = React.useMemo<
+    ReadonlyArray<SelectorOptionDefinition<string>>
+  >(
+    () =>
+      metricOptions.map((entry) => ({
+        key: entry.key,
+        label: entry.label,
+      })),
+    [metricOptions],
+  );
+
   const { chartData, keyMap, config } = React.useMemo(() => {
-    if (!stackRecords.length) {
+    if (!data.length) {
       return { chartData: [], keyMap: [], config: {} };
     }
 
-    const { keys, series, labelMap } = buildStackSeries(
-      stackRecords,
-      partnerAccessors,
-      {
-        months: monthsLimit,
-        top,
-        includeOther,
-        selectedKeys,
-        excludedKeys,
-        periodGrouping,
-        labelForKey: labelForPartner,
-      },
-    );
+    const { keys, series, labelMap } = buildSeries(data, {
+      top,
+      includeOther,
+      selectedKeys,
+      excludedKeys,
+    });
 
     return buildStackedChartView({
       keys,
@@ -141,18 +106,20 @@ export function ImportPartnersStackedChart({
       periodFormatter: getPeriodFormatter(periodGrouping),
     });
   }, [
-    stackRecords,
-    monthsLimit,
+    data,
     top,
     includeOther,
     selectedKeys,
     excludedKeys,
     periodGrouping,
+    buildSeries,
   ]);
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: formatCurrency,
+    formatValue: metric.formatters.value,
+    formatTotal: (value) =>
+      (metric.formatters.total ?? metric.formatters.value)(value),
   });
 
   const eventMarkers = useTimelineEventMarkers(
@@ -175,15 +142,21 @@ export function ImportPartnersStackedChart({
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap gap-4">
         <OptionSelector
+          value={metricKey}
+          onChange={(value) => setMetricKey(value)}
+          options={metricSelectorOptions}
+          label="Fluksi"
+        />
+        <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
           options={periodGroupingOptions}
           label="Perioda"
         />
         <OptionSelector
-          value={range}
-          onChange={setRange}
-          options={DEFAULT_TIME_RANGE_OPTIONS}
+          value={timeRange}
+          onChange={setTimeRange}
+          options={timeRangeOptions}
           label="Intervali"
         />
       </div>
@@ -210,7 +183,10 @@ export function ImportPartnersStackedChart({
           />
           <YAxis
             width="auto"
-            tickFormatter={(v) => formatCurrency(v as number)}
+            tickFormatter={(value) =>
+              metric.formatters.axis?.(value as number) ??
+              metric.formatters.value(value as number)
+            }
             axisLine={false}
           />
           {eventMarkers.map((event) => (

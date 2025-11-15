@@ -11,23 +11,8 @@ import {
   YAxis,
 } from "recharts";
 
-import {
-  timelineEvents,
-  createLabelMap,
-  tourismCountry,
-} from "@workspace/kas-data";
-import {
-  buildStackSeries,
-  summarizeStackTotals,
-  sanitizeValue,
-  type PeriodGrouping,
-  getPeriodGroupingOptions,
-  getPeriodFormatter,
-  type TimeRangeOption,
-  DEFAULT_TIME_RANGE_OPTIONS,
-  DEFAULT_TIME_RANGE,
-  monthsFromRange,
-} from "@workspace/utils";
+import { timelineEvents, tourismCountry } from "@workspace/kas-data";
+import { useStackChartState, getPeriodFormatter } from "@workspace/utils";
 
 import {
   ChartContainer,
@@ -38,77 +23,53 @@ import {
 } from "@workspace/ui/components/chart";
 import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
-import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import {
+  OptionSelector,
+  SelectorOptionDefinition,
+} from "@workspace/ui/custom-components/option-selector";
 import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 import { formatCountValue } from "./formatters";
-
-const DEFAULT_TOP_COUNTRIES = 5;
-
-const metricOptions = tourismCountry.meta.fields;
+import { tourismCountryStackChartSpec } from "./chart-specs";
 
 const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
-
-type CountryStackRecord = {
-  period: string;
-  country: string;
-  value: number;
-};
-
-const countryAccessors = {
-  period: (record: CountryStackRecord) => record.period,
-  key: (record: CountryStackRecord) => record.country,
-  value: (record: CountryStackRecord) => record.value,
-};
-
-const countryLabelMap = createLabelMap(tourismCountry.meta.dimensions.country);
-
-const labelForCountry = (key: string) => countryLabelMap[key] ?? key;
-
+const spec = tourismCountryStackChartSpec;
+const DEFAULT_TOP_COUNTRIES = spec.defaults.top ?? 5;
 const data = tourismCountry.records;
-const periodGroupingOptions = getPeriodGroupingOptions(
-  tourismCountry.meta.time.granularity,
-);
+
 export function TourismCountryStackedChart({
   top = DEFAULT_TOP_COUNTRIES,
 }: {
   top?: number;
 }) {
-  const defaultMetric = "visitors";
-  const [metric, setMetric] = React.useState<"visitors" | "nights">(
-    defaultMetric,
-  );
-  React.useEffect(() => {
-    if (!metricOptions.some((option) => option.key === metric)) {
-      setMetric(defaultMetric);
-    }
-  }, [metric, defaultMetric]);
-  const [periodGrouping, setPeriodGrouping] =
-    React.useState<PeriodGrouping>("yearly");
+  const {
+    metric,
+    metricKey,
+    setMetricKey,
+    metricOptions,
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    buildSeries,
+    summarizeTotals,
+  } = useStackChartState(spec);
 
-  const [range, setRange] = React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
-
-  const monthsLimit = monthsFromRange(range);
-
-  const stackRecords = React.useMemo<CountryStackRecord[]>(() => {
-    if (!data.length) return [];
-    return data.map((record) => ({
-      period: record.period,
-      country: record.country,
-      value: sanitizeValue(record[metric], 0),
-    }));
-  }, [metric]);
-
-  const totals = React.useMemo(
+  const metricSelectorOptions = React.useMemo<
+    ReadonlyArray<SelectorOptionDefinition<string>>
+  >(
     () =>
-      summarizeStackTotals(stackRecords, countryAccessors, {
-        months: monthsLimit,
-        periodGrouping,
-        labelForKey: labelForCountry,
-      }),
-    [stackRecords, monthsLimit, periodGrouping],
+      metricOptions.map((entry) => ({
+        key: entry.key,
+        label: entry.label,
+      })),
+    [metricOptions],
   );
+
+  const totals = React.useMemo(() => summarizeTotals(data), [summarizeTotals]);
 
   const {
     selectedKeys,
@@ -124,23 +85,16 @@ export function TourismCountryStackedChart({
   });
 
   const { chartData, keyMap, config } = React.useMemo(() => {
-    if (!stackRecords.length) {
+    if (!data.length) {
       return { chartData: [], keyMap: [], config: {} };
     }
 
-    const { keys, series, labelMap } = buildStackSeries(
-      stackRecords,
-      countryAccessors,
-      {
-        months: monthsLimit,
-        top,
-        includeOther,
-        selectedKeys,
-        excludedKeys,
-        periodGrouping,
-        labelForKey: labelForCountry,
-      },
-    );
+    const { keys, series, labelMap } = buildSeries(data, {
+      top,
+      includeOther,
+      selectedKeys,
+      excludedKeys,
+    });
 
     return buildStackedChartView({
       keys,
@@ -149,18 +103,19 @@ export function TourismCountryStackedChart({
       periodFormatter: getPeriodFormatter(periodGrouping),
     });
   }, [
-    stackRecords,
-    monthsLimit,
     top,
     includeOther,
     selectedKeys,
     excludedKeys,
     periodGrouping,
+    buildSeries,
   ]);
 
   const tooltip = useChartTooltipFormatters({
     keys: keyMap,
-    formatValue: formatCountValue,
+    formatValue: metric.formatters.value,
+    formatTotal: (value) =>
+      (metric.formatters.total ?? metric.formatters.value)(value),
   });
 
   const eventMarkers = useTimelineEventMarkers(
@@ -183,9 +138,9 @@ export function TourismCountryStackedChart({
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-4">
         <OptionSelector
-          value={metric}
-          onChange={(value) => setMetric(value as "visitors" | "nights")}
-          options={metricOptions}
+          value={metricKey}
+          onChange={(value) => setMetricKey(value)}
+          options={metricSelectorOptions}
           label="Metrika"
         />
         <OptionSelector
@@ -195,9 +150,9 @@ export function TourismCountryStackedChart({
           label="Perioda"
         />
         <OptionSelector
-          value={range}
-          onChange={setRange}
-          options={DEFAULT_TIME_RANGE_OPTIONS}
+          value={timeRange}
+          onChange={setTimeRange}
+          options={timeRangeOptions}
           label="Intervali"
         />
       </div>
@@ -224,7 +179,10 @@ export function TourismCountryStackedChart({
           />
           <YAxis
             width="auto"
-            tickFormatter={formatCountValue}
+            tickFormatter={(value) =>
+              metric.formatters.axis?.(value as number) ??
+              formatCountValue(value as number)
+            }
             axisLine={false}
           />
           {eventMarkers.map((event) => (

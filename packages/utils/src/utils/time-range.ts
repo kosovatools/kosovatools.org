@@ -1,6 +1,6 @@
 export type TimeRangeOption = number | "all";
 
-type TimeRangeDefinition<T extends TimeRangeOption = TimeRangeOption> = {
+export type TimeRangeDefinition<T extends TimeRangeOption = TimeRangeOption> = {
   key: T;
   label: string;
 };

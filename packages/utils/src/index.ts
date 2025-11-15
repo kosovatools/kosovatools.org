@@ -52,3 +52,22 @@ export type {
   GetSearchParamNumberOptions,
   GetSearchParamStringOptions,
 } from "./utils/search-params";
+export { buildKeyLabelMap } from "./utils/labels";
+export type { KeyLabelOption } from "./utils/labels";
+export type {
+  StackChartSpec,
+  StackChartMetric,
+  StackChartDefaults,
+  StackChartControlsConfig,
+  StackChartBuildOptions,
+} from "./charting/stacked-chart-spec";
+export {
+  getStackChartMetric,
+  buildStackChartSeries,
+  summarizeStackChartTotals,
+} from "./charting/stacked-chart-spec";
+export { useStackChartState } from "./hooks/use-stack-chart";
+export type {
+  UseStackChartStateOptions,
+  UseStackChartStateResult,
+} from "./hooks/use-stack-chart";
