@@ -1,4 +1,4 @@
-import type { DatasetMeta } from "../types/dataset";
+import type { DatasetMeta, TimeGranularity } from "../types/dataset";
 import { formatDate } from "@workspace/utils";
 
 type KeyLabelOption<TKey extends string = string> = Readonly<{
@@ -7,6 +7,8 @@ type KeyLabelOption<TKey extends string = string> = Readonly<{
 }>;
 
 export type LabelMap<TKey extends string = string> = ReadonlyMap<TKey, string>;
+
+type GenericDatasetMeta = DatasetMeta<string, string, TimeGranularity, object>;
 
 export function formatGeneratedAt(
   generatedAt?: string | null,
@@ -27,17 +29,8 @@ export function formatGeneratedAt(
   );
 }
 
-export function describeDatasetSource(
-  meta?: DatasetMeta | null,
-  fallback = "E panjohur",
-): string {
-  return meta?.source && typeof meta.source === "string"
-    ? meta.source
-    : fallback;
-}
-
 export function latestUpdatedAt(
-  metas: Array<DatasetMeta | undefined>,
+  metas: Array<GenericDatasetMeta | undefined>,
 ): string | null {
   const timestamps = metas
     .map((m) => m?.updated_at ?? null)

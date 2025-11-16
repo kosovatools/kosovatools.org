@@ -1,16 +1,7 @@
 {
   "extends": "@workspace/typescript-config/react-library.json",
   "compilerOptions": {
-    "outDir": "./dist",
-    "paths": {
-      "@workspace/ui": ["../ui/src/index.ts"],
-      "@workspace/ui/*": ["../ui/src/*"],
-      "@workspace/utils": ["../utils/src/index.ts"],
-      "@workspace/utils/*": ["../utils/src/*"],
-      "@workspace/kas-data": ["../kas-data/src/index.ts"],
-      "@workspace/kas-data/*": ["../kas-data/src/*"]
-    }
+    "outDir": "dist"
   },
-  "include": ["src"],
-  "exclude": ["dist", "node_modules"]
+  "include": ["src"]
 }

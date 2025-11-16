@@ -15,15 +15,11 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@workspace/utils": "workspace:*",
-    "@workspace/eslint-config": "workspace:*",
     "@workspace/kas-data": "workspace:*",
     "@workspace/ui": "workspace:*",
-    "recharts": "3.3.0"
-  },
-  "peerDependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "@workspace/utils": "workspace:*",
+    "lucide-react": "^0.475.0",
+    "recharts": "3.4.1"
   },
   "devDependencies": {
     "@types/react": "19.2.2",
@@ -34,6 +30,5 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "typescript": "^5.9.3"
-  },
-  "license": "AGPL-3.0-only"
+  }
 }

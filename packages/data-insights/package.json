@@ -15,10 +15,11 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@workspace/utils": "workspace:*",
     "@workspace/kas-data": "workspace:*",
+    "@workspace/timeline-events": "workspace:*",
     "@workspace/ui": "workspace:*",
-    "recharts": "3.3.0"
+    "@workspace/utils": "workspace:*",
+    "recharts": "3.4.1"
   },
   "peerDependencies": {
     "react": "^19.2.0",

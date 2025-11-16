@@ -1,4 +1,6 @@
-export type TimeRangeOption = number | "all";
+import type { PeriodGrouping } from "./period";
+
+export type TimeRangeOption = number | null;
 
 export type TimeRangeDefinition<T extends TimeRangeOption = TimeRangeOption> = {
   key: T;
@@ -9,17 +11,12 @@ export function normalizeTimeRange<T extends TimeRangeOption>(
   value: T | undefined,
   fallback: T,
 ): T {
-  if (value === "all") return "all" as T;
-  if (fallback === "all") return fallback;
+  if (value === null) return null as T;
+  if (fallback === null) return fallback;
   if (typeof value === "number" && Number.isFinite(value) && value > 0) {
     return value as T;
   }
   return fallback;
-}
-
-export function monthsFromRange(option: TimeRangeOption): number | undefined {
-  if (option === "all") return undefined;
-  return option;
 }
 
 export const DEFAULT_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> = [
@@ -28,20 +25,40 @@ export const DEFAULT_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> = [
   { key: 36, label: "3 vjet" },
   { key: 60, label: "5 vjet" },
   { key: 120, label: "10 vjet" },
-  { key: "all", label: "Gjithë seria" },
+  { key: null, label: "Gjithë seria" },
 ];
+
+export const DEFAULT_YEARLY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> =
+  [
+    { key: 1, label: "1 vjet" },
+    { key: 2, label: "2 vjet" },
+    { key: 3, label: "3 vjet" },
+    { key: 5, label: "5 vjet" },
+    { key: 10, label: "10 vjet" },
+    { key: null, label: "Gjithë seria" },
+  ];
 
 export const DEFAULT_TIME_RANGE: TimeRangeOption = 36;
 
-export function limitTimeRangeOptions<
-  TOption extends TimeRangeOption = TimeRangeOption,
->(
-  availablePeriods: number | null | undefined,
-  options?: ReadonlyArray<TimeRangeDefinition<TOption>>,
-): ReadonlyArray<TimeRangeDefinition<TOption>> {
+export type DatasetTimeMetadata = Readonly<{
+  granularity?: PeriodGrouping | null;
+  count?: number | null;
+}>;
+
+export function limitTimeRangeOptions(
+  timeMeta: DatasetTimeMetadata | null | undefined,
+): ReadonlyArray<TimeRangeDefinition> {
+  const granularity = timeMeta?.granularity;
   const baseOptions =
-    options ??
-    (DEFAULT_TIME_RANGE_OPTIONS as ReadonlyArray<TimeRangeDefinition<TOption>>);
+    granularity === "yearly"
+      ? DEFAULT_YEARLY_TIME_RANGE_OPTIONS
+      : DEFAULT_TIME_RANGE_OPTIONS;
+
+  if (!granularity || (granularity !== "monthly" && granularity !== "yearly")) {
+    return baseOptions;
+  }
+
+  const availablePeriods = timeMeta?.count;
 
   if (
     availablePeriods == null ||
@@ -53,15 +70,15 @@ export function limitTimeRangeOptions<
 
   const maxPeriods = Math.floor(availablePeriods);
   const limited = baseOptions.filter(
-    (option) => typeof option.key !== "number" || option.key <= maxPeriods,
+    (option) =>
+      option.key == null ||
+      (typeof option.key === "number" && option.key <= maxPeriods),
   );
 
   if (limited.some((option) => typeof option.key === "number")) {
     return limited;
   }
 
-  const fallback = baseOptions.filter(
-    (option) => typeof option.key !== "number",
-  );
+  const fallback = baseOptions.filter((option) => option.key == null);
   return fallback.length ? fallback : limited;
 }

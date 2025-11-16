@@ -12,8 +12,8 @@ Statistics PxWeb series for downstream visualisations.
 - `src/datasets/` — Type-safe loaders that expose JSON snapshots as arrays or
   structured objects. Files may apply lightweight cleanup (unit conversion,
   label overrides) but avoid presentation logic.
-- `src/stacks/` — Domain wrappers (trade, fuels, tourism) that adapt dataset
-  records to the shared stack utilities in `@workspace/utils`.
+- `src/utils/` — Dataset-wide helpers (metadata formatters, stack utilities)
+  that power downstream visualisations.
 
 ## Refreshing datasets
 
@@ -38,28 +38,37 @@ git update-index --no-skip-worktree packages/kas-data/data/<file>.json
 
 ```ts
 import {
-  tradeImportsByPartner,
-  tradeImportsMeta,
-  summarizePartnerTotals,
+  importsByPartner,
   electricityMonthly,
   electricityMeta,
   fuelBalances,
   fuelDatasetMeta,
-  describeDatasetSource,
   formatGeneratedAt,
 } from "@workspace/kas-data";
 
-import { monthsFromRange, getPeriodFormatter } from "@workspace/utils";
+import { getPeriodFormatter } from "@workspace/utils";
+
+const lastYearImports = importsByPartner.limit(12);
+const partnerStackView = lastYearImports.viewAsStack({
+  keyAccessor: (row) => row.partner,
+  valueAccessor: (row) => row.imports ?? 0,
+  dimension: "partner",
+  includeOther: true,
+  months: 12,
+});
+
+const availablePeriods = importsByPartner.periods({ grouping: "yearly" });
 ```
 
-Stack helpers such as `buildPartnerStackSeries` and `buildFuelTypeStackSeries`
-call into `@workspace/utils`' generic utilities so behaviour is consistent across
-charts (windowing, “Other” buckets, label resolution). Each JSON snapshot now ships as
+Dataset views expose `.limit()`, `.slice()`, and `.viewAsStack()` helpers that call
+into `@workspace/utils`' primitives so behaviour stays consistent across charts
+(windowing, “Other” buckets, label resolution). Each JSON snapshot now ships as
 `{ meta, records }` (or `{ meta, groups }` for CPI) so downstream code can surface table
 metadata without consulting a separate manifest. The shared `meta.dimensions` map exposes
 selector-friendly options (arrays of `{ id, label }`) for every categorical axis (e.g.,
 `visitor_group`, `region`, `fuel`, `metric`), so UI layers can plug those definitions
-directly into reusable components like `OptionSelector`.
+directly into reusable components like `OptionSelector`. If you ingest ASKdata outside of
+this package, wrap the result with `createDataset(rawData)` to get the same helpers.
 
 Fuel balances now ship as a single table (`fuelBalances`) where each record includes a
 `fuel` key plus every metric in tonnes, which keeps the JSON footprint small while letting

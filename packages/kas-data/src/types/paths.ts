@@ -1,0 +1,71 @@
+export const PATHS = {
+  trade_monthly: [
+    "ASKdata",
+    "External trade",
+    "Monthly indicators",
+    "08_qarkullimi.px",
+  ],
+  trade_chapters_yearly: [
+    "ASKdata",
+    "External trade",
+    "Yearly indicators",
+    "tab03.px",
+  ],
+  energy_monthly: ["ASKdata", "Energy", "Monthly indicators", "tab01.px"],
+  imports_by_partner: [
+    "ASKdata",
+    "External trade",
+    "Monthly indicators",
+    "07_imp_country.px",
+  ],
+  fuel_gasoline: ["ASKdata", "Energy", "Monthly indicators", "tab03.px"],
+  fuel_diesel: ["ASKdata", "Energy", "Monthly indicators", "tab04.px"],
+  fuel_lng: ["ASKdata", "Energy", "Monthly indicators", "tab05.px"],
+  fuel_jet: ["ASKdata", "Energy", "Monthly indicators", "tab06.px"],
+  tourism_region: [
+    "ASKdata",
+    "Tourism and hotels",
+    "Treguesit mujorë",
+    "tab01.px",
+  ],
+  tourism_country: [
+    "ASKdata",
+    "Tourism and hotels",
+    "Treguesit mujorë",
+    "tab02.px",
+  ],
+  transport_air_passengers_inbound: [
+    "ASKdata",
+    "Transport",
+    "Monthly indicators",
+    "4.numri i udhetareve hyres.px",
+  ],
+  transport_air_passengers_outbound: [
+    "ASKdata",
+    "Transport",
+    "Monthly indicators",
+    "5.numri i udhetareve dales.px",
+  ],
+  transport_air_flights: [
+    "ASKdata",
+    "Transport",
+    "Monthly indicators",
+    "6. numri i fluturimeve te realizuara.px",
+  ],
+  cpi_change: [
+    "ASKdata",
+    "Prices",
+    "Consumer Price Index",
+    "Monthly indicators",
+    "cpi05.px",
+  ],
+  cpi_index: [
+    "ASKdata",
+    "Prices",
+    "Consumer Price Index",
+    "Monthly indicators",
+    "cpi09.px",
+  ],
+} as const satisfies Record<string, readonly string[]>;
+
+export type PxPathKey = keyof typeof PATHS;

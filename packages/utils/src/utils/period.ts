@@ -31,8 +31,8 @@ const PERIOD_GROUPING_OPTION_DEFINITIONS: ReadonlyArray<PeriodGroupingOption> =
     { key: "weekly", label: "Javore" },
     { key: "monthly", label: "Mujor" },
     { key: "quarterly", label: "Tremujor" },
+    { key: "seasonal", label: "Stinor" },
     { key: "yearly", label: "Vjetor" },
-    { key: "seasonal", label: "Sezonal" },
   ];
 
 const PERIOD_GROUPING_OPTIONS_BY_GRANULARITY: Record<

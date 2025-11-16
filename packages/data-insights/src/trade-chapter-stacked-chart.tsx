@@ -3,8 +3,19 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { useStackChartState, getPeriodFormatter } from "@workspace/utils";
-import { tradeChaptersYearly } from "@workspace/kas-data";
+import {
+  tradeChaptersYearly,
+  type TradeChaptersYearlyMeta,
+} from "@workspace/kas-data";
+import {
+  formatCurrencyCompact,
+  getPeriodFormatter,
+  getPeriodGroupingOptions,
+  limitTimeRangeOptions,
+  type PeriodGrouping,
+  type PeriodGroupingOption,
+  type TimeRangeOption,
+} from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -12,97 +23,104 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import {
   OptionSelector,
   type SelectorOptionDefinition,
 } from "@workspace/ui/custom-components/option-selector";
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
-import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
-import { tradeChaptersStackChartSpec } from "./chart-specs";
 
-const spec = tradeChaptersStackChartSpec;
-const DEFAULT_TOP_CHAPTERS = spec.defaults.top ?? 6;
-const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
-const data = tradeChaptersYearly.records;
+import { buildStackedChartData } from "./lib/stacked-chart";
+
+const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
+  getPeriodGroupingOptions(tradeChaptersYearly.meta.time.granularity);
+const TIME_RANGE_OPTIONS = limitTimeRangeOptions(tradeChaptersYearly.meta.time);
+const DEFAULT_TIME_RANGE: TimeRangeOption = 5;
+
+type TradeChapterMetric = TradeChaptersYearlyMeta["metrics"][number];
+
+const METRIC_OPTIONS: ReadonlyArray<
+  SelectorOptionDefinition<TradeChapterMetric>
+> = tradeChaptersYearly.meta.fields;
+
+const DEFAULT_TOP_CHAPTERS = 6;
+const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
 
 export function TradeChapterStackedChart({
   top = DEFAULT_TOP_CHAPTERS,
 }: {
   top?: number;
 }) {
-  const {
-    metric,
-    metricKey,
-    setMetricKey,
-    metricOptions,
-    buildSeries,
-    summarizeTotals,
-    periodGrouping,
-  } = useStackChartState(spec);
+  const [metricKey, setMetricKey] =
+    React.useState<TradeChapterMetric>("imports");
+  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
+    tradeChaptersYearly.meta.time.granularity,
+  );
+  const [timeRange, setTimeRange] =
+    React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
-  const metricSelectorOptions = React.useMemo<
-    ReadonlyArray<SelectorOptionDefinition<string>>
-  >(
-    () =>
-      metricOptions.map((entry) => ({
-        key: entry.key,
-        label: entry.label,
-      })),
-    [metricOptions],
+  const datasetView = React.useMemo(
+    () => tradeChaptersYearly.limit(timeRange),
+    [timeRange],
   );
 
-  const totals = React.useMemo(() => summarizeTotals(data), [summarizeTotals]);
+  const totals = React.useMemo(
+    () =>
+      datasetView.summarizeStack({
+        keyAccessor: (record) => record.chapter,
+        valueAccessor: (record) => record[metricKey],
+        dimension: "chapter",
+      }),
+    [datasetView, metricKey],
+  );
 
   const {
     selectedKeys,
     includeOther,
-    onIncludeOtherChange,
     excludedKeys,
     setExcludedKeys,
     onSelectedKeysChange,
+    onIncludeOtherChange,
   } = useStackedKeySelection({
     totals,
     topCount: top,
     initialIncludeOther: true,
   });
 
-  const { chartData, keyMap, config } = React.useMemo(() => {
-    if (!data.length) {
-      return { chartData: [], keyMap: [], config: {} };
+  const stackResult = React.useMemo(() => {
+    if (!datasetView.records.length) {
+      return null;
     }
 
-    const { keys, series, labelMap } = buildSeries(data, {
-      top,
-      includeOther,
+    return datasetView.viewAsStack({
+      keyAccessor: (record) => record.chapter,
+      valueAccessor: (record) => record[metricKey],
+      dimension: "chapter",
       selectedKeys,
       excludedKeys,
-    });
-
-    return buildStackedChartView({
-      keys,
-      labelMap,
-      series,
-      periodFormatter: getPeriodFormatter(periodGrouping),
+      includeOther,
+      periodGrouping,
     });
   }, [
-    top,
-    includeOther,
+    datasetView,
+    metricKey,
     selectedKeys,
     excludedKeys,
+    includeOther,
     periodGrouping,
-    buildSeries,
   ]);
 
-  const tooltip = useChartTooltipFormatters({
-    keys: keyMap,
-    formatValue: metric.formatters.value,
-    formatTotal: (value) =>
-      (metric.formatters.total ?? metric.formatters.value)(value),
-  });
+  const { chartKeys, chartData, chartConfig } = React.useMemo(
+    () => buildStackedChartData(stackResult),
+    [stackResult],
+  );
 
-  if (!chartData.length || !keyMap.length) {
+  const periodFormatter = React.useMemo(
+    () => getPeriodFormatter(periodGrouping),
+    [periodGrouping],
+  );
+
+  if (!chartData.length || !chartKeys.length) {
     return (
       <ChartContainer config={{}}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
@@ -115,11 +133,23 @@ export function TradeChapterStackedChart({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap gap-4">
-        <OptionSelector
+        <OptionSelector<TradeChapterMetric>
           value={metricKey}
           onChange={(nextKey) => setMetricKey(nextKey)}
-          options={metricSelectorOptions}
+          options={METRIC_OPTIONS}
           label="Fluksi"
+        />
+        <OptionSelector<PeriodGrouping>
+          value={periodGrouping}
+          onChange={(value) => setPeriodGrouping(value)}
+          options={PERIOD_GROUPING_OPTIONS}
+          label="Perioda"
+        />
+        <OptionSelector<TimeRangeOption>
+          value={timeRange}
+          onChange={setTimeRange}
+          options={TIME_RANGE_OPTIONS}
+          label="Intervali"
         />
       </div>
       <StackedKeySelector
@@ -135,46 +165,42 @@ export function TradeChapterStackedChart({
         onExcludedKeysChange={setExcludedKeys}
       />
       <ChartContainer
-        config={config}
+        config={chartConfig}
         className="aspect-[1/1.5] sm:aspect-video"
       >
         <AreaChart data={chartData} margin={CHART_MARGIN}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
-            dataKey="periodLabel"
+            dataKey="period"
+            tickFormatter={(value) => periodFormatter(String(value))}
             tickMargin={8}
             minTickGap={24}
             axisLine={false}
           />
           <YAxis
             width="auto"
-            tickFormatter={(value) =>
-              metric.formatters.axis?.(value as number) ??
-              metric.formatters.value(value as number)
-            }
+            tickFormatter={(value) => formatCurrencyCompact(value as number)}
             axisLine={false}
           />
-          <ChartTooltip
-            content={
-              <ChartTooltipContent
-                labelFormatter={tooltip.labelFormatter}
-                formatter={tooltip.formatter}
-              />
-            }
-          />
+          <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
-          {keyMap.map((entry) => (
-            <Area
-              key={entry.id}
-              type="monotone"
-              dataKey={entry.id}
-              stackId="chapters"
-              stroke={`var(--color-${entry.id})`}
-              fill={`var(--color-${entry.id})`}
-              fillOpacity={0.85}
-              name={entry.label}
-            />
-          ))}
+          {chartKeys.map((key) => {
+            const label = chartConfig[key]?.label;
+            const seriesName = typeof label === "string" ? label : key;
+
+            return (
+              <Area
+                key={key}
+                type="monotone"
+                dataKey={key}
+                stackId="chapters"
+                stroke={`var(--color-${key})`}
+                fill={`var(--color-${key})`}
+                fillOpacity={0.2}
+                name={seriesName}
+              />
+            );
+          })}
         </AreaChart>
       </ChartContainer>
     </div>

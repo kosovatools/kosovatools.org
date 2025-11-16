@@ -1,6 +1,6 @@
 import * as React from "react";
 import { RefreshCcw, Search } from "lucide-react";
-import { formatCount } from "@workspace/utils";
+import { formatCount, formatCurrency, formatDecimal } from "@workspace/utils";
 import { Button } from "@workspace/ui/components/button";
 import {
   Card,
@@ -25,13 +25,7 @@ import type {
   BuildingPermitsYearDataset,
   BuildingPermitsYearSummary,
 } from "../../types";
-import {
-  areaFormatter,
-  collator,
-  euroFormatter,
-  sumRecords,
-  toOptionLabel,
-} from "./helpers";
+import { collator, sumRecords, toOptionLabel } from "./helpers";
 import { PermitRecordsTable } from "./permit-records-table";
 
 type PermitFiltersCardProps = {
@@ -194,13 +188,13 @@ export function PermitFiltersCard({
             <span>
               Sipërfaqe:{" "}
               <span className="font-semibold text-foreground">
-                {filteredArea > 0 ? `${areaFormatter(filteredArea)} m²` : "—"}
+                {filteredArea > 0 ? `${formatDecimal(filteredArea)} m²` : "—"}
               </span>
             </span>
             <span>
               Tarifa:{" "}
               <span className="font-semibold text-foreground">
-                {filteredFees > 0 ? euroFormatter(filteredFees) : "—"}
+                {filteredFees > 0 ? formatCurrency(filteredFees) : "—"}
               </span>
             </span>
           </div>

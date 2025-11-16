@@ -1,23 +1,12 @@
-import { PATHS } from "../lib/constants";
+import { PATHS } from "../../src/types/paths";
 import { PxError, buildValuePairs, type PxVariable } from "../lib/pxweb";
 import { normalizeGroupLabel, normalizeYM } from "../lib/utils";
 import { runPxDatasetPipeline } from "../pipeline/px-dataset";
 
-export type TourismMetric = "visitors" | "nights";
-
-export type TourismRegionRecord = {
-  period: string;
-  region: string;
-  visitor_group: "total" | "local" | "external";
-  visitors: number | null;
-  nights: number | null;
-};
-export type TourismCountryRecord = {
-  period: string;
-  country: string;
-  visitors: number | null;
-  nights: number | null;
-};
+import {
+  TourismCountryRecord,
+  TourismRegionRecord,
+} from "../../src/types/tourism";
 
 const TOURISM_METRICS = [
   {
@@ -62,7 +51,6 @@ export async function fetchTourismRegion(outDir: string, generatedAt: string) {
     parts,
     outDir,
     generatedAt,
-    unit: "people",
     timeDimension: {
       code: "Viti/muaji",
       text: "Viti/muaji",
@@ -131,7 +119,6 @@ export async function fetchTourismCountry(outDir: string, generatedAt: string) {
     parts,
     outDir,
     generatedAt,
-    unit: "people",
     timeDimension: {
       code: "Viti/muaji",
       text: "Viti/muaji",

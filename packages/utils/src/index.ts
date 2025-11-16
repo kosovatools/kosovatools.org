@@ -26,12 +26,12 @@ export type {
 } from "./utils/period";
 export {
   normalizeTimeRange,
-  monthsFromRange,
   DEFAULT_TIME_RANGE_OPTIONS,
+  DEFAULT_YEARLY_TIME_RANGE_OPTIONS,
   DEFAULT_TIME_RANGE,
   limitTimeRangeOptions,
 } from "./utils/time-range";
-export type { TimeRangeOption } from "./utils/time-range";
+export type { TimeRangeOption, DatasetTimeMetadata } from "./utils/time-range";
 export { aggregateSeriesByPeriod } from "./utils/series";
 export type {
   SeriesAggregationField,
@@ -55,20 +55,3 @@ export type {
 } from "./utils/search-params";
 export { buildKeyLabelMap } from "./utils/labels";
 export type { KeyLabelOption } from "./utils/labels";
-export type {
-  StackChartSpec,
-  StackChartMetric,
-  StackChartDefaults,
-  StackChartControlsConfig,
-  StackChartBuildOptions,
-} from "./charting/stacked-chart-spec";
-export {
-  getStackChartMetric,
-  buildStackChartSeries,
-  summarizeStackChartTotals,
-} from "./charting/stacked-chart-spec";
-export { useStackChartState } from "./hooks/use-stack-chart";
-export type {
-  UseStackChartStateOptions,
-  UseStackChartStateResult,
-} from "./hooks/use-stack-chart";

@@ -1,4 +1,5 @@
 import { FileText, MapPin } from "lucide-react";
+import { formatCurrency, formatDate, formatDecimal } from "@workspace/utils";
 import { Separator } from "@workspace/ui/components/separator";
 import {
   Tooltip,
@@ -10,8 +11,6 @@ import type {
   BuildingPermitRecord,
   BuildingPermitsYearSummary,
 } from "../../types";
-import { areaFormatter, dateFormatter, euroFormatter } from "./helpers";
-
 type PermitRecordsTableProps = {
   records: BuildingPermitRecord[];
   hasFilters: boolean;
@@ -110,7 +109,7 @@ export function PermitRecordsTable({
                 </td>
                 <td className="px-3 py-3 align-top">
                   {record.total_floor_area_m2 != null
-                    ? `${areaFormatter(record.total_floor_area_m2)} m²`
+                    ? `${formatDecimal(record.total_floor_area_m2)} m²`
                     : "—"}
                 </td>
                 <td className="px-3 py-3 align-top text-xs">
@@ -118,7 +117,7 @@ export function PermitRecordsTable({
                     label="Densiteti"
                     value={
                       record.density_fee_eur != null
-                        ? euroFormatter(record.density_fee_eur)
+                        ? formatCurrency(record.density_fee_eur)
                         : null
                     }
                   />
@@ -126,7 +125,7 @@ export function PermitRecordsTable({
                     label="Administrativa"
                     value={
                       record.administrative_fee_eur != null
-                        ? euroFormatter(record.administrative_fee_eur)
+                        ? formatCurrency(record.administrative_fee_eur)
                         : null
                     }
                   />
@@ -135,7 +134,7 @@ export function PermitRecordsTable({
                     label="Totali"
                     value={
                       record.total_fee_eur != null
-                        ? euroFormatter(record.total_fee_eur)
+                        ? formatCurrency(record.total_fee_eur)
                         : null
                     }
                     fallback="—"
@@ -146,7 +145,7 @@ export function PermitRecordsTable({
                     label="Aplikimi"
                     value={
                       record.application_date
-                        ? dateFormatter(record.application_date)
+                        ? formatDate(record.application_date)
                         : null
                     }
                   />
@@ -154,7 +153,7 @@ export function PermitRecordsTable({
                     label="Lëshimi"
                     value={
                       record.issuance_date
-                        ? dateFormatter(record.issuance_date)
+                        ? formatDate(record.issuance_date)
                         : null
                     }
                   />

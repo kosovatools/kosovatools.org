@@ -5,7 +5,7 @@ import * as React from "react";
 import { Button } from "@workspace/ui/components/button";
 import { cn } from "@workspace/ui/lib/utils";
 
-export type SelectorOptionValue = string | number;
+export type SelectorOptionValue = string | number | null;
 
 export type SelectorOptionDefinition<
   T extends SelectorOptionValue = SelectorOptionValue,
@@ -32,6 +32,10 @@ export function OptionSelector<T extends SelectorOptionValue>({
   disabled,
   label,
 }: OptionSelectorProps<T>) {
+  if (options.length <= 1) {
+    return null;
+  }
+
   return (
     <div className={cn("flex flex-wrap items-center gap-2 text-xs", className)}>
       {label ? (

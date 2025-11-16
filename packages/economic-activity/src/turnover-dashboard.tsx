@@ -72,7 +72,6 @@ import {
   createChromaPalette,
   resolvePaletteColor,
 } from "@workspace/ui/lib/chart-palette";
-import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 import {
   buildStackedChartView,
@@ -620,18 +619,6 @@ function CategoriesOverYearsChart({
     [records, selectedKeys, includeOther, excludedKeys],
   );
 
-  const tooltip = useChartTooltipFormatters({
-    keys:
-      view?.keyMap.map((entry) => ({
-        id: entry.id,
-        label: entry.label,
-        palette: entry.palette,
-      })) ?? [],
-    formatValue: formatTurnoverValue,
-    formatTotal: formatTurnoverValue,
-    totalLabel: "Totali",
-  });
-
   if (!view) {
     return (
       <ChartContainer config={{}}>
@@ -679,15 +666,7 @@ function CategoriesOverYearsChart({
               formatTurnoverValue(value)
             }
           />
-          <ChartTooltip
-            content={
-              <ChartTooltipContent
-                indicator="line"
-                formatter={tooltip.formatter}
-                labelFormatter={tooltip.labelFormatter}
-              />
-            }
-          />
+          <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
           <ChartLegend content={<ChartLegendContent />} />
           {view.keyMap.map((entry) => (
             <Area
@@ -740,18 +719,6 @@ function MonthlyCategoryStackedChart({
     [dataset, selectedKeys, includeOther, excludedKeys],
   );
 
-  const tooltip = useChartTooltipFormatters({
-    keys:
-      view?.keyMap.map((entry) => ({
-        id: entry.id,
-        label: entry.label,
-        palette: entry.palette,
-      })) ?? [],
-    formatValue: formatTurnoverValue,
-    formatTotal: formatTurnoverValue,
-    totalLabel: "Totali mujor",
-  });
-
   if (!view) {
     return (
       <ChartContainer config={{}}>
@@ -799,15 +766,7 @@ function MonthlyCategoryStackedChart({
               formatTurnoverValue(value)
             }
           />
-          <ChartTooltip
-            content={
-              <ChartTooltipContent
-                indicator="line"
-                formatter={tooltip.formatter}
-                labelFormatter={tooltip.labelFormatter}
-              />
-            }
-          />
+          <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
           <ChartLegend content={<ChartLegendContent />} />
           {view.keyMap.map((entry) => (
             <Area
@@ -882,18 +841,6 @@ function TopCategoryByCityStackedChart({
     [records, selectedKeys, includeOther, excludedKeys],
   );
 
-  const tooltip = useChartTooltipFormatters({
-    keys:
-      view?.keyMap.map((entry) => ({
-        id: entry.id,
-        label: entry.label,
-        palette: entry.palette,
-      })) ?? [],
-    formatValue: formatTurnoverValue,
-    formatTotal: formatTurnoverValue,
-    totalLabel: "Totali",
-  });
-
   if (!view) {
     return (
       <ChartContainer config={{}}>
@@ -941,15 +888,7 @@ function TopCategoryByCityStackedChart({
               formatTurnoverValue(value)
             }
           />
-          <ChartTooltip
-            content={
-              <ChartTooltipContent
-                indicator="line"
-                formatter={tooltip.formatter}
-                labelFormatter={tooltip.labelFormatter}
-              />
-            }
-          />
+          <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
           <ChartLegend content={<ChartLegendContent />} />
           {view.keyMap.map((entry) => (
             <Area

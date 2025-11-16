@@ -1,21 +1,14 @@
 import fuelsDatasetJson from "../../data/kas_energy_fuels_monthly.json" with { type: "json" };
-import type { Dataset, DatasetMeta } from "../types/dataset";
+import type { Dataset, DatasetMetaMonthly } from "../types/dataset";
+import { createDataset } from "../utils/dataset";
 
-export type FuelKey = "gasoline" | "diesel" | "lng" | "jet";
-export type FuelMetric =
-  | "production"
-  | "import"
-  | "export"
-  | "stock"
-  | "ready_for_market";
-
-export type FuelBalanceRecord = { period: string; fuel: FuelKey } & Record<
-  FuelMetric,
-  number | null
->;
+import { FuelMetric, type FuelRecord } from "../types/energy";
 
 type FuelDimensionKey = "fuel";
-export type FuelDatasetMeta = DatasetMeta<FuelMetric, FuelDimensionKey>;
 
-type FuelDataset = Dataset<FuelBalanceRecord, FuelDatasetMeta>;
-export const fuelDataset = fuelsDatasetJson as FuelDataset;
+export type FuelDatasetMeta = DatasetMetaMonthly<FuelMetric, FuelDimensionKey>;
+
+type FuelDataset = Dataset<FuelRecord, FuelDatasetMeta>;
+const fuelDatasetData = fuelsDatasetJson as FuelDataset;
+
+export const fuelDataset = createDataset(fuelDatasetData);

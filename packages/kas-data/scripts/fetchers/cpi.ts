@@ -1,4 +1,4 @@
-import { PATHS } from "../lib/constants";
+import { PATHS } from "../../src/types/paths";
 import {
   createMeta,
   describePxSources,
@@ -16,15 +16,10 @@ type PxDatasetResult<RecordShape extends Record<string, unknown>> = Awaited<
 type RawCpiRecord = { period: string; group: string; value: number | null };
 type RawCpiDataset = PxDatasetResult<RawCpiRecord>;
 
-export type CpiMetric = "index" | "change";
-
-export type CpiRecord = {
-  period: string;
-  group: string;
-} & Record<CpiMetric, number | null>;
+import { CpiMetric, CpiRecord } from "../../src/types/cpi";
 
 const CPI_METRIC_FIELDS: ReadonlyArray<MetaField & { key: CpiMetric }> = [
-  { key: "index", label: "CPI Index", unit: "" },
+  { key: "index", label: "CPI Index", unit: "index" },
   { key: "change", label: "CPI Change (m/m)", unit: "%" },
 ];
 
@@ -61,7 +56,6 @@ async function fetchCpiComponent(
     parts,
     outDir,
     generatedAt,
-    unit: spec.unit,
     timeDimension: {
       code: "Viti/muaji",
       text: "Viti/muaji",
@@ -190,7 +184,6 @@ export async function fetchCpiMonthly(outDir: string, generatedAt: string) {
     fields,
     metrics,
     dimensions: { group: groupOptions },
-    unit: null,
     source,
     source_urls: sourceUrls,
     title: indexDataset.meta.title ?? changeDataset.meta.title ?? null,

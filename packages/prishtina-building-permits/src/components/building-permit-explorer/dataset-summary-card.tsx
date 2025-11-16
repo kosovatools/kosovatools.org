@@ -1,5 +1,10 @@
 import * as React from "react";
-import { formatCount } from "@workspace/utils";
+import {
+  formatCount,
+  formatCurrency,
+  formatDate,
+  formatDecimal,
+} from "@workspace/utils";
 import {
   Card,
   CardContent,
@@ -17,13 +22,7 @@ import type {
   BuildingPermitsYearDataset,
   BuildingPermitsYearSummary,
 } from "../../types";
-import {
-  areaFormatter,
-  dateFormatter,
-  dateTimeFormatter,
-  euroFormatter,
-  sumRecords,
-} from "./helpers";
+import { sumRecords } from "./helpers";
 
 type DatasetSummaryCardProps = {
   index: BuildingPermitsIndex;
@@ -55,7 +54,10 @@ export function DatasetSummaryCard({
         <div>
           <CardTitle>Lejet e ndërtimit ({dataset.year})</CardTitle>
           <CardDescription>
-            {`Publikuar më ${dateTimeFormatter(dataset.generated_at)}`}
+            {`Publikuar më ${formatDate(dataset.generated_at, {
+              dateStyle: "long",
+              timeStyle: "short",
+            })}`}
           </CardDescription>
         </div>
         <div className="w-full sm:w-40">
@@ -77,16 +79,16 @@ export function DatasetSummaryCard({
           <MetricStat
             label="Leje të publikuara"
             value={formatCount(dataset.record_count)}
-            hint={`Gjeneruar më ${dateFormatter(index.generated_at)}`}
+            hint={`Gjeneruar më ${formatDate(index.generated_at)}`}
           />
           <MetricStat
             label="Sipërfaqja totale"
-            value={totalArea > 0 ? `${areaFormatter(totalArea)} m²` : "—"}
+            value={totalArea > 0 ? `${formatDecimal(totalArea)} m²` : "—"}
             hint="Sipas sipërfaqes së kateve të raportuara"
           />
           <MetricStat
             label="Tarifat totale"
-            value={totalFees > 0 ? euroFormatter(totalFees) : "—"}
+            value={totalFees > 0 ? formatCurrency(totalFees) : "—"}
             hint="Tarifa e densitetit + administrative"
           />
         </div>

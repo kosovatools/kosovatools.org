@@ -1,15 +1,16 @@
 import * as React from "react";
 
+import timelineEventsJson from "../data/events.json" with { type: "json" };
 import {
   PeriodGrouping,
   type TimelineEvent,
-  getPeriodFormatter,
   groupPeriod,
 } from "@workspace/utils";
 
+const timelineEvents = timelineEventsJson as TimelineEvent[];
+
 type ChartDatum = {
   period: string;
-  periodLabel: string;
 };
 
 export type ChartEventMarker = {
@@ -21,34 +22,48 @@ export type ChartEventMarker = {
   details?: string;
 };
 
+export type TimelineEventCategory = TimelineEvent["category"];
+
+export type UseTimelineEventMarkersOptions = {
+  includeCategories?: ReadonlyArray<TimelineEventCategory>;
+};
+
 export function useTimelineEventMarkers(
   data: ChartDatum[],
   grouping: PeriodGrouping,
-  events: TimelineEvent[] = [],
+  options: UseTimelineEventMarkersOptions = {},
 ): ChartEventMarker[] {
+  const { includeCategories } = options;
+
   return React.useMemo(() => {
     if (!data.length) {
       return [];
     }
 
-    const periodFormatter = getPeriodFormatter(grouping);
+    const includeCategorySet =
+      includeCategories && includeCategories.length
+        ? new Set(includeCategories)
+        : null;
+    const visibleEvents = includeCategorySet
+      ? timelineEvents.filter((event) => includeCategorySet.has(event.category))
+      : timelineEvents;
+
     const periodSet = new Set(data.map((row) => row.period));
     const markers = new Map<
       string,
       {
         id: string;
-        x: string;
+        period: string;
         titles: string[];
         descriptions: string[];
       }
     >();
 
-    for (const event of events) {
+    for (const event of visibleEvents) {
       const groupedPeriod = groupPeriod(event.period, grouping);
       if (!periodSet.has(groupedPeriod)) {
         continue;
       }
-      const x = periodFormatter(groupedPeriod);
       const existing = markers.get(groupedPeriod);
       if (existing) {
         existing.titles.push(event.title);
@@ -60,7 +75,7 @@ export function useTimelineEventMarkers(
 
       markers.set(groupedPeriod, {
         id: groupedPeriod,
-        x,
+        period: groupedPeriod,
         titles: [event.title],
         descriptions: event.summary ? [event.summary] : [],
       });
@@ -68,7 +83,7 @@ export function useTimelineEventMarkers(
 
     return Array.from(markers.values()).map((entry, i) => ({
       id: entry.id,
-      x: entry.x,
+      x: entry.period,
       offset: -(i % 6) * 12 - 5,
       label: entry.titles[0] ?? entry.id,
       description:
@@ -78,5 +93,5 @@ export function useTimelineEventMarkers(
       details:
         entry.titles.length > 1 ? entry.titles.slice(1).join(" • ") : undefined,
     }));
-  }, [data, events, grouping]);
+  }, [data, grouping, includeCategories]);
 }

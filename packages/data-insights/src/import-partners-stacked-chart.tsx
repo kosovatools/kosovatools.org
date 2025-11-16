@@ -11,9 +11,16 @@ import {
   YAxis,
 } from "recharts";
 
-import { timelineEvents, type TradePartnerRecord } from "@workspace/kas-data";
-import { useStackChartState, getPeriodFormatter } from "@workspace/utils";
-
+import { importsByPartner } from "@workspace/kas-data";
+import {
+  formatCurrencyCompact,
+  getPeriodFormatter,
+  getPeriodGroupingOptions,
+  limitTimeRangeOptions,
+  type PeriodGrouping,
+  type PeriodGroupingOption,
+  type TimeRangeOption,
+} from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -21,46 +28,45 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
-import {
-  OptionSelector,
-  type SelectorOptionDefinition,
-} from "@workspace/ui/custom-components/option-selector";
-import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
-import { useTimelineEventMarkers } from "@workspace/ui/hooks/use-timeline-event-markers";
+import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
-import { importPartnersStackChartSpec } from "./chart-specs";
+import { useTimelineEventMarkers } from "@workspace/timeline-events";
 
-const spec = importPartnersStackChartSpec;
-const DEFAULT_TOP_PARTNERS = spec.defaults.top ?? 5;
-const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
+import { buildStackedChartData } from "./lib/stacked-chart";
+
+const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
+  getPeriodGroupingOptions(importsByPartner.meta.time.granularity);
+const TIME_RANGE_OPTIONS = limitTimeRangeOptions(importsByPartner.meta.time);
+const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
+
+const DEFAULT_TOP_PARTNERS = 6;
+const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
 
 export function ImportPartnersStackedChart({
-  data,
   top = DEFAULT_TOP_PARTNERS,
 }: {
-  data: readonly TradePartnerRecord[];
   top?: number;
 }) {
-  const {
-    metric,
-    metricKey,
-    setMetricKey,
-    metricOptions,
-    periodGrouping,
-    setPeriodGrouping,
-    periodGroupingOptions,
-    timeRange,
-    setTimeRange,
-    timeRangeOptions,
-    buildSeries,
-    summarizeTotals,
-  } = useStackChartState(spec);
+  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
+    importsByPartner.meta.time.granularity,
+  );
+  const [timeRange, setTimeRange] =
+    React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
+
+  const datasetView = React.useMemo(
+    () => importsByPartner.limit(timeRange),
+    [timeRange],
+  );
 
   const totals = React.useMemo(
-    () => summarizeTotals(data),
-    [summarizeTotals, data],
+    () =>
+      datasetView.summarizeStack({
+        keyAccessor: (record) => record.partner,
+        valueAccessor: (record) => record.imports,
+        dimension: "partner",
+      }),
+    [datasetView],
   );
 
   const {
@@ -73,62 +79,38 @@ export function ImportPartnersStackedChart({
   } = useStackedKeySelection({
     totals,
     topCount: top,
-    initialIncludeOther: spec.defaults.includeOther ?? true,
+    initialIncludeOther: true,
   });
 
-  const metricSelectorOptions = React.useMemo<
-    ReadonlyArray<SelectorOptionDefinition<string>>
-  >(
-    () =>
-      metricOptions.map((entry) => ({
-        key: entry.key,
-        label: entry.label,
-      })),
-    [metricOptions],
-  );
-
-  const { chartData, keyMap, config } = React.useMemo(() => {
-    if (!data.length) {
-      return { chartData: [], keyMap: [], config: {} };
+  const stackResult = React.useMemo(() => {
+    if (!datasetView.records.length) {
+      return null;
     }
 
-    const { keys, series, labelMap } = buildSeries(data, {
-      top,
-      includeOther,
+    return datasetView.viewAsStack({
+      keyAccessor: (record) => record.partner,
+      valueAccessor: (record) => record.imports,
+      dimension: "partner",
       selectedKeys,
       excludedKeys,
+      includeOther,
+      periodGrouping,
     });
+  }, [datasetView, includeOther, periodGrouping, selectedKeys, excludedKeys]);
 
-    return buildStackedChartView({
-      keys,
-      labelMap,
-      series,
-      periodFormatter: getPeriodFormatter(periodGrouping),
-    });
-  }, [
-    data,
-    top,
-    includeOther,
-    selectedKeys,
-    excludedKeys,
-    periodGrouping,
-    buildSeries,
-  ]);
-
-  const tooltip = useChartTooltipFormatters({
-    keys: keyMap,
-    formatValue: metric.formatters.value,
-    formatTotal: (value) =>
-      (metric.formatters.total ?? metric.formatters.value)(value),
-  });
-
-  const eventMarkers = useTimelineEventMarkers(
-    chartData as Array<{ period: string; periodLabel: string }>,
-    periodGrouping,
-    timelineEvents,
+  const { chartKeys, chartData, chartConfig } = React.useMemo(
+    () => buildStackedChartData(stackResult),
+    [stackResult],
   );
 
-  if (!chartData.length || !keyMap.length) {
+  const periodFormatter = React.useMemo(
+    () => getPeriodFormatter(periodGrouping),
+    [periodGrouping],
+  );
+
+  const eventMarkers = useTimelineEventMarkers(chartData, periodGrouping);
+
+  if (!chartData.length || !chartKeys.length) {
     return (
       <ChartContainer config={{}}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
@@ -142,21 +124,15 @@ export function ImportPartnersStackedChart({
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap gap-4">
         <OptionSelector
-          value={metricKey}
-          onChange={(value) => setMetricKey(value)}
-          options={metricSelectorOptions}
-          label="Fluksi"
-        />
-        <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={periodGroupingOptions}
+          options={PERIOD_GROUPING_OPTIONS}
           label="Perioda"
         />
         <OptionSelector
           value={timeRange}
           onChange={setTimeRange}
-          options={timeRangeOptions}
+          options={TIME_RANGE_OPTIONS}
           label="Intervali"
         />
       </div>
@@ -172,21 +148,19 @@ export function ImportPartnersStackedChart({
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}
       />
-      <ChartContainer config={config} className="">
+      <ChartContainer config={chartConfig}>
         <AreaChart data={chartData} margin={CHART_MARGIN}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
-            dataKey="periodLabel"
+            dataKey="period"
+            tickFormatter={(value) => periodFormatter(String(value))}
             tickMargin={8}
             minTickGap={24}
             axisLine={false}
           />
           <YAxis
             width="auto"
-            tickFormatter={(value) =>
-              metric.formatters.axis?.(value as number) ??
-              metric.formatters.value(value as number)
-            }
+            tickFormatter={(value) => formatCurrencyCompact(value as number)}
             axisLine={false}
           />
           {eventMarkers.map((event) => (
@@ -206,27 +180,26 @@ export function ImportPartnersStackedChart({
               />
             </ReferenceLine>
           ))}
-          <ChartTooltip
-            content={
-              <ChartTooltipContent
-                labelFormatter={tooltip.labelFormatter}
-                formatter={tooltip.formatter}
-              />
-            }
-          />
+          <ReferenceLine y={0} stroke="var(--border)" />
+          <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
-          {keyMap.map((entry) => (
-            <Area
-              key={entry.id}
-              type="monotone"
-              dataKey={entry.id}
-              stackId="partners"
-              stroke={`var(--color-${entry.id})`}
-              fill={`var(--color-${entry.id})`}
-              fillOpacity={0.85}
-              name={entry.label}
-            />
-          ))}
+          {chartKeys.map((key) => {
+            const label = chartConfig[key]?.label;
+            const seriesName = typeof label === "string" ? label : key;
+
+            return (
+              <Area
+                key={key}
+                type="monotone"
+                dataKey={key}
+                stackId="partners"
+                stroke={`var(--color-${key})`}
+                fill={`var(--color-${key})`}
+                fillOpacity={0.2}
+                name={seriesName}
+              />
+            );
+          })}
         </AreaChart>
       </ChartContainer>
     </div>

@@ -1,1 +1,1 @@
-export { InflationDashboard } from "./cpi-dashboard";
+export { InflationTracker } from "./inflation-tracker";

@@ -46,7 +46,12 @@ type BaseTooltipContentProps = TooltipContentProps<ValueType, NameType>;
 
 type ChartTooltipContentProps = Omit<
   BaseTooltipContentProps,
-  "payload" | "accessibilityLayer" | "labelFormatter" | "active" | "coordinate"
+  | "payload"
+  | "accessibilityLayer"
+  | "labelFormatter"
+  | "active"
+  | "coordinate"
+  | "activeIndex"
 > &
   React.ComponentProps<"div"> & {
     active?: BaseTooltipContentProps["active"];
@@ -214,7 +219,7 @@ function ChartTooltipContent({
   return (
     <div
       className={cn(
-        "border-border/50 bg-background grid min-w-[8rem] items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl",
+        "border-border/50 bg-background grid items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl",
         className,
       )}
     >
@@ -273,10 +278,10 @@ function ChartTooltipContent({
                       )}
                     >
                       <div className="grid gap-1.5">
-                        {nestLabel ? tooltipLabel : null}
+                        {/* {nestLabel ? tooltipLabel : null}
                         <span className="text-muted-foreground">
                           {itemConfig?.label ?? item.name}
-                        </span>
+                        </span> */}
                       </div>
                       {item.value != null && (
                         <span className="text-foreground font-mono font-medium tabular-nums">

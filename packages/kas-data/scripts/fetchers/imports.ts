@@ -1,4 +1,5 @@
-import { PATHS } from "../lib/constants";
+import type { TradePartnerRecord } from "../../src/types/trade";
+import { PATHS } from "../../src/types/paths";
 import { normalizeYM } from "../lib/utils";
 import { PxPipelineSkip, runPxDatasetPipeline } from "../pipeline/px-dataset";
 
@@ -12,7 +13,7 @@ const PARTNER_LABEL_OVERRIDES: Record<string, string> = {
   "XX:": "E panjohur (XX)",
   "XY:": "E panjohur (XY)",
   "XZ:": "E panjohur (XZ)",
-  "XS:SERBIA 06/2005": "Serbia",
+  "XS:Serbia 06/2005": "Serbia",
   "YU:": "Serbia dhe Mali i Zi",
   "ZZ:": "E panjohur (ZZ)",
 };
@@ -45,12 +46,6 @@ function formatPartnerName(partner: string): string {
   return transformed || partner;
 }
 
-export type PartnerRecord = {
-  period: string;
-  partner: string;
-  imports: number | null;
-};
-
 export async function fetchImportsByPartner(
   outDir: string,
   partners: string[],
@@ -68,13 +63,12 @@ export async function fetchImportsByPartner(
   const partnerLabels = new Map<string, string>();
 
   try {
-    return await runPxDatasetPipeline<PartnerRecord>({
+    return await runPxDatasetPipeline<TradePartnerRecord>({
       datasetId,
       filename: "kas_imports_by_partner.json",
       parts,
       outDir,
       generatedAt,
-      unit: "EUR",
       timeDimension: {
         code: "Viti/muaji",
         text: "Viti/muaji",

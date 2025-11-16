@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import {
-  ElectricityBalanceChart,
-  ElectricityProductionBySourceChart,
+  ElectricityBalanceStackedAreaChart,
+  ElectricityProductionStackedAreaChart,
   EnergyFlowExplorer,
 } from "@workspace/energy-tracker";
-import { describeDatasetSource, electricityDataset } from "@workspace/kas-data";
+import { electricityDataset } from "@workspace/kas-data";
 import ReactQueryProvider from "@/components/react-query-provider";
 
 export const metadata: Metadata = {
@@ -37,10 +37,7 @@ export const metadata: Metadata = {
       "Monitoro importet dhe eksportet mujore të energjisë elektrike të Kosovës për secilin fqinj.",
   },
 };
-const electricitySourceLabel = describeDatasetSource(electricityDataset.meta);
-const unitLabel = electricityDataset.meta.unit
-  ? ` (${electricityDataset.meta.unit})`
-  : "";
+const electricitySourceLabel = electricityDataset.meta.source;
 export default function EnergyFlowsPage() {
   return (
     <div className="space-y-12">
@@ -55,11 +52,10 @@ export default function EnergyFlowsPage() {
             periudha të shkurtra ose të zgjatura.
           </p>
           <span className="text-xs text-muted-foreground">
-            Burimi: {electricitySourceLabel}
-            {unitLabel}.
+            Burimi: {electricitySourceLabel}.
           </span>
         </div>
-        <ElectricityBalanceChart />
+        <ElectricityBalanceStackedAreaChart />
       </section>
       <section className="space-y-4">
         <div className="flex flex-col gap-2">
@@ -72,11 +68,10 @@ export default function EnergyFlowsPage() {
             kur burimet e ripërtritshme mbulojnë më shumë kërkesën.
           </p>
           <span className="text-xs text-muted-foreground">
-            Burimi: {electricitySourceLabel}
-            {unitLabel}.
+            Burimi: {electricitySourceLabel}.
           </span>
         </div>
-        <ElectricityProductionBySourceChart />
+        <ElectricityProductionStackedAreaChart />
       </section>
       <ReactQueryProvider>
         <EnergyFlowExplorer />

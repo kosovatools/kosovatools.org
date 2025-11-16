@@ -1,4 +1,4 @@
-import { PATHS } from "../lib/constants";
+import { PATHS } from "../../src/types/paths";
 import {
   createMeta,
   describePxSources,
@@ -15,14 +15,7 @@ type PxDatasetResult<RecordShape extends Record<string, unknown>> = Awaited<
 type RawTransportRecord = { period: string; value: number | null };
 type RawTransportDataset = PxDatasetResult<RawTransportRecord>;
 
-export type TransportMetric =
-  | "passengers_inbound"
-  | "passengers_outbound"
-  | "flights";
-
-export type TransportRecord = {
-  period: string;
-} & Record<TransportMetric, number | null>;
+import { TransportMetric, TransportRecord } from "../../src/types/transport";
 
 const DATASET_ID = "kas_transport_air_traffic_monthly";
 const FILENAME = "kas_transport_air_traffic_monthly.json";
@@ -77,7 +70,6 @@ async function fetchTransportComponent(
     parts,
     outDir,
     generatedAt,
-    unit: spec.unit,
     timeDimension: {
       code: "Viti/muaji",
       text: "Viti/muaji",
@@ -197,7 +189,6 @@ export async function fetchAirTransportMonthly(
     fields,
     metrics: fields.map((field) => field.key),
     dimensions: {},
-    unit: null,
     source,
     source_urls: sourceUrls,
     title: null,

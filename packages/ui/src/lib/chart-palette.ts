@@ -98,3 +98,62 @@ export function resolvePaletteColor(
     DEFAULT_FALLBACK_COLOR
   );
 }
+
+type ConfigEntry = Record<string, unknown>;
+
+type ConfigRecord<TKey extends string = string> = Record<TKey, ConfigEntry>;
+
+export type ThemedChartConfig<TConfig extends ConfigRecord> = {
+  [K in keyof TConfig]: Omit<TConfig[K], "color" | "theme"> & {
+    color?: never;
+    theme: PaletteColor;
+  };
+};
+
+type ThemeConfigOptions = {
+  palette?: PaletteColor[];
+  fallback?: PaletteColor;
+  filter?: (key: string, index: number) => boolean;
+};
+
+/**
+ * Attach palette-driven theme entries to every key in a ChartConfig-like record.
+ */
+export function addThemeToChartConfig<TConfig extends ConfigRecord>(
+  config: TConfig,
+  { palette, fallback, filter }: ThemeConfigOptions = {},
+): ThemedChartConfig<TConfig> {
+  const candidateKeys = Object.keys(config);
+  const uniqueKeys = Array.from(new Set(candidateKeys)).filter(
+    (key): key is string => Boolean(key),
+  );
+  const filteredKeys = filter
+    ? uniqueKeys.filter((key, index) => filter(key, index))
+    : uniqueKeys;
+
+  if (!filteredKeys.length) {
+    return config as unknown as ThemedChartConfig<TConfig>;
+  }
+
+  const basePalette = palette ?? createChromaPalette(filteredKeys.length);
+  const nextConfig: Record<string, ConfigEntry> = { ...config };
+
+  filteredKeys.forEach((key, index) => {
+    const existing = (nextConfig[key] ?? config[key]) as ConfigEntry | null;
+    if (!existing) return;
+    const paletteEntry = resolvePaletteColor(basePalette, index, fallback);
+    const rest = { ...existing } as Record<string, unknown>;
+    delete rest.color;
+    delete rest.theme;
+
+    nextConfig[key] = {
+      ...(rest as Omit<TConfig[typeof key], "color" | "theme">),
+      theme: {
+        light: paletteEntry.light,
+        dark: paletteEntry.dark,
+      },
+    } as ThemedChartConfig<TConfig>[typeof key];
+  });
+
+  return nextConfig as unknown as ThemedChartConfig<TConfig>;
+}

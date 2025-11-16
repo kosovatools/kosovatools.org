@@ -3,64 +3,65 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { tourismCountry } from "@workspace/kas-data";
-import { useStackChartState, getPeriodFormatter } from "@workspace/utils";
-
+import { tourismCountry, type TourismCountryMeta } from "@workspace/kas-data";
+import {
+  formatCount,
+  getPeriodFormatter,
+  getPeriodGroupingOptions,
+  limitTimeRangeOptions,
+  type PeriodGrouping,
+  type PeriodGroupingOption,
+  type TimeRangeOption,
+} from "@workspace/utils";
 import {
   ChartContainer,
-  ChartTooltip,
   ChartLegend,
   ChartLegendContent,
+  ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
-import {
-  OptionSelector,
-  SelectorOptionDefinition,
-} from "@workspace/ui/custom-components/option-selector";
-import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
+import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
-import { formatCountValue } from "./formatters";
-import { tourismCountryStackChartSpec } from "./chart-specs";
 
-const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
-const spec = tourismCountryStackChartSpec;
-const DEFAULT_TOP_COUNTRIES = spec.defaults.top ?? 5;
-const data = tourismCountry.records;
+import { buildStackedChartData } from "./lib/stacked-chart";
+
+const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
+const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
+  getPeriodGroupingOptions(tourismCountry.meta.time.granularity);
+const TIME_RANGE_OPTIONS = limitTimeRangeOptions(tourismCountry.meta.time);
+const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
+
+type TourismMetric = TourismCountryMeta["metrics"][number];
+
+const DEFAULT_TOP_COUNTRIES = 5;
 
 export function TourismCountryStackedChart({
   top = DEFAULT_TOP_COUNTRIES,
 }: {
   top?: number;
 }) {
-  const {
-    metric,
-    metricKey,
-    setMetricKey,
-    metricOptions,
-    periodGrouping,
-    setPeriodGrouping,
-    periodGroupingOptions,
-    timeRange,
-    setTimeRange,
-    timeRangeOptions,
-    buildSeries,
-    summarizeTotals,
-  } = useStackChartState(spec);
+  const [metricKey, setMetricKey] = React.useState<TourismMetric>("visitors");
+  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
+    tourismCountry.meta.time.granularity,
+  );
+  const [timeRange, setTimeRange] =
+    React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
-  const metricSelectorOptions = React.useMemo<
-    ReadonlyArray<SelectorOptionDefinition<string>>
-  >(
-    () =>
-      metricOptions.map((entry) => ({
-        key: entry.key,
-        label: entry.label,
-      })),
-    [metricOptions],
+  const datasetView = React.useMemo(
+    () => tourismCountry.limit(timeRange),
+    [timeRange],
   );
 
-  const totals = React.useMemo(() => summarizeTotals(data), [summarizeTotals]);
+  const totals = React.useMemo(
+    () =>
+      datasetView.summarizeStack({
+        keyAccessor: (record) => record.country,
+        valueAccessor: (record) => record[metricKey],
+        dimension: "country",
+      }),
+    [datasetView, metricKey],
+  );
 
   const {
     selectedKeys,
@@ -75,43 +76,42 @@ export function TourismCountryStackedChart({
     initialIncludeOther: true,
   });
 
-  const { chartData, keyMap, config } = React.useMemo(() => {
-    if (!data.length) {
-      return { chartData: [], keyMap: [], config: {} };
+  const stackResult = React.useMemo(() => {
+    if (!datasetView.records.length) {
+      return null;
     }
 
-    const { keys, series, labelMap } = buildSeries(data, {
-      top,
-      includeOther,
+    return datasetView.viewAsStack({
+      keyAccessor: (record) => record.country,
+      valueAccessor: (record) => record[metricKey],
+      dimension: "country",
       selectedKeys,
       excludedKeys,
-    });
-
-    return buildStackedChartView({
-      keys,
-      labelMap,
-      series,
-      periodFormatter: getPeriodFormatter(periodGrouping),
+      includeOther,
+      periodGrouping,
     });
   }, [
-    top,
-    includeOther,
+    datasetView,
+    metricKey,
     selectedKeys,
     excludedKeys,
+    includeOther,
     periodGrouping,
-    buildSeries,
   ]);
 
-  const tooltip = useChartTooltipFormatters({
-    keys: keyMap,
-    formatValue: metric.formatters.value,
-    formatTotal: (value) =>
-      (metric.formatters.total ?? metric.formatters.value)(value),
-  });
+  const { chartKeys, chartData, chartConfig } = React.useMemo(
+    () => buildStackedChartData(stackResult),
+    [stackResult],
+  );
 
-  if (!chartData.length || !keyMap.length) {
+  const periodFormatter = React.useMemo(
+    () => getPeriodFormatter(periodGrouping),
+    [periodGrouping],
+  );
+
+  if (!chartData.length || !chartKeys.length) {
     return (
-      <ChartContainer config={config}>
+      <ChartContainer config={{}}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
           Nuk ka të dhëna për vendet e turizmit.
         </div>
@@ -122,22 +122,22 @@ export function TourismCountryStackedChart({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-4">
-        <OptionSelector
+        <OptionSelector<TourismMetric>
           value={metricKey}
           onChange={(value) => setMetricKey(value)}
-          options={metricSelectorOptions}
+          options={tourismCountry.meta.fields}
           label="Metrika"
         />
-        <OptionSelector
+        <OptionSelector<PeriodGrouping>
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={periodGroupingOptions}
+          options={PERIOD_GROUPING_OPTIONS}
           label="Perioda"
         />
-        <OptionSelector
+        <OptionSelector<TimeRangeOption>
           value={timeRange}
           onChange={setTimeRange}
-          options={timeRangeOptions}
+          options={TIME_RANGE_OPTIONS}
           label="Intervali"
         />
       </div>
@@ -153,44 +153,40 @@ export function TourismCountryStackedChart({
         excludedKeys={excludedKeys}
         onExcludedKeysChange={setExcludedKeys}
       />
-      <ChartContainer config={config} className="">
+      <ChartContainer config={chartConfig}>
         <AreaChart data={chartData} margin={CHART_MARGIN}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
-            dataKey="periodLabel"
+            dataKey="period"
+            tickFormatter={(value) => periodFormatter(String(value))}
             tickMargin={8}
             minTickGap={24}
             axisLine={false}
           />
           <YAxis
             width="auto"
-            tickFormatter={(value) =>
-              metric.formatters.axis?.(value as number) ??
-              formatCountValue(value as number)
-            }
+            tickFormatter={(value) => formatCount(value as number)}
             axisLine={false}
           />
-          <ChartTooltip
-            content={
-              <ChartTooltipContent
-                labelFormatter={tooltip.labelFormatter}
-                formatter={tooltip.formatter}
-              />
-            }
-          />
+          <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
-          {keyMap.map((entry) => (
-            <Area
-              key={entry.id}
-              type="monotone"
-              dataKey={entry.id}
-              stackId="tourism"
-              stroke={`var(--color-${entry.id})`}
-              fill={`var(--color-${entry.id})`}
-              fillOpacity={0.85}
-              name={entry.label}
-            />
-          ))}
+          {chartKeys.map((key) => {
+            const label = chartConfig[key]?.label;
+            const seriesName = typeof label === "string" ? label : key;
+
+            return (
+              <Area
+                key={key}
+                type="monotone"
+                dataKey={key}
+                stackId="tourism"
+                stroke={`var(--color-${key})`}
+                fill={`var(--color-${key})`}
+                fillOpacity={0.2}
+                name={seriesName}
+              />
+            );
+          })}
         </AreaChart>
       </ChartContainer>
     </div>

@@ -1,83 +1,74 @@
-export type MetaField = {
-  key: string;
-  label: string;
-  unit: string; // REQUIRED per v1.1
-};
+import type {
+  DatasetMeta,
+  DatasetMetaField,
+  DimensionOption as DatasetDimensionOption,
+  TimeGranularity,
+  DatasetMetaBaseExtras,
+} from "../../src/types/dataset";
 
-export type DimensionOption = {
-  key: string;
-  label: string;
-};
+export type { TimeGranularity };
 
-export type TimeGranularity = "yearly" | "quarterly" | "monthly" | "daily";
+export type MetaField<TKey extends string = string> = DatasetMetaField<TKey>;
 
-export type Meta = {
-  id: string;
-  generated_at: string;
-  updated_at: string | null;
-  time: {
-    key: "period";
-    granularity: TimeGranularity;
-    first: string;
-    last: string;
-    count: number;
-  };
-  fields: MetaField[];
-  metrics: string[];
-  dimensions: Record<string, DimensionOption[]>; // excludes period
-  unit?: string | null;
-  source: string;
-  source_urls: string[];
-  title?: string | null;
-  notes?: string[];
-};
+export type DimensionOption<TKey extends string = string> =
+  DatasetDimensionOption<TKey>;
 
-export function createMeta(
+export type Meta<TExtras extends object = DatasetMetaBaseExtras> = DatasetMeta<
+  string,
+  string,
+  TimeGranularity,
+  TExtras
+>;
+
+export function createMeta<TExtras extends object>(
   id: string,
   generatedAt: string,
-  options: Omit<Meta, "id" | "generated_at">,
-): Meta {
-  const {
-    updated_at,
-    time,
-    fields,
-    metrics,
-    dimensions,
-    unit,
-    source,
-    source_urls,
-    title,
-    notes,
-  } = options as unknown as Meta;
+  options: Omit<Meta<TExtras>, "id" | "generated_at">,
+): Meta<TExtras> {
+  // Treat options as a Meta without id/generated_at,
+  // so it includes any extras (TExtras) as well.
+  const base = options as Meta<TExtras>;
 
-  // Minimal runtime validation to enforce v1.1
-  if (!time || time.key !== "period")
-    throw new Error("meta.time.key must be 'period'");
-  if (!time.first || !time.last)
-    throw new Error("meta.time.first/last required");
-  if (!time.granularity) throw new Error("meta.time.granularity required");
-  if (!Array.isArray(fields) || !fields.length)
-    throw new Error("meta.fields required");
-  for (const f of fields)
-    if (f.unit === undefined || f.unit === null)
-      throw new Error("field.unit must be provided");
-  if (!Array.isArray(metrics) || metrics.length !== fields.length)
-    throw new Error("meta.metrics must mirror fields");
-
-  return {
+  // Build the full meta object, preserving extras
+  const meta: Meta<TExtras> = {
+    ...base,
     id,
     generated_at: generatedAt,
-    updated_at,
-    time,
-    fields,
-    metrics,
-    dimensions: dimensions ?? {},
-    unit,
-    source,
-    source_urls,
-    title: title ?? null,
-    notes: notes ?? [],
+    // ensure some defaults
+    dimensions: (base.dimensions ?? {}) as Meta<TExtras>["dimensions"],
+    title: base.title ?? null,
+    notes: base.notes ?? [],
   };
+
+  // ---- Minimal runtime validation (v1.1) ----
+  const { time, fields, metrics } = meta;
+
+  if (!time || time.key !== "period") {
+    throw new Error("meta.time.key must be 'period'");
+  }
+  if (!time.first || !time.last) {
+    throw new Error("meta.time.first/last required");
+  }
+  if (!time.granularity) {
+    throw new Error("meta.time.granularity required");
+  }
+
+  if (!Array.isArray(fields) || !fields.length) {
+    throw new Error("meta.fields required");
+  }
+
+  const typedFields = fields as ReadonlyArray<DatasetMetaField<string>>;
+  for (const f of typedFields) {
+    if (f.unit === undefined || f.unit === null) {
+      throw new Error("field.unit must be provided");
+    }
+  }
+
+  if (!Array.isArray(metrics) || metrics.length !== fields.length) {
+    throw new Error("meta.metrics must mirror fields");
+  }
+
+  return meta;
 }
 
 function normalizeTableLabel(filename: string): string {

@@ -8,7 +8,9 @@ import path from "node:path";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
 
-import { API_BASE, FUEL_SPECS, PATHS } from "./lib/constants";
+import { API_BASE } from "./lib/constants";
+import { FUEL_SPECS } from "../src/types/constants";
+import { PATHS } from "../src/types/paths";
 import {
   PxError,
   requestJson,
@@ -34,7 +36,7 @@ import {
   FuelDatasetResult,
 } from "./fetchers/energy";
 import { fetchImportsByPartner } from "./fetchers/imports";
-import { fetchTradeChaptersYearly, fetchTradeMonthly } from "./fetchers/trade";
+import { fetchTradeChaptersYearly } from "./fetchers/trade";
 import { fetchTourismCountry, fetchTourismRegion } from "./fetchers/tourism";
 import { fetchAirTransportMonthly } from "./fetchers/transport";
 
@@ -108,9 +110,6 @@ export async function main(): Promise<void> {
     }
   };
 
-  const tradeDataset = await runTask("Trade Monthly", () =>
-    fetchTradeMonthly(outDir, started),
-  );
   const tradeChaptersYearlyDataset = await runTask(
     "Trade Chapters Yearly",
     () => fetchTradeChaptersYearly(outDir, started),
@@ -124,7 +123,7 @@ export async function main(): Promise<void> {
     [FuelKey, (typeof FUEL_SPECS)[FuelKey]]
   >) {
     const dataset = await runTask(`Fuel: ${fuelName}`, () =>
-      fetchFuelTable(outDir, fuelName, spec, started),
+      fetchFuelTable(outDir, fuelName as string, spec, started),
     );
     if (dataset) {
       fuelDatasets[fuelName] = dataset;
@@ -154,8 +153,7 @@ export async function main(): Promise<void> {
   }
 
   console.log(
-    `✔ trade (${tradeDataset && "records" in tradeDataset ? tradeDataset.records.length : 0} rows) ` +
-      `| trade chapters yearly (${tradeChaptersYearlyDataset && "records" in tradeChaptersYearlyDataset ? tradeChaptersYearlyDataset.records.length : 0} rows) ` +
+    `✔ trade chapters yearly (${tradeChaptersYearlyDataset && "records" in tradeChaptersYearlyDataset ? tradeChaptersYearlyDataset.records.length : 0} rows) ` +
       `| energy (${energyDataset && "records" in energyDataset ? energyDataset.records?.length : 0} rows)`,
   );
   console.log("Done.");

@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 
 import { Card, CardContent } from "@workspace/ui/components/card";
 import { Progress } from "@workspace/ui/components/progress";
@@ -17,28 +10,16 @@ import { formatDate } from "@workspace/utils";
 
 import { createCustomsColumns } from "./customs-table/columns";
 import { VirtualizedTreeTable } from "./virtualized-tree-table";
+import { useCustomsSearchState } from "./use-customs-search-state";
 
 type DatasetValidity = {
   iso: string;
   display: string;
 };
 
-function useDebouncedValue<T>(value: T, delayMs: number): T {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    const timeout = window.setTimeout(() => setDebounced(value), delayMs);
-    return () => window.clearTimeout(timeout);
-  }, [value, delayMs]);
-  return debounced;
-}
-
 export function CustomsExplorer() {
   const [treeData, setTreeData] = useState<CustomsTreeNode[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [idQuery, setIdQuery] = useState<string>("");
-  const [descQuery, setDescQuery] = useState<string>("");
-  const [codeFilterOpen, setCodeFilterOpen] = useState(false);
-  const [descFilterOpen, setDescFilterOpen] = useState(false);
   const [indexingState, setIndexingState] =
     useState<InitializationProgress | null>(null);
   const [initialized, setInitialized] = useState(false);
@@ -47,33 +28,19 @@ export function CustomsExplorer() {
   const [isPending, startTransition] = useTransition();
   const mountedRef = useRef(true);
 
-  const debouncedId = useDebouncedValue(idQuery.trim(), 250);
-  const normalizedDescQuery = descQuery.trim();
-  const debouncedDesc = useDebouncedValue(
-    normalizedDescQuery.length >= 3 ? normalizedDescQuery : "",
-    250,
-  );
-  const codePrefix = debouncedId;
-  const idQueryRef = useRef(idQuery);
-  idQueryRef.current = idQuery;
-  const descQueryRef = useRef(descQuery);
-  descQueryRef.current = descQuery;
-  const codePrefixRef = useRef(codePrefix);
-  codePrefixRef.current = codePrefix;
-  const getIdQuery = useCallback(() => idQueryRef.current, [idQueryRef]);
-  const getDescQuery = useCallback(() => descQueryRef.current, [descQueryRef]);
-  const getCodePrefix = useCallback(
-    () => codePrefixRef.current,
-    [codePrefixRef],
-  );
-  const toggleCodeFilter = useCallback(
-    () => setCodeFilterOpen((previous) => !previous),
-    [],
-  );
-  const toggleDescFilter = useCallback(
-    () => setDescFilterOpen((previous) => !previous),
-    [],
-  );
+  const {
+    setIdQuery,
+    setDescQuery,
+    codeFilterOpen,
+    toggleCodeFilter,
+    descFilterOpen,
+    toggleDescFilter,
+    debouncedId,
+    debouncedDesc,
+    getIdQuery,
+    getDescQuery,
+    getCodePrefix,
+  } = useCustomsSearchState();
 
   useEffect(() => {
     mountedRef.current = true;

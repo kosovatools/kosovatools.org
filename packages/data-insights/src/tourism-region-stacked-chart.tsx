@@ -3,26 +3,34 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { tourismRegion, type TourismRegionRecord } from "@workspace/kas-data";
-import { useStackChartState, getPeriodFormatter } from "@workspace/utils";
-
+import { tourismRegion, type TourismRegionMeta } from "@workspace/kas-data";
+import {
+  formatCount,
+  getPeriodFormatter,
+  getPeriodGroupingOptions,
+  limitTimeRangeOptions,
+  type PeriodGrouping,
+  type PeriodGroupingOption,
+  type TimeRangeOption,
+} from "@workspace/utils";
 import {
   ChartContainer,
-  ChartTooltip,
   ChartLegend,
   ChartLegendContent,
+  ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { buildStackedChartView } from "@workspace/ui/lib/stacked-chart-helpers";
-import {
-  OptionSelector,
-  type SelectorOptionDefinition,
-} from "@workspace/ui/custom-components/option-selector";
-import { useChartTooltipFormatters } from "@workspace/ui/hooks/use-chart-tooltip-formatters";
-import { formatCountValue } from "./formatters";
-import { tourismRegionStackChartSpec } from "./chart-specs";
+import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+
+import { buildStackedChartData } from "./lib/stacked-chart";
 
 const DEFAULT_GROUP_LABEL = "Total";
+const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
+
+const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
+  getPeriodGroupingOptions(tourismRegion.meta.time.granularity);
+const TIME_RANGE_OPTIONS = limitTimeRangeOptions(tourismRegion.meta.time);
+const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
 
 const getVisitorGroupLabelText = (
   label: React.ReactNode | null | undefined,
@@ -37,65 +45,58 @@ const getVisitorGroupLabelText = (
   return fallback;
 };
 
-const visitorGroupOptions: SelectorOptionDefinition<
-  TourismRegionRecord["visitor_group"]
->[] =
-  tourismRegion.meta.dimensions.visitor_group?.map((option) => ({
-    key: option.key as TourismRegionRecord["visitor_group"],
-    label: option.label,
-  })) ?? [];
-
-const DEFAULT_GROUP = "total";
-const CHART_MARGIN = { top: 56, right: 0, left: 0, bottom: 0 };
-const spec = tourismRegionStackChartSpec;
-const data = tourismRegion.records;
-
 export function TourismRegionCharts() {
   const [group, setGroup] =
-    React.useState<TourismRegionRecord["visitor_group"]>(DEFAULT_GROUP);
+    React.useState<
+      TourismRegionMeta["dimensions"]["visitor_group"][number]["key"]
+    >("total");
+  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
+    tourismRegion.meta.time.granularity,
+  );
+  const [timeRange, setTimeRange] =
+    React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
   React.useEffect(() => {
-    if (!visitorGroupOptions.some((option) => option.key === group)) {
-      setGroup(DEFAULT_GROUP);
+    if (
+      !tourismRegion.meta.dimensions.visitor_group.some(
+        (option) => option.key === group,
+      )
+    ) {
+      setGroup("total");
     }
   }, [group]);
 
-  const {
-    periodGrouping,
-    setPeriodGrouping,
-    periodGroupingOptions,
-    timeRange,
-    setTimeRange,
-    timeRangeOptions,
-    buildSeries,
-  } = useStackChartState(spec);
-
-  const filteredRecords = React.useMemo(
-    () =>
-      data.filter((record) => (group ? record.visitor_group === group : true)),
-    [group],
+  const datasetView = React.useMemo(
+    () => tourismRegion.limit(timeRange),
+    [timeRange],
   );
 
-  const { chartData, keyMap, config } = React.useMemo(() => {
-    if (!filteredRecords.length) {
-      return { chartData: [], keyMap: [], config: {} };
+  const stackResult = React.useMemo(() => {
+    if (!datasetView.records.length) {
+      return null;
     }
 
-    const { keys, series, labelMap } = buildSeries(filteredRecords);
-
-    return buildStackedChartView({
-      keys,
-      labelMap,
-      series,
-      periodFormatter: getPeriodFormatter(periodGrouping),
+    return datasetView.viewAsStack({
+      keyAccessor: (record) => record.region,
+      valueAccessor: (record) =>
+        record.visitor_group === group ? record.visitors : null,
+      dimension: "region",
+      periodGrouping,
     });
-  }, [filteredRecords, buildSeries, periodGrouping]);
+  }, [datasetView, group, periodGrouping]);
 
-  const latestSummary = React.useMemo<{
-    periodLabel: string;
-    total: number;
-  } | null>(() => {
-    if (!chartData.length || !keyMap.length) {
+  const { chartKeys, chartData, chartConfig } = React.useMemo(
+    () => buildStackedChartData(stackResult),
+    [stackResult],
+  );
+
+  const periodFormatter = React.useMemo(
+    () => getPeriodFormatter(periodGrouping),
+    [periodGrouping],
+  );
+
+  const latestSummary = React.useMemo(() => {
+    if (!chartData.length || !chartKeys.length) {
       return null;
     }
 
@@ -104,27 +105,18 @@ export function TourismRegionCharts() {
       return null;
     }
 
-    const total = keyMap.reduce(
-      (sum, entry) => sum + Number(lastRow[entry.id] ?? 0),
+    const total = chartKeys.reduce(
+      (sum, key) => sum + (Number(lastRow[key]) || 0),
       0,
     );
 
     return {
-      periodLabel:
-        typeof lastRow.periodLabel === "string"
-          ? lastRow.periodLabel
-          : String(lastRow.periodLabel ?? ""),
+      periodLabel: periodFormatter(lastRow.period),
       total,
     };
-  }, [chartData, keyMap]);
+  }, [chartData, chartKeys, periodFormatter]);
 
-  const tooltip = useChartTooltipFormatters({
-    keys: keyMap,
-    formatValue: formatCountValue,
-    formatTotal: formatCountValue,
-  });
-
-  if (!chartData.length || !keyMap.length) {
+  if (!chartData.length || !chartKeys.length) {
     return (
       <ChartContainer config={{}}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
@@ -135,8 +127,10 @@ export function TourismRegionCharts() {
   }
 
   const groupLabel =
-    visitorGroupOptions.find((option) => option.key === group)?.label ??
-    visitorGroupOptions[0]?.label ??
+    tourismRegion.meta.dimensions.visitor_group.find(
+      (option) => option.key === group,
+    )?.label ??
+    tourismRegion.meta.dimensions.visitor_group[0]?.label ??
     DEFAULT_GROUP_LABEL;
   const groupLabelText = getVisitorGroupLabelText(groupLabel);
 
@@ -146,19 +140,19 @@ export function TourismRegionCharts() {
         <OptionSelector
           value={group}
           onChange={(value) => setGroup(value)}
-          options={visitorGroupOptions}
+          options={tourismRegion.meta.dimensions.visitor_group}
           label="Grupi i vizitorëve"
         />
-        <OptionSelector
+        <OptionSelector<PeriodGrouping>
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={periodGroupingOptions}
+          options={PERIOD_GROUPING_OPTIONS}
           label="Perioda"
         />
-        <OptionSelector
+        <OptionSelector<TimeRangeOption>
           value={timeRange}
           onChange={setTimeRange}
-          options={timeRangeOptions}
+          options={TIME_RANGE_OPTIONS}
           label="Intervali"
         />
       </div>
@@ -167,47 +161,46 @@ export function TourismRegionCharts() {
         <p className="text-xs text-muted-foreground">
           Periudha e fundit ({latestSummary.periodLabel}):{" "}
           <span className="font-medium text-foreground">
-            {formatCountValue(latestSummary.total)}
+            {formatCount(latestSummary.total)}
           </span>{" "}
           {groupLabelText.toLowerCase()} vizitorë në të gjitha rajonet.
         </p>
       ) : null}
 
-      <ChartContainer config={config} className="">
+      <ChartContainer config={chartConfig}>
         <AreaChart data={chartData} margin={CHART_MARGIN}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
-            dataKey="periodLabel"
+            dataKey="period"
+            tickFormatter={(value) => periodFormatter(String(value))}
             tickMargin={8}
             minTickGap={24}
             axisLine={false}
           />
           <YAxis
             width="auto"
-            tickFormatter={formatCountValue}
+            tickFormatter={(value) => formatCount(value as number)}
             axisLine={false}
           />
-          <ChartTooltip
-            content={
-              <ChartTooltipContent
-                labelFormatter={tooltip.labelFormatter}
-                formatter={tooltip.formatter}
-              />
-            }
-          />
+          <ChartTooltip content={<ChartTooltipContent />} />
           <ChartLegend content={<ChartLegendContent />} />
-          {keyMap.map((entry) => (
-            <Area
-              key={entry.id}
-              type="monotone"
-              dataKey={entry.id}
-              stackId="tourism-regions"
-              stroke={`var(--color-${entry.id})`}
-              fill={`var(--color-${entry.id})`}
-              fillOpacity={0.85}
-              name={entry.label}
-            />
-          ))}
+          {chartKeys.map((key) => {
+            const label = chartConfig[key]?.label;
+            const seriesName = typeof label === "string" ? label : key;
+
+            return (
+              <Area
+                key={key}
+                type="monotone"
+                dataKey={key}
+                stackId="tourism-regions"
+                stroke={`var(--color-${key})`}
+                fill={`var(--color-${key})`}
+                fillOpacity={0.2}
+                name={seriesName}
+              />
+            );
+          })}
         </AreaChart>
       </ChartContainer>
     </div>

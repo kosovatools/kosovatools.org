@@ -1,5 +1,4 @@
 import {
-  describeDatasetSource,
   formatGeneratedAt,
   fuelDataset,
   tradeChaptersYearly,
@@ -24,11 +23,11 @@ import { TourismRegionCharts } from "./tourism-region-stacked-chart";
 
 export function DataInsightsDashboard() {
   const generatedLabel = formatGeneratedAt(importsByPartner.meta.generated_at);
-  const fuelSourceLabel = describeDatasetSource(fuelDataset.meta);
-  const chapterSourceLabel = describeDatasetSource(tradeChaptersYearly.meta);
-  const partnersSourceLabel = describeDatasetSource(importsByPartner.meta);
-  const tourismCountrySourceLabel = describeDatasetSource(tourismCountry.meta);
-  const tourismRegionSourceLabel = describeDatasetSource(tourismRegion.meta);
+  const fuelSourceLabel = fuelDataset.meta.source;
+  const chapterSourceLabel = tradeChaptersYearly.meta.source;
+  const partnersSourceLabel = importsByPartner.meta.source;
+  const tourismCountrySourceLabel = tourismCountry.meta.source;
+  const tourismRegionSourceLabel = tourismRegion.meta.source;
   const chapterGeneratedLabel = formatGeneratedAt(
     tradeChaptersYearly.meta.generated_at,
   );
@@ -86,10 +85,7 @@ export function DataInsightsDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent className={chartContentClass}>
-            <ImportPartnersStackedChart
-              data={importsByPartner.records}
-              top={6}
-            />
+            <ImportPartnersStackedChart top={6} />
           </CardContent>
           <CardFooter className="text-xs text-muted-foreground">
             Burimi: {partnersSourceLabel}.

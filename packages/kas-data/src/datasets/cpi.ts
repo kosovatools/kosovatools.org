@@ -1,19 +1,12 @@
 import cpiMonthlyJson from "../../data/kas_cpi_monthly.json" with { type: "json" };
-import type { Dataset, DatasetMeta } from "../types/dataset";
+import type { Dataset, DatasetMetaMonthly } from "../types/dataset";
+import { createDataset } from "../utils/dataset";
 
-export type CpiMetric = "index" | "change";
+import type { CpiMetric, CpiRecord } from "../types/cpi";
 
-export type CpiRecord = {
-  period: string;
-  group: string;
-} & Record<CpiMetric, number | null>;
-
-export type CpiMeta = DatasetMeta<CpiMetric, "group">;
+export type CpiMeta = DatasetMetaMonthly<CpiMetric, "group">;
 
 type CpiDataset = Dataset<CpiRecord, CpiMeta>;
+const cpiDatasetData = cpiMonthlyJson as CpiDataset;
 
-const cpiDataset = cpiMonthlyJson as CpiDataset;
-
-export const cpiMeta = cpiDataset.meta;
-export const cpiMonthly = cpiDataset.records;
-export { cpiDataset };
+export const cpiDataset = createDataset(cpiDatasetData);

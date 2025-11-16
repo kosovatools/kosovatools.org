@@ -1,4 +1,4 @@
-import { PATHS } from "../lib/constants";
+import { PATHS } from "../../src/types/paths";
 import { writeJson } from "../lib/io";
 import {
   PxError,
@@ -14,56 +14,12 @@ import {
 import {
   createMeta,
   describePxSources,
-  normalizeYM,
   parseTradeChapterLabel,
   tidyNumber,
   type MetaField,
 } from "../lib/utils";
-import { runPxDatasetPipeline } from "../pipeline/px-dataset";
 
-type TradeMonthlyRecord = { period: string; imports: number | null };
-
-type TradeChapterRecord = {
-  period: string;
-  chapter: string;
-  imports: number | null;
-  exports: number | null;
-};
-
-const TRADE_MONTHLY_METRIC = {
-  code: "1",
-  key: "imports",
-  label: "Imports",
-  unit: "EUR",
-} as const;
-
-export async function fetchTradeMonthly(outDir: string, generatedAt: string) {
-  return runPxDatasetPipeline<TradeMonthlyRecord>({
-    datasetId: "kas_imports_monthly",
-    filename: "kas_imports_monthly.json",
-    parts: PATHS.trade_monthly,
-    outDir,
-    generatedAt,
-    unit: "EUR",
-    timeDimension: {
-      code: "Viti/muaji",
-      text: "Viti/muaji",
-      toLabel: normalizeYM,
-      granularity: "monthly",
-    },
-    metricDimensions: [
-      { code: "Variabla", text: "Variabla", values: [TRADE_MONTHLY_METRIC] },
-    ],
-    createRecord: ({ period, values }) => {
-      const th = values.imports ?? null;
-      return { period, imports: th == null ? null : th * 1_000 };
-    },
-    finalizeDataset: ({ meta, records }) => ({
-      meta,
-      records: [...records].sort((a, b) => a.period.localeCompare(b.period)),
-    }),
-  });
-}
+import { TradeChapterRecord } from "../../src/types/trade";
 
 export async function fetchTradeChaptersYearly(
   outDir: string,
@@ -170,7 +126,6 @@ export async function fetchTradeChaptersYearly(
     dimensions: {
       chapter: chapterSpecs.map(([, s]) => ({ key: s.code, label: s.label })),
     },
-    unit: "EUR",
     source,
     source_urls: sourceUrls,
     notes: ["Source values are thousand EUR; scaled to EUR."],

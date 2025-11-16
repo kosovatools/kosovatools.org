@@ -6,37 +6,22 @@
     "paths": {
       "@/*": ["./*"],
       "@workspace/customs-codes": ["../../packages/customs-codes/src/index.ts"],
-      "@workspace/customs-codes/*": ["../../packages/customs-codes/src/*"],
       "@workspace/aviation-stats": [
         "../../packages/aviation-stats/src/index.ts"
       ],
-      "@workspace/aviation-stats/*": ["../../packages/aviation-stats/src/*"],
       "@workspace/car-import-taxes": [
         "../../packages/car-import-taxes/src/index.ts"
       ],
-      "@workspace/car-import-taxes/*": [
-        "../../packages/car-import-taxes/src/*"
-      ],
+      "@workspace/data-insights": ["../../packages/data-insights/src/index.ts"],
+      "@workspace/drug-prices": ["../../packages/drug-prices/src/index.ts"],
       "@workspace/inflation-tracker": [
         "../../packages/inflation-tracker/src/index.ts"
       ],
-      "@workspace/inflation-tracker/*": [
-        "../../packages/inflation-tracker/src/*"
-      ],
-      "@workspace/data-insights": ["../../packages/data-insights/src/index.ts"],
-      "@workspace/data-insights/*": ["../../packages/data-insights/src/*"],
-      "@workspace/drug-prices": ["../../packages/drug-prices/src/index.ts"],
-      "@workspace/drug-prices/*": ["../../packages/drug-prices/src/*"],
       "@workspace/payroll": ["../../packages/payroll/src/index.ts"],
-      "@workspace/payroll/*": ["../../packages/payroll/src/*"],
       "@workspace/prishtina-building-permits": [
         "../../packages/prishtina-building-permits/src/index.ts"
       ],
-      "@workspace/prishtina-building-permits/*": [
-        "../../packages/prishtina-building-permits/src/*"
-      ],
       "@workspace/war-records": ["../../packages/war-records/src/index.ts"],
-      "@workspace/war-records/*": ["../../packages/war-records/src/*"],
       "@workspace/ui/*": ["../../packages/ui/src/*"]
     },
     "plugins": [

@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@workspace/ui": "workspace:*",
-    "recharts": "3.3.0"
+    "recharts": "3.4.1"
   },
   "peerDependencies": {
     "react": "^19.2.0",
@@ -26,8 +26,8 @@
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@workspace/eslint-config": "workspace:*",
-    "@workspace/utils": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
+    "@workspace/utils": "workspace:*",
     "eslint": "^9.39.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

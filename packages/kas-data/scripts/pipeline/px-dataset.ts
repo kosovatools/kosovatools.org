@@ -166,7 +166,6 @@ export type PipelineSpec<
   axes?: AxisDimensionSpec[];
   metricDimensions?: MetricDimensionSpec[];
   queryDimensions?: QueryDimensionSpec[];
-  unit?: string | null; // optional default
   extraFields?: MetaField[]; // will be appended; must have units
   createRecord: (
     context: RecordContext,
@@ -194,7 +193,6 @@ export async function runPxDatasetPipeline<
     axes = [],
     metricDimensions: metricSpecs = [],
     queryDimensions = [],
-    unit = null,
     createRecord,
     extraFields = [],
     buildNotes,
@@ -419,11 +417,6 @@ export async function runPxDatasetPipeline<
   );
 
   const cubeSummary = readCubeMetadata(cube);
-  const datasetUnit = unit
-    ? String(unit)
-    : cubeSummary.unit
-      ? String(cubeSummary.unit)
-      : undefined;
   const updatedAt =
     typeof cubeSummary.updatedAt === "string"
       ? cubeSummary.updatedAt
@@ -448,7 +441,7 @@ export async function runPxDatasetPipeline<
         typeof value.label === "string" && value.label.length
           ? value.label
           : key;
-      const entryUnit = value.unit ?? datasetUnit ?? "";
+      const entryUnit = value.unit;
       if (!entryUnit)
         throw new PxError(`${datasetId}: unit is required for metric ${key}`);
       const exists = fields.some((f) => f.key === key);
@@ -471,7 +464,6 @@ export async function runPxDatasetPipeline<
     fields,
     metrics,
     dimensions: dimensionOptions,
-    unit: datasetUnit,
     source: defaultSource,
     source_urls: defaultSourceUrls,
     notes: buildNotes ? (buildNotes({ cubeSummary }) ?? []) : [],

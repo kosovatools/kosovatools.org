@@ -1,5 +1,4 @@
-import { PATHS, FUEL_SPECS } from "../lib/constants";
-import type { FuelSpec } from "../lib/constants";
+import { FUEL_SPECS, FuelSpec } from "../../src/types/constants";
 import { PxError, findTimeDimension } from "../lib/pxweb";
 import {
   normalizeFuelField,
@@ -11,28 +10,12 @@ import {
 import { runPxDatasetPipeline } from "../pipeline/px-dataset";
 import { writeJson } from "../lib/io";
 export type FuelDatasetResult = Awaited<ReturnType<typeof fetchFuelTable>>;
-type EnergyValues = {
-  production_thermal_gwh: number | null;
-  production_hydro_gwh: number | null;
-  production_wind_solar_gwh: number | null;
-  import_gwh: number | null;
-  export_gwh: number | null;
-  gross_available_gwh: number | null;
-  household_consumption_gwh: number | null;
-  commercial_consumption_gwh: number | null;
-  industry_consumption_gwh: number | null;
-  public_lighting_consumption_gwh: number | null;
-  high_voltage_consumption_gwh: number | null;
-  mining_consumption_gwh: number | null;
-  consumption_total_gwh: number | null;
-};
+import { EnergyRecord, FuelRecord } from "../../src/types/energy";
+import type { FuelMetric as FuelMetricKey } from "../../src/types/energy";
 
-type EnergyRecord = {
-  period: string;
-  production_gwh: number | null;
-} & EnergyValues;
+import { PATHS } from "../../src/types/paths";
 
-type EnergyMetricSpec = MetaField & { code: string; key: keyof EnergyValues };
+type EnergyMetricSpec = MetaField & { code: string; key: keyof EnergyRecord };
 
 const PRODUCTION_TOTAL_FIELD: MetaField = {
   key: "production_gwh",
@@ -106,7 +89,7 @@ const ENERGY_METRIC_SPECS: ReadonlyArray<EnergyMetricSpec> = [
   },
 ];
 
-const PRODUCTION_KEYS: (keyof EnergyValues)[] = [
+const PRODUCTION_KEYS: (keyof EnergyRecord)[] = [
   "production_thermal_gwh",
   "production_hydro_gwh",
   "production_wind_solar_gwh",
@@ -119,7 +102,6 @@ export async function fetchEnergyMonthly(outDir: string, generatedAt: string) {
     parts: PATHS.energy_monthly,
     outDir,
     generatedAt,
-    unit: "GWh",
     timeDimension: {
       code: "Viti/muaji",
       text: "Viti/muaji",
@@ -174,17 +156,6 @@ export async function fetchEnergyMonthly(outDir: string, generatedAt: string) {
   });
 }
 
-type FuelMetricKey =
-  | "production"
-  | "import"
-  | "export"
-  | "stock"
-  | "ready_for_market";
-
-type FuelRecord = { period: string } & Record<FuelMetricKey, number | null> & {
-    fuel: keyof typeof FUEL_SPECS;
-  };
-
 const FUEL_METRICS: MetaField[] = [
   { key: "production", label: "Production", unit: "tonnes" },
   { key: "import", label: "Import", unit: "tonnes" },
@@ -207,7 +178,6 @@ export async function fetchFuelTable(
     parts,
     outDir,
     generatedAt,
-    unit: "tonnes",
     timeDimension: {
       code: ({ meta }) => findTimeDimension(meta),
       toLabel: normalizeYM,
@@ -322,7 +292,6 @@ export async function writeFuelCombinedDataset(
     dimensions: {
       fuel: fuelOptions.map((o) => ({ key: o.key, label: o.label })),
     },
-    unit: "tonnes",
     source,
     source_urls: sourceUrls,
     notes: [],

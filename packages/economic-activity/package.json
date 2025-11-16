@@ -17,7 +17,7 @@
     "@workspace/dataset-api": "workspace:*",
     "@workspace/ui": "workspace:*",
     "@workspace/utils": "workspace:*",
-    "recharts": "3.3.0"
+    "recharts": "3.4.1"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.90.6",

@@ -112,6 +112,28 @@ function createValueFormatter(
   return (input) => formatNumber(input, options, formatterOptions);
 }
 
+export function formatDecimal(
+  value: NumericInput,
+  options: NumberFormatOptions = {},
+  formatterOptions: FormatterOptions = {},
+): string {
+  const {
+    minimumFractionDigits = 2,
+    maximumFractionDigits = 2,
+    ...intlOptions
+  } = options;
+
+  return formatNumber(
+    value,
+    {
+      ...intlOptions,
+      minimumFractionDigits,
+      maximumFractionDigits,
+    },
+    formatterOptions,
+  );
+}
+
 export function formatCurrency(
   value: NumericInput,
   options: CurrencyFormatOptions = {},

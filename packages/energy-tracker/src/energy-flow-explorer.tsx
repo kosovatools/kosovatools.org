@@ -1,10 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { Info } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { DailyFlowChart, MonthlyFlowTrendChart } from "./energy-flow-chart";
+import { DailyFlowChart } from "./charts/energy-flow-daily-chart";
+import { MonthlyFlowTrendChart } from "./charts/energy-flow-monthly-trend-chart";
 import {
   formatPeriodLabel,
   loadIndex,
@@ -21,8 +22,6 @@ import type {
   EnergyFlowIndex,
   EnergyFlowSnapshot,
 } from "./types";
-import { EnergyFlowExplorerSkeleton } from "./energy-flow-explorer-skeleton";
-
 import {
   Alert,
   AlertDescription,
@@ -87,7 +86,14 @@ export function EnergyFlowExplorer() {
 }
 
 function EnergyFlowExplorerLoadingFallback() {
-  return <EnergyFlowExplorerSkeleton />;
+  return (
+    <div className="flex min-h-[400px] w-full items-center justify-center rounded-2xl border border-dashed border-border/80 bg-muted/30">
+      <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" aria-hidden />
+        <p>Duke u ngarkuar flukset e energjisë…</p>
+      </div>
+    </div>
+  );
 }
 
 class EnergyFlowExplorerErrorBoundary extends React.Component<
@@ -329,7 +335,7 @@ function EnergyFlowExplorerContent() {
   );
 
   if (!derived) {
-    return <EnergyFlowExplorerSkeleton />;
+    return <EnergyFlowExplorerLoadingFallback />;
   }
 
   const {

@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-Kosova Tools uses pnpm and Turborepo to coordinate multiple packages. The Next.js customer surface lives in `apps/web`, with routes in `app/`, shared UI in `components/`, and utilities in `lib/`. Tool-specific React packages (e.g., `packages/customs-codes`, `packages/car-import-taxes`, `packages/energy-tracker`, `packages/inflation-tracker`, `packages/public-wage-calculator`, `packages/data-insights`) own their UI and domain logic. Shared React primitives live in `packages/ui`, data loaders sit in `packages/customs-data` and `packages/kas-data`, and chart-formatting helpers live in `packages/utils`. Workspace-wide linting plus TypeScript baselines sit in `packages/eslint-config` and `packages/typescript-config`.
+Kosova Tools uses pnpm and Turborepo to coordinate multiple packages. The Next.js customer surface lives in `apps/web`, with routes in `app/`, shared UI in `components/`, and utilities in `lib/`. Tool-specific React packages (e.g., `packages/customs-codes`, `packages/car-import-taxes`, `packages/energy-tracker`, `packages/public-wage-calculator`, `packages/data-insights`) own their UI and domain logic. Shared React primitives live in `packages/ui`, data loaders sit in `packages/customs-data` and `packages/kas-data`, and chart-formatting helpers live in `packages/utils`. Workspace-wide linting plus TypeScript baselines sit in `packages/eslint-config` and `packages/typescript-config`.
 
 **Important:** Leave the shadcn-generated files in `packages/ui/src/components` alone—they are regenerated periodically and any manual edits will be lost. Place bespoke UI in `packages/ui/src/custom-components` instead.
 
@@ -28,9 +28,15 @@ Install dependencies with `pnpm install`. Use `pnpm dev` to run Turborepo's `nex
 
 Shared ESLint presets in `packages/eslint-config` extend Next.js and React rules with zero-warning enforcement. Prettier handles formatting (two-space indentation, trailing commas); always run `pnpm format`. Use PascalCase for components and exported hooks, camelCase for utilities, and align route folder names under `app/` with their URL segments. When formatting data, import helpers from `@workspace/utils` (see `packages/utils/src/formatters` and `getPeriodFormatter`) instead of spinning up ad-hoc `Intl` instances, so currency, counts, and period labels stay consistent.
 
+- Prefer shared utilities like `formatCount`, `getPeriodFormatter`, and other helpers from `@workspace/utils` instead of custom formatters to keep copy consistent across tools.
+- Do not wrap these formatters in local helpers (e.g., skip `formatCountValue`); import and use the shared helpers directly so behavior stays centralized.
+
 ## Data Visualization Colors
 
 Derive all chart palettes with `createChromaPalette` in `packages/ui/src/lib/chart-palette.ts` so both light and dark themes stay in sync. When adding new charts, feed the generated colors through `ChartContainer` configs instead of hard-coding CSS variables or hex values.
+
+- Always set Recharts `YAxis` components to `width="auto"` so axes stay balanced across breakpoints.
+- Build stacked series by calling `datasetView.summarizeStack` for totals, `datasetView.viewAsStack` for the series, and piping the result through helpers like `buildStackedChartData` so palette logic comes from `addThemeToChartConfig` rather than bespoke specs.
 
 ## Testing Guidelines
 

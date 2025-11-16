@@ -9,7 +9,7 @@
   "dependencies": {
     "chroma-js": "^3.1.2",
     "d3-scale": "^4.0.2",
-    "recharts": "3.3.0"
+    "recharts": "3.4.1"
   },
   "devDependencies": {
     "@types/chroma-js": "^3.1.2",
