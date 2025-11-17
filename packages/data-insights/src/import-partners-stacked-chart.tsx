@@ -33,7 +33,7 @@ import { OptionSelector } from "@workspace/ui/custom-components/option-selector"
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 import { useTimelineEventMarkers } from "@workspace/timeline-events";
 
-import { buildStackedChartData } from "./lib/stacked-chart";
+import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
 const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
   getPeriodGroupingOptions(importsByPartner.meta.time.granularity);

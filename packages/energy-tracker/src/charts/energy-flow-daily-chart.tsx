@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import {
   Area,
   CartesianGrid,
@@ -9,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import type { EnergyFlowDailyPoint } from "../types";
+import type { EnergyDailyDatasetView } from "../types";
 import { formatDayLabel } from "../date-formatters";
 import {
   ChartContainer,
@@ -18,16 +19,43 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-
 import { energyFlowChartConfig } from "../utils/chart-config";
 import { formatAuto } from "../utils/number-format";
 
-export function DailyFlowChart({ data }: { data: EnergyFlowDailyPoint[] }) {
+type DailyChartRow = {
+  date: string;
+  label: string;
+  imports: number;
+  exports: number;
+  net: number;
+};
+
+export function DailyFlowChart({
+  dataset,
+}: {
+  dataset: EnergyDailyDatasetView;
+}) {
   const chartConfig = energyFlowChartConfig;
-  const chartData = data.map((day) => ({
-    ...day,
-    label: formatDayLabel(day.date),
-  }));
+
+  const chartData = React.useMemo<DailyChartRow[]>(() => {
+    return dataset.records.map((record) => ({
+      date: record.period,
+      label: formatDayLabel(record.period),
+      imports: record.import ?? 0,
+      exports: record.export ?? 0,
+      net: record.net ?? 0,
+    }));
+  }, [dataset.records]);
+
+  if (!chartData.length) {
+    return (
+      <ChartContainer config={chartConfig}>
+        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+          Nuk ka të dhëna ditore për të shfaqur.
+        </div>
+      </ChartContainer>
+    );
+  }
 
   return (
     <ChartContainer

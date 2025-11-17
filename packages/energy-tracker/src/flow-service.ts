@@ -1,58 +1,56 @@
 import { createDatasetFetcher } from "@workspace/dataset-api";
-import { formatDate } from "@workspace/utils";
+import { createDataset } from "@workspace/kas-data";
 
 import type {
-  EnergyFlowDailyLatest,
-  EnergyFlowIndex,
-  EnergyFlowSnapshot,
+  EnergyDailyDataset,
+  EnergyDailyDatasetView,
+  EnergyMonthlyDataset,
+  EnergyMonthlyDatasetView,
 } from "./types";
 
 const DATASET_PREFIX = ["energy"] as const;
+const MONTHLY_FILE = "energy_crossborder_monthly.json";
+const DAILY_FILE = "energy_crossborder_daily.json";
+
 const fetchEnergyDataset = createDatasetFetcher(DATASET_PREFIX, {
   label: "energy-flow",
 });
 
-export function loadIndex(): Promise<EnergyFlowIndex> {
-  return fetchEnergyDataset<EnergyFlowIndex>("index.json");
+let monthlyDatasetPromise: Promise<EnergyMonthlyDatasetView> | null = null;
+let dailyDatasetPromise: Promise<EnergyDailyDatasetView> | null = null;
+
+export function getMonthlyPeriodRange(period: string): {
+  start: string;
+  end: string;
+} {
+  const [yearPart, monthPart] = period.split("-");
+  const year = Number(yearPart);
+  const month = Number(monthPart);
+  if (!Number.isFinite(year) || !Number.isFinite(month)) {
+    throw new Error(`Invalid period format: ${period}`);
+  }
+  const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0));
+  const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
+  return {
+    start: startDate.toISOString(),
+    end: endDate.toISOString(),
+  };
 }
 
-export function loadMonthly(id: string): Promise<EnergyFlowSnapshot> {
-  if (!id) {
-    throw new Error("Missing snapshot id");
+export async function loadMonthlyDataset(): Promise<EnergyMonthlyDatasetView> {
+  if (!monthlyDatasetPromise) {
+    monthlyDatasetPromise = fetchEnergyDataset<EnergyMonthlyDataset>(
+      MONTHLY_FILE,
+    ).then((data) => createDataset(data));
   }
-  return fetchEnergyDataset<EnergyFlowSnapshot>(`monthly/${id}.json`);
+  return monthlyDatasetPromise;
 }
 
-export function loadLatestDaily(): Promise<EnergyFlowDailyLatest> {
-  return fetchEnergyDataset<EnergyFlowDailyLatest>("latest-daily.json");
-}
-
-export function formatPeriodLabel(start: string, end: string): string {
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-
-  if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
-    return "Periudhë e panjohur";
+export async function loadDailyDataset(): Promise<EnergyDailyDatasetView> {
+  if (!dailyDatasetPromise) {
+    dailyDatasetPromise = fetchEnergyDataset<EnergyDailyDataset>(
+      DAILY_FILE,
+    ).then((data) => createDataset(data));
   }
-
-  const options = {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  } as const;
-
-  const formattedStart = formatDate(startDate, options, {
-    fallback: "",
-    preserveInputOnInvalid: false,
-  });
-  const formattedEnd = formatDate(endDate, options, {
-    fallback: "",
-    preserveInputOnInvalid: false,
-  });
-
-  if (!formattedStart || !formattedEnd) {
-    return "Periudhë e panjohur";
-  }
-
-  return `${formattedStart} → ${formattedEnd}`;
+  return dailyDatasetPromise;
 }

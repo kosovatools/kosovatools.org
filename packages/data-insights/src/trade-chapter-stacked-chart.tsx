@@ -30,7 +30,7 @@ import {
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
-import { buildStackedChartData } from "./lib/stacked-chart";
+import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
 const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
   getPeriodGroupingOptions(tradeChaptersYearly.meta.time.granularity);

@@ -22,7 +22,7 @@ import {
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 
-import { buildStackedChartData } from "./lib/stacked-chart";
+import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
 const DEFAULT_GROUP_LABEL = "Total";
 const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };

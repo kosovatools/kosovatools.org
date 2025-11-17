@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import {
   Area,
   CartesianGrid,
@@ -9,8 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import type { EnergyFlowIndex } from "../types";
-import { formatMonthLabel } from "../date-formatters";
+import type { EnergyMonthlyDatasetView } from "../types";
 import {
   ChartContainer,
   ChartLegend,
@@ -18,18 +18,89 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
+import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import {
+  getPeriodFormatter,
+  getPeriodGroupingOptions,
+  limitTimeRangeOptions,
+  type PeriodGrouping,
+  type PeriodGroupingOption,
+  type TimeRangeOption,
+} from "@workspace/utils";
 
 import { energyFlowChartConfig } from "../utils/chart-config";
 import { formatAuto } from "../utils/number-format";
 
+type TrendChartRow = {
+  period: string;
+  label: string;
+  imports: number;
+  exports: number;
+  net: number;
+};
+
 export function MonthlyFlowTrendChart({
-  data,
+  dataset,
 }: {
-  data: EnergyFlowIndex["months"];
+  dataset: EnergyMonthlyDatasetView;
 }) {
   const chartConfig = energyFlowChartConfig;
+  const periodGroupingOptions = React.useMemo<
+    ReadonlyArray<PeriodGroupingOption>
+  >(
+    () => getPeriodGroupingOptions(dataset.meta.time.granularity),
+    [dataset.meta.time.granularity],
+  );
+  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
+    dataset.meta.time.granularity,
+  );
+  const timeRangeOptions = React.useMemo(
+    () => limitTimeRangeOptions(dataset.meta.time),
+    [dataset.meta.time],
+  );
+  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(
+    () => timeRangeOptions[0]?.key ?? null,
+  );
 
-  if (!data.length) {
+  const limitedDataset = React.useMemo(
+    () => dataset.limit(timeRange ?? null),
+    [dataset, timeRange],
+  );
+
+  const periodFormatter = React.useMemo(
+    () => getPeriodFormatter(periodGrouping),
+    [periodGrouping],
+  );
+
+  const chartData = React.useMemo<TrendChartRow[]>(() => {
+    const aggregated = limitedDataset.aggregate({
+      grouping: periodGrouping,
+      fields: [
+        {
+          key: "imports",
+          valueAccessor: (record) => record.import ?? 0,
+        },
+        {
+          key: "exports",
+          valueAccessor: (record) => record.export ?? 0,
+        },
+        {
+          key: "net",
+          valueAccessor: (record) => record.net ?? 0,
+        },
+      ],
+    });
+
+    return aggregated.map((row) => ({
+      period: row.period,
+      label: periodFormatter(row.period),
+      imports: row.imports ?? 0,
+      exports: row.exports ?? 0,
+      net: row.net ?? 0,
+    }));
+  }, [limitedDataset, periodGrouping, periodFormatter]);
+
+  if (!chartData.length) {
     return (
       <ChartContainer config={chartConfig}>
         <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
@@ -39,57 +110,65 @@ export function MonthlyFlowTrendChart({
     );
   }
 
-  const chartData = data.map((month) => ({
-    ...month,
-    label: formatMonthLabel(month.periodStart),
-    imports: month.totals.importMWh,
-    exports: month.totals.exportMWh,
-    net: month.totals.netMWh,
-  }));
-
   return (
-    <ChartContainer
-      config={chartConfig}
-      className="aspect-[1/1.5] sm:aspect-video"
-    >
-      <ComposedChart
-        data={chartData}
-        margin={{ top: 16, right: 24, bottom: 12, left: 12 }}
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-center gap-3">
+        <OptionSelector<PeriodGrouping>
+          label="Grupimi"
+          value={periodGrouping}
+          onChange={(value) => setPeriodGrouping(value)}
+          options={periodGroupingOptions}
+        />
+        <OptionSelector<TimeRangeOption>
+          label="Intervali"
+          value={timeRange}
+          onChange={(value) => setTimeRange(value)}
+          options={timeRangeOptions}
+        />
+      </div>
+      <ChartContainer
+        config={chartConfig}
+        className="aspect-[1/1.5] sm:aspect-video"
       >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="label" tickMargin={8} />
-        <YAxis
-          width="auto"
-          tickFormatter={(value: number | string) =>
-            formatAuto(value, { includeUnit: true })
-          }
-        />
-        <ChartTooltip content={<ChartTooltipContent />} />
-        <ChartLegend content={<ChartLegendContent />} />
-        <Area
-          dataKey="imports"
-          type="monotone"
-          fill="var(--color-imports)"
-          fillOpacity={0.2}
-          stroke="var(--color-imports)"
-          strokeWidth={2}
-        />
-        <Area
-          dataKey="exports"
-          type="monotone"
-          fill="var(--color-exports)"
-          fillOpacity={0.15}
-          stroke="var(--color-exports)"
-          strokeWidth={2}
-        />
-        <Line
-          type="monotone"
-          dataKey="net"
-          stroke="var(--color-net)"
-          strokeWidth={3}
-          dot={{ r: 3 }}
-        />
-      </ComposedChart>
-    </ChartContainer>
+        <ComposedChart
+          data={chartData}
+          margin={{ top: 16, right: 24, bottom: 12, left: 12 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="label" tickMargin={8} />
+          <YAxis
+            width="auto"
+            tickFormatter={(value: number | string) =>
+              formatAuto(value, { includeUnit: true })
+            }
+          />
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartLegend content={<ChartLegendContent />} />
+          <Area
+            dataKey="imports"
+            type="monotone"
+            fill="var(--color-imports)"
+            fillOpacity={0.2}
+            stroke="var(--color-imports)"
+            strokeWidth={2}
+          />
+          <Area
+            dataKey="exports"
+            type="monotone"
+            fill="var(--color-exports)"
+            fillOpacity={0.15}
+            stroke="var(--color-exports)"
+            strokeWidth={2}
+          />
+          <Line
+            type="monotone"
+            dataKey="net"
+            stroke="var(--color-net)"
+            strokeWidth={3}
+            dot={{ r: 3 }}
+          />
+        </ComposedChart>
+      </ChartContainer>
+    </div>
   );
 }

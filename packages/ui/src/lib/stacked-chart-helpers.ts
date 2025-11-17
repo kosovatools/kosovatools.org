@@ -1,35 +1,26 @@
 import type { ChartConfig } from "@workspace/ui/components/chart";
-import {
-  createChromaPalette,
-  resolvePaletteColor,
-  type PaletteColor,
-} from "@workspace/ui/lib/chart-palette";
+import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 
 export type StackedSeriesRow = {
   period: string;
   values: Record<string, number>;
 };
 
-export type StackedKeyEntry = {
-  id: string;
-  originalKey: string;
-  label: string;
-  palette: PaletteColor;
+export type StackChartRow = Record<string, number | string | null> & {
+  period: string;
 };
 
-export type BuildStackedChartViewArgs = {
-  keys: string[];
-  labelMap: Record<string, string>;
+export type DatasetStackResult<TKey extends string> = {
+  keys: Array<TKey | "Other">;
+  labelMap: Record<TKey | "Other", string>;
   series: StackedSeriesRow[];
-  periodFormatter: (period: string) => string;
 };
 
-export type StackedChartView = {
-  keyMap: StackedKeyEntry[];
-  config: ChartConfig;
-  chartData: Array<Record<string, string | number>>;
-};
+const DEFAULT_OTHER_KEY = "other" as const;
 
+export type BuildStackedChartDataArgs = {
+  otherKey?: string;
+};
 function toKeyId(label: string, index: number) {
   const slug = label
     .toLowerCase()
@@ -38,62 +29,57 @@ function toKeyId(label: string, index: number) {
   return slug.length ? slug : `series-${index}`;
 }
 
-export function buildStackedChartView({
-  keys,
-  labelMap,
-  series,
-  periodFormatter,
-}: BuildStackedChartViewArgs): StackedChartView {
-  if (!keys.length || !series.length) {
-    return { keyMap: [], config: {} as ChartConfig, chartData: [] };
+export function buildStackedChartData<TKey extends string>(
+  stack: DatasetStackResult<TKey> | null,
+  { otherKey = DEFAULT_OTHER_KEY }: BuildStackedChartDataArgs = {},
+): {
+  chartKeys: string[];
+  chartData: StackChartRow[];
+  chartConfig: ChartConfig;
+} {
+  if (!stack || !stack.keys.length || !stack.series.length) {
+    return {
+      chartKeys: [],
+      chartData: [],
+      chartConfig: {} as ChartConfig,
+    };
   }
 
-  const dynamicKeys = keys.filter((key) => key !== "Other");
-  const palette = createChromaPalette(dynamicKeys.length);
-  let paletteIndex = 0;
-
-  const keyMap = keys.map((key, index) => {
-    const label = labelMap[key] ?? key;
-    let paletteEntry: PaletteColor;
-    if (key === "Other") {
-      paletteEntry = {
-        light: "var(--muted-foreground)",
-        dark: "var(--muted-foreground)",
-      };
-    } else {
-      paletteEntry = resolvePaletteColor(palette, paletteIndex);
-      paletteIndex += 1;
-    }
-
-    return {
-      id: toKeyId(label, index),
-      originalKey: key,
-      label,
-      palette: paletteEntry,
-    };
+  type StackEntry = {
+    stackKey: TKey | "Other";
+    chartKey: string;
+    label: string;
+  };
+  const entries: StackEntry[] = stack.keys.map((stackKey) => {
+    const rawLabel =
+      stackKey === "Other"
+        ? (otherKey ?? "Other")
+        : (stack.labelMap[stackKey] ?? (stackKey as string));
+    const chartKey = toKeyId(rawLabel, stack.keys.length);
+    return { stackKey, chartKey, label: rawLabel };
   });
 
-  const config = keyMap.reduce<ChartConfig>((acc, entry) => {
-    acc[entry.id] = {
-      label: entry.label,
-      theme: {
-        light: entry.palette.light,
-        dark: entry.palette.dark,
-      },
-    };
-    return acc;
-  }, {});
-
-  const chartData = series.map((row) => {
-    const base: Record<string, string | number> = {
-      period: row.period,
-      periodLabel: periodFormatter(row.period),
-    };
-    for (const entry of keyMap) {
-      base[entry.id] = row.values[entry.originalKey] ?? 0;
+  const chartData: StackChartRow[] = stack.series.map((row) => {
+    const base: StackChartRow = { period: row.period };
+    for (const { stackKey, chartKey } of entries) {
+      const value = row.values[stackKey];
+      base[chartKey] =
+        typeof value === "number" && Number.isFinite(value) ? value : null;
     }
     return base;
   });
 
-  return { keyMap, config, chartData };
+  const themedConfig = addThemeToChartConfig(
+    entries.reduce<ChartConfig>((acc, { stackKey, chartKey }) => {
+      const label = stack.labelMap[stackKey] ?? chartKey;
+      acc[chartKey] = { label };
+      return acc;
+    }, {} as ChartConfig),
+  );
+
+  return {
+    chartKeys: entries.map((entry) => entry.chartKey),
+    chartData,
+    chartConfig: themedConfig,
+  };
 }

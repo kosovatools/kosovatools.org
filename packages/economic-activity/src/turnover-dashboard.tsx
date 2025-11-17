@@ -5,33 +5,18 @@ import {
   useSuspenseQuery,
   type UseSuspenseQueryResult,
 } from "@tanstack/react-query";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Cell,
-  Pie,
-  PieChart,
-  XAxis,
-  YAxis,
-} from "recharts";
-import type { PieLabelRenderProps } from "recharts";
 
 import {
-  fetchCategoriesLastYear,
-  fetchCategoriesOverYears,
-  fetchCitiesLastYear,
-  fetchMonthlyCategoryCityLastYear,
-  fetchTopCategoryByCityOverYears,
+  fetchCategoriesDataset,
+  fetchCitiesDataset,
+  fetchCityCategoryYearlyDataset,
+  fetchMonthlyCityCategoryDataset,
 } from "./api";
 import type {
-  CategoriesLastYear,
-  CategoryOverYearsRecord,
-  CitiesLastYear,
-  MonthlyCategoryCityLastYear,
-  TurnoverCategoryRecord,
-  TurnoverCityRecord,
-  TopCategoriesByCityRecord,
+  CategoriesDatasetView,
+  CitiesDatasetView,
+  CityCategoryYearlyDatasetView,
+  MonthlyCategoryCityDatasetView,
 } from "./types";
 import {
   Alert,
@@ -47,82 +32,61 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import {
-  buildStackSeries,
-  summarizeStackTotals,
-  formatCurrency,
-  formatCount,
-  getPeriodFormatter,
-} from "@workspace/utils";
-import {
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@workspace/ui/components/chart";
 import { Label } from "@workspace/ui/components/label";
 import { NativeSelect } from "@workspace/ui/components/native-select";
 import { Skeleton } from "@workspace/ui/components/skeleton";
-import {
-  StackedKeySelector,
-  type StackedKeyTotal,
-} from "@workspace/ui/custom-components/stacked-key-selector";
-import {
-  createChromaPalette,
-  resolvePaletteColor,
-} from "@workspace/ui/lib/chart-palette";
-import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
-import {
-  buildStackedChartView,
-  type StackedSeriesRow,
-} from "@workspace/ui/lib/stacked-chart-helpers";
+import { ChartContainer } from "@workspace/ui/components/chart";
+import { formatCurrency, formatCount } from "@workspace/utils";
 
-const formatMonthlyPeriod = getPeriodFormatter("monthly");
-const formatYearlyPeriod = getPeriodFormatter("yearly");
+import { CategoriesOverYearsChart } from "./charts/categories-over-years-chart";
+import { MonthlyCategoryStackedChart } from "./charts/monthly-category-stacked-chart";
+import { TopCategoryByCityStackedChart } from "./charts/top-category-by-city-chart";
+import { TurnoverByCategoryChart } from "./charts/turnover-by-category-chart";
+import { TurnoverByCityChart } from "./charts/turnover-by-city-chart";
 
-const OTHER_LABEL = "Të tjerët";
-const CATEGORY_STACK_TOP = 6;
-const MONTHLY_STACK_TOP = 6;
-const CITY_STACK_TOP = 5;
-const PIE_FALLBACK_COLOR = "hsl(var(--primary))";
-
-function toChartNumeric(value: unknown): number | null {
-  if (typeof value === "number") {
-    return Number.isFinite(value) ? value : null;
-  }
-  if (typeof value === "string") {
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? parsed : null;
-  }
-  if (Array.isArray(value) && value.length) {
-    const parsed = Number(value[0]);
-    return Number.isFinite(parsed) ? parsed : null;
+function getLatestPeriod(meta?: {
+  time?: { last?: string | null };
+}): string | null {
+  const last = meta?.time?.last ?? null;
+  if (typeof last === "string" && last.trim().length > 0) {
+    return last;
   }
   return null;
 }
 
-function formatTurnoverValue(value: unknown): string {
-  const numeric = toChartNumeric(value);
-  return formatCurrency(numeric, { compact: true });
+function getLatestPeriodRecords<T extends { period: string }>(
+  dataset?: {
+    meta: { time: { last?: string | null } };
+    records: ReadonlyArray<T>;
+  } | null,
+): { period: string; records: T[] } | null {
+  if (!dataset) return null;
+  const period = getLatestPeriod(dataset.meta);
+  if (!period) return null;
+  const records = dataset.records.filter((record) => record.period === period);
+  if (!records.length) return null;
+  return { period, records };
 }
 
-type StackedView = ReturnType<typeof buildStackedChartView>;
+function formatPeriodRange(meta?: {
+  time?: { first?: string | null; last?: string | null };
+}): string | null {
+  const first = meta?.time?.first ?? null;
+  const last = meta?.time?.last ?? null;
+  if (!first && !last) return null;
+  if (!first) return last;
+  if (!last) return first;
+  if (first === last) return first;
+  return `${first}–${last}`;
+}
 
-type CategoryStackOptions = {
-  top?: number;
-  selectedKeys?: string[];
-  includeOther?: boolean;
-  excludedKeys?: string[];
-};
-
-type SliceColor = {
-  fill: string;
-  stroke: string;
-};
-
-type CategorySlice = TurnoverCategoryRecord & SliceColor;
-type CitySlice = TurnoverCityRecord & SliceColor;
+function parseYearFromPeriod(period: string | null | undefined): number | null {
+  if (!period) return null;
+  const match = /^(\d{4})/.exec(period);
+  if (!match) return null;
+  const numeric = Number(match[1]);
+  return Number.isFinite(numeric) ? numeric : null;
+}
 
 function TurnoverDashboardLoadingFallback() {
   return (
@@ -197,718 +161,6 @@ class TurnoverDashboardErrorBoundary extends React.Component<
   }
 }
 
-function buildColoredSlices<T extends { turnover: number }>(
-  records: T[],
-): Array<T & SliceColor> {
-  if (!records.length) {
-    return [];
-  }
-
-  const palette = createChromaPalette(records.length);
-
-  return records.map((record, index) => {
-    const paletteColor = resolvePaletteColor(palette, index);
-    const fill = paletteColor.light || PIE_FALLBACK_COLOR;
-    const stroke =
-      paletteColor.dark || paletteColor.light || PIE_FALLBACK_COLOR;
-    return {
-      ...record,
-      fill,
-      stroke,
-    };
-  });
-}
-
-type TooltipFormatter = NonNullable<
-  React.ComponentProps<typeof ChartTooltipContent>["formatter"]
->;
-
-function usePieTooltipFormatter<T extends SliceColor>({
-  getLabel,
-}: {
-  getLabel: (slice?: T, fallbackName?: string) => string;
-}): TooltipFormatter {
-  return React.useCallback<TooltipFormatter>(
-    (value, name, entry) => {
-      const slice = entry?.payload as T | undefined;
-      const color =
-        slice?.fill ??
-        (typeof entry?.color === "string" ? entry.color : undefined) ??
-        PIE_FALLBACK_COLOR;
-
-      const fallbackName =
-        typeof name === "string" || typeof name === "number"
-          ? String(name)
-          : undefined;
-
-      const label = getLabel(slice, fallbackName) ?? "";
-
-      const formattedValue = formatTurnoverValue(value);
-
-      return (
-        <div className="flex w-full items-center gap-2">
-          <span
-            className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
-            style={{ backgroundColor: color }}
-          />
-          <div className="flex flex-1 items-center justify-between gap-2">
-            <span className="text-muted-foreground">{label}</span>
-            <span className="text-foreground font-mono font-medium tabular-nums">
-              {formattedValue}
-            </span>
-          </div>
-        </div>
-      );
-    },
-    [getLabel],
-  );
-}
-
-function renderPieSliceLabel({ value }: PieLabelRenderProps) {
-  return formatTurnoverValue(value);
-}
-
-type PieLegendSlice = {
-  turnover: number;
-  fill: string;
-};
-
-function PieLegendList<T extends PieLegendSlice>({
-  slices,
-  getLabel,
-}: {
-  slices: T[];
-  getLabel: (slice: T) => string;
-}) {
-  if (!slices.length) {
-    return null;
-  }
-
-  return (
-    <div className="flex flex-col justify-stretch gap-2 pt-4 text-xs">
-      {slices.map((slice, index) => {
-        const label = getLabel(slice);
-        return (
-          <div
-            key={`${label}-${index}`}
-            className="flex items-center justify-between"
-          >
-            <div className="flex items-center gap-2">
-              <span
-                className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
-                style={{ backgroundColor: slice.fill }}
-              />
-              <span className="font-medium leading-none">{label}</span>
-            </div>
-            <span className="font-mono text-muted-foreground">
-              {formatTurnoverValue(slice.turnover)}
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function ensureStackView(
-  keys: string[],
-  labelMap: Record<string, string>,
-  series: StackedSeriesRow[],
-  periodFormatter: (period: string) => string,
-): StackedView | null {
-  if (!keys.length || !series.length) {
-    return null;
-  }
-
-  const view = buildStackedChartView({
-    keys,
-    labelMap,
-    series,
-    periodFormatter,
-  });
-
-  if (!view.keyMap.length || !view.chartData.length) {
-    return null;
-  }
-
-  return view;
-}
-
-function summarizeCategoryOverYearsTotals(
-  records: CategoryOverYearsRecord[],
-): StackedKeyTotal[] {
-  if (!records.length) {
-    return [];
-  }
-
-  return summarizeStackTotals(
-    records,
-    {
-      period: (record) => String(record.year),
-      key: (record) => record.category,
-      value: (record) => record.turnover,
-    },
-    {
-      labelForKey: (key) => key,
-    },
-  );
-}
-
-function buildCategoryOverYearsView(
-  records: CategoryOverYearsRecord[],
-  options: CategoryStackOptions = {},
-): StackedView | null {
-  if (!records.length) {
-    return null;
-  }
-
-  const result = buildStackSeries(
-    records,
-    {
-      period: (record) => String(record.year),
-      key: (record) => record.category,
-      value: (record) => record.turnover,
-    },
-    {
-      top: options.top ?? CATEGORY_STACK_TOP,
-      selectedKeys: options.selectedKeys,
-      includeOther: options.includeOther ?? true,
-      excludedKeys: options.excludedKeys,
-      labelForKey: (key) => key,
-      otherLabel: OTHER_LABEL,
-    },
-  );
-
-  return ensureStackView(
-    result.keys.map((key) => String(key)),
-    result.labelMap,
-    result.series,
-    (period) => formatYearlyPeriod(String(period)),
-  );
-}
-
-function summarizeMonthlyCategoryTotals(
-  dataset: MonthlyCategoryCityLastYear,
-): StackedKeyTotal[] {
-  if (!dataset.records.length) {
-    return [];
-  }
-
-  return summarizeStackTotals(
-    dataset.records,
-    {
-      period: (record) =>
-        `${dataset.year}-${String(record.month).padStart(2, "0")}`,
-      key: (record) => record.category,
-      value: (record) => record.turnover,
-    },
-    {
-      labelForKey: (key) => key,
-    },
-  );
-}
-
-function buildMonthlyCategoryView(
-  dataset: MonthlyCategoryCityLastYear,
-  options: CategoryStackOptions = {},
-): StackedView | null {
-  if (!dataset.records.length) {
-    return null;
-  }
-
-  const result = buildStackSeries(
-    dataset.records,
-    {
-      period: (record) =>
-        `${dataset.year}-${String(record.month).padStart(2, "0")}`,
-      key: (record) => record.category,
-      value: (record) => record.turnover,
-    },
-    {
-      top: options.top ?? MONTHLY_STACK_TOP,
-      selectedKeys: options.selectedKeys,
-      includeOther: options.includeOther ?? true,
-      excludedKeys: options.excludedKeys,
-      labelForKey: (key) => key,
-      otherLabel: OTHER_LABEL,
-    },
-  );
-
-  return ensureStackView(
-    result.keys.map((key) => String(key)),
-    result.labelMap,
-    result.series,
-    (period) => formatMonthlyPeriod(period),
-  );
-}
-
-function summarizeCityCategoryTotals(
-  records: TopCategoriesByCityRecord[],
-): StackedKeyTotal[] {
-  if (!records.length) {
-    return [];
-  }
-
-  return summarizeStackTotals(
-    records,
-    {
-      period: (record) => String(record.year),
-      key: (record) => record.category,
-      value: (record) => record.turnover,
-    },
-    {
-      labelForKey: (key) => key,
-    },
-  );
-}
-
-function buildCityCategoryView(
-  records: TopCategoriesByCityRecord[],
-  options: CategoryStackOptions = {},
-): StackedView | null {
-  if (!records.length) {
-    return null;
-  }
-
-  const result = buildStackSeries(
-    records,
-    {
-      period: (record) => String(record.year),
-      key: (record) => record.category,
-      value: (record) => record.turnover,
-    },
-    {
-      top: options.top ?? CITY_STACK_TOP,
-      selectedKeys: options.selectedKeys,
-      includeOther: options.includeOther ?? true,
-      excludedKeys: options.excludedKeys,
-      labelForKey: (key) => key,
-      otherLabel: OTHER_LABEL,
-    },
-  );
-
-  return ensureStackView(
-    result.keys.map((key) => String(key)),
-    result.labelMap,
-    result.series,
-    (period) => formatYearlyPeriod(String(period)),
-  );
-}
-
-function TurnoverByCategoryChart({
-  records,
-}: {
-  records: TurnoverCategoryRecord[];
-}) {
-  const topRecords = React.useMemo(() => records.slice(0, 14), [records]);
-  const slices = React.useMemo<CategorySlice[]>(
-    () => buildColoredSlices(topRecords),
-    [topRecords],
-  );
-  const tooltipFormatter = usePieTooltipFormatter<CategorySlice>({
-    getLabel: (slice, fallback) => slice?.category ?? fallback ?? "",
-  });
-
-  return (
-    <div className="space-y-4 grid grid-cols-1 md:grid-cols-2">
-      <ChartContainer config={{}} className="aspect-square ">
-        <PieChart>
-          <Pie
-            data={slices}
-            dataKey="turnover"
-            nameKey="category"
-            cx="50%"
-            cy="50%"
-            outerRadius="60%"
-            label={renderPieSliceLabel}
-          >
-            {slices.map((slice) => (
-              <Cell
-                key={slice.category}
-                fill={slice.fill}
-                stroke={slice.stroke}
-                strokeWidth={1}
-              />
-            ))}
-          </Pie>
-          <ChartTooltip
-            cursor={false}
-            content={
-              <ChartTooltipContent hideLabel formatter={tooltipFormatter} />
-            }
-          />
-        </PieChart>
-      </ChartContainer>
-      <PieLegendList slices={slices} getLabel={(slice) => slice.category} />
-    </div>
-  );
-}
-
-function TurnoverByCityChart({ records }: { records: TurnoverCityRecord[] }) {
-  const topRecords = React.useMemo(() => records.slice(0, 14), [records]);
-  const slices = React.useMemo<CitySlice[]>(
-    () => buildColoredSlices(topRecords),
-    [topRecords],
-  );
-  const tooltipFormatter = usePieTooltipFormatter<CitySlice>({
-    getLabel: (slice, fallback) => slice?.city ?? fallback ?? "",
-  });
-
-  return (
-    <div className="space-y-4 grid grid-cols-1 md:grid-cols-2">
-      <ChartContainer config={{}} className="aspect-square sm:aspect-[1.4]">
-        <PieChart>
-          <Pie
-            data={slices}
-            dataKey="turnover"
-            nameKey="city"
-            outerRadius="60%"
-            label={renderPieSliceLabel}
-          >
-            {slices.map((slice) => (
-              <Cell
-                key={slice.city}
-                fill={slice.fill}
-                stroke={slice.stroke}
-                strokeWidth={1}
-              />
-            ))}
-          </Pie>
-          <ChartTooltip
-            cursor={false}
-            content={
-              <ChartTooltipContent hideLabel formatter={tooltipFormatter} />
-            }
-          />
-        </PieChart>
-      </ChartContainer>
-      <PieLegendList slices={slices} getLabel={(slice) => slice.city} />
-    </div>
-  );
-}
-
-function CategoriesOverYearsChart({
-  records,
-}: {
-  records: CategoryOverYearsRecord[];
-}) {
-  const totals = React.useMemo(
-    () => summarizeCategoryOverYearsTotals(records),
-    [records],
-  );
-  const {
-    selectedKeys,
-    includeOther,
-    excludedKeys,
-    setExcludedKeys,
-    onSelectedKeysChange,
-    onIncludeOtherChange,
-  } = useStackedKeySelection({
-    totals,
-    topCount: CATEGORY_STACK_TOP,
-  });
-
-  const view = React.useMemo(
-    () =>
-      buildCategoryOverYearsView(records, {
-        top: CATEGORY_STACK_TOP,
-        selectedKeys,
-        includeOther,
-        excludedKeys,
-      }),
-    [records, selectedKeys, includeOther, excludedKeys],
-  );
-
-  if (!view) {
-    return (
-      <ChartContainer config={{}}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna të mjaftueshme për këtë periudhë.
-        </div>
-      </ChartContainer>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      {totals.length > 0 ? (
-        <StackedKeySelector
-          totals={totals}
-          selectedKeys={selectedKeys}
-          onSelectedKeysChange={onSelectedKeysChange}
-          topCount={CATEGORY_STACK_TOP}
-          selectionLabel="Zgjidh kategoritë"
-          searchPlaceholder="Kërko kategoritë..."
-          includeOther={includeOther}
-          onIncludeOtherChange={onIncludeOtherChange}
-          excludedKeys={excludedKeys}
-          onExcludedKeysChange={setExcludedKeys}
-        />
-      ) : null}
-      <ChartContainer
-        config={view.config}
-        className="aspect-[1/1.5] sm:aspect-video"
-      >
-        <AreaChart
-          data={view.chartData}
-          margin={{ top: 16, right: 24, bottom: 12, left: 12 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="periodLabel"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={8}
-          />
-          <YAxis
-            width="auto"
-            tickFormatter={(value: number | string) =>
-              formatTurnoverValue(value)
-            }
-          />
-          <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
-          <ChartLegend content={<ChartLegendContent />} />
-          {view.keyMap.map((entry) => (
-            <Area
-              key={entry.id}
-              dataKey={entry.id}
-              type="monotone"
-              stackId="turnover"
-              stroke={`var(--color-${entry.id})`}
-              strokeWidth={2}
-              fill={`var(--color-${entry.id})`}
-              fillOpacity={0.75}
-              activeDot={{ r: 4 }}
-            />
-          ))}
-        </AreaChart>
-      </ChartContainer>
-    </div>
-  );
-}
-
-function MonthlyCategoryStackedChart({
-  dataset,
-}: {
-  dataset: MonthlyCategoryCityLastYear;
-}) {
-  const totals = React.useMemo(
-    () => summarizeMonthlyCategoryTotals(dataset),
-    [dataset],
-  );
-  const {
-    selectedKeys,
-    includeOther,
-    excludedKeys,
-    setExcludedKeys,
-    onSelectedKeysChange,
-    onIncludeOtherChange,
-  } = useStackedKeySelection({
-    totals,
-    topCount: MONTHLY_STACK_TOP,
-  });
-
-  const view = React.useMemo(
-    () =>
-      buildMonthlyCategoryView(dataset, {
-        top: MONTHLY_STACK_TOP,
-        selectedKeys,
-        includeOther,
-        excludedKeys,
-      }),
-    [dataset, selectedKeys, includeOther, excludedKeys],
-  );
-
-  if (!view) {
-    return (
-      <ChartContainer config={{}}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna mujore për vitin e fundit.
-        </div>
-      </ChartContainer>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      {totals.length > 0 ? (
-        <StackedKeySelector
-          totals={totals}
-          selectedKeys={selectedKeys}
-          onSelectedKeysChange={onSelectedKeysChange}
-          topCount={MONTHLY_STACK_TOP}
-          selectionLabel="Zgjidh kategoritë"
-          searchPlaceholder="Kërko kategoritë..."
-          includeOther={includeOther}
-          onIncludeOtherChange={onIncludeOtherChange}
-          excludedKeys={excludedKeys}
-          onExcludedKeysChange={setExcludedKeys}
-        />
-      ) : null}
-      <ChartContainer
-        config={view.config}
-        className="aspect-[1/1.5] sm:aspect-video"
-      >
-        <AreaChart
-          data={view.chartData}
-          margin={{ top: 16, right: 24, bottom: 12, left: 12 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="periodLabel"
-            tickMargin={8}
-            tickLine={false}
-            axisLine={false}
-          />
-          <YAxis
-            width="auto"
-            tickFormatter={(value: number | string) =>
-              formatTurnoverValue(value)
-            }
-          />
-          <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
-          <ChartLegend content={<ChartLegendContent />} />
-          {view.keyMap.map((entry) => (
-            <Area
-              key={entry.id}
-              dataKey={entry.id}
-              type="monotone"
-              stackId="turnover"
-              stroke={`var(--color-${entry.id})`}
-              strokeWidth={2}
-              fill={`var(--color-${entry.id})`}
-              fillOpacity={0.75}
-              activeDot={{ r: 4 }}
-            />
-          ))}
-        </AreaChart>
-      </ChartContainer>
-    </div>
-  );
-}
-
-function TopCategoryByCityStackedChart({
-  city,
-  records,
-}: {
-  city: string;
-  records: TopCategoriesByCityRecord[];
-}) {
-  const totals = React.useMemo(
-    () => summarizeCityCategoryTotals(records),
-    [records],
-  );
-  const {
-    selectedKeys,
-    includeOther,
-    setIncludeOther,
-    excludedKeys,
-    setExcludedKeys,
-    onSelectedKeysChange,
-    onIncludeOtherChange,
-    resetSelection,
-    defaultKeys,
-  } = useStackedKeySelection({
-    totals,
-    topCount: CITY_STACK_TOP,
-  });
-  const previousCityRef = React.useRef<string | null>(null);
-
-  React.useEffect(() => {
-    if (previousCityRef.current !== city) {
-      resetSelection();
-      setIncludeOther(totals.length > defaultKeys.length);
-      setExcludedKeys([]);
-      previousCityRef.current = city;
-    }
-  }, [
-    city,
-    defaultKeys,
-    totals.length,
-    resetSelection,
-    setIncludeOther,
-    setExcludedKeys,
-  ]);
-
-  const view = React.useMemo(
-    () =>
-      buildCityCategoryView(records, {
-        top: CITY_STACK_TOP,
-        selectedKeys,
-        includeOther,
-        excludedKeys,
-      }),
-    [records, selectedKeys, includeOther, excludedKeys],
-  );
-
-  if (!view) {
-    return (
-      <ChartContainer config={{}}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna për këtë komunë.
-        </div>
-      </ChartContainer>
-    );
-  }
-
-  return (
-    <div className="space-y-4">
-      {totals.length > 0 ? (
-        <StackedKeySelector
-          totals={totals}
-          selectedKeys={selectedKeys}
-          onSelectedKeysChange={onSelectedKeysChange}
-          topCount={CITY_STACK_TOP}
-          selectionLabel="Zgjidh kategoritë kryesore"
-          searchPlaceholder="Kërko kategoritë..."
-          includeOther={includeOther}
-          onIncludeOtherChange={onIncludeOtherChange}
-          excludedKeys={excludedKeys}
-          onExcludedKeysChange={setExcludedKeys}
-        />
-      ) : null}
-      <ChartContainer
-        config={view.config}
-        className="aspect-[1/1.5] sm:aspect-video"
-      >
-        <AreaChart
-          data={view.chartData}
-          margin={{ top: 16, right: 24, bottom: 12, left: 12 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="periodLabel"
-            tickMargin={8}
-            tickLine={false}
-            axisLine={false}
-          />
-          <YAxis
-            width="auto"
-            tickFormatter={(value: number | string) =>
-              formatTurnoverValue(value)
-            }
-          />
-          <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
-          <ChartLegend content={<ChartLegendContent />} />
-          {view.keyMap.map((entry) => (
-            <Area
-              key={entry.id}
-              dataKey={entry.id}
-              type="monotone"
-              stackId="turnover"
-              stroke={`var(--color-${entry.id})`}
-              strokeWidth={2}
-              fill={`var(--color-${entry.id})`}
-              fillOpacity={0.75}
-              activeDot={{ r: 4 }}
-            />
-          ))}
-        </AreaChart>
-      </ChartContainer>
-    </div>
-  );
-}
-
 function ErrorState({ message }: { message: string }) {
   return (
     <Alert variant="destructive">
@@ -921,16 +173,27 @@ function ErrorState({ message }: { message: string }) {
 function CategorySection({
   query,
 }: {
-  query: UseSuspenseQueryResult<CategoriesLastYear, Error>;
+  query: UseSuspenseQueryResult<CategoriesDatasetView, Error>;
 }) {
   const isError = query.isError;
   const errorMessage =
     query.error instanceof Error
       ? query.error.message
       : "Provoni përsëri më vonë.";
-  const dataset = query.data;
-  const year = dataset?.year;
-  const hasData = Boolean(dataset?.records.length);
+  const dataset = query.data ?? null;
+  const latestRecords = React.useMemo(() => {
+    if (!dataset) return [];
+    return [...dataset.limit(1).records];
+  }, [dataset]);
+  const latestPeriod = React.useMemo(
+    () => getLatestPeriod(dataset?.meta),
+    [dataset],
+  );
+  const year = React.useMemo(
+    () => parseYearFromPeriod(latestPeriod),
+    [latestPeriod],
+  );
+  const hasData = latestRecords.length > 0;
 
   return (
     <React.Fragment>
@@ -945,8 +208,8 @@ function CategorySection({
       <CardContent>
         {isError ? (
           <ErrorState message={errorMessage} />
-        ) : hasData && dataset ? (
-          <TurnoverByCategoryChart records={dataset.records} />
+        ) : hasData ? (
+          <TurnoverByCategoryChart records={latestRecords} />
         ) : (
           <p className="text-sm text-muted-foreground">
             Nuk ka të dhëna për kategoritë kryesore të qarkullimit.
@@ -964,16 +227,27 @@ function CategorySection({
 function CitySection({
   query,
 }: {
-  query: UseSuspenseQueryResult<CitiesLastYear, Error>;
+  query: UseSuspenseQueryResult<CitiesDatasetView, Error>;
 }) {
   const isError = query.isError;
   const errorMessage =
     query.error instanceof Error
       ? query.error.message
       : "Provoni përsëri më vonë.";
-  const dataset = query.data;
-  const year = dataset?.year;
-  const hasData = Boolean(dataset?.records.length);
+  const dataset = query.data ?? null;
+  const latestRecords = React.useMemo(() => {
+    if (!dataset) return [];
+    return [...dataset.limit(1).records];
+  }, [dataset]);
+  const latestPeriod = React.useMemo(
+    () => getLatestPeriod(dataset?.meta),
+    [dataset],
+  );
+  const year = React.useMemo(
+    () => parseYearFromPeriod(latestPeriod),
+    [latestPeriod],
+  );
+  const hasData = latestRecords.length > 0;
 
   return (
     <React.Fragment>
@@ -988,8 +262,8 @@ function CitySection({
       <CardContent>
         {isError ? (
           <ErrorState message={errorMessage} />
-        ) : hasData && dataset ? (
-          <TurnoverByCityChart records={dataset.records} />
+        ) : hasData ? (
+          <TurnoverByCityChart records={latestRecords} />
         ) : (
           <p className="text-sm text-muted-foreground">
             Nuk ka të dhëna për komunat me qarkullimin më të lartë.
@@ -1007,15 +281,15 @@ function CitySection({
 function CategoryTrendSection({
   query,
 }: {
-  query: UseSuspenseQueryResult<CategoryOverYearsRecord[], Error>;
+  query: UseSuspenseQueryResult<CategoriesDatasetView, Error>;
 }) {
   const isError = query.isError;
   const errorMessage =
     query.error instanceof Error
       ? query.error.message
       : "Provoni përsëri më vonë.";
-  const records = query.data ?? [];
-  const hasData = records.length > 0;
+  const dataset = query.data ?? null;
+  const hasData = Boolean(dataset && dataset.records.length);
 
   return (
     <React.Fragment>
@@ -1030,8 +304,8 @@ function CategoryTrendSection({
       <CardContent>
         {isError ? (
           <ErrorState message={errorMessage} />
-        ) : hasData ? (
-          <CategoriesOverYearsChart records={records} />
+        ) : hasData && dataset ? (
+          <CategoriesOverYearsChart dataset={dataset} />
         ) : (
           <p className="text-sm text-muted-foreground">
             Nuk ka të dhëna shumëvjeçare për t&apos;u paraqitur.
@@ -1049,24 +323,27 @@ function CategoryTrendSection({
 function MonthlyCategorySection({
   query,
 }: {
-  query: UseSuspenseQueryResult<MonthlyCategoryCityLastYear, Error>;
+  query: UseSuspenseQueryResult<MonthlyCategoryCityDatasetView, Error>;
 }) {
   const isError = query.isError;
   const errorMessage =
     query.error instanceof Error
       ? query.error.message
       : "Provoni përsëri më vonë.";
-  const dataset = query.data;
-  const hasData = Boolean(dataset && dataset.records.length);
+  const dataset = query.data ?? null;
+  const hasData = Boolean(dataset?.records.length);
+  const coverageYear = dataset?.meta.coverage_year ?? null;
 
   return (
     <React.Fragment>
       <CardHeader>
         <CardTitle>Dinamika mujore e kategorive</CardTitle>
         <CardDescription>
-          Shiko si shpërndahet qarkullimi mujor ndërmjet kategorive kryesore
-          gjatë vitit të fundit. Grafiku i grumbulluar paraqet kontributet
-          mujore të kategorive më të mëdha, të agreguara nga të gjitha komunat.
+          {coverageYear
+            ? `Shiko si shpërndahet qarkullimi mujor ndërmjet kategorive kryesore gjatë vitit ${coverageYear}.`
+            : "Shiko si shpërndahet qarkullimi mujor ndërmjet kategorive kryesore gjatë vitit të fundit."}{" "}
+          Grafiku i grumbulluar paraqet kontributet mujore të kategorive më të
+          mëdha, të agreguara nga të gjitha komunat.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -1095,23 +372,25 @@ function MonthlyCategorySection({
 function TopCategoryByCitySection({
   query,
 }: {
-  query: UseSuspenseQueryResult<TopCategoriesByCityRecord[], Error>;
+  query: UseSuspenseQueryResult<CityCategoryYearlyDatasetView, Error>;
 }) {
   const isError = query.isError;
   const errorMessage =
     query.error instanceof Error
       ? query.error.message
       : "Provoni përsëri më vonë.";
-  const records = React.useMemo(() => query.data ?? [], [query.data]);
   const citySummaries = React.useMemo(() => {
     const map = new Map<string, { turnover: number; years: Set<number> }>();
-    for (const record of records) {
+    for (const record of (query.data ?? null)?.records ?? []) {
+      const periodYear = parseYearFromPeriod(record.period);
       const summary = map.get(record.city) ?? {
         turnover: 0,
         years: new Set<number>(),
       };
       summary.turnover += record.turnover;
-      summary.years.add(record.year);
+      if (periodYear != null) {
+        summary.years.add(periodYear);
+      }
       map.set(record.city, summary);
     }
     return Array.from(map.entries())
@@ -1121,7 +400,7 @@ function TopCategoryByCitySection({
         yearCount: years.size,
       }))
       .sort((a, b) => b.turnover - a.turnover);
-  }, [records]);
+  }, [query.data]);
 
   const [selectedCity, setSelectedCity] = React.useState<string | null>(null);
 
@@ -1146,9 +425,11 @@ function TopCategoryByCitySection({
   const filteredRecords = React.useMemo(
     () =>
       selectedCity
-        ? records.filter((record) => record.city === selectedCity)
+        ? ((query.data ?? null)?.records ?? []).filter(
+            (record) => record.city === selectedCity,
+          )
         : [],
-    [records, selectedCity],
+    [query.data, selectedCity],
   );
 
   const selectedSummary = React.useMemo(() => {
@@ -1208,10 +489,11 @@ function TopCategoryByCitySection({
               ) : null}
             </div>
 
-            {hasData && selectedCity ? (
+            {(query.data ?? null) && hasData && selectedCity ? (
               <TopCategoryByCityStackedChart
                 city={selectedCity}
                 records={filteredRecords}
+                meta={(query.data ?? null).meta}
               />
             ) : (
               <ChartContainer config={{}}>
@@ -1232,74 +514,62 @@ function TopCategoryByCitySection({
 }
 
 function TurnoverDashboardContent() {
-  const categoriesQuery = useSuspenseQuery<CategoriesLastYear, Error>({
-    queryKey: ["mfk", "turnover", "categories", "last-year"],
-    queryFn: fetchCategoriesLastYear,
+  const categoriesQuery = useSuspenseQuery<CategoriesDatasetView, Error>({
+    queryKey: ["mfk", "turnover", "categories", "dataset"],
+    queryFn: fetchCategoriesDataset,
     staleTime: 6 * 60 * 1000,
   });
 
-  const citiesQuery = useSuspenseQuery<CitiesLastYear, Error>({
-    queryKey: ["mfk", "turnover", "cities", "last-year"],
-    queryFn: fetchCitiesLastYear,
-    staleTime: 6 * 60 * 1000,
-  });
-
-  const categoriesOverYearsQuery = useSuspenseQuery<
-    CategoryOverYearsRecord[],
-    Error
-  >({
-    queryKey: ["mfk", "turnover", "categories", "over-years"],
-    queryFn: fetchCategoriesOverYears,
+  const citiesQuery = useSuspenseQuery<CitiesDatasetView, Error>({
+    queryKey: ["mfk", "turnover", "cities", "dataset"],
+    queryFn: fetchCitiesDataset,
     staleTime: 6 * 60 * 1000,
   });
 
   const monthlyCategoryQuery = useSuspenseQuery<
-    MonthlyCategoryCityLastYear,
+    MonthlyCategoryCityDatasetView,
     Error
   >({
     queryKey: ["mfk", "turnover", "monthly", "category-city"],
-    queryFn: fetchMonthlyCategoryCityLastYear,
+    queryFn: fetchMonthlyCityCategoryDataset,
     staleTime: 6 * 60 * 1000,
   });
 
-  const topCategoryByCityQuery = useSuspenseQuery<
-    TopCategoriesByCityRecord[],
+  const cityCategoryYearlyQuery = useSuspenseQuery<
+    CityCategoryYearlyDatasetView,
     Error
   >({
-    queryKey: ["mfk", "turnover", "top-category-city"],
-    queryFn: fetchTopCategoryByCityOverYears,
+    queryKey: ["mfk", "turnover", "city-category", "yearly"],
+    queryFn: fetchCityCategoryYearlyDataset,
     staleTime: 6 * 60 * 1000,
   });
 
-  const datasetYear = categoriesQuery.data?.year ?? citiesQuery.data?.year;
+  const latestCategoryRecords = React.useMemo(
+    () => getLatestPeriodRecords(categoriesQuery.data ?? null),
+    [categoriesQuery.data],
+  );
+  const latestCityRecords = React.useMemo(
+    () => getLatestPeriodRecords(citiesQuery.data ?? null),
+    [citiesQuery.data],
+  );
+  const datasetYear = React.useMemo(() => {
+    const period =
+      latestCategoryRecords?.period ?? latestCityRecords?.period ?? null;
+    return parseYearFromPeriod(period);
+  }, [latestCategoryRecords, latestCityRecords]);
+
   const totalTaxpayers = React.useMemo(() => {
-    if (!categoriesQuery.data) {
-      return null;
-    }
-    return categoriesQuery.data.records.reduce(
-      (sum, record) =>
-        Number.isFinite(record.taxpayers) ? sum + record.taxpayers : sum,
-      0,
-    );
-  }, [categoriesQuery.data]);
-  const totalCitiesReported = citiesQuery.data?.records.length ?? 0;
+    if (!latestCategoryRecords) return null;
+    return latestCategoryRecords.records.reduce((sum, record) => {
+      return Number.isFinite(record.taxpayers) ? sum + record.taxpayers : sum;
+    }, 0);
+  }, [latestCategoryRecords]);
+
+  const totalCitiesReported = latestCityRecords?.records.length ?? 0;
 
   const yearRangeLabel = React.useMemo(() => {
-    const dataset = categoriesOverYearsQuery.data;
-    if (!dataset || !dataset.length) {
-      return null;
-    }
-    let minYear = Number.POSITIVE_INFINITY;
-    let maxYear = Number.NEGATIVE_INFINITY;
-    for (const record of dataset) {
-      if (record.year < minYear) minYear = record.year;
-      if (record.year > maxYear) maxYear = record.year;
-    }
-    if (!Number.isFinite(minYear) || !Number.isFinite(maxYear)) {
-      return null;
-    }
-    return minYear === maxYear ? `${minYear}` : `${minYear}–${maxYear}`;
-  }, [categoriesOverYearsQuery.data]);
+    return formatPeriodRange(categoriesQuery.data?.meta);
+  }, [categoriesQuery.data]);
 
   return (
     <article className="space-y-12">
@@ -1340,10 +610,10 @@ function TurnoverDashboardContent() {
         </Card>
 
         <Card>
-          <CategoryTrendSection query={categoriesOverYearsQuery} />
+          <CategoryTrendSection query={categoriesQuery} />
         </Card>
         <Card>
-          <TopCategoryByCitySection query={topCategoryByCityQuery} />
+          <TopCategoryByCitySection query={cityCategoryYearlyQuery} />
         </Card>
       </section>
     </article>

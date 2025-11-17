@@ -1,12 +1,5 @@
 import { formatDate, type DateFormatter } from "@workspace/utils";
 
-export const formatMonthLabel: DateFormatter = (value) =>
-  formatDate(
-    value,
-    { month: "long", year: "numeric" },
-    { fallback: "E panjohur" },
-  );
-
 export const formatTimestamp: DateFormatter = (value) =>
   formatDate(
     value,

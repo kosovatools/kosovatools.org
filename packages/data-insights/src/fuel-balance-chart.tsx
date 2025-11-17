@@ -34,7 +34,7 @@ import {
 } from "@workspace/ui/custom-components/option-selector";
 import { useTimelineEventMarkers } from "@workspace/timeline-events";
 
-import { buildStackedChartData } from "./lib/stacked-chart";
+import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 type FuelMetric = FuelDatasetMeta["metrics"][number];
 
 const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";

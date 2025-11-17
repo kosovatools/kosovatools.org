@@ -24,7 +24,7 @@ import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
-import { buildStackedChartData } from "./lib/stacked-chart";
+import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
 const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
 const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =

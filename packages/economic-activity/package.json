@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@workspace/dataset-api": "workspace:*",
+    "@workspace/kas-data": "workspace:*",
     "@workspace/ui": "workspace:*",
     "@workspace/utils": "workspace:*",
     "recharts": "3.4.1"

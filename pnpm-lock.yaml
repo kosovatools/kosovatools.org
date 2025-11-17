@@ -378,6 +378,9 @@ importers:
       '@workspace/dataset-api':
         specifier: workspace:*
         version: link:../dataset-api
+      '@workspace/kas-data':
+        specifier: workspace:*
+        version: link:../kas-data
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
