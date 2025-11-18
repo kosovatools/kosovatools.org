@@ -33,31 +33,37 @@ import { useTimelineEventMarkers } from "@workspace/timeline-events";
 
 import { formatAuto } from "../utils/number-format";
 
-const labelMap = createLabelMap(electricityDataset.meta.fields);
-const PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(
-  electricityDataset.meta.time.granularity,
-);
-const TIME_RANGE_OPTIONS = limitTimeRangeOptions(electricityDataset.meta.time);
-const DEFAULT_TIME_RANGE = 24;
+type ElectricityDatasetView = typeof electricityDataset;
 
-const chartConfig = addThemeToChartConfig({
-  production_thermal_gwh: { label: labelMap.production_thermal_gwh },
-  production_hydro_gwh: { label: labelMap.production_hydro_gwh },
-  production_wind_solar_gwh: { label: labelMap.production_wind_solar_gwh },
-});
+export function ElectricityProductionStackedAreaChart({
+  dataset,
+}: {
+  dataset: ElectricityDatasetView;
+}) {
+  const labelMap = createLabelMap(dataset.meta.fields);
+  const PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(
+    dataset.meta.time.granularity,
+  );
+  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
+  const DEFAULT_TIME_RANGE = 24;
 
-export function ElectricityProductionStackedAreaChart() {
+  const chartConfig = addThemeToChartConfig({
+    production_thermal_gwh: { label: labelMap.production_thermal_gwh },
+    production_hydro_gwh: { label: labelMap.production_hydro_gwh },
+    production_wind_solar_gwh: { label: labelMap.production_wind_solar_gwh },
+  });
+
   const chartClassName = "w-full aspect-[4/3] sm:aspect-video";
   const chartMargin = { top: 24, right: 0, left: 0, bottom: 0 };
   const [periodGrouping, setPeriodGrouping] = useState<PeriodGrouping>(
-    electricityDataset.meta.time.granularity,
+    dataset.meta.time.granularity,
   );
   const [timeRange, setTimeRange] =
     useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
   const datasetView = useMemo(
-    () => electricityDataset.limit(timeRange),
-    [timeRange],
+    () => dataset.limit(timeRange),
+    [dataset, timeRange],
   );
   const periodFormatter = useMemo(
     () => getPeriodFormatter(periodGrouping),
@@ -106,18 +112,8 @@ export function ElectricityProductionStackedAreaChart() {
 
   const eventMarkers = useTimelineEventMarkers(chartData, periodGrouping);
 
-  if (!chartData.length) {
-    return (
-      <ChartContainer config={chartConfig} className={chartClassName}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna për prodhimin.
-        </div>
-      </ChartContainer>
-    );
-  }
-
-  return (
-    <>
+  return chartData.length ? (
+    <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <OptionSelector
           label="Perioda"
@@ -197,6 +193,12 @@ export function ElectricityProductionStackedAreaChart() {
           />
         </AreaChart>
       </ChartContainer>
-    </>
+    </div>
+  ) : (
+    <ChartContainer config={chartConfig} className={chartClassName}>
+      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+        Nuk ka të dhëna për prodhimin.
+      </div>
+    </ChartContainer>
   );
 }

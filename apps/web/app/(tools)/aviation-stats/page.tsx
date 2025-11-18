@@ -1,13 +1,5 @@
 import type { Metadata } from "next";
 
-import {
-  airTransportMonthly,
-  formatGeneratedAt,
-  getDatasetCoverageLabel,
-} from "@workspace/kas-data";
-
-import { AviationStatsChart } from "@workspace/aviation-stats";
-
 export const metadata: Metadata = {
   title: "Statistikat e aviacionit – Pasagjerët dhe fluturimet mujore",
   description:
@@ -39,31 +31,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AviationStatsPage() {
-  const airTransportMeta = airTransportMonthly.meta;
-  const sourceLabel = airTransportMeta.source;
-  const generatedAtLabel = formatGeneratedAt(airTransportMeta.generated_at);
-  const coverageLabel = getDatasetCoverageLabel(airTransportMeta);
+import { ToolPage } from "@workspace/ui/custom-components/tool-page";
+import { AviationStats } from "@workspace/aviation-stats";
 
+export default function AviationStatsPage() {
   return (
-    <div className="space-y-8">
-      <section className="space-y-4">
-        <div className="space-y-3">
-          <h1 className="text-3xl font-semibold tracking-tight">
-            Statistikat e aviacionit të Kosovës
-          </h1>
-          <p className="max-w-2xl text-base text-muted-foreground">
-            Pasqyro pasagjerët hyrës dhe dalës që qarkullojnë çdo muaj në
-            Aeroportin Ndërkombëtar të Prishtinës duke përdorur të dhënat
-            zyrtare të ASK-së për trafikun ajror.
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Burimi: {sourceLabel}. Gjeneruar më {generatedAtLabel}
-            {coverageLabel ? ` · Periudha e të dhënave: ${coverageLabel}` : ""}.
-          </p>
-        </div>
-        <AviationStatsChart />
-      </section>
-    </div>
+    <ToolPage
+      title="Statistikat e aviacionit të Kosovës"
+      description="Pasqyro pasagjerët hyrës dhe dalës që qarkullojnë çdo muaj në Aeroportin Ndërkombëtar të Prishtinës duke përdorur të dhënat zyrtare të ASK-së për trafikun ajror."
+    >
+      <AviationStats />
+    </ToolPage>
   );
 }

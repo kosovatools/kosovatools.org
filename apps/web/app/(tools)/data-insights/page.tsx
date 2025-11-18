@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { DataInsightsDashboard } from "@workspace/data-insights";
+import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export const metadata: Metadata = {
   title: "Analiza të të dhënave të Kosovës – Dashboard nga ASK",
@@ -34,5 +35,12 @@ export const metadata: Metadata = {
 };
 
 export default function DataInsightsPage() {
-  return <DataInsightsDashboard />;
+  return (
+    <ToolPage
+      title="Analiza të të dhënave të Kosovës – Dashboard nga ASK"
+      description="Vizualizoni trendet e tregtisë, energjisë dhe turizmit me grafika interaktive të bazuara në të dhënat e Agjencisë së Statistikave të Kosovës."
+    >
+      <DataInsightsDashboard />
+    </ToolPage>
+  );
 }

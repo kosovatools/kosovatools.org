@@ -75,17 +75,7 @@ export function WageCalculatorClient() {
     mode === "grossToNet" ? grossBreakdown : inverseBreakdown.breakdown;
 
   return (
-    <article className="space-y-8">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Kalkulatori i pagave në Kosovë
-        </h1>
-        <p className="text-muted-foreground">
-          Llogarit pagën neto dhe bruto duke marrë parasysh Trustin e Kursimeve
-          të Kosovës dhe tatimin mbi të ardhurat.
-        </p>
-      </header>
-
+    <div className="space-y-8">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] items-start">
         <Card>
           <CardHeader>
@@ -255,6 +245,6 @@ export function WageCalculatorClient() {
           </p>
         </CardContent>
       </Card>
-    </article>
+    </div>
   );
 }

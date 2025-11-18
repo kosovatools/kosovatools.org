@@ -1,51 +1,26 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
+## Workspace Snapshot
 
-Kosova Tools uses pnpm and Turborepo to coordinate multiple packages. The Next.js customer surface lives in `apps/web`, with routes in `app/`, shared UI in `components/`, and utilities in `lib/`. Tool-specific React packages (e.g., `packages/customs-codes`, `packages/car-import-taxes`, `packages/energy-tracker`, `packages/public-wage-calculator`, `packages/data-insights`) own their UI and domain logic. Shared React primitives live in `packages/ui`, data loaders sit in `packages/customs-data` and `packages/kas-data`, and chart-formatting helpers live in `packages/utils`. Workspace-wide linting plus TypeScript baselines sit in `packages/eslint-config` and `packages/typescript-config`.
+- Next.js app lives in `apps/web` (routes under `app/`, shared UI in `components/`, helpers in `lib/`).
+- Each tool owns its package in `packages/<tool>` with domain logic, hooks, and React exports; re-export shared primitives through `packages/ui`.
+- Generated shadcn files under `packages/ui/src/components` are off-limits—custom UI belongs in `packages/ui/src/custom-components`.
 
-**Important:** Leave the shadcn-generated files in `packages/ui/src/components` alone—they are regenerated periodically and any manual edits will be lost. Place bespoke UI in `packages/ui/src/custom-components` instead.
+## Data & Dataset Workflow
 
-## Tool Package Workflow
+- Refresh Kosovo Agency of Statistics sources with `pnpm --filter @workspace/kas-data fetch-data` (or `pnpm fetch-data` to run every package target). JSON snapshots live in `packages/kas-data/data/` under `{ meta, records }` envelopes.
+- Load hosted datasets through `createDatasetFetcher` from `@workspace/dataset-api`, passing a stable prefix plus an optional `label`, then cache the resulting promise inside the loader module to avoid duplicate requests.
+- Wrap every dataset in `createDataset` from `@workspace/kas-data`. The returned `DatasetView` exposes `limit`, `slice`, `aggregate`, `viewAsStack`, and `summarizeStack`, so all derived series respect the metadata’s granularity and coverage info.
+- Surface dataset sections with `DatasetRenderer` (`@workspace/ui/custom-components`). Pass either a static `dataset` or a TanStack Query `query`, optional `isEmpty` logic, and let the component render loading/error states plus the standard footer (`Burimi`, `Gjeneruar më`, `Periudha` when `getDatasetCoverageLabel` returns a string).
 
-Each citizen tool should ship as its own workspace package (e.g., `packages/customs-codes`, `packages/payroll`). For a new tool: copy the `packages/utils` layout, update `package.json` name/exports, add a `tsconfig` extending `@workspace/typescript-config/react-library.json`, and seed `src/index.ts` with typed exports. Re-export any UI building blocks through `packages/ui/src/components/<tool>/index.ts`, then consume the package inside `apps/web` by importing from `@workspace/<tool>`.
+## UI, Charts & Layout
 
-## KAS Data Lifecycle
+- Use `ToolPage` for every route under `apps/web/app/(tools)` to keep hero copy, spacing, and optional footers consistent. Put per-chart attribution in each `DatasetRenderer`, not in the page shell.
+- Import formatting helpers (e.g., `formatCount`, `getPeriodFormatter`) from `@workspace/utils`; avoid bespoke `Intl` instances so copy stays uniform.
+- Build palettes through `addThemeToChartConfig`/`createChromaPalette`, set every `YAxis width="auto"`, and derive stacked data via `datasetView.viewAsStack` + `summarizeStack`. Avoid hand-rolled reducers.
 
-- Refresh Kosovo Agency of Statistics (KAS) sources by running `pnpm --filter @workspace/kas-data fetch-data` (or `node packages/kas-data/scripts/fetch_kas.mjs --out packages/kas-data/data `). Scripts require Node.js 18+.
-- Document visualization requirements in `packages/kas-data/docs/` (e.g., `kas_chart_specs.md`) so UI work aligns with dataset schemas.
-- Keep JSON snapshots in `packages/kas-data/data/` up to date; note retrieval dates inside `docs/data/README.md`.
-- Each snapshot stores a `{ meta, records }` envelope (or `{ meta, groups }` for CPI);
-  use the embedded metadata when displaying table names, units, or last-updated copy in UI.
-- Run `pnpm fetch-data` at the workspace root to execute every package-level `fetch-data` task when you need fresh local datasets across tools.
-- Scheduled production fetches run from the `data.kosovatools.org` repository in the Kosova Tools GitHub organization, which publishes JSON snapshots to https://data.kosovatools.org for packages like `@workspace/energy-tracker`, `@workspace/kas-data`, and `@workspace/utils`.
+## Development Workflow
 
-## Build, Test, and Development Commands
-
-Install dependencies with `pnpm install`. Use `pnpm dev` to run Turborepo's `next dev --turbopack` for `apps/web`. Build production output via `pnpm build`; lint with `pnpm lint` or `pnpm --filter web lint`. Run type checks using `pnpm --filter web typecheck` and package-specific checks like `pnpm --filter @workspace/kas-data typecheck` or `pnpm --filter @workspace/utils typecheck`. Apply formatting before committing with `pnpm format`.
-
-## Coding Style & Naming Conventions
-
-Shared ESLint presets in `packages/eslint-config` extend Next.js and React rules with zero-warning enforcement. Prettier handles formatting (two-space indentation, trailing commas); always run `pnpm format`. Use PascalCase for components and exported hooks, camelCase for utilities, and align route folder names under `app/` with their URL segments. When formatting data, import helpers from `@workspace/utils` (see `packages/utils/src/formatters` and `getPeriodFormatter`) instead of spinning up ad-hoc `Intl` instances, so currency, counts, and period labels stay consistent.
-
-- Prefer shared utilities like `formatCount`, `getPeriodFormatter`, and other helpers from `@workspace/utils` instead of custom formatters to keep copy consistent across tools.
-- Do not wrap these formatters in local helpers (e.g., skip `formatCountValue`); import and use the shared helpers directly so behavior stays centralized.
-
-## Data Visualization Colors
-
-Derive all chart palettes with `createChromaPalette` in `packages/ui/src/lib/chart-palette.ts` so both light and dark themes stay in sync. When adding new charts, feed the generated colors through `ChartContainer` configs instead of hard-coding CSS variables or hex values.
-
-- Always set Recharts `YAxis` components to `width="auto"` so axes stay balanced across breakpoints.
-- Build stacked series by calling `datasetView.summarizeStack` for totals, `datasetView.viewAsStack` for the series, and piping the result through helpers like `buildStackedChartData` so palette logic comes from `addThemeToChartConfig` rather than bespoke specs.
-
-## Testing Guidelines
-
-Automated tests are not yet configured. When introducing them, colocate component specs as `*.test.tsx` near sources or create an `apps/web/tests` directory for integration suites. Prefer React Testing Library for React units and wire new test scripts into the relevant `package.json` plus Turborepo.
-
-## Commit & Pull Request Guidelines
-
-History currently contains only `Initial commit`; adopt Conventional Commits (`feat:`, `fix:`, `docs:`) to signal intent. Keep changes scoped, mention affected packages in the body, and ensure linting and type checks pass locally. Pull requests should outline the change, validation steps, and linked issues or design assets.
-
-## Security & Configuration Notes
-
-Store secrets in `.env.local` (mirroring `.env.example` when present) and keep them out of version control. Turborepo caches build artifacts in `.turbo/` and Next.js outputs in `.next/`; run `pnpm turbo run clean --force` if caches desync. Update shared configs in `packages/*-config` with synchronized version bumps.
+- Commands: `pnpm install`, `pnpm dev`, `pnpm build`, `pnpm lint`, `pnpm --filter web typecheck`, `pnpm format`.
+- Tests are opt-in; colocate future specs next to sources or under `apps/web/tests`.
+- Follow Conventional Commits (`feat:`, `fix:`, `docs:`), keep changes scoped, document new datasets in PRs, and store secrets in `.env.local`. Use `pnpm turbo run clean --force` if build caches misbehave.

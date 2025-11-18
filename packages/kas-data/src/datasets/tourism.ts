@@ -9,18 +9,24 @@ import type {
   TourismRegionRecord,
 } from "../types/tourism";
 
-export type TourismRegionMeta = DatasetMetaMonthly<
+type TourismRegionMeta = DatasetMetaMonthly<
   TourismMetric,
   "region" | "visitor_group"
 >;
 
-export type TourismCountryMeta = DatasetMetaMonthly<TourismMetric, "country">;
+type TourismCountryMeta = DatasetMetaMonthly<TourismMetric, "country">;
 
-type RegionDataset = Dataset<TourismRegionRecord, TourismRegionMeta>;
-type CountryDataset = Dataset<TourismCountryRecord, TourismCountryMeta>;
+export type TourismRegionDataset = Dataset<
+  TourismRegionRecord,
+  TourismRegionMeta
+>;
+export type TourismCountryDataset = Dataset<
+  TourismCountryRecord,
+  TourismCountryMeta
+>;
 
-const tourismRegionData = regionJson as RegionDataset;
-const tourismCountryData = countryJson as CountryDataset;
+const tourismRegionData = regionJson as TourismRegionDataset;
+const tourismCountryData = countryJson as TourismCountryDataset;
 
 export const tourismRegion = createDataset(tourismRegionData);
 export const tourismCountry = createDataset(tourismCountryData);

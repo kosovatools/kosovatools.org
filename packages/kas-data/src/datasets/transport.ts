@@ -7,7 +7,7 @@ import type {
   TransportRecord as AirTransportRecord,
 } from "../types/transport";
 
-export type AirTransportMeta = DatasetMetaMonthly<AirTransportMetric>;
+type AirTransportMeta = DatasetMetaMonthly<AirTransportMetric>;
 
 export type AirTransportDataset = Dataset<AirTransportRecord, AirTransportMeta>;
 const airTransportData = transportJson as AirTransportDataset;

@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { Area, AreaChart, CartesianGrid, Line, XAxis, YAxis } from "recharts";
 
-import { airTransportMonthly } from "@workspace/kas-data";
+import { AirTransportDataset, ToDatasetView } from "@workspace/kas-data";
 import {
   formatCount,
   getPeriodFormatter,
@@ -22,11 +22,6 @@ import {
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 
-const PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(
-  airTransportMonthly.meta.time.granularity,
-);
-const TIME_RANGE_OPTIONS = limitTimeRangeOptions(airTransportMonthly.meta.time);
-
 const baseChartConfig = {
   passengers_inbound: {
     label: "Pasagjerë hyrës",
@@ -41,18 +36,26 @@ const baseChartConfig = {
 
 const chartConfig = addThemeToChartConfig(baseChartConfig);
 
-export function AviationStatsChart() {
+export function AviationStatsChart({
+  dataset,
+}: {
+  dataset: ToDatasetView<AirTransportDataset>;
+}) {
+  const PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(
+    dataset.meta.time.granularity,
+  );
+  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
   const [periodGrouping, setPeriodGrouping] = useState<PeriodGrouping>(
-    airTransportMonthly.meta.time.granularity,
+    dataset.meta.time.granularity,
   );
   const [timeRange, setTimeRange] = useState<TimeRangeOption>(24);
 
   const datasetView = useMemo(() => {
     if (timeRange == null || Number.isNaN(timeRange)) {
-      return airTransportMonthly;
+      return dataset;
     }
-    return airTransportMonthly.limit(timeRange);
-  }, [timeRange]);
+    return dataset.limit(timeRange);
+  }, [dataset, timeRange]);
 
   const periodFormatter = useMemo(
     () => getPeriodFormatter(periodGrouping),
@@ -90,66 +93,61 @@ export function AviationStatsChart() {
     return aggregated;
   }, [datasetView, periodGrouping]);
 
-  if (!chartData.length) {
-    return (
-      <ChartContainer config={chartConfig} className="h-[360px] w-full">
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna për t'u shfaqur.
-        </div>
-      </ChartContainer>
-    );
-  }
-
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-3">
         <OptionSelector<PeriodGrouping>
           label="Grupimi"
           value={periodGrouping}
-          onChange={(value) => setPeriodGrouping(value)}
+          onChange={setPeriodGrouping}
           options={PERIOD_GROUPING_OPTIONS}
         />
         <OptionSelector<TimeRangeOption>
-          label="Intervali"
+          label="Periudha"
           value={timeRange}
-          onChange={(value) => setTimeRange(value)}
+          onChange={setTimeRange}
           options={TIME_RANGE_OPTIONS}
         />
       </div>
-      <ChartContainer config={chartConfig} className="h-[420px] w-full">
+      <ChartContainer config={chartConfig} className="h-[360px] w-full">
         <AreaChart
+          accessibilityLayer
           data={chartData}
-          margin={{ top: 32, right: 32, bottom: 16, left: 16 }}
+          margin={{
+            left: 0,
+            right: 0,
+            top: 10,
+            bottom: 0,
+          }}
         >
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <CartesianGrid vertical={false} />
           <XAxis
             dataKey="period"
-            tickFormatter={formatPeriodTick}
-            tickMargin={8}
-            minTickGap={24}
+            tickLine={false}
             axisLine={false}
+            tickMargin={10}
+            tickFormatter={formatPeriodTick}
+            minTickGap={30}
           />
           <YAxis
-            yAxisId="passengers"
-            width="auto"
-            tickFormatter={(value) => formatCount(value as number)}
-            axisLine={false}
             tickLine={false}
+            axisLine={false}
+            tickMargin={10}
+            tickFormatter={(value) => formatCount(value as number)}
+            width="auto"
           />
           <YAxis
             yAxisId="flights"
             orientation="right"
-            width="auto"
-            tickFormatter={(value) => formatCount(value as number)}
-            axisLine={false}
             tickLine={false}
+            axisLine={false}
+            tickMargin={10}
+            tickFormatter={(value) => formatCount(value as number)}
+            width="auto"
           />
           <ChartTooltip
-            content={
-              <ChartTooltipContent
-                labelFormatter={(value) => formatPeriodTick(value as string)}
-              />
-            }
+            cursor={false}
+            content={<ChartTooltipContent indicator="dot" />}
           />
           <ChartLegend content={<ChartLegendContent />} />
           <Area
@@ -160,8 +158,6 @@ export function AviationStatsChart() {
             stroke="var(--color-passengers_inbound)"
             fill="var(--color-passengers_inbound)"
             fillOpacity={0.2}
-            isAnimationActive={false}
-            name={chartConfig.passengers_inbound.label}
           />
           <Area
             type="monotone"

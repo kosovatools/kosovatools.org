@@ -10,5 +10,4 @@ export type {
   EnergyMonthlyDataset,
   EnergyMonthlyDatasetView,
 } from "./types";
-export { ElectricityBalanceStackedAreaChart } from "./charts/electricity-balance-stacked-area";
-export { ElectricityProductionStackedAreaChart } from "./charts/electricity-production-stacked-area";
+export { EnergyImportAndProduction } from "./energy-static";

@@ -112,7 +112,7 @@ export function MonthlyFlowTrendChart({
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap justify-between items-center gap-3">
         <OptionSelector<PeriodGrouping>
           label="Grupimi"
           value={periodGrouping}

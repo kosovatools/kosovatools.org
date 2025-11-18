@@ -185,17 +185,7 @@ export function PublicWageCalculatorClient() {
   };
 
   return (
-    <article className="space-y-8">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Llogaritësi i Pagave Publike
-        </h1>
-        <p className="text-muted-foreground">
-          Llogarisni pagën bruto mujore sipas koeficientit C, vlerës Z, përvojës
-          dhe orëve me shtesa bazuar në Ligjin për Pagat në sektorin publik.
-        </p>
-      </header>
-
+    <div className="space-y-8">
       <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
         <Card className="min-w-0">
           <CardHeader>
@@ -318,6 +308,6 @@ export function PublicWageCalculatorClient() {
           </div>
         </CardContent>
       </Card>
-    </article>
+    </div>
   );
 }

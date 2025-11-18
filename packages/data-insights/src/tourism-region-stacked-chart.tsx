@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { tourismRegion, type TourismRegionMeta } from "@workspace/kas-data";
 import {
   formatCount,
   getPeriodFormatter,
@@ -23,14 +22,10 @@ import {
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
+import { ToDatasetView, TourismRegionDataset } from "@workspace/kas-data";
 
 const DEFAULT_GROUP_LABEL = "Total";
 const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
-
-const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
-  getPeriodGroupingOptions(tourismRegion.meta.time.granularity);
-const TIME_RANGE_OPTIONS = limitTimeRangeOptions(tourismRegion.meta.time);
-const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
 
 const getVisitorGroupLabelText = (
   label: React.ReactNode | null | undefined,
@@ -45,30 +40,39 @@ const getVisitorGroupLabelText = (
   return fallback;
 };
 
-export function TourismRegionCharts() {
+export function TourismRegionCharts({
+  dataset,
+}: {
+  dataset: ToDatasetView<TourismRegionDataset>;
+}) {
+  const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
+    getPeriodGroupingOptions(dataset.meta.time.granularity);
+  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
+  const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
+
   const [group, setGroup] =
     React.useState<
-      TourismRegionMeta["dimensions"]["visitor_group"][number]["key"]
+      TourismRegionDataset["meta"]["dimensions"]["visitor_group"][number]["key"]
     >("total");
   const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    tourismRegion.meta.time.granularity,
+    dataset.meta.time.granularity,
   );
   const [timeRange, setTimeRange] =
     React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
   React.useEffect(() => {
     if (
-      !tourismRegion.meta.dimensions.visitor_group.some(
+      !dataset.meta.dimensions.visitor_group.some(
         (option) => option.key === group,
       )
     ) {
       setGroup("total");
     }
-  }, [group]);
+  }, [group, dataset.meta.dimensions.visitor_group]);
 
   const datasetView = React.useMemo(
-    () => tourismRegion.limit(timeRange),
-    [timeRange],
+    () => dataset.limit(timeRange),
+    [dataset, timeRange],
   );
 
   const stackResult = React.useMemo(() => {
@@ -116,21 +120,10 @@ export function TourismRegionCharts() {
     };
   }, [chartData, chartKeys, periodFormatter]);
 
-  if (!chartData.length || !chartKeys.length) {
-    return (
-      <ChartContainer config={{}}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna për rajonet e turizmit.
-        </div>
-      </ChartContainer>
-    );
-  }
-
   const groupLabel =
-    tourismRegion.meta.dimensions.visitor_group.find(
-      (option) => option.key === group,
-    )?.label ??
-    tourismRegion.meta.dimensions.visitor_group[0]?.label ??
+    dataset.meta.dimensions.visitor_group.find((option) => option.key === group)
+      ?.label ??
+    dataset.meta.dimensions.visitor_group[0]?.label ??
     DEFAULT_GROUP_LABEL;
   const groupLabelText = getVisitorGroupLabelText(groupLabel);
 
@@ -140,16 +133,16 @@ export function TourismRegionCharts() {
         <OptionSelector
           value={group}
           onChange={(value) => setGroup(value)}
-          options={tourismRegion.meta.dimensions.visitor_group}
+          options={dataset.meta.dimensions.visitor_group}
           label="Grupi i vizitorëve"
         />
-        <OptionSelector<PeriodGrouping>
+        <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
           options={PERIOD_GROUPING_OPTIONS}
           label="Perioda"
         />
-        <OptionSelector<TimeRangeOption>
+        <OptionSelector
           value={timeRange}
           onChange={setTimeRange}
           options={TIME_RANGE_OPTIONS}

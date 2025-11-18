@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { TurnoverDashboard } from "@workspace/economic-activity";
 import ReactQueryProvider from "@/components/react-query-provider";
+import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export const metadata: Metadata = {
   title: "Aktiviteti ekonomik – Qarkullimi sipas kategorive dhe komunave",
@@ -37,7 +38,12 @@ export const metadata: Metadata = {
 export default function EconomicActivityPage() {
   return (
     <ReactQueryProvider>
-      <TurnoverDashboard />
+      <ToolPage
+        title="Qarkullimi i bizneseve në Kosovë"
+        description="Vizualizime të qarkullimit sipas degëve ekonomike dhe komunave për të kuptuar ku përqëndrohen bizneset që gjenerojnë më shumë të ardhura."
+      >
+        <TurnoverDashboard />
+      </ToolPage>
     </ReactQueryProvider>
   );
 }

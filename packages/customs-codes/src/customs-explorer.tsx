@@ -2,8 +2,13 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 
-import { Card, CardContent } from "@workspace/ui/components/card";
 import { Progress } from "@workspace/ui/components/progress";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@workspace/ui/components/alert";
+import { AlertTriangle } from "lucide-react";
 import { CustomsDataService } from "./database";
 import type { CustomsTreeNode, InitializationProgress } from "./types";
 import { formatDate } from "@workspace/utils";
@@ -174,8 +179,20 @@ export function CustomsExplorer() {
       : null;
 
   return (
-    <Card className="overflow-hidden gap-0 py-0">
-      <CardContent className="p-0 ">
+    <>
+      <Alert className="border-amber-200 bg-amber-50 text-amber-800">
+        <AlertTitle className="flex items-center gap-2 text-sm font-semibold">
+          <AlertTriangle aria-hidden className="h-4 w-4" />
+          Informacion i rëndësishëm
+        </AlertTitle>
+        <AlertDescription className="text-xs text-amber-700 sm:text-sm">
+          Të dhënat ngarkohen nga burime publike dhe mund të jenë të
+          papërditësuara. Versioni i fundit i skedarëve të tarifave doganore
+          ruhet lokalisht për përdorim më të shpejtë.
+        </AlertDescription>
+      </Alert>
+
+      <div className="overflow-hidden gap-0 py-0">
         {indexingState ? (
           <div className="space-y-2 border-b px-4 py-3 text-xs text-muted-foreground sm:text-sm">
             <div className="flex items-center justify-between gap-4">
@@ -192,21 +209,15 @@ export function CustomsExplorer() {
           </div>
         ) : null}
 
-        <div className="space-y-2 border-b px-4 py-3 text-xs text-muted-foreground sm:text-sm">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="space-y-1">
-              <span className="text-foreground text-sm font-semibold uppercase tracking-wide">
-                Përditësuar së fundmi:
-                <time
-                  title={datasetValidity?.iso ?? "—"}
-                  dateTime={datasetValidity?.iso ?? undefined}
-                  className="font-medium text-foreground ml-1"
-                >
-                  {datasetValidity?.display ?? "—"}
-                </time>
-              </span>
-            </div>
-          </div>
+        <div className="py-1 text-foreground text-sm font-semibold uppercase tracking-wide">
+          Përditësuar së fundmi:
+          <time
+            title={datasetValidity?.iso ?? "—"}
+            dateTime={datasetValidity?.iso ?? undefined}
+            className="font-medium text-foreground ml-1"
+          >
+            {datasetValidity?.display ?? "—"}
+          </time>
         </div>
 
         <VirtualizedTreeTable
@@ -215,7 +226,7 @@ export function CustomsExplorer() {
           loading={loading || isPending}
           autoExpandAll
         />
-      </CardContent>
-    </Card>
+      </div>
+    </>
   );
 }

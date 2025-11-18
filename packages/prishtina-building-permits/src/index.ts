@@ -7,7 +7,4 @@ export type {
 
 export { loadBuildingPermitsIndex, loadBuildingPermitsYear } from "./api";
 
-export {
-  BuildingPermitExplorer,
-  type BuildingPermitExplorerProps,
-} from "./components/building-permit-explorer";
+export { BuildingPermitExplorer } from "./components/building-permit-explorer";

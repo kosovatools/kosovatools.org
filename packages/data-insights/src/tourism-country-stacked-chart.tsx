@@ -3,7 +3,6 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { tourismCountry, type TourismCountryMeta } from "@workspace/kas-data";
 import {
   formatCount,
   getPeriodFormatter,
@@ -25,32 +24,36 @@ import { OptionSelector } from "@workspace/ui/custom-components/option-selector"
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
+import { ToDatasetView, TourismCountryDataset } from "@workspace/kas-data";
 
 const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
-const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
-  getPeriodGroupingOptions(tourismCountry.meta.time.granularity);
-const TIME_RANGE_OPTIONS = limitTimeRangeOptions(tourismCountry.meta.time);
-const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
-
-type TourismMetric = TourismCountryMeta["metrics"][number];
-
 const DEFAULT_TOP_COUNTRIES = 5;
 
 export function TourismCountryStackedChart({
+  dataset,
   top = DEFAULT_TOP_COUNTRIES,
 }: {
+  dataset: ToDatasetView<TourismCountryDataset>;
   top?: number;
 }) {
-  const [metricKey, setMetricKey] = React.useState<TourismMetric>("visitors");
+  const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
+    getPeriodGroupingOptions(dataset.meta.time.granularity);
+  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
+  const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
+
+  const [metricKey, setMetricKey] =
+    React.useState<TourismCountryDataset["meta"]["metrics"][number]>(
+      "visitors",
+    );
   const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    tourismCountry.meta.time.granularity,
+    dataset.meta.time.granularity,
   );
   const [timeRange, setTimeRange] =
     React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
   const datasetView = React.useMemo(
-    () => tourismCountry.limit(timeRange),
-    [timeRange],
+    () => dataset.limit(timeRange),
+    [dataset, timeRange],
   );
 
   const totals = React.useMemo(
@@ -109,32 +112,22 @@ export function TourismCountryStackedChart({
     [periodGrouping],
   );
 
-  if (!chartData.length || !chartKeys.length) {
-    return (
-      <ChartContainer config={{}}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna për vendet e turizmit.
-        </div>
-      </ChartContainer>
-    );
-  }
-
-  return (
+  return chartData.length && chartKeys.length ? (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-4">
-        <OptionSelector<TourismMetric>
+        <OptionSelector
           value={metricKey}
           onChange={(value) => setMetricKey(value)}
-          options={tourismCountry.meta.fields}
+          options={dataset.meta.fields}
           label="Metrika"
         />
-        <OptionSelector<PeriodGrouping>
+        <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
           options={PERIOD_GROUPING_OPTIONS}
           label="Perioda"
         />
-        <OptionSelector<TimeRangeOption>
+        <OptionSelector
           value={timeRange}
           onChange={setTimeRange}
           options={TIME_RANGE_OPTIONS}
@@ -190,5 +183,11 @@ export function TourismCountryStackedChart({
         </AreaChart>
       </ChartContainer>
     </div>
+  ) : (
+    <ChartContainer config={{}}>
+      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+        Nuk ka të dhëna për vendet e turizmit.
+      </div>
+    </ChartContainer>
   );
 }

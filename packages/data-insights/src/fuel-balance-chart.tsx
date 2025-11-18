@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { fuelDataset, FuelDatasetMeta } from "@workspace/kas-data";
+import { FuelDataset, ToDatasetView } from "@workspace/kas-data";
 import {
   formatCount,
   getPeriodFormatter,
@@ -28,37 +28,34 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import {
-  OptionSelector,
-  type SelectorOptionDefinition,
-} from "@workspace/ui/custom-components/option-selector";
+import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { useTimelineEventMarkers } from "@workspace/timeline-events";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-type FuelMetric = FuelDatasetMeta["metrics"][number];
-
 const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";
-const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
+const CHART_MARGIN = { top: 32, right: 16, bottom: 16, left: 16 };
 
-const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
-  getPeriodGroupingOptions(fuelDataset.meta.time.granularity);
-const TIME_RANGE_OPTIONS = limitTimeRangeOptions(fuelDataset.meta.time);
-const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
+export function FuelBalanceChart({
+  dataset,
+}: {
+  dataset: ToDatasetView<FuelDataset>;
+}) {
+  const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
+    getPeriodGroupingOptions(dataset.meta.time.granularity);
+  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
+  const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
 
-const METRIC_OPTIONS: ReadonlyArray<SelectorOptionDefinition<FuelMetric>> =
-  fuelDataset.meta.fields;
-
-export function FuelBalanceChart() {
-  const [metricKey, setMetricKey] = React.useState<FuelMetric>("import");
+  const [metricKey, setMetricKey] =
+    React.useState<FuelDataset["meta"]["metrics"][number]>("import");
   const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    fuelDataset.meta.time.granularity,
+    dataset.meta.time.granularity,
   );
   const [timeRange, setTimeRange] =
     React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
   const datasetView = React.useMemo(
-    () => fuelDataset.limit(timeRange),
-    [timeRange],
+    () => dataset.limit(timeRange),
+    [dataset, timeRange],
   );
 
   const stackResult = React.useMemo(() => {
@@ -86,23 +83,13 @@ export function FuelBalanceChart() {
 
   const eventMarkers = useTimelineEventMarkers(chartData, periodGrouping);
 
-  if (!chartData.length || !chartKeys.length) {
-    return (
-      <ChartContainer config={{}} className={CHART_CLASS}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna për karburantet.
-        </div>
-      </ChartContainer>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <OptionSelector<FuelMetric>
+        <OptionSelector
           value={metricKey}
           onChange={(value) => setMetricKey(value)}
-          options={METRIC_OPTIONS}
+          options={dataset.meta.fields}
           label="Metrika"
         />
         <OptionSelector<PeriodGrouping>
@@ -165,7 +152,7 @@ export function FuelBalanceChart() {
                 stackId="fuel"
                 stroke={`var(--color-${key})`}
                 fill={`var(--color-${key})`}
-                fillOpacity={0.85}
+                fillOpacity={0.2}
                 name={seriesName}
               />
             );

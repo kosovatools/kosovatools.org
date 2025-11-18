@@ -13,13 +13,13 @@ import type {
   TradePartnerRecord,
 } from "../types/trade";
 
-export type TradeChaptersYearlyMeta = DatasetMetaYearly<
+type TradeChaptersYearlyMeta = DatasetMetaYearly<
   TradeMetric,
   "chapter",
   { chaptersLabel?: Record<string, string> | undefined }
 >;
 
-type TradeChaptersYearlyDataset = Dataset<
+export type TradeChaptersYearlyDataset = Dataset<
   TradeChapterRecord,
   TradeChaptersYearlyMeta
 >;
@@ -29,14 +29,17 @@ const tradeChaptersYearlyData =
 
 export const tradeChaptersYearly = createDataset(tradeChaptersYearlyData);
 
-export type ImportsByPartnerMeta = DatasetMetaMonthly<
+type ImportsByPartnerMeta = DatasetMetaMonthly<
   "imports",
   "partner",
   { partner_labels?: Record<string, string> | undefined }
 >;
 
-type TradePartnerDataset = Dataset<TradePartnerRecord, ImportsByPartnerMeta>;
+export type ImportsByPartnerDataset = Dataset<
+  TradePartnerRecord,
+  ImportsByPartnerMeta
+>;
 
-const importsByPartnerData = importsByPartnerJson as TradePartnerDataset;
+const importsByPartnerData = importsByPartnerJson as ImportsByPartnerDataset;
 
 export const importsByPartner = createDataset(importsByPartnerData);

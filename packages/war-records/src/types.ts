@@ -16,12 +16,13 @@ export type CrimeStats = {
   incidentYearBreakdown: CrimeStatsBreakdownEntry[];
   topMunicipalities: CrimeStatsBreakdownEntry[];
   ageInsights: {
-    average: number | null;
-    median: number | null;
-    min: number | null;
-    max: number | null;
+    average: number;
+    median: number;
+    min: number;
+    max: number;
     minorsUnder18: number;
     seniors65Plus: number;
+    toddlers: number;
   };
 };
 

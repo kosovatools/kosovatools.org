@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { CarImportTaxesClient } from "./car-import-taxes-client";
+import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export const metadata: Metadata = {
   title: "Kalkulatori i taksave të importit të veturave në Kosovë",
@@ -34,5 +35,12 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <CarImportTaxesClient />;
+  return (
+    <ToolPage
+      title="Kalkulatori i taksave të importit të veturave në Kosovë"
+      description="Llogarit detyrimet doganore, akcizën dhe TVSH-në për automjetet e reja ose të përdorura që importohen në Kosovë."
+    >
+      <CarImportTaxesClient />
+    </ToolPage>
+  );
 }

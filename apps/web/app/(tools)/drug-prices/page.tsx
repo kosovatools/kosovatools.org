@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { DrugPriceExplorer } from "@workspace/drug-prices";
 import ReactQueryProvider from "@/components/react-query-provider";
+import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export const metadata: Metadata = {
   title: "Çmimet e barnave të Ministrisë së Shëndetësisë",
@@ -36,29 +37,13 @@ export const metadata: Metadata = {
 
 export default function DrugPricesPage() {
   return (
-    <div className="space-y-6">
-      <section className="space-y-4">
-        <header className="space-y-2">
-          <p className="text-sm font-medium text-primary">
-            Ministria e Shëndetësisë · Çmimet referuese
-          </p>
-          <h1 className="text-3xl font-semibold tracking-tight">
-            Barnat e licencuara dhe çmimet e miratuara
-          </h1>
-          <p className="max-w-3xl text-sm text-muted-foreground">
-            Kërko dhe filtro listën e barnave të importuara ose të prodhuara në
-            Kosovë për të parë çmimet me shumicë, marzhën e lejuar dhe çmimin me
-            pakicë sipas versioneve të publikuara të Ministrisë së Shëndetësisë.
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Të dhënat rifreskohen pas çdo publikimi të ri dhe janë të
-            disponueshme për ta ndarë si lidhje me filtrat aktivë.
-          </p>
-        </header>
-      </section>
-      <ReactQueryProvider>
+    <ReactQueryProvider>
+      <ToolPage
+        title="Tabela e çmimeve"
+        description="Çmimet shfaqen në euro dhe përditësohen sipas versionit më të fundit të publikuar. Çdo rresht shfaq çmimet më të fundit për produktin përkatës dhe historikun e versioneve."
+      >
         <DrugPriceExplorer />
-      </ReactQueryProvider>
-    </div>
+      </ToolPage>
+    </ReactQueryProvider>
   );
 }

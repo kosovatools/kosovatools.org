@@ -7,9 +7,9 @@ import type {
   EnergyMetric as ElectricityMetric,
 } from "../types/energy";
 
-export type ElectricityMeta = DatasetMetaMonthly<ElectricityMetric>;
+type ElectricityMeta = DatasetMetaMonthly<ElectricityMetric>;
 
-type ElectricityDataset = Dataset<ElectricityRecord, ElectricityMeta>;
+export type ElectricityDataset = Dataset<ElectricityRecord, ElectricityMeta>;
 const electricityData = energyElectricity as ElectricityDataset;
 
 export const electricityDataset = createDataset(electricityData);

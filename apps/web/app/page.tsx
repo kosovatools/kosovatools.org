@@ -316,58 +316,45 @@ export default function Page() {
             dhe referenca të përditësuara nga institucionet e Kosovës.
           </p>
         </header>
-        <Card className="border-border/60 bg-background/80">
-          <CardHeader className="gap-2">
-            <CardTitle className="text-2xl font-semibold">
-              Zgjidh veglën që të duhet
-            </CardTitle>
-            <CardDescription className="text-sm">
-              Shfleto sipas kategorive dhe hap menjëherë veglën përkatëse me një
-              klikim.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-7">
-            {groupedTools.map((group) => (
-              <div key={group.category} className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-primary text-nowrap">
-                    {group.category}
-                  </span>
-                  <span className="h-px w-full bg-border/60" />
-                </div>
-                <div className="grid gap-2">
-                  {group.tools.map((tool) => {
-                    const Icon = tool.icon;
-
-                    return (
-                      <Link
-                        key={tool.name}
-                        className="group flex items-start gap-4 rounded-2xl border border-border/50 bg-background/60 px-4 py-3 transition hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                        href={tool.href}
-                      >
-                        <span className="mt-1 inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:bg-primary/15">
-                          <Icon aria-hidden className="h-4 w-4" />
-                        </span>
-                        <span className="flex flex-1 flex-col gap-1">
-                          <span className="text-sm font-medium">
-                            {tool.name}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            {tool.description}
-                          </span>
-                        </span>
-                        <ArrowRight
-                          aria-hidden
-                          className="mt-1 h-4 w-4 flex-shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary"
-                        />
-                      </Link>
-                    );
-                  })}
-                </div>
+        <div className="space-y-7">
+          {groupedTools.map((group) => (
+            <div key={group.category} className="space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-semibold uppercase tracking-wide text-primary text-nowrap">
+                  {group.category}
+                </span>
+                <span className="h-px w-full bg-border/60" />
               </div>
-            ))}
-          </CardContent>
-        </Card>
+              <div className="grid gap-2">
+                {group.tools.map((tool) => {
+                  const Icon = tool.icon;
+
+                  return (
+                    <Link
+                      key={tool.name}
+                      className="group flex items-start gap-4 rounded-2xl border border-border/50 bg-background/60 px-4 py-3 transition hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                      href={tool.href}
+                    >
+                      <span className="mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:bg-primary/15">
+                        <Icon aria-hidden className="h-4 w-4" />
+                      </span>
+                      <span className="flex flex-1 flex-col gap-1">
+                        <span className="text-sm font-medium">{tool.name}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {tool.description}
+                        </span>
+                      </span>
+                      <ArrowRight
+                        aria-hidden
+                        className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary"
+                      />
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section

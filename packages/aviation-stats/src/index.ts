@@ -1,1 +1,1 @@
-export { AviationStatsChart } from "./aviation-stats-chart";
+export { AviationStats } from "./aviantion-stats";

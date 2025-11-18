@@ -189,7 +189,7 @@ export function CategoriesOverYearsChart({
               stroke={`var(--color-${key})`}
               strokeWidth={2}
               fill={`var(--color-${key})`}
-              fillOpacity={0.75}
+              fillOpacity={0.2}
               activeDot={{ r: 4 }}
             />
           ))}

@@ -30,10 +30,9 @@ export type DatasetCoverageLabelOptions = Readonly<{
 export function getDatasetCoverageLabel(
   meta: GenericDatasetMeta,
   options: DatasetCoverageLabelOptions = {},
-): string | null {
-  const first = meta.time.first ?? null;
-  const last = meta.time.last ?? null;
-  if (!first || !last) return null;
+): string {
+  const first = meta.time.first;
+  const last = meta.time.last;
 
   const formatPeriod =
     options.formatPeriod ??
@@ -42,7 +41,7 @@ export function getDatasetCoverageLabel(
   const formattedFirst = formatPeriod(first);
   const formattedLast = formatPeriod(last);
 
-  if (!formattedFirst && !formattedLast) return null;
+  if (!formattedFirst && !formattedLast) return "";
   if (!formattedFirst) return formattedLast;
   if (!formattedLast) return formattedFirst;
 
@@ -77,6 +76,19 @@ export type DatasetView<
     options: DatasetAggregateOptions<TRecord, TKey>,
   ): DatasetAggregateRow<TKey>[];
 };
+
+export type GenericDataset = Dataset<
+  DatasetRecordBase,
+  DatasetMeta<string, string, TimeGranularity, object>
+>;
+
+export type ToDatasetView<T> =
+  T extends Dataset<
+    infer TRecord extends DatasetRecordBase,
+    infer TMeta extends DatasetMeta<string, string, TimeGranularity, object>
+  >
+    ? DatasetView<TRecord, TMeta>
+    : never;
 
 export type DatasetAggregateField<
   TRecord extends DatasetRecordBase,

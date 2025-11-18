@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { WageCalculatorClient } from "./wage-calculator-client";
+import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export const metadata: Metadata = {
   title: "Paga dhe Rroga – Neto në Bruto, Tatimet & Trusti",
@@ -36,5 +37,12 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <WageCalculatorClient />;
+  return (
+    <ToolPage
+      title="Kalkulatori i pagave në Kosovë"
+      description="Llogarit pagën neto dhe bruto duke marrë parasysh tatimin progresiv dhe kontributet në Trustin e Kursimeve të Kosovës."
+    >
+      <WageCalculatorClient />
+    </ToolPage>
+  );
 }

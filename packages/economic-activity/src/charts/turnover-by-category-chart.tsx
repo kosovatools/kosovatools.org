@@ -34,11 +34,17 @@ const METRIC_FORMATTERS: Record<TurnoverMetric, (value: number) => string> = {
 };
 
 export function TurnoverByCategoryChart({
-  records,
+  records: raw,
 }: {
   records: TurnoverCategoryRecord[];
 }) {
   const [metricKey, setMetricKey] = React.useState<TurnoverMetric>("turnover");
+  const records = React.useMemo(() => {
+    const sorted = [...raw];
+
+    sorted.sort((b, a) => a[metricKey] - b[metricKey]);
+    return sorted;
+  }, [raw, metricKey]);
   const valueFormatter = React.useMemo(
     () => METRIC_FORMATTERS[metricKey],
     [metricKey],

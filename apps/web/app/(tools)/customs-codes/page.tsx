@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
 
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@workspace/ui/components/alert";
 import { CustomsExplorer } from "@workspace/customs-codes";
-import { AlertTriangle } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Tarifat Doganore të Kosovës – Shfletues i kodeve HS",
@@ -39,38 +33,17 @@ export const metadata: Metadata = {
   },
 };
 
+import { ToolPage } from "@workspace/ui/custom-components/tool-page";
+
 export default function CustomsCodesPage() {
   return (
-    <article className="space-y-10">
-      <header className="space-y-4">
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Shfletuesi i Tarifave Doganore të Republikës së Kosovës
-        </h1>
-        <p className="text-muted-foreground text-sm sm:text-base max-w-3xl">
-          Kërkoni dhe shfletoni tarifat doganore sipas kodit, përshkrimit ose
-          llogaritni detyrimet për një vlerë të caktuar. Rezultatet përditësohen
-          në çast ndërsa filtroni.
-        </p>
-      </header>
-
-      <section className="[&>*]:rounded-2xl [&>*]:border [&>*]:border-border/70 [&>*]:bg-card/70">
-        <Alert className="border-amber-200 bg-amber-50 text-amber-800">
-          <AlertTitle className="flex items-center gap-2 text-sm font-semibold">
-            <AlertTriangle aria-hidden className="h-4 w-4" />
-            Informacion i rëndësishëm
-          </AlertTitle>
-          <AlertDescription className="space-y-2 text-xs text-amber-700 sm:text-sm">
-            <p>
-              Ky aplikacion është jo-zyrtar dhe
-              <strong> nuk përfaqëson Doganën e Kosovës</strong>. Të dhënat
-              ngarkohen nga burime publike dhe mund të jenë të papërditësuara.
-              Për informata zyrtare, referojuni publikimeve zyrtare.
-            </p>
-          </AlertDescription>
-        </Alert>
-      </section>
-
+    <ToolPage
+      title="Shfletuesi i tarifave doganore të Republikës së Kosovës"
+      description="Kërko dhe shfleto tarifat doganore sipas kodit ose përshkrimit dhe llogarit detyrimet për një vlerë të caktuar. Rezultatet përditësohen në çast ndërsa filtroni."
+      footer="Ky aplikacion është jo-zyrtar dhe nuk përfaqëson Doganën e Kosovës; për informata zyrtare referojuni publikimeve të institucionit."
+      className="space-y-6"
+    >
       <CustomsExplorer />
-    </article>
+    </ToolPage>
   );
 }

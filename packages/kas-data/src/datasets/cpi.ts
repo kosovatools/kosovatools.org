@@ -4,9 +4,9 @@ import { createDataset } from "../utils/dataset";
 
 import type { CpiMetric, CpiRecord } from "../types/cpi";
 
-export type CpiMeta = DatasetMetaMonthly<CpiMetric, "group">;
+type CpiMeta = DatasetMetaMonthly<CpiMetric, "group">;
 
-type CpiDataset = Dataset<CpiRecord, CpiMeta>;
+export type CpiDataset = Dataset<CpiRecord, CpiMeta>;
 const cpiDatasetData = cpiMonthlyJson as CpiDataset;
 
 export const cpiDataset = createDataset(cpiDatasetData);

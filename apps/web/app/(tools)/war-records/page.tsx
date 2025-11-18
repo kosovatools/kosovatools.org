@@ -9,11 +9,13 @@ import {
 
 import { WarRecordsClient } from "./war-records-client";
 import ReactQueryProvider from "@/components/react-query-provider";
+import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 const warRecordsTitle = `Kosovo War Records – Regjistrat e viktimave të krimeve të luftës (${WAR_RECORDS_TIMEFRAME_LABEL})`;
 const warRecordsDescription = buildWarRecordsDatasetSummary(
   crimeStats.totals.records,
 );
+const warRecordsHeroDescription = `${warRecordsDescription} Një pasqyrë e humbjeve njerëzore e dokumentuar për të ruajtur kujtesën historike.`;
 
 export const metadata: Metadata = {
   title: warRecordsTitle,
@@ -42,11 +44,14 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="space-y-12">
+    <ToolPage
+      title="Arkivi i Viktimave të Luftës"
+      description={warRecordsHeroDescription}
+    >
       <WarRecordsOverview />
       <ReactQueryProvider>
         <WarRecordsClient />
       </ReactQueryProvider>
-    </main>
+    </ToolPage>
   );
 }

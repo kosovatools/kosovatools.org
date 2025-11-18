@@ -44,20 +44,11 @@ Generated documentation for contributors lives in `AGENTS.md`. Components, hooks
 
 Run `pnpm --filter web dev` for app-only development, `pnpm --filter web lint` to target web linting, and `pnpm --filter web typecheck` for strict TypeScript validation. Shared UI primitives should be added inside `packages/ui/src/components` and re-exported through the package index; tool-specific components belong in their respective package directories.
 
-### Working with KAS Data
+### Data Workflow
 
-The `@workspace/kas-data` package hosts Kosovo Agency of Statistics assets:
-
-- `packages/kas-data/scripts/` — Run `pnpm --filter @workspace/kas-data fetch-data` (or `node packages/kas-data/scripts/fetch_kas.mjs --out packages/kas-data/data `) to refresh local JSON snapshots.
-- `packages/kas-data/data/` — Checked-in datasets for offline development and testing.
-- `packages/kas-data/docs/` — Chart specifications and notes to keep data exports aligned with UI needs.
-- Every JSON snapshot stores a `{ meta, records }` (or `{ meta, groups }`) payload so
-  downstream code can surface table names, units, and update timestamps without a
-  separate manifest.
-
-Use `@workspace/utils` for shared formatters, period helpers, and stack primitives. For project-wide data refresh, run `pnpm fetch-data` to execute every package’s `fetch-data` target.
-
-Scheduled pipelines now live in the `data.kosovatools.org` repository within the Kosova Tools GitHub org. That project ingests upstream sources, publishes JSON to https://data.kosovatools.org, and powers production consumers such as `@workspace/energy-tracker` and `@workspace/kas-data`.
+- Refresh Kosovo Agency of Statistics sources with `pnpm --filter @workspace/kas-data fetch-data` (or `pnpm fetch-data` from the root). Snapshots stay in `packages/kas-data/data/` and always include `{ meta, records }` so tools can show attribution without extra wiring.
+- Hosted datasets ship from https://data.kosovatools.org. Use `createDatasetFetcher` (from `@workspace/dataset-api`) plus `createDataset` (from `@workspace/kas-data`) to turn those JSON files into typed `DatasetView`s you can `limit`, `slice`, or `aggregate`.
+- Render data sections through `DatasetRenderer` (`@workspace/ui/custom-components`). Hand it either a static dataset or a TanStack Query plus an optional empty state and it will handle loading/error visuals and print the standard footer copy.
 
 ## Contributing
 

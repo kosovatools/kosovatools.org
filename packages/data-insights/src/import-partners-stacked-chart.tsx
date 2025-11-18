@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { importsByPartner } from "@workspace/kas-data";
+import { ImportsByPartnerDataset, ToDatasetView } from "@workspace/kas-data";
 import {
   formatCurrencyCompact,
   getPeriodFormatter,
@@ -35,28 +35,30 @@ import { useTimelineEventMarkers } from "@workspace/timeline-events";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
-const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
-  getPeriodGroupingOptions(importsByPartner.meta.time.granularity);
-const TIME_RANGE_OPTIONS = limitTimeRangeOptions(importsByPartner.meta.time);
-const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
-
 const DEFAULT_TOP_PARTNERS = 6;
 const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
 
 export function ImportPartnersStackedChart({
+  dataset,
   top = DEFAULT_TOP_PARTNERS,
 }: {
+  dataset: ToDatasetView<ImportsByPartnerDataset>;
   top?: number;
 }) {
+  const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
+    getPeriodGroupingOptions(dataset.meta.time.granularity);
+  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
+  const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
+
   const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    importsByPartner.meta.time.granularity,
+    dataset.meta.time.granularity,
   );
   const [timeRange, setTimeRange] =
     React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
   const datasetView = React.useMemo(
-    () => importsByPartner.limit(timeRange),
-    [timeRange],
+    () => dataset.limit(timeRange),
+    [dataset, timeRange],
   );
 
   const totals = React.useMemo(
@@ -109,16 +111,6 @@ export function ImportPartnersStackedChart({
   );
 
   const eventMarkers = useTimelineEventMarkers(chartData, periodGrouping);
-
-  if (!chartData.length || !chartKeys.length) {
-    return (
-      <ChartContainer config={{}}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna për partnerët.
-        </div>
-      </ChartContainer>
-    );
-  }
 
   return (
     <div className="flex flex-col gap-4">

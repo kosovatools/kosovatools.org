@@ -130,7 +130,7 @@ export function AgeDistributionPlot({
           cy={cy}
           r={size}
           className={cn("fill-[var(--color-count)]", "dark:fill-white")}
-          fillOpacity={0.75}
+          fillOpacity={0.2}
         />
         <circle
           cx={cx}

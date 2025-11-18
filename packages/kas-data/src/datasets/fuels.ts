@@ -6,9 +6,9 @@ import { FuelMetric, type FuelRecord } from "../types/energy";
 
 type FuelDimensionKey = "fuel";
 
-export type FuelDatasetMeta = DatasetMetaMonthly<FuelMetric, FuelDimensionKey>;
+type FuelDatasetMeta = DatasetMetaMonthly<FuelMetric, FuelDimensionKey>;
 
-type FuelDataset = Dataset<FuelRecord, FuelDatasetMeta>;
+export type FuelDataset = Dataset<FuelRecord, FuelDatasetMeta>;
 const fuelDatasetData = fuelsDatasetJson as FuelDataset;
 
 export const fuelDataset = createDataset(fuelDatasetData);

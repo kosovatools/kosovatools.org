@@ -209,7 +209,8 @@
     "min": 0,
     "max": 99,
     "minorsUnder18": 1235,
-    "seniors65Plus": 2172
+    "seniors65Plus": 2172,
+    "toddlers": 218
   },
   "ageBreakdown": {
     "0": 80,

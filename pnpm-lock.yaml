@@ -781,6 +781,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.2.8
         version: 1.2.8(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@workspace/kas-data':
+        specifier: workspace:*
+        version: link:../kas-data
       '@workspace/utils':
         specifier: workspace:*
         version: link:../utils
@@ -887,6 +890,9 @@ importers:
       '@workspace/utils':
         specifier: workspace:*
         version: link:../utils
+      lucide-react:
+        specifier: ^0.475.0
+        version: 0.475.0(react@19.2.0)
       recharts:
         specifier: 3.4.1
         version: 3.4.1(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react-is@18.3.1)(react@19.2.0)(redux@5.0.1)

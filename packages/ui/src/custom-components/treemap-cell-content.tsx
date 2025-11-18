@@ -45,6 +45,7 @@ export function TreemapCellContent({
       style={{
         fill: `var(--color-${colorKey})`,
         stroke: "#fff",
+        fillOpacity: 0.3,
         strokeWidth: 1,
       }}
     />
@@ -156,7 +157,7 @@ export function TreemapCellContent({
   }
 
   return (
-    <g>
+    <g className="overflow-hidden">
       {rect}
       <text
         transform={`rotate(-90, ${cx}, ${cy})`}

@@ -4,10 +4,6 @@ import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
-  tradeChaptersYearly,
-  type TradeChaptersYearlyMeta,
-} from "@workspace/kas-data";
-import {
   formatCurrencyCompact,
   getPeriodFormatter,
   getPeriodGroupingOptions,
@@ -31,37 +27,45 @@ import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
+import {
+  type ToDatasetView,
+  type TradeChaptersYearlyDataset,
+} from "@workspace/kas-data";
 
-const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
-  getPeriodGroupingOptions(tradeChaptersYearly.meta.time.granularity);
-const TIME_RANGE_OPTIONS = limitTimeRangeOptions(tradeChaptersYearly.meta.time);
-const DEFAULT_TIME_RANGE: TimeRangeOption = 5;
+type TradeChaptersDatasetView = ToDatasetView<TradeChaptersYearlyDataset>;
 
-type TradeChapterMetric = TradeChaptersYearlyMeta["metrics"][number];
-
-const METRIC_OPTIONS: ReadonlyArray<
-  SelectorOptionDefinition<TradeChapterMetric>
-> = tradeChaptersYearly.meta.fields;
+type TradeChapterMetric = TradeChaptersYearlyDataset["meta"]["metrics"][number];
 
 const DEFAULT_TOP_CHAPTERS = 6;
 const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
 
 export function TradeChapterStackedChart({
+  dataset,
   top = DEFAULT_TOP_CHAPTERS,
 }: {
+  dataset: TradeChaptersDatasetView;
   top?: number;
 }) {
+  const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
+    getPeriodGroupingOptions(dataset.meta.time.granularity);
+  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
+  const DEFAULT_TIME_RANGE: TimeRangeOption = 5;
+
+  const METRIC_OPTIONS: ReadonlyArray<
+    SelectorOptionDefinition<TradeChapterMetric>
+  > = dataset.meta.fields;
+
   const [metricKey, setMetricKey] =
     React.useState<TradeChapterMetric>("imports");
   const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    tradeChaptersYearly.meta.time.granularity,
+    dataset.meta.time.granularity,
   );
   const [timeRange, setTimeRange] =
     React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
 
   const datasetView = React.useMemo(
-    () => tradeChaptersYearly.limit(timeRange),
-    [timeRange],
+    () => dataset.limit(timeRange),
+    [dataset, timeRange],
   );
 
   const totals = React.useMemo(
@@ -119,16 +123,6 @@ export function TradeChapterStackedChart({
     () => getPeriodFormatter(periodGrouping),
     [periodGrouping],
   );
-
-  if (!chartData.length || !chartKeys.length) {
-    return (
-      <ChartContainer config={{}}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna për kapitujt.
-        </div>
-      </ChartContainer>
-    );
-  }
 
   return (
     <div className="flex flex-col gap-4">
