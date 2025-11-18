@@ -1,70 +1,93 @@
 "use client";
 
 import * as React from "react";
-import { Cell, Pie, PieChart } from "recharts";
+import { Treemap } from "recharts";
 
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  type ChartConfig,
 } from "@workspace/ui/components/chart";
-
-import type { TurnoverCategoryRecord } from "../types";
 import {
-  buildColoredSlices,
-  PieLegendList,
-  usePieTooltipFormatter,
-  type SliceColor,
-} from "./helpers";
-import { formatCurrencyCompact } from "@workspace/utils";
+  TreemapCellContent,
+  defaultTreemapColorKey,
+} from "@workspace/ui/custom-components/treemap-cell-content";
+import {
+  OptionSelector,
+  type SelectorOptionDefinition,
+} from "@workspace/ui/custom-components/option-selector";
 
-type CategorySlice = TurnoverCategoryRecord & SliceColor;
+import type { TurnoverCategoryRecord, TurnoverMetric } from "../types";
+import { formatCount, formatCurrencyCompact } from "@workspace/utils";
+import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
+const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";
+const METRIC_OPTIONS: ReadonlyArray<SelectorOptionDefinition<TurnoverMetric>> =
+  [
+    { key: "turnover", label: "Qarkullimi" },
+    { key: "taxpayers", label: "Tatimpaguesit" },
+  ];
+
+const METRIC_FORMATTERS: Record<TurnoverMetric, (value: number) => string> = {
+  turnover: (value) => formatCurrencyCompact(value),
+  taxpayers: (value) => formatCount(value),
+};
 
 export function TurnoverByCategoryChart({
   records,
 }: {
   records: TurnoverCategoryRecord[];
 }) {
-  const topRecords = React.useMemo(() => records.slice(0, 14), [records]);
-  const slices = React.useMemo<CategorySlice[]>(
-    () => buildColoredSlices(topRecords),
-    [topRecords],
+  const [metricKey, setMetricKey] = React.useState<TurnoverMetric>("turnover");
+  const valueFormatter = React.useMemo(
+    () => METRIC_FORMATTERS[metricKey],
+    [metricKey],
   );
-  const tooltipFormatter = usePieTooltipFormatter<CategorySlice>({
-    getLabel: (slice, fallback) => slice?.category ?? fallback ?? "",
-  });
+
+  const chartConfig = React.useMemo(() => {
+    const chartConfig: ChartConfig = {};
+    records.forEach((slice) => {
+      const colorKey = defaultTreemapColorKey(slice.category);
+      chartConfig[colorKey] = {
+        label: slice.category,
+      };
+    });
+
+    return addThemeToChartConfig(chartConfig);
+  }, [records]);
 
   return (
-    <div className="space-y-4 grid grid-cols-1 md:grid-cols-2">
-      <ChartContainer config={{}} className="aspect-square ">
-        <PieChart>
-          <Pie
-            data={slices}
-            dataKey="turnover"
-            nameKey="category"
-            cx="50%"
-            cy="50%"
-            outerRadius="60%"
-            label={(v) => formatCurrencyCompact(v.value)}
-          >
-            {slices.map((slice) => (
-              <Cell
-                key={slice.category}
-                fill={slice.fill}
-                stroke={slice.stroke}
-                strokeWidth={1}
-              />
-            ))}
-          </Pie>
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <OptionSelector<TurnoverMetric>
+          value={metricKey}
+          onChange={setMetricKey}
+          options={METRIC_OPTIONS}
+          label="Metrika"
+        />
+      </div>
+      <ChartContainer config={chartConfig} className={CHART_CLASS}>
+        <Treemap
+          data={records}
+          dataKey={metricKey}
+          nameKey="category"
+          content={(props) => (
+            <TreemapCellContent valueFormatter={valueFormatter} {...props} />
+          )}
+          isAnimationActive={false}
+        >
           <ChartTooltip
             cursor={false}
             content={
-              <ChartTooltipContent hideLabel formatter={tooltipFormatter} />
+              <ChartTooltipContent
+                nameKey="category"
+                labelFormatter={(_, p) => p[0]?.name}
+                formatter={(v) => valueFormatter(v as number)}
+              />
             }
           />
-        </PieChart>
+        </Treemap>
       </ChartContainer>
-      <PieLegendList slices={slices} getLabel={(slice) => slice.category} />
     </div>
   );
 }
