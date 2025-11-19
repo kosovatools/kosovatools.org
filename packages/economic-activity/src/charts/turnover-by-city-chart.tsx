@@ -21,7 +21,7 @@ import type { TurnoverCityRecord, TurnoverMetric } from "../types";
 import { formatCount, formatCurrencyCompact } from "@workspace/utils";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 
-const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";
+const CHART_CLASS = "w-full aspect-[1/1.5] sm:aspect-video";
 const METRIC_OPTIONS: ReadonlyArray<SelectorOptionDefinition<TurnoverMetric>> =
   [
     { key: "turnover", label: "Qarkullimi" },

@@ -115,7 +115,10 @@ export function AviationStatsChart({
           options={TIME_RANGE_OPTIONS}
         />
       </div>
-      <ChartContainer config={chartConfig} className="h-[360px] w-full">
+      <ChartContainer
+        config={chartConfig}
+        className="w-full aspect-[1/1.5] sm:aspect-video"
+      >
         <AreaChart
           accessibilityLayer
           data={chartData}

@@ -34,7 +34,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";
+const CHART_CLASS = "w-full aspect-[1/1.5] sm:aspect-video";
 const CHART_MARGIN = { top: 32, right: 16, bottom: 16, left: 16 };
 
 export function FuelBalanceChart({

@@ -163,7 +163,10 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
           onChange={setTimeRange}
           options={TIME_RANGE_OPTIONS}
         />
-        <ChartContainer config={chartConfig} className="h-[380px] w-full">
+        <ChartContainer
+          config={chartConfig}
+          className="w-full aspect-[1/1.5] sm:aspect-video"
+        >
           {hasData ? (
             <LineChart
               accessibilityLayer
@@ -214,7 +217,7 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
               ))}
             </LineChart>
           ) : (
-            <div className="flex h-80 items-center justify-center text-sm text-muted-foreground">
+            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
               Nuk ka të dhëna për përzgjedhjet aktuale.
             </div>
           )}

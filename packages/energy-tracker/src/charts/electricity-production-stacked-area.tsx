@@ -57,7 +57,7 @@ export function ElectricityProductionStackedAreaChart({
     production_wind_solar_gwh: { label: labelMap.production_wind_solar_gwh },
   });
 
-  const chartClassName = "w-full aspect-[4/3] sm:aspect-video";
+  const chartClassName = "w-full aspect-[1/1.5] sm:aspect-video";
   const chartMargin = { top: 24, right: 0, left: 0, bottom: 0 };
   const [periodGrouping, setPeriodGrouping] = useState<PeriodGrouping>(
     dataset.meta.time.granularity,

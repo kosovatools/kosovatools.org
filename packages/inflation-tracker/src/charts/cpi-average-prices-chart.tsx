@@ -131,7 +131,10 @@ export function CpiAveragePricesChart({ dataset, timelineEvents }: Props) {
           onChange={setTimeRange}
           options={timeRangeOptions}
         />
-        <ChartContainer config={chartConfig} className="h-[360px] w-full">
+        <ChartContainer
+          config={chartConfig}
+          className="w-full aspect-[1/1.5] sm:aspect-video"
+        >
           <LineChart
             accessibilityLayer
             data={chartData}

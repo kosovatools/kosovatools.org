@@ -185,7 +185,10 @@ export function CpiChart({
             options={TIME_RANGE_OPTIONS}
           />
         </div>
-        <ChartContainer config={chartConfig} className="h-[400px] w-full">
+        <ChartContainer
+          config={chartConfig}
+          className="w-full aspect-[1/1.5] sm:aspect-video"
+        >
           <LineChart
             accessibilityLayer
             data={chartData}

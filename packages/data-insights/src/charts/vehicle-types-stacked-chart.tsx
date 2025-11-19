@@ -42,7 +42,7 @@ export function VehicleTypesStackedChart({
   return (
     <ChartContainer
       config={chartConfig}
-      className="aspect-[1/1.25] sm:aspect-video"
+      className="aspect-[1/1.5] sm:aspect-video"
     >
       <AreaChart data={chartData} margin={CHART_MARGIN}>
         <CartesianGrid strokeDasharray="3 3" />
