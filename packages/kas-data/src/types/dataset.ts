@@ -9,6 +9,15 @@ export type DimensionOption<TKey extends string> = Readonly<{
   label: string;
 }>;
 
+export type DimensionHierarchyNode = Readonly<{
+  key: string;
+  label: string;
+  short_label: string;
+  parent: string | null;
+  children: ReadonlyArray<string>;
+  level: number;
+}>;
+
 export type TimeGranularity = "yearly" | "quarterly" | "monthly" | "daily";
 
 export type DatasetMetaBaseExtras = Record<never, never>;
@@ -45,6 +54,12 @@ export type DatasetMetaMonthly<
   TDimensionKey extends string = never,
   TExtras extends object = DatasetMetaBaseExtras,
 > = DatasetMeta<TFieldKey, TDimensionKey, "monthly", TExtras>;
+
+export type DatasetMetaQuarterly<
+  TFieldKey extends string,
+  TDimensionKey extends string = never,
+  TExtras extends object = DatasetMetaBaseExtras,
+> = DatasetMeta<TFieldKey, TDimensionKey, "quarterly", TExtras>;
 
 export type DatasetMetaYearly<
   TFieldKey extends string,

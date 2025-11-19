@@ -199,7 +199,7 @@ export function HierarchicalMultiSelect({
           <li key={node.id} className="flex min-w-0 flex-col gap-1">
             <div
               className={cn(
-                "flex w-full cursor-pointer items-center gap-2 overflow-hidden rounded-md px-1 py-0.5 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary/60",
+                "flex w-full cursor-pointer items-center gap-2 overflow-hidden rounded-md px-1 py-0.5 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-primary/60",
                 isChecked
                   ? "bg-primary/10 text-primary"
                   : "hover:bg-muted/60 text-foreground",

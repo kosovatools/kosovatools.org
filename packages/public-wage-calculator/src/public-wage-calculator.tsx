@@ -2,21 +2,11 @@
 
 import { useMemo, useState } from "react";
 
-import {
-  COEFFICIENT_CATALOG,
-} from "./data/catalog";
-import {
-  DEFAULT_COEFFICIENT_VALUE,
-} from "./config";
-import {
-  PublicWageCalculatorInputs,
-} from "./components/public-wage-calculator-inputs";
-import {
-  PublicWageCalculatorResults,
-} from "./components/public-wage-calculator-results";
-import {
-  calculatePublicWage,
-} from "./lib/public-wage-calculator";
+import { COEFFICIENT_CATALOG } from "./data/catalog";
+import { DEFAULT_COEFFICIENT_VALUE } from "./config";
+import { PublicWageCalculatorInputs } from "./components/public-wage-calculator-inputs";
+import { PublicWageCalculatorResults } from "./components/public-wage-calculator-results";
+import { calculatePublicWage } from "./lib/public-wage-calculator";
 import {
   type AllowanceFormEntry,
   type PremiumKey,
@@ -182,9 +172,9 @@ export function PublicWageCalculator() {
       prev.map((item) =>
         item.id === id
           ? {
-            ...item,
-            ...updates,
-          }
+              ...item,
+              ...updates,
+            }
           : item,
       ),
     );

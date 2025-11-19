@@ -3,6 +3,7 @@ import {
   importsByPartner,
   fuelDataset,
   tradeChaptersYearly,
+  vehicleTypesYearly,
   tourismCountry,
   tourismRegion,
 } from "@workspace/kas-data";
@@ -13,6 +14,7 @@ import { TradeChapterStackedChart } from "./charts/trade-chapter-stacked-chart";
 import { ImportPartnersStackedChart } from "./charts/import-partners-stacked-chart";
 import { TourismCountryStackedChart } from "./charts/tourism-country-stacked-chart";
 import { TourismRegionCharts } from "./charts/tourism-region-stacked-chart";
+import { VehicleTypesStackedChart } from "./charts/vehicle-types-stacked-chart";
 
 export function DataInsightsDashboard() {
   return (
@@ -47,6 +49,17 @@ export function DataInsightsDashboard() {
           description="Disponueshmëria mujore e karburanteve sipas llojit. Ndrysho metrikat për të krahasuar prodhimin, flukset tregtare, rezervat ose vëllimet gati për treg."
         >
           {(dataset) => <FuelBalanceChart dataset={dataset} />}
+        </DatasetRenderer>
+      </section>
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-semibold tracking-tight">Transporti</h2>
+        <DatasetRenderer
+          dataset={vehicleTypesYearly}
+          title="Mjetet motorike sipas llojit"
+          description="Seri vjetore për mjetet motorike dhe jo motorike të raportuara nga ASK. Grafiku shtresor shfaq të gjitha kategoritë si vetura, autobusë, rimorkio dhe të tjera."
+        >
+          {(dataset) => <VehicleTypesStackedChart dataset={dataset} />}
         </DatasetRenderer>
       </section>
 

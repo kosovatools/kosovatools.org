@@ -88,7 +88,9 @@ export function TurnoverByCategoryChart({
               <ChartTooltipContent
                 nameKey="category"
                 labelFormatter={(_, p) => p[0]?.name}
-                formatter={(v) => valueFormatter(v as number)}
+                hideValueLabel
+                hideIndicator
+                valueFormatter={(v) => valueFormatter(v as number)}
               />
             }
           />

@@ -1,7 +1,6 @@
 {
   "extends": "@workspace/typescript-config/tsconfig.node.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "moduleResolution": "bundler",
     "module": "ESNext",
     "allowImportingTsExtensions": false,

@@ -27,32 +27,22 @@ import { HierarchicalMultiSelect } from "@workspace/ui/custom-components/hierarc
 import {
   CPI_DEFAULT_GROUP_CODE,
   buildCpiHierarchicalNodes,
-  cpiGroupNodesByCode,
-} from "./cpi-groups";
+  cpiGroupLabelsByCode,
+} from "../cpi-groups";
 
 const DEFAULT_TIME_RANGE = 36;
 
-const METRIC_OPTIONS = [
-  {
-    key: "index",
-    label: "Indeksi (2015 = 100)",
-    axisFormatter: (value: number) =>
-      formatNumber(
-        value,
-        { minimumFractionDigits: 1, maximumFractionDigits: 1 },
-        { fallback: "—" },
-      ),
-  },
-  {
-    key: "change",
-    label: "Ndryshimi mujor (%)",
-    axisFormatter: (value: number) => formatSignedPercent(value),
-  },
-] as const;
+const METRIC_FORMATTER = {
+  index: (value: number) =>
+    formatNumber(
+      value,
+      { minimumFractionDigits: 1, maximumFractionDigits: 1 },
+      { fallback: "—" },
+    ),
+  change: (value: number) => formatSignedPercent(value),
+} as const;
 
-type MetricKey = (typeof METRIC_OPTIONS)[number]["key"];
 type ChartRow = { period: string } & Record<string, number | string | null>;
-
 const hierarchicalNodes = buildCpiHierarchicalNodes();
 
 export function CpiChart({ dataset }: { dataset: ToDatasetView<CpiDataset> }) {
@@ -65,7 +55,8 @@ export function CpiChart({ dataset }: { dataset: ToDatasetView<CpiDataset> }) {
   );
   const [timeRange, setTimeRange] =
     useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
-  const [metric, setMetric] = useState<MetricKey>("index");
+  const [metric, setMetric] =
+    useState<CpiDataset["meta"]["metrics"][number]>("index");
   const [selectedGroups, setSelectedGroups] = useState<string[]>([
     CPI_DEFAULT_GROUP_CODE,
   ]);
@@ -85,9 +76,7 @@ export function CpiChart({ dataset }: { dataset: ToDatasetView<CpiDataset> }) {
     }
 
     const uniqueGroups = Array.from(
-      new Set(
-        selectedGroups.filter((code) => Boolean(cpiGroupNodesByCode[code])),
-      ),
+      new Set(selectedGroups.filter((code) => cpiGroupLabelsByCode[code])),
     );
     if (!uniqueGroups.length) {
       return { chartData: [], chartConfig: {} as ChartConfig };
@@ -96,7 +85,7 @@ export function CpiChart({ dataset }: { dataset: ToDatasetView<CpiDataset> }) {
     const aggregatedSeries = uniqueGroups
       .map((code) => ({
         code,
-        label: cpiGroupNodesByCode[code]?.name ?? code,
+        label: cpiGroupLabelsByCode[code] ?? code,
         rows: datasetView.aggregate({
           grouping: periodGrouping,
           filter: (record) => record.group === code,
@@ -150,8 +139,7 @@ export function CpiChart({ dataset }: { dataset: ToDatasetView<CpiDataset> }) {
     };
   }, [datasetView, periodGrouping, metric, selectedGroups]);
 
-  const metricConfig = METRIC_OPTIONS.find((option) => option.key === metric)!;
-  const axisFormatter = metricConfig.axisFormatter;
+  const axisFormatter = METRIC_FORMATTER[metric];
 
   // Helper function for XAxis tick formatting
   const formatPeriodTick = (value: string) => periodFormatter(value);
@@ -168,19 +156,19 @@ export function CpiChart({ dataset }: { dataset: ToDatasetView<CpiDataset> }) {
       />
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <OptionSelector<MetricKey>
+          <OptionSelector
             label="Metrika"
             value={metric}
             onChange={setMetric}
-            options={METRIC_OPTIONS}
+            options={dataset.meta.fields}
           />
-          <OptionSelector<PeriodGrouping>
+          <OptionSelector
             label="Grupimi"
             value={periodGrouping}
             onChange={setPeriodGrouping}
             options={PERIOD_GROUPING_OPTIONS}
           />
-          <OptionSelector<TimeRangeOption>
+          <OptionSelector
             label="Periudha"
             value={timeRange}
             onChange={setTimeRange}
@@ -210,12 +198,17 @@ export function CpiChart({ dataset }: { dataset: ToDatasetView<CpiDataset> }) {
             <YAxis
               tickLine={false}
               axisLine={false}
+              domain={["auto", "auto"]}
               tickMargin={10}
               tickFormatter={(value) => axisFormatter(value as number)}
             />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent indicator="line" />}
+              content={
+                <ChartTooltipContent
+                  valueFormatter={(value) => axisFormatter(value as number)}
+                />
+              }
             />
             <ChartLegend content={<ChartLegendContent />} />
             {Object.keys(chartConfig).map((key) => (

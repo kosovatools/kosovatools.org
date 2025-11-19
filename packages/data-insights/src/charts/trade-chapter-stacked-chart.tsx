@@ -176,7 +176,15 @@ export function TradeChapterStackedChart({
             tickFormatter={(value) => formatCurrencyCompact(value as number)}
             axisLine={false}
           />
-          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartTooltip
+            content={
+              <ChartTooltipContent
+                valueFormatter={(value) =>
+                  formatCurrencyCompact(value as number, { currency: "EUR" })
+                }
+              />
+            }
+          />
           <ChartLegend content={<ChartLegendContent />} />
           {chartKeys.map((key) => {
             const label = chartConfig[key]?.label;

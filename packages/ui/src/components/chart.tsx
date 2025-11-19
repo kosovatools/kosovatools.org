@@ -9,24 +9,13 @@ import type {
 } from "recharts/types/component/DefaultTooltipContent";
 import type { TooltipContentProps } from "recharts/types/component/Tooltip";
 import { cn } from "../lib/utils";
-import { formatNumber } from "@workspace/utils";
 
-// Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
 
-function formatTooltipValue(value: ValueType | null | undefined): string {
-  if (typeof value === "number") {
-    return formatNumber(value);
-  }
-  if (typeof value === "string") {
-    const parsed = Number(value);
-    return Number.isFinite(parsed) ? formatNumber(parsed) : value;
-  }
-  if (Array.isArray(value) && value.length) {
-    const parsed = Number(value[0]);
-    return Number.isFinite(parsed) ? formatNumber(parsed) : formatNumber(null);
-  }
-  return formatNumber(null);
+function truncateLabel(label: string | undefined, maxLength = 20): string {
+  if (!label) return "";
+  if (label.length <= maxLength) return label;
+  return label.slice(0, maxLength) + "...";
 }
 
 export type ChartConfig = Record<
@@ -61,7 +50,12 @@ type ChartTooltipContentProps = Omit<
       label: React.ReactNode,
       payload: ChartTooltipPayload,
     ) => React.ReactNode;
+    valueFormatter?: (
+      label: React.ReactNode,
+      payload: ChartTooltipPayload,
+    ) => React.ReactNode;
     hideLabel?: boolean;
+    hideValueLabel?: boolean;
     hideIndicator?: boolean;
     indicator?: "line" | "dot" | "dashed";
     nameKey?: string;
@@ -164,8 +158,10 @@ function ChartTooltipContent({
   indicator = "dot",
   hideLabel = false,
   hideIndicator = false,
+  hideValueLabel = false,
   label,
   labelFormatter,
+  valueFormatter,
   labelClassName,
   formatter,
   color,
@@ -256,7 +252,7 @@ function ChartTooltipContent({
                             "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
                             {
                               "h-2.5 w-2.5": indicator === "dot",
-                              "w-1": indicator === "line",
+                              "w-1 self-stretch": indicator === "line",
                               "w-0 border-[1.5px] border-dashed bg-transparent":
                                 indicator === "dashed",
                               "my-0.5": nestLabel && indicator === "dashed",
@@ -278,14 +274,20 @@ function ChartTooltipContent({
                       )}
                     >
                       <div className="grid gap-1.5">
-                        {/* {nestLabel ? tooltipLabel : null}
-                        <span className="text-muted-foreground">
-                          {itemConfig?.label ?? item.name}
-                        </span> */}
+                        {nestLabel ? tooltipLabel : null}
+                        {!hideValueLabel ? (
+                          <span className="text-muted-foreground mr-0.5">
+                            {truncateLabel(
+                              (itemConfig?.label as string) ?? item.name,
+                            )}
+                          </span>
+                        ) : null}
                       </div>
                       {item.value != null && (
                         <span className="text-foreground font-mono font-medium tabular-nums">
-                          {formatTooltipValue(item.value)}
+                          {valueFormatter
+                            ? valueFormatter(item.value, payload)
+                            : item.value}
                         </span>
                       )}
                     </div>

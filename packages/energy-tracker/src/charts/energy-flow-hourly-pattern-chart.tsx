@@ -87,7 +87,22 @@ export function HourlyFlowPatternChart({
         />
         <ChartTooltip
           content={
-            <ChartTooltipContent labelFormatter={hourlyLabelFormatter} />
+            <ChartTooltipContent
+              labelFormatter={hourlyLabelFormatter}
+              valueFormatter={(value) =>
+                formatAuto(value as number, {
+                  includeUnit: true,
+                  smallUnitDigits: {
+                    minimumFractionDigits: 1,
+                    maximumFractionDigits: 1,
+                  },
+                  largeUnitDigits: {
+                    minimumFractionDigits: 1,
+                    maximumFractionDigits: 1,
+                  },
+                })
+              }
+            />
           }
         />
         <ChartLegend content={<ChartLegendContent />} />

@@ -146,42 +146,54 @@ export function createCustomsColumns({
       header: () => <ColumnHeaderLabel>Bazë</ColumnHeaderLabel>,
       accessorKey: "percentage",
       cell: (info) => (
-        <span>{formatCustomsRate(info.getValue() as number | null | undefined)}</span>
+        <span>
+          {formatCustomsRate(info.getValue() as number | null | undefined)}
+        </span>
       ),
     },
     {
       header: () => <ColumnHeaderLabel>CEFTA</ColumnHeaderLabel>,
       accessorKey: "cefta",
       cell: (info) => (
-        <span>{formatCustomsRate(info.getValue() as number | null | undefined)}</span>
+        <span>
+          {formatCustomsRate(info.getValue() as number | null | undefined)}
+        </span>
       ),
     },
     {
       header: () => <ColumnHeaderLabel>MSA</ColumnHeaderLabel>,
       accessorKey: "msa",
       cell: (info) => (
-        <span>{formatCustomsRate(info.getValue() as number | null | undefined)}</span>
+        <span>
+          {formatCustomsRate(info.getValue() as number | null | undefined)}
+        </span>
       ),
     },
     {
       header: () => <ColumnHeaderLabel>TRMTL</ColumnHeaderLabel>,
       accessorKey: "trmtl",
       cell: (info) => (
-        <span>{formatCustomsRate(info.getValue() as number | null | undefined)}</span>
+        <span>
+          {formatCustomsRate(info.getValue() as number | null | undefined)}
+        </span>
       ),
     },
     {
       header: () => <ColumnHeaderLabel>TVSH</ColumnHeaderLabel>,
       accessorKey: "tvsh",
       cell: (info) => (
-        <span>{formatCustomsRate(info.getValue() as number | null | undefined)}</span>
+        <span>
+          {formatCustomsRate(info.getValue() as number | null | undefined)}
+        </span>
       ),
     },
     {
       header: () => <ColumnHeaderLabel>Aksizë</ColumnHeaderLabel>,
       accessorKey: "excise",
       cell: (info) => (
-        <span>{formatCustomsRate(info.getValue() as number | null | undefined)}</span>
+        <span>
+          {formatCustomsRate(info.getValue() as number | null | undefined)}
+        </span>
       ),
     },
     {

@@ -175,7 +175,13 @@ export function TourismRegionCharts({
             tickFormatter={(value) => formatCount(value as number)}
             axisLine={false}
           />
-          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartTooltip
+            content={
+              <ChartTooltipContent
+                valueFormatter={(value) => formatCount(value as number)}
+              />
+            }
+          />
           <ChartLegend content={<ChartLegendContent />} />
           {chartKeys.map((key) => {
             const label = chartConfig[key]?.label;

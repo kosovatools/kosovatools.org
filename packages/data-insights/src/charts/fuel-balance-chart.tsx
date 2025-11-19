@@ -138,7 +138,15 @@ export function FuelBalanceChart({
             </ReferenceLine>
           ))}
           <ReferenceLine y={0} stroke="var(--border)" />
-          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartTooltip
+            content={
+              <ChartTooltipContent
+                valueFormatter={(value) =>
+                  `${formatCount(value as number)} tonë`
+                }
+              />
+            }
+          />
           <ChartLegend content={<ChartLegendContent />} />
           {chartKeys.map((key) => {
             const label = chartConfig[key]?.label;

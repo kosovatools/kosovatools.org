@@ -1,0 +1,165 @@
+{
+  "meta": {
+    "updated_at": null,
+    "time": {
+      "key": "period",
+      "granularity": "quarterly",
+      "first": "2013-Q1",
+      "last": "2025-Q2",
+      "count": 50
+    },
+    "fields": [
+      {
+        "key": "index",
+        "label": "Indeksi i kostos së ndërtimit (2015 = 100)",
+        "unit": "indeks (2015=100)"
+      }
+    ],
+    "metrics": [
+      "index"
+    ],
+    "dimensions": {
+      "cost_category": [
+        {
+          "key": "0",
+          "label": "1 Materialet"
+        },
+        {
+          "key": "1",
+          "label": "1.1 Materialet ndërtimore"
+        },
+        {
+          "key": "2",
+          "label": "1.2 Materialet elektrike"
+        },
+        {
+          "key": "3",
+          "label": "1.3 Materialet hidro-sanitare"
+        },
+        {
+          "key": "4",
+          "label": "2 Pagat"
+        },
+        {
+          "key": "5",
+          "label": "3 Makineritë"
+        },
+        {
+          "key": "6",
+          "label": "4 Transporti"
+        },
+        {
+          "key": "7",
+          "label": "5 Energjia"
+        },
+        {
+          "key": "8",
+          "label": "6 Kostot e tjera"
+        },
+        {
+          "key": "9",
+          "label": "0 Total"
+        }
+      ]
+    },
+    "source": "Table CCI01 in Prices",
+    "source_urls": [
+      "ASKdata/Prices/Construction Cost Index/CCI01.px"
+    ],
+    "notes": [
+      "Seria përfshin vetëm vlerat tremujore TM1–TM4; peshat 'Peshat' përjashtohen sepse përfaqësojnë përqindjen e kostove në total."
+    ],
+    "id": "kas_construction_cost_index_quarterly",
+    "generated_at": "2025-11-19T15:49:24.615Z",
+    "title": null,
+    "dimension_hierarchies": {
+      "cost_category": [
+        {
+          "key": "0",
+          "label": "1 Materialet",
+          "short_label": "Materialet",
+          "parent": null,
+          "children": [
+            "1",
+            "2",
+            "3"
+          ],
+          "level": 0
+        },
+        {
+          "key": "1",
+          "label": "1.1 Materialet ndërtimore",
+          "short_label": "Materialet ndërtimore",
+          "parent": "0",
+          "children": [],
+          "level": 1
+        },
+        {
+          "key": "2",
+          "label": "1.2 Materialet elektrike",
+          "short_label": "Materialet elektrike",
+          "parent": "0",
+          "children": [],
+          "level": 1
+        },
+        {
+          "key": "3",
+          "label": "1.3 Materialet hidro-sanitare",
+          "short_label": "Materialet hidro-sanitare",
+          "parent": "0",
+          "children": [],
+          "level": 1
+        },
+        {
+          "key": "4",
+          "label": "2 Pagat",
+          "short_label": "Pagat",
+          "parent": null,
+          "children": [],
+          "level": 0
+        },
+        {
+          "key": "5",
+          "label": "3 Makineritë",
+          "short_label": "Makineritë",
+          "parent": null,
+          "children": [],
+          "level": 0
+        },
+        {
+          "key": "6",
+          "label": "4 Transporti",
+          "short_label": "Transporti",
+          "parent": null,
+          "children": [],
+          "level": 0
+        },
+        {
+          "key": "7",
+          "label": "5 Energjia",
+          "short_label": "Energjia",
+          "parent": null,
+          "children": [],
+          "level": 0
+        },
+        {
+          "key": "8",
+          "label": "6 Kostot e tjera",
+          "short_label": "Kostot e tjera",
+          "parent": null,
+          "children": [],
+          "level": 0
+        },
+        {
+          "key": "9",
+          "label": "0 Total",
+          "short_label": "Total",
+          "parent": null,
+          "children": [],
+          "level": 0
+        }
+      ]
+    }
+  },
+  "records": []
+}

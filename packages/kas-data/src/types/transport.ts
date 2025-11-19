@@ -6,3 +6,11 @@ export type TransportMetric =
 export type TransportRecord = {
   period: string;
 } & Record<TransportMetric, number | null>;
+
+export type VehicleTypesMetric = "vehicles";
+
+export type VehicleTypesRecord = {
+  period: string;
+  vehicle_type: string;
+  vehicles: number | null;
+};

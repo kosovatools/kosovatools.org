@@ -14,9 +14,7 @@ import {
   type WageCalculatorInputsProps,
   type CalculationMode,
 } from "./components/wage-calculator-inputs";
-import {
-  WageCalculatorResults,
-} from "./components/wage-calculator-results";
+import { WageCalculatorResults } from "./components/wage-calculator-results";
 import {
   calculateGrossFromNet,
   calculateWageBreakdown,

@@ -39,6 +39,18 @@ export const config = defineConfig([
       onlyWarn,
     },
   },
+  {
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          destructuredArrayIgnorePattern: "^_",
+        },
+      ],
+    },
+  },
   eslintConfigPrettier,
   globalIgnores([
     ".next/**",

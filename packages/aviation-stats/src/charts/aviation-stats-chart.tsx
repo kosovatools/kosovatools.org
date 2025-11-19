@@ -147,7 +147,12 @@ export function AviationStatsChart({
           />
           <ChartTooltip
             cursor={false}
-            content={<ChartTooltipContent indicator="dot" />}
+            content={
+              <ChartTooltipContent
+                indicator="dot"
+                valueFormatter={(value) => formatCount(value as number)}
+              />
+            }
           />
           <ChartLegend content={<ChartLegendContent />} />
           <Area

@@ -273,8 +273,8 @@ export function WarRecordsExplorer() {
         onLoadMore={
           canAutoLoadMore
             ? () => {
-              void fetchNextPage();
-            }
+                void fetchNextPage();
+              }
             : undefined
         }
       />

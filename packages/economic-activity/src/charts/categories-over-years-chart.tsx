@@ -174,8 +174,10 @@ export function CategoriesOverYearsChart({
           <ChartTooltip
             content={
               <ChartTooltipContent
-                indicator="line"
                 labelFormatter={(value) => periodFormatter(value as string)}
+                valueFormatter={(value) =>
+                  formatCurrencyCompact(value as number, { currency: "EUR" })
+                }
               />
             }
           />

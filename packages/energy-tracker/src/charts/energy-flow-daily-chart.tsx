@@ -74,7 +74,15 @@ export function DailyFlowChart({
             formatAuto(value, { includeUnit: true })
           }
         />
-        <ChartTooltip content={<ChartTooltipContent />} />
+        <ChartTooltip
+          content={
+            <ChartTooltipContent
+              valueFormatter={(value) =>
+                formatAuto(value as number, { includeUnit: true })
+              }
+            />
+          }
+        />
         <ChartLegend content={<ChartLegendContent />} />
         <Area
           dataKey="imports"

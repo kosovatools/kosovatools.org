@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "updated_at": null,
+    "time": {
+      "key": "period",
+      "granularity": "yearly",
+      "first": "2011",
+      "last": "2024",
+      "count": 14
+    },
+    "fields": [
+      {
+        "key": "vehicles",
+        "label": "Mjetet motorike dhe jo motorike",
+        "unit": "vehicles"
+      }
+    ],
+    "metrics": [
+      "vehicles"
+    ],
+    "dimensions": {
+      "vehicle_type": [
+        {
+          "key": "vetura",
+          "label": "Vetura"
+        },
+        {
+          "key": "automjet_trans_3_5_dhe_mbi_3_5t",
+          "label": "Automjet trans,3.5 dhe mbi 3.5t"
+        },
+        {
+          "key": "automjet_trans_n_n_3_5t",
+          "label": "Automjet trans,nën 3.5t"
+        },
+        {
+          "key": "kombibuset",
+          "label": "Kombibuset"
+        },
+        {
+          "key": "autobuset",
+          "label": "Autobuset"
+        },
+        {
+          "key": "moto_ikleta",
+          "label": "Motoçikleta"
+        },
+        {
+          "key": "traktor",
+          "label": "Traktorë"
+        },
+        {
+          "key": "rimorkio_n_n3_5t",
+          "label": "Rimorkio nën3.5t"
+        },
+        {
+          "key": "rimorkio_3_5_dhe_mbi_3_5t",
+          "label": "Rimorkio  3.5 dhe mbi 3.5t"
+        }
+      ]
+    },
+    "source": "Table tr05 in Transport",
+    "source_urls": [
+      "ASKdata/Transport/Annual indicators/tr05.px"
+    ],
+    "notes": [],
+    "id": "kas_transport_vehicle_types_yearly",
+    "generated_at": "2025-11-19T15:49:24.615Z",
+    "title": null
+  },
+  "records": []
+}

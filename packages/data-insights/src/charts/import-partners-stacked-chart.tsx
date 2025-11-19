@@ -173,7 +173,15 @@ export function ImportPartnersStackedChart({
             </ReferenceLine>
           ))}
           <ReferenceLine y={0} stroke="var(--border)" />
-          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartTooltip
+            content={
+              <ChartTooltipContent
+                valueFormatter={(value) =>
+                  formatCurrencyCompact(value as number, { currency: "EUR" })
+                }
+              />
+            }
+          />
           <ChartLegend content={<ChartLegendContent />} />
           {chartKeys.map((key) => {
             const label = chartConfig[key]?.label;

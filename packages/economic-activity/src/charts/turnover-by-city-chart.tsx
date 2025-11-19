@@ -89,7 +89,9 @@ export function TurnoverByCityChart({
               <ChartTooltipContent
                 nameKey="city"
                 labelFormatter={(_, payload) => payload[0]?.name}
-                formatter={(value) => valueFormatter(value as number)}
+                hideValueLabel
+                hideIndicator
+                valueFormatter={(value) => valueFormatter(value as number)}
               />
             }
           />

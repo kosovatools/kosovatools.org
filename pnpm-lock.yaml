@@ -884,6 +884,9 @@ importers:
       '@tanstack/react-virtual':
         specifier: ^3.13.12
         version: 3.13.12(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@workspace/dataset-api':
+        specifier: workspace:*
+        version: link:../dataset-api
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -897,6 +900,9 @@ importers:
         specifier: 3.4.1
         version: 3.4.1(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react-is@18.3.1)(react@19.2.0)(redux@5.0.1)
     devDependencies:
+      '@tanstack/react-query':
+        specifier: ^5.90.8
+        version: 5.90.8(react@19.2.0)
       '@types/react':
         specifier: 19.2.2
         version: 19.2.2

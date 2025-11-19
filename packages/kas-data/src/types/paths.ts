@@ -52,6 +52,12 @@ export const PATHS = {
     "Monthly indicators",
     "6. numri i fluturimeve te realizuara.px",
   ],
+  transport_vehicle_types_yearly: [
+    "ASKdata",
+    "Transport",
+    "Annual indicators",
+    "tr05.px",
+  ],
   cpi_change: [
     "ASKdata",
     "Prices",
@@ -65,6 +71,12 @@ export const PATHS = {
     "Consumer Price Index",
     "Monthly indicators",
     "cpi09.px",
+  ],
+  construction_cost_index: [
+    "ASKdata",
+    "Prices",
+    "Construction Cost Index",
+    "CCI01.px",
   ],
 } as const satisfies Record<string, readonly string[]>;
 

@@ -22,7 +22,6 @@ import { candlestick } from "@lucide/lab";
 import { Button } from "@workspace/ui/components/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,

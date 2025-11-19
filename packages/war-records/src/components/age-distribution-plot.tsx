@@ -188,7 +188,7 @@ export function AgeDistributionPlot({
           content={
             <ChartTooltipContent
               indicator="dot"
-              formatter={(value) => [
+              valueFormatter={(value) => [
                 formatNumber(
                   typeof value === "number" ? value : Number(value),
                   { maximumFractionDigits: 0 },

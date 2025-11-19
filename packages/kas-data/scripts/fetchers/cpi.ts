@@ -8,6 +8,7 @@ import {
 import { runPxDatasetPipeline } from "../pipeline/px-dataset";
 import { writeJson } from "../lib/io";
 import { PxError } from "../lib/pxweb";
+import { buildNumberedHierarchy } from "../lib/hierarchy";
 
 type PxDatasetResult<RecordShape extends Record<string, unknown>> = Awaited<
   ReturnType<typeof runPxDatasetPipeline<RecordShape>>
@@ -16,11 +17,11 @@ type PxDatasetResult<RecordShape extends Record<string, unknown>> = Awaited<
 type RawCpiRecord = { period: string; group: string; value: number | null };
 type RawCpiDataset = PxDatasetResult<RawCpiRecord>;
 
-import { CpiMetric, CpiRecord } from "../../src/types/cpi";
+import { CpiMetric, CpiRecord, CpiMetaExtras } from "../../src/types/cpi";
 
 const CPI_METRIC_FIELDS: ReadonlyArray<MetaField & { key: CpiMetric }> = [
-  { key: "index", label: "CPI Index", unit: "index" },
-  { key: "change", label: "CPI Change (m/m)", unit: "%" },
+  { key: "index", label: "CPI Indeksi", unit: "index" },
+  { key: "change", label: "CPI Ndryshimi (m/m)", unit: "%" },
 ];
 
 const CPI_DATASET_ID = "kas_cpi_monthly";
@@ -174,8 +175,9 @@ export async function fetchCpiMonthly(outDir: string, generatedAt: string) {
   ]);
   const fields = CPI_METRIC_FIELDS.map((field) => ({ ...field }));
   const metrics = fields.map((field) => field.key);
+  const groupHierarchy = buildNumberedHierarchy(groupOptions);
 
-  const meta = createMeta(CPI_DATASET_ID, generatedAt, {
+  const meta = createMeta<CpiMetaExtras>(CPI_DATASET_ID, generatedAt, {
     updated_at: latestTimestamp([
       indexDataset.meta.updated_at,
       changeDataset.meta.updated_at,
@@ -184,6 +186,7 @@ export async function fetchCpiMonthly(outDir: string, generatedAt: string) {
     fields,
     metrics,
     dimensions: { group: groupOptions },
+    dimension_hierarchies: { group: groupHierarchy },
     source,
     source_urls: sourceUrls,
     title: indexDataset.meta.title ?? changeDataset.meta.title ?? null,

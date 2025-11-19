@@ -149,7 +149,15 @@ export function ElectricityBalanceStackedAreaChart({
             </ReferenceLine>
           ))}
           <ReferenceLine y={0} stroke="var(--border)" />
-          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartTooltip
+            content={
+              <ChartTooltipContent
+                valueFormatter={(value) =>
+                  formatAuto(Number(value), { inputUnit: "MWh" })
+                }
+              />
+            }
+          />
           <ChartLegend content={<ChartLegendContent />} />
           <Area
             type="monotone"

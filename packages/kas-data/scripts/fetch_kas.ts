@@ -35,10 +35,14 @@ import {
   writeFuelCombinedDataset,
   FuelDatasetResult,
 } from "./fetchers/energy";
+import { fetchConstructionCostIndex } from "./fetchers/construction-cost-index";
 import { fetchImportsByPartner } from "./fetchers/imports";
 import { fetchTradeChaptersYearly } from "./fetchers/trade";
 import { fetchTourismCountry, fetchTourismRegion } from "./fetchers/tourism";
-import { fetchAirTransportMonthly } from "./fetchers/transport";
+import {
+  fetchAirTransportMonthly,
+  fetchMotorVehiclesByType,
+} from "./fetchers/transport";
 
 type CliArgs = {
   out: string | null;
@@ -138,8 +142,14 @@ export async function main(): Promise<void> {
   await runTask("Air Transport", () =>
     fetchAirTransportMonthly(outDir, started),
   );
+  await runTask("Motor Vehicles by Type", () =>
+    fetchMotorVehiclesByType(outDir, started),
+  );
 
   await runTask("CPI Monthly", () => fetchCpiMonthly(outDir, started));
+  await runTask("Construction Cost Index", () =>
+    fetchConstructionCostIndex(outDir, started),
+  );
 
   if (partners) {
     await runTask("Imports by Partner", () =>
