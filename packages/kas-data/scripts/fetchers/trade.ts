@@ -14,6 +14,7 @@ import {
 import {
   createMeta,
   describePxSources,
+  normalizeYM,
   parseTradeChapterLabel,
   tidyNumber,
   type MetaField,
@@ -21,44 +22,38 @@ import {
 
 import { TradeChapterRecord } from "../../src/types/trade";
 
-export async function fetchTradeChaptersYearly(
+const DATASET_ID = "kas_trade_chapters_monthly";
+
+export async function fetchTradeChaptersMonthly(
   outDir: string,
   generatedAt: string,
 ) {
-  const parts = PATHS.trade_chapters_yearly;
+  const parts = PATHS.trade_chapters_monthly;
   const meta = await pxGetMeta(parts);
-  const chapterVar = requireVariable(
-    meta,
-    "Chapter",
-    "kas_trade_chapters_yearly",
-  );
-  const yearVar = requireVariable(meta, "Year", "kas_trade_chapters_yearly");
-  const flowVar = requireVariable(
-    meta,
-    "Exporti/Import",
-    "kas_trade_chapters_yearly",
-  );
+  const chapterVar = requireVariable(meta, "Variablat", DATASET_ID);
+  const periodVar = requireVariable(meta, "Viti/muaji", DATASET_ID);
+  const flowVar = requireVariable(meta, "Export/Import", DATASET_ID);
 
   const chapterPairs = buildValuePairs(chapterVar);
   const flowPairs = buildValuePairs(flowVar);
-  const yearCodes = extractTimeCodes(yearVar);
+  const periodCodes = extractTimeCodes(periodVar);
 
   const query = [
     {
-      code: "Chapter",
+      code: "Variablat",
       selection: { filter: "item", values: chapterPairs.map(([code]) => code) },
     },
-    { code: "Year", selection: { filter: "item", values: yearCodes } },
+    { code: "Viti/muaji", selection: { filter: "item", values: periodCodes } },
     {
-      code: "Exporti/Import",
+      code: "Export/Import",
       selection: { filter: "item", values: flowPairs.map(([code]) => code) },
     },
   ];
 
   const cube = await pxPostData(parts, { query, response: { format: "JSON" } });
-  const table = tableLookup(cube, ["Chapter", "Year", "Exporti/Import"]);
+  const table = tableLookup(cube, ["Variablat", "Viti/muaji", "Export/Import"]);
   if (!table)
-    throw new PxError("Trade yearly chapters: unexpected response format");
+    throw new PxError("Trade monthly chapters: unexpected response format");
   const { dimCodes, lookup } = table;
   const { updatedAt } = readCubeMetadata(cube);
 
@@ -70,7 +65,7 @@ export async function fetchTradeChaptersYearly(
   const hasExportFlow = flowPairs.some(([code]) => code === "1");
   if (!hasImportFlow || !hasExportFlow)
     throw new PxError(
-      "Trade yearly chapters: expected flow codes 0 (Import) and 1 (Export)",
+      "Trade monthly chapters: expected flow codes 0 (Import) and 1 (Export)",
     );
 
   const chapterSpecs = chapterPairs.map(
@@ -79,9 +74,10 @@ export async function fetchTradeChaptersYearly(
 
   const records: TradeChapterRecord[] = [];
   for (const [chapterId, spec] of chapterSpecs) {
-    for (const yearCode of yearCodes) {
+    for (const periodCode of periodCodes) {
+      const normalizedPeriod = normalizeYM(periodCode);
       const base: TradeChapterRecord = {
-        period: yearCode,
+        period: normalizedPeriod,
         chapter: spec.code,
         imports: null,
         exports: null,
@@ -90,9 +86,9 @@ export async function fetchTradeChaptersYearly(
         const fieldKey = flowKeyMap[flowCode];
         if (!fieldKey) continue;
         const value = lookupTableValue(dimCodes, lookup, {
-          Chapter: chapterId,
-          Year: yearCode,
-          "Exporti/Import": flowCode,
+          Variablat: chapterId,
+          "Viti/muaji": periodCode,
+          "Export/Import": flowCode,
         });
         const thousandValue = tidyNumber(value);
         base[fieldKey] = thousandValue == null ? null : thousandValue * 1_000;
@@ -105,21 +101,22 @@ export async function fetchTradeChaptersYearly(
   const { description: source, urls: sourceUrls } =
     describePxSources(sourcePaths);
 
-  const first = yearCodes[0]!;
-  const last = yearCodes[yearCodes.length - 1]!;
+  const normalizedPeriods = periodCodes.map((code) => normalizeYM(code));
+  const first = normalizedPeriods[0]!;
+  const last = normalizedPeriods[normalizedPeriods.length - 1]!;
   const fields: MetaField[] = [
     { key: "imports", label: "Importe", unit: "EUR" },
     { key: "exports", label: "Eksporte", unit: "EUR" },
   ];
 
-  const metaOut = createMeta("kas_trade_chapters_yearly", generatedAt, {
+  const metaOut = createMeta(DATASET_ID, generatedAt, {
     updated_at: updatedAt ?? null,
     time: {
       key: "period",
-      granularity: "yearly",
+      granularity: "monthly",
       first,
       last,
-      count: yearCodes.length,
+      count: periodCodes.length,
     },
     fields,
     metrics: fields.map((f) => f.key),
@@ -133,8 +130,12 @@ export async function fetchTradeChaptersYearly(
 
   const dataset = {
     meta: metaOut,
-    records: records.sort((a, b) => a.period.localeCompare(b.period)),
+    records: records.sort((a, b) =>
+      a.period === b.period
+        ? a.chapter.localeCompare(b.chapter)
+        : a.period.localeCompare(b.period),
+    ),
   };
-  await writeJson(outDir, "kas_trade_chapters_yearly.json", dataset);
+  await writeJson(outDir, "kas_trade_chapters_monthly.json", dataset);
   return dataset;
 }

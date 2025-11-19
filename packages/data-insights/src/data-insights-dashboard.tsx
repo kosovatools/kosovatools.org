@@ -2,7 +2,7 @@
 import {
   tradePartners,
   fuelDataset,
-  tradeChaptersYearly,
+  tradeChaptersMonthly,
   vehicleTypesYearly,
   tourismCountry,
   tourismRegion,
@@ -24,9 +24,9 @@ export function DataInsightsDashboard() {
           Tregtia & Dogana
         </h2>
         <DatasetRenderer
-          dataset={tradeChaptersYearly}
+          dataset={tradeChaptersMonthly}
           title="Kapitujt kryesorë të tregtisë (shtresuar)"
-          description="Të dhëna vjetore për eksportet (FOB) dhe importet (CIF) sipas kapitujve të nomenklaturës doganore. Ndrysho fluksin ose filtro kapitujt kryesorë për të parë kontributet në vite."
+          description="Të dhëna mujore për eksportet (FOB) dhe importet (CIF) sipas kapitujve të nomenklaturës doganore. Ndrysho fluksin, përzgjedh periudhën ose filtro kapitujt kryesorë për të parë kontributet në kohë."
         >
           {(dataset) => <TradeChapterStackedChart dataset={dataset} />}
         </DatasetRenderer>

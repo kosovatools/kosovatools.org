@@ -26,12 +26,13 @@ import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-sele
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import {
   type ToDatasetView,
-  type TradeChaptersYearlyDataset,
+  type TradeChaptersMonthlyDataset,
 } from "@workspace/kas-data";
 
-type TradeChaptersDatasetView = ToDatasetView<TradeChaptersYearlyDataset>;
+type TradeChaptersDatasetView = ToDatasetView<TradeChaptersMonthlyDataset>;
 
-type TradeChapterMetric = TradeChaptersYearlyDataset["meta"]["metrics"][number];
+type TradeChapterMetric =
+  TradeChaptersMonthlyDataset["meta"]["metrics"][number];
 
 const DEFAULT_TOP_CHAPTERS = 6;
 const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
@@ -46,7 +47,6 @@ export function TradeChapterStackedChart({
   const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
     getPeriodGroupingOptions(dataset.meta.time.granularity);
   const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
-  const DEFAULT_TIME_RANGE: TimeRangeOption = 5;
 
   const [metricKey, setMetricKey] =
     React.useState<TradeChapterMetric>("imports");
@@ -54,7 +54,7 @@ export function TradeChapterStackedChart({
     dataset.meta.time.granularity,
   );
   const [timeRange, setTimeRange] =
-    React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
+    React.useState<TimeRangeOption>(60);
 
   const datasetView = React.useMemo(
     () => dataset.limit(timeRange),

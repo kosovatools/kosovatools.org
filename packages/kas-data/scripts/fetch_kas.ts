@@ -37,7 +37,7 @@ import {
 } from "./fetchers/energy";
 import { fetchConstructionCostIndex } from "./fetchers/construction-cost-index";
 import { fetchTradePartners } from "./fetchers/trade-partners";
-import { fetchTradeChaptersYearly } from "./fetchers/trade";
+import { fetchTradeChaptersMonthly } from "./fetchers/trade";
 import { fetchTourismCountry, fetchTourismRegion } from "./fetchers/tourism";
 import {
   fetchAirTransportMonthly,
@@ -114,9 +114,9 @@ export async function main(): Promise<void> {
     }
   };
 
-  const tradeChaptersYearlyDataset = await runTask(
-    "Trade Chapters Yearly",
-    () => fetchTradeChaptersYearly(outDir, started),
+  const tradeChaptersMonthlyDataset = await runTask(
+    "Trade Chapters Monthly",
+    () => fetchTradeChaptersMonthly(outDir, started),
   );
   const energyDataset = await runTask("Energy Monthly", () =>
     fetchEnergyMonthly(outDir, started),
@@ -166,7 +166,7 @@ export async function main(): Promise<void> {
   }
 
   console.log(
-    `✔ trade chapters yearly (${tradeChaptersYearlyDataset && "records" in tradeChaptersYearlyDataset ? tradeChaptersYearlyDataset.records.length : 0} rows) ` +
+    `✔ trade chapters monthly (${tradeChaptersMonthlyDataset && "records" in tradeChaptersMonthlyDataset ? tradeChaptersMonthlyDataset.records.length : 0} rows) ` +
       `| energy (${energyDataset && "records" in energyDataset ? energyDataset.records?.length : 0} rows)`,
   );
   console.log("Done.");

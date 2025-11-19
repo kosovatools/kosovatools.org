@@ -5,11 +5,11 @@ export const PATHS = {
     "Monthly indicators",
     "08_qarkullimi.px",
   ],
-  trade_chapters_yearly: [
+  trade_chapters_monthly: [
     "ASKdata",
     "External trade",
-    "Yearly indicators",
-    "tab03.px",
+    "Monthly indicators",
+    "05_exp_imp_seksionet.px",
   ],
   energy_monthly: ["ASKdata", "Energy", "Monthly indicators", "tab01.px"],
   imports_by_partner: [

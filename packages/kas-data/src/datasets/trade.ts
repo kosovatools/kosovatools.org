@@ -1,9 +1,8 @@
-import tradeChaptersYearlyJson from "../../data/kas_trade_chapters_yearly.json" with { type: "json" };
+import tradeChaptersMonthlyJson from "../../data/kas_trade_chapters_monthly.json" with { type: "json" };
 import tradePartnersJson from "../../data/kas_trade_partners.json" with { type: "json" };
 import type {
   Dataset,
   DatasetMetaMonthly,
-  DatasetMetaYearly,
 } from "../types/dataset";
 import { createDataset } from "../utils/dataset";
 
@@ -13,21 +12,22 @@ import type {
   TradePartnerRecord,
 } from "../types/trade";
 
-type TradeChaptersYearlyMeta = DatasetMetaYearly<
+type TradeChaptersMonthlyMeta = DatasetMetaMonthly<
   TradeMetric,
   "chapter",
   { chaptersLabel?: Record<string, string> | undefined }
 >;
 
-export type TradeChaptersYearlyDataset = Dataset<
+export type TradeChaptersMonthlyDataset = Dataset<
   TradeChapterRecord,
-  TradeChaptersYearlyMeta
+  TradeChaptersMonthlyMeta
 >;
 
-const tradeChaptersYearlyData =
-  tradeChaptersYearlyJson as TradeChaptersYearlyDataset;
+const tradeChaptersMonthlyData =
+  tradeChaptersMonthlyJson as TradeChaptersMonthlyDataset;
 
-export const tradeChaptersYearly = createDataset(tradeChaptersYearlyData);
+export const tradeChaptersMonthly =
+  createDataset(tradeChaptersMonthlyData);
 
 type TradePartnersMeta = DatasetMetaMonthly<
   TradeMetric,

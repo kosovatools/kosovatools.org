@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "updated_at": null,
+    "time": {
+      "key": "period",
+      "granularity": "monthly",
+      "first": "2010-01",
+      "last": "2025-09",
+      "count": 189
+    },
+    "fields": [
+      {
+        "key": "imports",
+        "label": "Importe",
+        "unit": "EUR"
+      },
+      {
+        "key": "exports",
+        "label": "Eksporte",
+        "unit": "EUR"
+      }
+    ],
+    "metrics": [
+      "imports",
+      "exports"
+    ],
+    "dimensions": {
+      "chapter": [
+        {
+          "key": "01",
+          "label": "01 · Kafshë të gjalla, produkte me origjinë kafshe"
+        },
+        {
+          "key": "02",
+          "label": "02 · Produkte bimore"
+        },
+        {
+          "key": "03",
+          "label": "03 · Yndyrëra"
+        },
+        {
+          "key": "04",
+          "label": "04 · Ushqime të përg. pije, pije alkoholike dhe duhan"
+        },
+        {
+          "key": "05",
+          "label": "05 · Produkte minerale"
+        },
+        {
+          "key": "06",
+          "label": "06 · Produkte të industrisë kimike"
+        },
+        {
+          "key": "07",
+          "label": "07 · Plastikë,gomë dhe artikuj prej tyre"
+        },
+        {
+          "key": "08",
+          "label": "08 · Lëkurë dhe artikuj prej tyre"
+        },
+        {
+          "key": "09",
+          "label": "09 · Druri dhe artikuj druri"
+        },
+        {
+          "key": "10",
+          "label": "10 · Letër dhe artikuj prej letëre"
+        },
+        {
+          "key": "11",
+          "label": "11 · Tekstil dhe artikuj tekstili"
+        },
+        {
+          "key": "12",
+          "label": "12 · Veshëmbathje të këmbëve"
+        },
+        {
+          "key": "13",
+          "label": "13 · Artikuj prej guri, allçie, prod. qeramike dhe qelqi"
+        },
+        {
+          "key": "14",
+          "label": "14 · Perla, gurë të çmuar, metale të çmuara etj."
+        },
+        {
+          "key": "15",
+          "label": "15 · Metale bazë dhe artikuj prej tyre"
+        },
+        {
+          "key": "16",
+          "label": "16 · Makineri, paisje mekanike dhe elektrike"
+        },
+        {
+          "key": "17",
+          "label": "17 · Mjetet e transportit"
+        },
+        {
+          "key": "18",
+          "label": "18 · Instr.optike,mjeksore,fotog.,muzikore etj."
+        },
+        {
+          "key": "19",
+          "label": "19 · Armët dhe municionet"
+        },
+        {
+          "key": "20",
+          "label": "20 · Artikuj të ndryshëm të prodhura"
+        },
+        {
+          "key": "21",
+          "label": "21 · Veprat e artit"
+        }
+      ]
+    },
+    "source": "Table 05 in External trade",
+    "source_urls": [
+      "ASKdata/External trade/Monthly indicators/05_exp_imp_seksionet.px"
+    ],
+    "notes": [
+      "Source values are thousand EUR; scaled to EUR."
+    ],
+    "id": "kas_trade_chapters_monthly",
+    "generated_at": "2025-11-19T19:43:30.024Z",
+    "title": null
+  },
+  "records": []
+}
