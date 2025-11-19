@@ -11,7 +11,7 @@ import type { CustomsTreeNode } from "../types";
 
 import { ExpandIcon } from "../expand-icon";
 import { highlightPrefix } from "../highlighting";
-import { formatDate, formatPercent } from "@workspace/utils";
+import { formatDate, formatPercent, isFiniteNumber } from "@workspace/utils";
 
 type ColumnFactoryParams = {
   getCodePrefix: () => string;
@@ -24,6 +24,10 @@ type ColumnFactoryParams = {
   isDescFilterOpen: boolean;
   onToggleDescFilter: () => void;
 };
+
+function formatCustomsRate(value: number | null | undefined) {
+  return formatPercent(isFiniteNumber(value) ? value / 100 : null);
+}
 
 export function createCustomsColumns({
   getCodePrefix,
@@ -141,32 +145,44 @@ export function createCustomsColumns({
     {
       header: () => <ColumnHeaderLabel>Bazë</ColumnHeaderLabel>,
       accessorKey: "percentage",
-      cell: (info) => <span>{formatPercent(info.getValue() as number)}</span>,
+      cell: (info) => (
+        <span>{formatCustomsRate(info.getValue() as number | null | undefined)}</span>
+      ),
     },
     {
       header: () => <ColumnHeaderLabel>CEFTA</ColumnHeaderLabel>,
       accessorKey: "cefta",
-      cell: (info) => <span>{formatPercent(info.getValue() as number)}</span>,
+      cell: (info) => (
+        <span>{formatCustomsRate(info.getValue() as number | null | undefined)}</span>
+      ),
     },
     {
       header: () => <ColumnHeaderLabel>MSA</ColumnHeaderLabel>,
       accessorKey: "msa",
-      cell: (info) => <span>{formatPercent(info.getValue() as number)}</span>,
+      cell: (info) => (
+        <span>{formatCustomsRate(info.getValue() as number | null | undefined)}</span>
+      ),
     },
     {
       header: () => <ColumnHeaderLabel>TRMTL</ColumnHeaderLabel>,
       accessorKey: "trmtl",
-      cell: (info) => <span>{formatPercent(info.getValue() as number)}</span>,
+      cell: (info) => (
+        <span>{formatCustomsRate(info.getValue() as number | null | undefined)}</span>
+      ),
     },
     {
       header: () => <ColumnHeaderLabel>TVSH</ColumnHeaderLabel>,
       accessorKey: "tvsh",
-      cell: (info) => <span>{formatPercent(info.getValue() as number)}</span>,
+      cell: (info) => (
+        <span>{formatCustomsRate(info.getValue() as number | null | undefined)}</span>
+      ),
     },
     {
       header: () => <ColumnHeaderLabel>Aksizë</ColumnHeaderLabel>,
       accessorKey: "excise",
-      cell: (info) => <span>{formatPercent(info.getValue() as number)}</span>,
+      cell: (info) => (
+        <span>{formatCustomsRate(info.getValue() as number | null | undefined)}</span>
+      ),
     },
     {
       header: () => <ColumnHeaderLabel>E vlefshme nga</ColumnHeaderLabel>,
