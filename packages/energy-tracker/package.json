@@ -17,7 +17,6 @@
   "dependencies": {
     "@workspace/dataset-api": "workspace:*",
     "@workspace/kas-data": "workspace:*",
-    "@workspace/timeline-events": "workspace:*",
     "@workspace/ui": "workspace:*",
     "@workspace/utils": "workspace:*",
     "lucide-react": "^0.475.0",

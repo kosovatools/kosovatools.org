@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@workspace/kas-data": "workspace:*",
-    "@workspace/timeline-events": "workspace:*",
     "@workspace/ui": "workspace:*",
     "@workspace/utils": "workspace:*",
     "recharts": "3.4.1"
