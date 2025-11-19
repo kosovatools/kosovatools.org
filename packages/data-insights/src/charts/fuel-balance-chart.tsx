@@ -92,13 +92,13 @@ export function FuelBalanceChart({
           options={dataset.meta.fields}
           label="Metrika"
         />
-        <OptionSelector<PeriodGrouping>
+        <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
           options={PERIOD_GROUPING_OPTIONS}
           label="Perioda"
         />
-        <OptionSelector<TimeRangeOption>
+        <OptionSelector
           value={timeRange}
           onChange={setTimeRange}
           options={TIME_RANGE_OPTIONS}

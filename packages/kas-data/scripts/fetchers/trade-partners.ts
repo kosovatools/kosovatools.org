@@ -258,13 +258,12 @@ function mergeTradePartnerRecords(
     if (!dataset) continue;
     for (const record of dataset.records) {
       const key = `${record.period}:${record.partner}`;
-      const existing =
-        byKey.get(key) ?? {
-          period: record.period,
-          partner: record.partner,
-          imports: null,
-          exports: null,
-        };
+      const existing = byKey.get(key) ?? {
+        period: record.period,
+        partner: record.partner,
+        imports: null,
+        exports: null,
+      };
       const value = record.value ?? null;
       if (spec.key === "imports") existing.imports = value;
       else existing.exports = value;

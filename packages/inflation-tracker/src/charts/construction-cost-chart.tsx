@@ -152,7 +152,7 @@ export function ConstructionCostIndexChart({ dataset }: Props) {
         emptyMessage="Nuk ka kategori të disponueshme."
       />
       <div className="space-y-2">
-        <OptionSelector<TimeRangeOption>
+        <OptionSelector
           label="Periudha"
           value={timeRange}
           onChange={setTimeRange}

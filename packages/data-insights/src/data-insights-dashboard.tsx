@@ -35,9 +35,7 @@ export function DataInsightsDashboard() {
           title="Kontributet e partnerëve (shtresuar)"
           description='Partnerët kryesorë tregtarë gjatë vitit të fundit. Rregullo përzgjedhjen ose aktivizo kategorinë "Të tjerët" për të parë partnerët më të vegjël.'
         >
-          {(dataset) => (
-            <TradePartnersStackedChart dataset={dataset} top={6} />
-          )}
+          {(dataset) => <TradePartnersStackedChart dataset={dataset} top={6} />}
         </DatasetRenderer>
       </section>
 

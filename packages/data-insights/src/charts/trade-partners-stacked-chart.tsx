@@ -11,10 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-import {
-  ToDatasetView,
-  TradePartnersDataset,
-} from "@workspace/kas-data";
+import { ToDatasetView, TradePartnersDataset } from "@workspace/kas-data";
 import {
   formatCurrencyCompact,
   getPeriodFormatter,
@@ -32,9 +29,7 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
-import {
-  OptionSelector,
-} from "@workspace/ui/custom-components/option-selector";
+import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 import { useTimelineEventMarkers } from "@workspace/timeline-events";
 
@@ -55,13 +50,13 @@ export function TradePartnersStackedChart({
   const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
   const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
 
-
   const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
     dataset.meta.time.granularity,
   );
   const [timeRange, setTimeRange] =
     React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
-  const [metric, setMetric] = React.useState<TradePartnersDataset['meta']['metrics'][number]>("imports");
+  const [metric, setMetric] =
+    React.useState<TradePartnersDataset["meta"]["metrics"][number]>("imports");
 
   const datasetView = React.useMemo(
     () => dataset.limit(timeRange),

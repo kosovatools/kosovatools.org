@@ -1,6 +1,7 @@
 import type {
   Dataset,
   DatasetMetaMonthly,
+  DatasetMetaYearly,
   DimensionHierarchyNode,
 } from "./dataset";
 
@@ -20,3 +21,16 @@ export type CpiMetaExtras = {
 type CpiMeta = DatasetMetaMonthly<CpiMetric, "group", CpiMetaExtras>;
 
 export type CpiDataset = Dataset<CpiRecord, CpiMeta>;
+
+export type CpiAveragePriceMetric = "price";
+
+export type CpiAveragePriceRecord = {
+  period: string;
+  article: string;
+  price: number | null;
+};
+
+export type CpiAveragePriceDataset = Dataset<
+  CpiAveragePriceRecord,
+  DatasetMetaYearly<CpiAveragePriceMetric, "article">
+>;

@@ -78,6 +78,13 @@ export const PATHS = {
     "Monthly indicators",
     "cpi09.px",
   ],
+  cpi_average_prices: [
+    "ASKdata",
+    "Prices",
+    "Consumer Price Index",
+    "Annual indicators",
+    "cpi03.px",
+  ],
   construction_cost_index: [
     "ASKdata",
     "Prices",

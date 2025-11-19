@@ -28,7 +28,7 @@ import {
   normalizeYM,
   tidyNumber,
 } from "./lib/utils";
-import { fetchCpiMonthly } from "./fetchers/cpi";
+import { fetchCpiAveragePricesYearly, fetchCpiMonthly } from "./fetchers/cpi";
 import {
   fetchEnergyMonthly,
   fetchFuelTable,
@@ -147,6 +147,9 @@ export async function main(): Promise<void> {
   );
 
   await runTask("CPI Monthly", () => fetchCpiMonthly(outDir, started));
+  await runTask("CPI Average Prices", () =>
+    fetchCpiAveragePricesYearly(outDir, started),
+  );
   await runTask("Construction Cost Index", () =>
     fetchConstructionCostIndex(outDir, started),
   );

@@ -96,13 +96,13 @@ export function AviationStatsChart({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-3">
-        <OptionSelector<PeriodGrouping>
+        <OptionSelector
           label="Grupimi"
           value={periodGrouping}
           onChange={setPeriodGrouping}
           options={PERIOD_GROUPING_OPTIONS}
         />
-        <OptionSelector<TimeRangeOption>
+        <OptionSelector
           label="Periudha"
           value={timeRange}
           onChange={setTimeRange}

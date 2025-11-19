@@ -17,7 +17,12 @@ type PxDatasetResult<RecordShape extends Record<string, unknown>> = Awaited<
 type RawCpiRecord = { period: string; group: string; value: number | null };
 type RawCpiDataset = PxDatasetResult<RawCpiRecord>;
 
-import { CpiMetric, CpiRecord, CpiMetaExtras } from "../../src/types/cpi";
+import {
+  CpiAveragePriceRecord,
+  CpiMetric,
+  CpiRecord,
+  CpiMetaExtras,
+} from "../../src/types/cpi";
 
 const CPI_METRIC_FIELDS: ReadonlyArray<MetaField & { key: CpiMetric }> = [
   { key: "index", label: "CPI Indeksi", unit: "index" },
@@ -26,6 +31,8 @@ const CPI_METRIC_FIELDS: ReadonlyArray<MetaField & { key: CpiMetric }> = [
 
 const CPI_DATASET_ID = "kas_cpi_monthly";
 const CPI_FILENAME = "kas_cpi_monthly.json";
+const CPI_AVERAGE_PRICES_DATASET_ID = "kas_cpi_average_prices_yearly";
+const CPI_AVERAGE_PRICES_FILENAME = "kas_cpi_average_prices_yearly.json";
 
 const COMPONENT_SPECS = {
   index: {
@@ -42,6 +49,13 @@ const COMPONENT_SPECS = {
   CpiMetric,
   { datasetId: string; path_key: keyof typeof PATHS; unit: string }
 >;
+
+const CPI_AVERAGE_PRICE_FIELD = {
+  code: "__value__",
+  key: "price",
+  label: "Çmimet mesatare",
+  unit: "€",
+} as const;
 
 type ComponentSpec = (typeof COMPONENT_SPECS)[CpiMetric];
 
@@ -196,4 +210,54 @@ export async function fetchCpiMonthly(outDir: string, generatedAt: string) {
   const dataset = { meta, records };
   await writeJson(outDir, CPI_FILENAME, dataset);
   return dataset;
+}
+
+export async function fetchCpiAveragePricesYearly(
+  outDir: string,
+  generatedAt: string,
+) {
+  return runPxDatasetPipeline<CpiAveragePriceRecord>({
+    datasetId: CPI_AVERAGE_PRICES_DATASET_ID,
+    filename: CPI_AVERAGE_PRICES_FILENAME,
+    parts: PATHS.cpi_average_prices,
+    outDir,
+    generatedAt,
+    timeDimension: {
+      code: "viti",
+      text: "viti",
+      granularity: "yearly",
+    },
+    axes: [
+      {
+        code: "artikujt",
+        text: "artikujt",
+        alias: "article",
+      },
+    ],
+    metricDimensions: [
+      {
+        code: () => null,
+        values: [CPI_AVERAGE_PRICE_FIELD],
+      },
+    ],
+    createRecord: ({ period, axes, values }) => {
+      const article = axes.article;
+      if (!article)
+        throw new PxError(
+          `${CPI_AVERAGE_PRICES_DATASET_ID}: missing article dimension`,
+        );
+      return {
+        period,
+        article: article.code,
+        price: values.price ?? null,
+      };
+    },
+    finalizeDataset: ({ records, meta }) => {
+      const sortedRecords = [...records].sort((a, b) => {
+        if (a.period === b.period) return a.article.localeCompare(b.article);
+        return a.period.localeCompare(b.period);
+      });
+      return { meta, records: sortedRecords };
+    },
+  });
 }

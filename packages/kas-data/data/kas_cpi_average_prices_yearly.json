@@ -1,0 +1,327 @@
+{
+  "meta": {
+    "updated_at": null,
+    "time": {
+      "key": "period",
+      "granularity": "yearly",
+      "first": "2002",
+      "last": "2024",
+      "count": 23
+    },
+    "fields": [
+      {
+        "key": "price",
+        "label": "Çmimet mesatare",
+        "unit": "€"
+      }
+    ],
+    "metrics": [
+      "price"
+    ],
+    "dimensions": {
+      "article": [
+        {
+          "key": "0",
+          "label": "Oriz 1 kg"
+        },
+        {
+          "key": "1",
+          "label": "Miell gruri 1 kg"
+        },
+        {
+          "key": "2",
+          "label": "Bukë e bardhë 500 gr"
+        },
+        {
+          "key": "3",
+          "label": "Makarona 500 gr"
+        },
+        {
+          "key": "4",
+          "label": "Miell misri 1 kg"
+        },
+        {
+          "key": "5",
+          "label": "Mish gjedhi pa eshtra 1 kg"
+        },
+        {
+          "key": "6",
+          "label": "Mish viçi 1 kg"
+        },
+        {
+          "key": "7",
+          "label": "Mushkëri viçi 1 kg"
+        },
+        {
+          "key": "8",
+          "label": "Mish pule 1 kg"
+        },
+        {
+          "key": "9",
+          "label": "Mish i terur shtepie dhe pershutë 1 kg"
+        },
+        {
+          "key": "10",
+          "label": "Mish qengji 1 kg"
+        },
+        {
+          "key": "11",
+          "label": "Suxhuk shtëpiak 1 kg"
+        },
+        {
+          "key": "12",
+          "label": "Sallamë pule 1 kg"
+        },
+        {
+          "key": "13",
+          "label": "Pashtetë pule 100 gr"
+        },
+        {
+          "key": "14",
+          "label": "Peshk i ngrirë 1 kg"
+        },
+        {
+          "key": "15",
+          "label": "Peshk i freskët 1 kg"
+        },
+        {
+          "key": "16",
+          "label": "Peshk i konzervuar 125 gr"
+        },
+        {
+          "key": "17",
+          "label": "Qumësht (tetrapak) 1 lit"
+        },
+        {
+          "key": "18",
+          "label": "Qumësht i freskët 1 lit"
+        },
+        {
+          "key": "19",
+          "label": "Jogurt 1 lit"
+        },
+        {
+          "key": "20",
+          "label": "Djathë i freskët 1 kg"
+        },
+        {
+          "key": "21",
+          "label": "Ajkë 180-200 gr"
+        },
+        {
+          "key": "22",
+          "label": "Vezë 30 copë"
+        },
+        {
+          "key": "23",
+          "label": "Vajë ushqimor luledielli 1 lit"
+        },
+        {
+          "key": "24",
+          "label": "Margarinë 250 gr"
+        },
+        {
+          "key": "25",
+          "label": "Yndyrë bimësh  1 kg"
+        },
+        {
+          "key": "26",
+          "label": "Mollë 1 kg"
+        },
+        {
+          "key": "27",
+          "label": "Dardhë 1 kg"
+        },
+        {
+          "key": "28",
+          "label": "Banane 1 kg"
+        },
+        {
+          "key": "29",
+          "label": "Portokall 1 kg"
+        },
+        {
+          "key": "30",
+          "label": "Limon 1 kg"
+        },
+        {
+          "key": "31",
+          "label": "Rrush 1 kg"
+        },
+        {
+          "key": "32",
+          "label": "Patate 1 kg"
+        },
+        {
+          "key": "33",
+          "label": "Domate 1 kg"
+        },
+        {
+          "key": "34",
+          "label": "Fasule 1 kg"
+        },
+        {
+          "key": "35",
+          "label": "Qepë 1 kg"
+        },
+        {
+          "key": "36",
+          "label": "Hudhra 1 kg"
+        },
+        {
+          "key": "37",
+          "label": "Tranguj 1 kg"
+        },
+        {
+          "key": "38",
+          "label": "Speca të padjegës 1 kg"
+        },
+        {
+          "key": "39",
+          "label": "Karotë 1 kg"
+        },
+        {
+          "key": "40",
+          "label": "Spinaq 1 kg"
+        },
+        {
+          "key": "41",
+          "label": "Lakra 1 kg"
+        },
+        {
+          "key": "42",
+          "label": "Sheqer 1 kg"
+        },
+        {
+          "key": "43",
+          "label": "Mjaltë 0.9-1 kg"
+        },
+        {
+          "key": "44",
+          "label": "Marmelatë 1 kg"
+        },
+        {
+          "key": "45",
+          "label": "Çokolatë 100 gr"
+        },
+        {
+          "key": "46",
+          "label": "Eurokrem 500 gr"
+        },
+        {
+          "key": "47",
+          "label": "Biberi i kuq 1 kg"
+        },
+        {
+          "key": "48",
+          "label": "Erëzë, mëlmesë 1 kg"
+        },
+        {
+          "key": "49",
+          "label": "Tharmi 500 gr"
+        },
+        {
+          "key": "50",
+          "label": "Majonezi 1 ml"
+        },
+        {
+          "key": "51",
+          "label": "Kafe e bluar 1 kg"
+        },
+        {
+          "key": "52",
+          "label": "Çaj (Cejlon) 1 kg"
+        },
+        {
+          "key": "53",
+          "label": "Kakao 100 gr"
+        },
+        {
+          "key": "54",
+          "label": "Uji mineral 1.5 lit"
+        },
+        {
+          "key": "55",
+          "label": "Coca cola 2 lit"
+        },
+        {
+          "key": "56",
+          "label": "Lëng pemësh 1 lit"
+        },
+        {
+          "key": "57",
+          "label": "Sprite 2 lit"
+        },
+        {
+          "key": "58",
+          "label": "Birrë 0.5 lit"
+        },
+        {
+          "key": "59",
+          "label": "Cigare - Boss 1 pako"
+        },
+        {
+          "key": "60",
+          "label": "Cigare - Lucky strike 1 pako"
+        },
+        {
+          "key": "61",
+          "label": "Cigare - Ronhill 1 pako"
+        },
+        {
+          "key": "62",
+          "label": "Cigare - Marlboro 1 pako"
+        },
+        {
+          "key": "63",
+          "label": "Qelq për dritare (3mm) 1 m²"
+        },
+        {
+          "key": "64",
+          "label": "Ngjyrë druri 1 lit"
+        },
+        {
+          "key": "65",
+          "label": "Pllaka të qeramikës 1 m²"
+        },
+        {
+          "key": "66",
+          "label": "Çimento 50 kg"
+        },
+        {
+          "key": "67",
+          "label": "Rryma elektrike për amvisëri pa fuqi bartse 1 kwh"
+        },
+        {
+          "key": "68",
+          "label": "Dru të zjarrit 1 m³"
+        },
+        {
+          "key": "69",
+          "label": "Nxerrja e dhëmbit a"
+        },
+        {
+          "key": "70",
+          "label": "Vizita te mjeku b"
+        },
+        {
+          "key": "71",
+          "label": "Benzin 1 lit"
+        },
+        {
+          "key": "72",
+          "label": "Dizel 1 lit"
+        }
+      ]
+    },
+    "source": "Table cpi03 in Prices",
+    "source_urls": [
+      "ASKdata/Prices/Consumer Price Index/Annual indicators/cpi03.px"
+    ],
+    "notes": [],
+    "id": "kas_cpi_average_prices_yearly",
+    "generated_at": "2025-11-19T18:50:01.985Z",
+    "title": null
+  },
+  "records": []
+}

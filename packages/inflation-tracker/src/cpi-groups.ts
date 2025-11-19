@@ -2,7 +2,7 @@ import { buildUiHierarchy, cpiDataset } from "@workspace/kas-data";
 import type { HierarchicalNode } from "@workspace/ui/custom-components/hierarchical-multi-select";
 
 const hierarchy = buildUiHierarchy(
-  cpiDataset.meta.dimension_hierarchies?.group,
+  cpiDataset.meta.dimension_hierarchies.group,
   cpiDataset.meta.dimensions.group,
 );
 

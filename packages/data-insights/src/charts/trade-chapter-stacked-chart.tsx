@@ -19,10 +19,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import {
-  OptionSelector,
-  type SelectorOptionDefinition,
-} from "@workspace/ui/custom-components/option-selector";
+import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
@@ -50,10 +47,6 @@ export function TradeChapterStackedChart({
     getPeriodGroupingOptions(dataset.meta.time.granularity);
   const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
   const DEFAULT_TIME_RANGE: TimeRangeOption = 5;
-
-  const METRIC_OPTIONS: ReadonlyArray<
-    SelectorOptionDefinition<TradeChapterMetric>
-  > = dataset.meta.fields;
 
   const [metricKey, setMetricKey] =
     React.useState<TradeChapterMetric>("imports");
@@ -127,19 +120,19 @@ export function TradeChapterStackedChart({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap gap-4">
-        <OptionSelector<TradeChapterMetric>
+        <OptionSelector
           value={metricKey}
           onChange={(nextKey) => setMetricKey(nextKey)}
-          options={METRIC_OPTIONS}
+          options={dataset.meta.fields}
           label="Fluksi"
         />
-        <OptionSelector<PeriodGrouping>
+        <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
           options={PERIOD_GROUPING_OPTIONS}
           label="Perioda"
         />
-        <OptionSelector<TimeRangeOption>
+        <OptionSelector
           value={timeRange}
           onChange={setTimeRange}
           options={TIME_RANGE_OPTIONS}
