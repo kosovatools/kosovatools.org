@@ -20,6 +20,10 @@ import {
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 import { MultiSelectCombobox } from "../components/multi-select-combobox";
 
 const MAX_SELECTED_ARTICLES = 10;
@@ -27,11 +31,12 @@ const DEFAULT_VISIBLE_ARTICLES = 3;
 
 type Props = {
   dataset: ToDatasetView<CpiAveragePriceDataset>;
+  timelineEvents?: TimelineEventMarkerControls;
 };
 
 type ChartRow = { period: string } & Record<string, number | null | string>;
 
-export function CpiAveragePricesChart({ dataset }: Props) {
+export function CpiAveragePricesChart({ dataset, timelineEvents }: Props) {
   const [selectedArticles, setSelectedArticles] = useState<string[]>(() =>
     dataset.meta.dimensions.article
       .slice(0, DEFAULT_VISIBLE_ARTICLES)
@@ -148,6 +153,12 @@ export function CpiAveragePricesChart({ dataset }: Props) {
               tickMargin={10}
               width={80}
               tickFormatter={(value) => formatCurrency(value as number)}
+            />
+            <TimelineEventMarkers
+              data={chartData}
+              grouping={dataset.meta.time.granularity}
+              enabled={timelineEvents?.enabled}
+              includeCategories={timelineEvents?.includeCategories}
             />
             <ChartTooltip
               cursor={false}

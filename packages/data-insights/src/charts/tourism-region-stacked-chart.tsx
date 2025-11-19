@@ -20,6 +20,10 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { ToDatasetView, TourismRegionDataset } from "@workspace/kas-data";
@@ -42,8 +46,10 @@ const getVisitorGroupLabelText = (
 
 export function TourismRegionCharts({
   dataset,
+  timelineEvents,
 }: {
   dataset: ToDatasetView<TourismRegionDataset>;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
     getPeriodGroupingOptions(dataset.meta.time.granularity);
@@ -174,6 +180,12 @@ export function TourismRegionCharts({
             width="auto"
             tickFormatter={(value) => formatCount(value as number)}
             axisLine={false}
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
             content={

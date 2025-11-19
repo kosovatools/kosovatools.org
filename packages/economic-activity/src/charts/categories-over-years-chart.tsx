@@ -14,6 +14,10 @@ import {
   StackedKeySelector,
   type StackedKeyTotal,
 } from "@workspace/ui/custom-components/stacked-key-selector";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
@@ -31,8 +35,10 @@ import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
 export function CategoriesOverYearsChart({
   dataset,
+  timelineEvents,
 }: {
   dataset: CategoriesDatasetView;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const periodGroupingOptions = React.useMemo(
     () => getPeriodGroupingOptions(dataset.meta.time.granularity),
@@ -170,6 +176,12 @@ export function CategoriesOverYearsChart({
           <YAxis
             width="auto"
             tickFormatter={(value: number) => formatCurrencyCompact(value)}
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
             content={

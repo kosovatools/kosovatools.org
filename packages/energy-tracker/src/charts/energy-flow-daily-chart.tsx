@@ -19,10 +19,15 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 import { energyFlowChartConfig } from "../utils/chart-config";
 import { formatAuto } from "../utils/number-format";
 
 type DailyChartRow = {
+  period: string;
   date: string;
   label: string;
   imports: number;
@@ -32,13 +37,16 @@ type DailyChartRow = {
 
 export function DailyFlowChart({
   dataset,
+  timelineEvents,
 }: {
   dataset: EnergyDailyDatasetView;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const chartConfig = energyFlowChartConfig;
 
   const chartData = React.useMemo<DailyChartRow[]>(() => {
     return dataset.records.map((record) => ({
+      period: record.period,
       date: record.period,
       label: formatDayLabel(record.period),
       imports: record.import ?? 0,
@@ -67,12 +75,22 @@ export function DailyFlowChart({
         margin={{ top: 16, right: 0, bottom: 12, left: 0 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="label" tickMargin={8} />
+        <XAxis
+          dataKey="period"
+          tickMargin={8}
+          tickFormatter={(value) => formatDayLabel(String(value))}
+        />
         <YAxis
           width="auto"
           tickFormatter={(value: number | string) =>
             formatAuto(value, { includeUnit: true })
           }
+        />
+        <TimelineEventMarkers
+          data={chartData}
+          grouping={dataset.meta.time.granularity}
+          enabled={timelineEvents?.enabled}
+          includeCategories={timelineEvents?.includeCategories}
         />
         <ChartTooltip
           content={

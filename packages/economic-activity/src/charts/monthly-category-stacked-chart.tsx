@@ -14,6 +14,10 @@ import {
   StackedKeySelector,
   type StackedKeyTotal,
 } from "@workspace/ui/custom-components/stacked-key-selector";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 import { formatCurrencyCompact, getPeriodFormatter } from "@workspace/utils";
 
@@ -26,8 +30,10 @@ import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
 export function MonthlyCategoryStackedChart({
   dataset,
+  timelineEvents,
 }: {
   dataset: MonthlyCategoryCityDatasetView;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const stackConfig = React.useMemo(
     () => ({
@@ -119,6 +125,12 @@ export function MonthlyCategoryStackedChart({
           <YAxis
             width="auto"
             tickFormatter={(value: number) => formatCurrencyCompact(value)}
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={dataset.meta.time.granularity}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
             content={

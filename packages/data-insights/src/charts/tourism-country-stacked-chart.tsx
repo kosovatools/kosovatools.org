@@ -21,6 +21,10 @@ import {
 } from "@workspace/ui/components/chart";
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
@@ -32,9 +36,11 @@ const DEFAULT_TOP_COUNTRIES = 5;
 export function TourismCountryStackedChart({
   dataset,
   top = DEFAULT_TOP_COUNTRIES,
+  timelineEvents,
 }: {
   dataset: ToDatasetView<TourismCountryDataset>;
   top?: number;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
     getPeriodGroupingOptions(dataset.meta.time.granularity);
@@ -160,6 +166,12 @@ export function TourismCountryStackedChart({
             width="auto"
             tickFormatter={(value) => formatCount(value as number)}
             axisLine={false}
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
             content={

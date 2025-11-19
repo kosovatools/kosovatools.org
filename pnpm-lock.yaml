@@ -784,6 +784,9 @@ importers:
       '@workspace/kas-data':
         specifier: workspace:*
         version: link:../kas-data
+      '@workspace/timeline-events':
+        specifier: workspace:*
+        version: link:../timeline-events
       '@workspace/utils':
         specifier: workspace:*
         version: link:../utils

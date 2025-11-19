@@ -21,6 +21,10 @@ import {
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 
 const baseChartConfig = {
   passengers_inbound: {
@@ -38,8 +42,10 @@ const chartConfig = addThemeToChartConfig(baseChartConfig);
 
 export function AviationStatsChart({
   dataset,
+  timelineEvents,
 }: {
   dataset: ToDatasetView<AirTransportDataset>;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(
     dataset.meta.time.granularity,
@@ -135,6 +141,12 @@ export function AviationStatsChart({
             tickMargin={10}
             tickFormatter={(value) => formatCount(value as number)}
             width="auto"
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
           />
           <YAxis
             yAxisId="flights"

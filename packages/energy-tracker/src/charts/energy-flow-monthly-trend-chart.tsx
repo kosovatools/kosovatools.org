@@ -20,6 +20,10 @@ import {
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
+import {
   getPeriodFormatter,
   getPeriodGroupingOptions,
   limitTimeRangeOptions,
@@ -33,7 +37,6 @@ import { formatAuto } from "../utils/number-format";
 
 type TrendChartRow = {
   period: string;
-  label: string;
   imports: number;
   exports: number;
   net: number;
@@ -41,8 +44,10 @@ type TrendChartRow = {
 
 export function MonthlyFlowTrendChart({
   dataset,
+  timelineEvents,
 }: {
   dataset: EnergyMonthlyDatasetView;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const chartConfig = energyFlowChartConfig;
   const periodGroupingOptions = React.useMemo<
@@ -93,12 +98,11 @@ export function MonthlyFlowTrendChart({
 
     return aggregated.map((row) => ({
       period: row.period,
-      label: periodFormatter(row.period),
       imports: row.imports ?? 0,
       exports: row.exports ?? 0,
       net: row.net ?? 0,
     }));
-  }, [limitedDataset, periodGrouping, periodFormatter]);
+  }, [limitedDataset, periodGrouping]);
 
   if (!chartData.length) {
     return (
@@ -135,12 +139,22 @@ export function MonthlyFlowTrendChart({
           margin={{ top: 16, right: 24, bottom: 12, left: 12 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="label" tickMargin={8} />
+          <XAxis
+            dataKey="period"
+            tickMargin={8}
+            tickFormatter={(value) => periodFormatter(String(value))}
+          />
           <YAxis
             width="auto"
             tickFormatter={(value: number | string) =>
               formatAuto(value, { includeUnit: true })
             }
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
             content={

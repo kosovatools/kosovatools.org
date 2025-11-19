@@ -17,6 +17,10 @@ import {
   StackedKeySelector,
   type StackedKeyTotal,
 } from "@workspace/ui/custom-components/stacked-key-selector";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 import {
   formatCurrency,
@@ -34,8 +38,10 @@ import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
 export function TopCategoryByCityStackedChart({
   dataset,
+  timelineEvents,
 }: {
   dataset: CityCategoryYearlyDatasetView;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const datasetMeta = dataset.meta;
   const citySummaries = React.useMemo(() => {
@@ -242,6 +248,12 @@ export function TopCategoryByCityStackedChart({
           <YAxis
             width="auto"
             tickFormatter={(value: number) => formatCurrencyCompact(value)}
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={datasetMeta.time.granularity ?? "yearly"}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
             content={

@@ -25,6 +25,10 @@ import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { HierarchicalMultiSelect } from "@workspace/ui/custom-components/hierarchical-multi-select";
 import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
+import {
   CPI_DEFAULT_GROUP_CODE,
   buildCpiHierarchicalNodes,
   cpiGroupLabelsByCode,
@@ -45,7 +49,13 @@ const METRIC_FORMATTER = {
 type ChartRow = { period: string } & Record<string, number | string | null>;
 const hierarchicalNodes = buildCpiHierarchicalNodes();
 
-export function CpiChart({ dataset }: { dataset: ToDatasetView<CpiDataset> }) {
+export function CpiChart({
+  dataset,
+  timelineEvents,
+}: {
+  dataset: ToDatasetView<CpiDataset>;
+  timelineEvents?: TimelineEventMarkerControls;
+}) {
   const PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(
     dataset.meta.time.granularity,
   );
@@ -201,6 +211,12 @@ export function CpiChart({ dataset }: { dataset: ToDatasetView<CpiDataset> }) {
               domain={["auto", "auto"]}
               tickMargin={10}
               tickFormatter={(value) => axisFormatter(value as number)}
+            />
+            <TimelineEventMarkers
+              data={chartData}
+              grouping={periodGrouping}
+              enabled={timelineEvents?.enabled}
+              includeCategories={timelineEvents?.includeCategories}
             />
             <ChartTooltip
               cursor={false}

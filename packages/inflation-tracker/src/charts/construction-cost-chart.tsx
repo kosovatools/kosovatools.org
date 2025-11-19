@@ -24,6 +24,10 @@ import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { HierarchicalMultiSelect } from "@workspace/ui/custom-components/hierarchical-multi-select";
 import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
+import {
   buildConstructionCostNodes,
   CONSTRUCTION_DEFAULT_CATEGORY_CODES,
   CONSTRUCTION_DEFAULT_EXPANDED_CODES,
@@ -44,9 +48,10 @@ type ChartRow = { period: string } & Record<string, number | string | null>;
 
 type Props = {
   dataset: ToDatasetView<ConstructionCostIndexDataset>;
+  timelineEvents?: TimelineEventMarkerControls;
 };
 
-export function ConstructionCostIndexChart({ dataset }: Props) {
+export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
   const labelMap = useMemo(
     () => new Map(Object.entries(constructionCostLabelMap)),
     [],
@@ -180,6 +185,12 @@ export function ConstructionCostIndexChart({ dataset }: Props) {
                 domain={["auto", "auto"]}
                 tickMargin={10}
                 tickFormatter={(value) => formatAxisValue(value as number)}
+              />
+              <TimelineEventMarkers
+                data={chartData}
+                grouping={dataset.meta.time.granularity}
+                enabled={timelineEvents?.enabled}
+                includeCategories={timelineEvents?.includeCategories}
               />
               <ChartTooltip
                 cursor={false}

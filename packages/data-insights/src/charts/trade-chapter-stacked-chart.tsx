@@ -21,6 +21,10 @@ import {
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
@@ -40,9 +44,11 @@ const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
 export function TradeChapterStackedChart({
   dataset,
   top = DEFAULT_TOP_CHAPTERS,
+  timelineEvents,
 }: {
   dataset: TradeChaptersDatasetView;
   top?: number;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
     getPeriodGroupingOptions(dataset.meta.time.granularity);
@@ -53,8 +59,7 @@ export function TradeChapterStackedChart({
   const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
     dataset.meta.time.granularity,
   );
-  const [timeRange, setTimeRange] =
-    React.useState<TimeRangeOption>(60);
+  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(60);
 
   const datasetView = React.useMemo(
     () => dataset.limit(timeRange),
@@ -168,6 +173,12 @@ export function TradeChapterStackedChart({
             width="auto"
             tickFormatter={(value) => formatCurrencyCompact(value as number)}
             axisLine={false}
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
             content={

@@ -5,7 +5,6 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
-  Label,
   ReferenceLine,
   XAxis,
   YAxis,
@@ -29,7 +28,10 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
-import { useTimelineEventMarkers } from "@workspace/timeline-events";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 const CHART_CLASS = "w-full aspect-[4/3] sm:aspect-video";
@@ -37,8 +39,10 @@ const CHART_MARGIN = { top: 32, right: 16, bottom: 16, left: 16 };
 
 export function FuelBalanceChart({
   dataset,
+  timelineEvents,
 }: {
   dataset: ToDatasetView<FuelDataset>;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
     getPeriodGroupingOptions(dataset.meta.time.granularity);
@@ -81,8 +85,6 @@ export function FuelBalanceChart({
     [periodGrouping],
   );
 
-  const eventMarkers = useTimelineEventMarkers(chartData, periodGrouping);
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -120,23 +122,12 @@ export function FuelBalanceChart({
             tickFormatter={(value) => `${formatCount(value as number)} tonë`}
             axisLine={false}
           />
-          {eventMarkers.map((event) => (
-            <ReferenceLine
-              key={event.id}
-              x={event.x}
-              stroke="var(--muted-foreground)"
-              strokeDasharray="3 3"
-              ifOverflow="extendDomain"
-            >
-              <Label
-                value={event.label}
-                position="top"
-                fill="var(--muted-foreground)"
-                fontSize={10}
-                offset={event.offset}
-              />
-            </ReferenceLine>
-          ))}
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
+          />
           <ReferenceLine y={0} stroke="var(--border)" />
           <ChartTooltip
             content={

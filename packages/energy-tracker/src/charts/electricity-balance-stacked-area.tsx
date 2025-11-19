@@ -5,7 +5,6 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
-  Label,
   ReferenceLine,
   XAxis,
   YAxis,
@@ -28,8 +27,11 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
-import { useTimelineEventMarkers } from "@workspace/timeline-events";
 
 import { formatAuto } from "../utils/number-format";
 
@@ -37,8 +39,10 @@ type ElectricityDatasetView = typeof electricityDataset;
 
 export function ElectricityBalanceStackedAreaChart({
   dataset,
+  timelineEvents,
 }: {
   dataset: ElectricityDatasetView;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const labelMap = createLabelMap(dataset.meta.fields);
   const PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(
@@ -97,8 +101,6 @@ export function ElectricityBalanceStackedAreaChart({
     }));
   }, [datasetView, periodGrouping, periodFormatter]);
 
-  const eventMarkers = useTimelineEventMarkers(chartData, periodGrouping);
-
   return chartData.length ? (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -119,7 +121,8 @@ export function ElectricityBalanceStackedAreaChart({
         <AreaChart data={chartData} margin={chartMargin}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
-            dataKey="periodLabel"
+            dataKey="period"
+            tickFormatter={(value) => periodFormatter(String(value))}
             tickMargin={8}
             minTickGap={24}
             axisLine={false}
@@ -131,23 +134,12 @@ export function ElectricityBalanceStackedAreaChart({
             }
             axisLine={false}
           />
-          {eventMarkers.map((event) => (
-            <ReferenceLine
-              key={event.id}
-              x={event.x}
-              stroke="var(--muted-foreground)"
-              strokeDasharray="3 3"
-              ifOverflow="extendDomain"
-            >
-              <Label
-                value={event.label}
-                position="top"
-                fill="var(--muted-foreground)"
-                fontSize={10}
-                offset={event.offset}
-              />
-            </ReferenceLine>
-          ))}
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
+          />
           <ReferenceLine y={0} stroke="var(--border)" />
           <ChartTooltip
             content={
