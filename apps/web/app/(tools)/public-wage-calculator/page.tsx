@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { PublicWageCalculatorClient } from "./public-wage-calculator-client";
+import { PublicWageCalculator } from "@workspace/public-wage-calculator";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export const metadata: Metadata = {
@@ -40,7 +40,7 @@ export default function Page() {
       title="Llogaritësi i Pagave Publike"
       description="Llogarisni pagën bruto mujore sipas koeficientit C, vlerës Z dhe shtesave sipas Ligjit për Pagat në sektorin publik."
     >
-      <PublicWageCalculatorClient />
+      <PublicWageCalculator />
     </ToolPage>
   );
 }

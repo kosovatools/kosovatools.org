@@ -4,11 +4,11 @@ import { useMemo, useState } from "react";
 
 import {
   CAR_IMPORT_CONSTANTS,
-  CarImportTaxesInputs,
-  CarImportTaxesResults,
   calculateCarImportTaxes,
   type FuelType,
-} from "@workspace/car-import-taxes";
+} from "./lib/car-import-calculator";
+import { CarImportTaxesInputs } from "./components/car-import-taxes-inputs";
+import { CarImportTaxesResults } from "./components/car-import-taxes-results";
 import {
   Card,
   CardContent,
@@ -17,7 +17,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 
-export function CarImportTaxesClient() {
+export function CarImportTaxesCalculator() {
   const currentYear = useMemo(() => new Date().getFullYear(), []);
 
   const [vehicleYear, setVehicleYear] = useState(currentYear - 4);

@@ -9,7 +9,8 @@ import {
 import { Loader2, Search } from "lucide-react";
 
 import { createDatasetFetcher } from "@workspace/dataset-api";
-import { VictimList, type MemorialVictim } from "@workspace/war-records";
+import { VictimList } from "./components/victim-list";
+import type { MemorialVictim } from "./types";
 import {
   Card,
   CardContent,
@@ -50,7 +51,7 @@ async function fetchChunk(page: number): Promise<VictimChunk> {
   return fetchWarDataset<VictimChunk>(buildChunkFilename(page));
 }
 
-export function WarRecordsClient() {
+export function WarRecordsExplorer() {
   const [isLoadingAll, setIsLoadingAll] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const queryClient = useQueryClient();
@@ -272,8 +273,8 @@ export function WarRecordsClient() {
         onLoadMore={
           canAutoLoadMore
             ? () => {
-                void fetchNextPage();
-              }
+              void fetchNextPage();
+            }
             : undefined
         }
       />

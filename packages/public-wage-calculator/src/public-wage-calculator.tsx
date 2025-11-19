@@ -4,15 +4,25 @@ import { useMemo, useState } from "react";
 
 import {
   COEFFICIENT_CATALOG,
+} from "./data/catalog";
+import {
   DEFAULT_COEFFICIENT_VALUE,
+} from "./config";
+import {
   PublicWageCalculatorInputs,
+} from "./components/public-wage-calculator-inputs";
+import {
   PublicWageCalculatorResults,
+} from "./components/public-wage-calculator-results";
+import {
   calculatePublicWage,
+} from "./lib/public-wage-calculator";
+import {
   type AllowanceFormEntry,
   type PremiumKey,
   type PolicyFormState,
-  type PublicWageCalculationMode,
-} from "@workspace/public-wage-calculator";
+  type CalculationMode as PublicWageCalculationMode,
+} from "./components/types";
 import { formatCount, formatCurrency } from "@workspace/utils";
 import {
   Card,
@@ -50,7 +60,7 @@ function createEmptyAllowance(): AllowanceFormEntry {
   };
 }
 
-export function PublicWageCalculatorClient() {
+export function PublicWageCalculator() {
   const defaultPosition = COEFFICIENT_CATALOG[0] ?? null;
   const defaultSector = defaultPosition?.sector ?? null;
   const defaultPositionId = defaultPosition?.id ?? null;
@@ -172,9 +182,9 @@ export function PublicWageCalculatorClient() {
       prev.map((item) =>
         item.id === id
           ? {
-              ...item,
-              ...updates,
-            }
+            ...item,
+            ...updates,
+          }
           : item,
       ),
     );

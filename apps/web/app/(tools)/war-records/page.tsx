@@ -7,7 +7,7 @@ import {
   WAR_RECORDS_TIMEFRAME_LABEL,
 } from "@workspace/war-records";
 
-import { WarRecordsClient } from "./war-records-client";
+import { WarRecordsExplorer } from "@workspace/war-records";
 import ReactQueryProvider from "@/components/react-query-provider";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
@@ -50,7 +50,7 @@ export default function Page() {
     >
       <WarRecordsOverview />
       <ReactQueryProvider>
-        <WarRecordsClient />
+        <WarRecordsExplorer />
       </ReactQueryProvider>
     </ToolPage>
   );

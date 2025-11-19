@@ -12,12 +12,16 @@ import {
 import {
   WageCalculatorInputs,
   type WageCalculatorInputsProps,
-  WageCalculatorResults,
   type CalculationMode,
+} from "./components/wage-calculator-inputs";
+import {
+  WageCalculatorResults,
+} from "./components/wage-calculator-results";
+import {
   calculateGrossFromNet,
   calculateWageBreakdown,
   type JobType,
-} from "@workspace/payroll";
+} from "./lib/wage-calculator";
 import { formatCurrency, formatPercent } from "@workspace/utils";
 
 const DEFAULT_VALUES: Pick<
@@ -37,7 +41,7 @@ const DEFAULT_VALUES: Pick<
 
 const DEFAULT_MODE: CalculationMode = "grossToNet";
 
-export function WageCalculatorClient() {
+export function WageCalculator() {
   const [mode, setMode] = useState<CalculationMode>(DEFAULT_MODE);
   const [grossPay, setGrossPay] = useState(DEFAULT_VALUES.grossPay);
   const [targetNetPay, setTargetNetPay] = useState(DEFAULT_VALUES.targetNetPay);

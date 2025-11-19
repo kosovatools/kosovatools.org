@@ -8,11 +8,11 @@ import {
 } from "@workspace/kas-data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
-import { FuelBalanceChart } from "./fuel-balance-chart";
-import { TradeChapterStackedChart } from "./trade-chapter-stacked-chart";
-import { ImportPartnersStackedChart } from "./import-partners-stacked-chart";
-import { TourismCountryStackedChart } from "./tourism-country-stacked-chart";
-import { TourismRegionCharts } from "./tourism-region-stacked-chart";
+import { FuelBalanceChart } from "./charts/fuel-balance-chart";
+import { TradeChapterStackedChart } from "./charts/trade-chapter-stacked-chart";
+import { ImportPartnersStackedChart } from "./charts/import-partners-stacked-chart";
+import { TourismCountryStackedChart } from "./charts/tourism-country-stacked-chart";
+import { TourismRegionCharts } from "./charts/tourism-region-stacked-chart";
 
 export function DataInsightsDashboard() {
   return (

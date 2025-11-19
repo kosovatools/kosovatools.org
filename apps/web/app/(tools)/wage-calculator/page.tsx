@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { WageCalculatorClient } from "./wage-calculator-client";
+import { WageCalculator } from "@workspace/payroll";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export const metadata: Metadata = {
@@ -42,7 +42,7 @@ export default function Page() {
       title="Kalkulatori i pagave në Kosovë"
       description="Llogarit pagën neto dhe bruto duke marrë parasysh tatimin progresiv dhe kontributet në Trustin e Kursimeve të Kosovës."
     >
-      <WageCalculatorClient />
+      <WageCalculator />
     </ToolPage>
   );
 }
