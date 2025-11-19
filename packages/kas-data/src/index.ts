@@ -7,6 +7,7 @@ export * from "./datasets/cpi";
 export * from "./datasets/construction-cost-index";
 export * from "./types/cpi";
 export * from "./types/construction-cost-index";
+export * from "./types/trade";
 
 export type {
   Dataset,

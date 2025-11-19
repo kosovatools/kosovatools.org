@@ -36,7 +36,7 @@ import {
   FuelDatasetResult,
 } from "./fetchers/energy";
 import { fetchConstructionCostIndex } from "./fetchers/construction-cost-index";
-import { fetchImportsByPartner } from "./fetchers/imports";
+import { fetchTradePartners } from "./fetchers/trade-partners";
 import { fetchTradeChaptersYearly } from "./fetchers/trade";
 import { fetchTourismCountry, fetchTourismRegion } from "./fetchers/tourism";
 import {
@@ -152,8 +152,8 @@ export async function main(): Promise<void> {
   );
 
   if (partners) {
-    await runTask("Imports by Partner", () =>
-      fetchImportsByPartner(outDir, partners, started),
+    await runTask("Trade Partners", () =>
+      fetchTradePartners(outDir, partners, started),
     );
   }
 

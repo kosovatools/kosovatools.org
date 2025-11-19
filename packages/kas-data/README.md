@@ -38,7 +38,7 @@ git update-index --no-skip-worktree packages/kas-data/data/<file>.json
 
 ```ts
 import {
-  importsByPartner,
+  tradePartners,
   electricityMonthly,
   electricityMeta,
   fuelBalances,
@@ -48,7 +48,7 @@ import {
 
 import { getPeriodFormatter } from "@workspace/utils";
 
-const lastYearImports = importsByPartner.limit(12);
+const lastYearImports = tradePartners.limit(12);
 const partnerStackView = lastYearImports.viewAsStack({
   keyAccessor: (row) => row.partner,
   valueAccessor: (row) => row.imports ?? 0,
@@ -57,7 +57,7 @@ const partnerStackView = lastYearImports.viewAsStack({
   months: 12,
 });
 
-const availablePeriods = importsByPartner.periods({ grouping: "yearly" });
+const availablePeriods = tradePartners.periods({ grouping: "yearly" });
 ```
 
 Dataset views expose `.limit()`, `.slice()`, and `.viewAsStack()` helpers that call

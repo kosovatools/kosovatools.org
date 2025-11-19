@@ -11,4 +11,5 @@ export type TradePartnerRecord = {
   period: string;
   partner: string;
   imports: number | null;
+  exports: number | null;
 };

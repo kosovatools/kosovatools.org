@@ -1,6 +1,6 @@
 "use client";
 import {
-  importsByPartner,
+  tradePartners,
   fuelDataset,
   tradeChaptersYearly,
   vehicleTypesYearly,
@@ -11,7 +11,7 @@ import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-rendere
 
 import { FuelBalanceChart } from "./charts/fuel-balance-chart";
 import { TradeChapterStackedChart } from "./charts/trade-chapter-stacked-chart";
-import { ImportPartnersStackedChart } from "./charts/import-partners-stacked-chart";
+import { TradePartnersStackedChart } from "./charts/trade-partners-stacked-chart";
 import { TourismCountryStackedChart } from "./charts/tourism-country-stacked-chart";
 import { TourismRegionCharts } from "./charts/tourism-region-stacked-chart";
 import { VehicleTypesStackedChart } from "./charts/vehicle-types-stacked-chart";
@@ -31,12 +31,12 @@ export function DataInsightsDashboard() {
           {(dataset) => <TradeChapterStackedChart dataset={dataset} />}
         </DatasetRenderer>
         <DatasetRenderer
-          dataset={importsByPartner}
+          dataset={tradePartners}
           title="Kontributet e partnerëve (shtresuar)"
           description='Partnerët kryesorë tregtarë gjatë vitit të fundit. Rregullo përzgjedhjen ose aktivizo kategorinë "Të tjerët" për të parë partnerët më të vegjël.'
         >
           {(dataset) => (
-            <ImportPartnersStackedChart dataset={dataset} top={6} />
+            <TradePartnersStackedChart dataset={dataset} top={6} />
           )}
         </DatasetRenderer>
       </section>

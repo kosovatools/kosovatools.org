@@ -18,6 +18,12 @@ export const PATHS = {
     "Monthly indicators",
     "07_imp_country.px",
   ],
+  exports_by_partner: [
+    "ASKdata",
+    "External trade",
+    "Monthly indicators",
+    "06_exp_country.px",
+  ],
   fuel_gasoline: ["ASKdata", "Energy", "Monthly indicators", "tab03.px"],
   fuel_diesel: ["ASKdata", "Energy", "Monthly indicators", "tab04.px"],
   fuel_lng: ["ASKdata", "Energy", "Monthly indicators", "tab05.px"],
