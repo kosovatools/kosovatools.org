@@ -1,7 +1,7 @@
 import regionJson from "../../data/kas_tourism_region_monthly.json" with { type: "json" };
 import countryJson from "../../data/kas_tourism_country_monthly.json" with { type: "json" };
 import type { Dataset, DatasetMetaMonthly } from "../types/dataset";
-import { createDataset } from "../utils/dataset";
+import { createDataset, ToDatasetView } from "../utils/dataset";
 
 import type {
   TourismCountryRecord,
@@ -13,20 +13,13 @@ type TourismRegionMeta = DatasetMetaMonthly<
   TourismMetric,
   "region" | "visitor_group"
 >;
+type TourismRegionDataset = Dataset<TourismRegionRecord, TourismRegionMeta>;
+const tourismRegionData = regionJson as TourismRegionDataset;
+export type TourismRegionDatasetView = ToDatasetView<TourismRegionDataset>;
+export const tourismRegion = createDataset(tourismRegionData);
 
 type TourismCountryMeta = DatasetMetaMonthly<TourismMetric, "country">;
-
-export type TourismRegionDataset = Dataset<
-  TourismRegionRecord,
-  TourismRegionMeta
->;
-export type TourismCountryDataset = Dataset<
-  TourismCountryRecord,
-  TourismCountryMeta
->;
-
-const tourismRegionData = regionJson as TourismRegionDataset;
+type TourismCountryDataset = Dataset<TourismCountryRecord, TourismCountryMeta>;
 const tourismCountryData = countryJson as TourismCountryDataset;
-
-export const tourismRegion = createDataset(tourismRegionData);
+export type TourismCountryDatasetView = ToDatasetView<TourismCountryDataset>;
 export const tourismCountry = createDataset(tourismCountryData);

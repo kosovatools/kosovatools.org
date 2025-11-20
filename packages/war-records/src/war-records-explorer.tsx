@@ -8,9 +8,9 @@ import {
 } from "@tanstack/react-query";
 import { Loader2, Search } from "lucide-react";
 
-import { createDatasetFetcher } from "@workspace/dataset-api";
 import { VictimList } from "./components/victim-list";
-import type { MemorialVictim } from "./types";
+import { fetchWarVictimChunk } from "@workspace/dataset-api";
+import type { VictimChunk } from "@workspace/dataset-api";
 import {
   Card,
   CardContent,
@@ -22,33 +22,10 @@ import { Input } from "@workspace/ui/components/input";
 import { Field, FieldContent } from "@workspace/ui/components/field";
 import { Progress } from "@workspace/ui/components/progress";
 
-const DATASET_PREFIX = ["war"] as const;
-const fetchWarDataset = createDatasetFetcher(DATASET_PREFIX, {
-  defaultInit: { cache: "no-store" },
-  label: "war-records",
-});
 const WAR_RECORDS_QUERY_KEY = ["war-records-victims"] as const;
 
-const CHUNK_FILE_PREFIX = "deaths-part";
-
-function buildChunkFilename(page: number): string {
-  const suffix = page.toString().padStart(2, "0");
-  return `${CHUNK_FILE_PREFIX}-${suffix}.json`;
-}
-
-type VictimChunk = {
-  meta: {
-    chunk: number;
-    count: number;
-    total: number;
-    currentPage: number;
-    totalPages: number;
-  };
-  records: MemorialVictim[];
-};
-
 async function fetchChunk(page: number): Promise<VictimChunk> {
-  return fetchWarDataset<VictimChunk>(buildChunkFilename(page));
+  return fetchWarVictimChunk(page);
 }
 
 export function WarRecordsExplorer() {

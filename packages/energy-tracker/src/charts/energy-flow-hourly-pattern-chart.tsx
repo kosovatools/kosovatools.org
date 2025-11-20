@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import type { EnergyFlowHourlyEntry } from "../types";
+import type { EnergyFlowHourlyEntry } from "@workspace/dataset-api";
 import {
   ChartContainer,
   ChartLegend,

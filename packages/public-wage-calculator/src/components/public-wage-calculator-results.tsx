@@ -382,7 +382,7 @@ export function PublicWageCalculatorResults({
                   : null;
                 const baseText = item.source
                   ? ALLOWANCE_TYPE_DESCRIPTIONS[item.source.type]
-                  : "Shtesë e zgjidhur sipas konfigurimit";
+                  : "Shtesë e Zgjedhur sipas konfigurimit";
                 return (
                   <p key={item.label}>
                     {item.label}: {baseText}

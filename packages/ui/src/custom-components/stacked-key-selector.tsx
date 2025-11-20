@@ -2,13 +2,13 @@
 
 import * as React from "react";
 import {
-  Search,
-  Layers,
-  MoreHorizontal,
   Check,
-  X,
-  ListFilter,
   ChevronDown,
+  Layers,
+  ListFilter,
+  MoreHorizontal,
+  Search,
+  X,
 } from "lucide-react";
 
 import { Button } from "@workspace/ui/components/button";
@@ -17,7 +17,6 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@workspace/ui/components/collapsible";
-import { cn } from "@workspace/ui/lib/utils";
 import { SearchableListSection } from "./searchable-list-section";
 
 export type StackedKeyTotal = {
@@ -26,49 +25,246 @@ export type StackedKeyTotal = {
   total: number;
 };
 
+export type StackedKeySelectionState = {
+  selectedKeys: string[];
+  includeOther: boolean;
+  excludedKeys: string[];
+};
+
+type NormalizeStackedKeySelectionArgs = {
+  selection: StackedKeySelectionState;
+  totals: StackedKeyTotal[];
+  topCount: number;
+  initialSelectedKeys?: string[];
+  previousDefaultKeys?: string[];
+};
+
 export type StackedKeySelectorProps = {
   totals: StackedKeyTotal[];
-  selectedKeys: string[];
-  onSelectedKeysChange: (keys: string[]) => void;
   topCount: number;
   selectionLabel: string;
   searchPlaceholder: string;
-  includeOther: boolean;
-  onIncludeOtherChange: (next: boolean) => void;
-  excludedKeys?: string[];
-  onExcludedKeysChange?: (keys: string[]) => void;
-  excludedSearchPlaceholder?: string;
   defaultOpen?: boolean;
+  excludedSearchPlaceholder?: string;
+
+  selection?: StackedKeySelectionState;
+  onSelectionChange?: (selection: StackedKeySelectionState) => void;
+
+  initialSelectedKeys?: string[];
+  initialIncludeOther?: boolean;
+  initialExcludedKeys?: string[];
 };
+
+function areKeyArraysEqual(a: string[], b: string[]): boolean {
+  if (a === b) return true;
+  if (a.length !== b.length) return false;
+  for (let index = 0; index < a.length; index += 1) {
+    if (a[index] !== b[index]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function areSelectionsEqual(
+  a: StackedKeySelectionState,
+  b: StackedKeySelectionState,
+): boolean {
+  return (
+    a.includeOther === b.includeOther &&
+    areKeyArraysEqual(a.selectedKeys, b.selectedKeys) &&
+    areKeyArraysEqual(a.excludedKeys, b.excludedKeys)
+  );
+}
+
+export function getDefaultStackedKeys(
+  totals: StackedKeyTotal[],
+  topCount: number,
+): string[] {
+  if (!totals.length) {
+    return [];
+  }
+  const limit = Math.max(1, Math.min(topCount, totals.length));
+  return totals.slice(0, limit).map((item) => item.key);
+}
+
+export function createInitialStackedKeySelection({
+  totals,
+  topCount,
+  initialSelectedKeys,
+  initialIncludeOther,
+  initialExcludedKeys,
+}: {
+  totals: StackedKeyTotal[];
+  topCount: number;
+  initialSelectedKeys?: string[];
+  initialIncludeOther?: boolean;
+  initialExcludedKeys?: string[];
+}): StackedKeySelectionState {
+  const defaultKeys = getDefaultStackedKeys(totals, topCount);
+  const selectedKeys = initialSelectedKeys?.length
+    ? initialSelectedKeys
+    : defaultKeys;
+  const includeOther =
+    typeof initialIncludeOther === "boolean"
+      ? initialIncludeOther
+      : totals.length > defaultKeys.length;
+  const excludedKeys =
+    initialExcludedKeys?.filter((key) =>
+      totals.some((item) => item.key === key),
+    ) ?? [];
+
+  return { selectedKeys, includeOther, excludedKeys };
+}
+
+export function normalizeStackedKeySelection({
+  selection,
+  totals,
+  topCount,
+  initialSelectedKeys,
+  previousDefaultKeys,
+}: NormalizeStackedKeySelectionArgs): StackedKeySelectionState {
+  const defaultKeys = getDefaultStackedKeys(totals, topCount);
+  const previousDefault = previousDefaultKeys ?? defaultKeys;
+
+  if (!totals.length) {
+    return {
+      selectedKeys: [],
+      includeOther: selection.includeOther,
+      excludedKeys: [],
+    };
+  }
+
+  const validKeys = new Set(totals.map((item) => item.key));
+  const filteredSelected = selection.selectedKeys.filter((key) =>
+    validKeys.has(key),
+  );
+
+  let nextSelected: string[];
+
+  if (filteredSelected.length === selection.selectedKeys.length) {
+    if (filteredSelected.length) {
+      nextSelected = filteredSelected;
+    } else if (initialSelectedKeys?.length) {
+      const fallback = initialSelectedKeys.filter((key) => validKeys.has(key));
+      nextSelected = fallback.length ? fallback : defaultKeys;
+    } else {
+      nextSelected = defaultKeys;
+    }
+  } else {
+    nextSelected = filteredSelected.length ? filteredSelected : defaultKeys;
+  }
+
+  if (
+    !areKeyArraysEqual(previousDefault, defaultKeys) &&
+    areKeyArraysEqual(selection.selectedKeys, previousDefault)
+  ) {
+    nextSelected = defaultKeys;
+  }
+
+  const nextExcluded = selection.excludedKeys.filter((key) =>
+    validKeys.has(key),
+  );
+
+  return {
+    selectedKeys: nextSelected,
+    includeOther: selection.includeOther,
+    excludedKeys: nextExcluded,
+  };
+}
 
 export function StackedKeySelector({
   totals,
-  selectedKeys,
-  onSelectedKeysChange,
   topCount,
   selectionLabel,
   searchPlaceholder,
-  includeOther,
-  onIncludeOtherChange,
-  excludedKeys: controlledExcludedKeys,
-  onExcludedKeysChange,
-  excludedSearchPlaceholder,
   defaultOpen = true,
+  excludedSearchPlaceholder,
+  selection,
+  onSelectionChange,
+  initialSelectedKeys,
+  initialIncludeOther,
+  initialExcludedKeys,
 }: StackedKeySelectorProps) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [otherSearchTerm, setOtherSearchTerm] = React.useState("");
   const selectedListIdPrefix = React.useId();
   const excludedListIdPrefix = React.useId();
 
+  const defaultKeys = React.useMemo(
+    () => getDefaultStackedKeys(totals, topCount),
+    [totals, topCount],
+  );
+  const previousDefaultKeysRef = React.useRef(defaultKeys);
+
+  const [internalSelection, setInternalSelection] =
+    React.useState<StackedKeySelectionState>(() =>
+      createInitialStackedKeySelection({
+        totals,
+        topCount,
+        initialSelectedKeys: selection?.selectedKeys ?? initialSelectedKeys,
+        initialIncludeOther: selection?.includeOther ?? initialIncludeOther,
+        initialExcludedKeys: selection?.excludedKeys ?? initialExcludedKeys,
+      }),
+    );
+
+  const selectionValue = selection ?? internalSelection;
+  const isSelectionControlled = Boolean(selection);
+
+  React.useEffect(() => {
+    const normalized = normalizeStackedKeySelection({
+      selection: selectionValue,
+      totals,
+      topCount,
+      initialSelectedKeys: selection?.selectedKeys ?? initialSelectedKeys,
+      previousDefaultKeys: previousDefaultKeysRef.current,
+    });
+
+    previousDefaultKeysRef.current = defaultKeys;
+    if (!areSelectionsEqual(normalized, selectionValue)) {
+      if (isSelectionControlled) {
+        onSelectionChange?.(normalized);
+      } else {
+        setInternalSelection(normalized);
+        onSelectionChange?.(normalized);
+      }
+    }
+  }, [
+    selectionValue,
+    selection,
+    totals,
+    topCount,
+    defaultKeys,
+    initialSelectedKeys,
+    isSelectionControlled,
+    onSelectionChange,
+  ]);
+
+  const updateSelection = React.useCallback(
+    (
+      updater:
+        | StackedKeySelectionState
+        | ((current: StackedKeySelectionState) => StackedKeySelectionState),
+    ) => {
+      if (isSelectionControlled) {
+        const next =
+          typeof updater === "function" ? updater(selectionValue) : updater;
+        onSelectionChange?.(next);
+        return;
+      }
+      setInternalSelection((current) => {
+        const next = typeof updater === "function" ? updater(current) : updater;
+        onSelectionChange?.(next);
+        return next;
+      });
+    },
+    [isSelectionControlled, selectionValue, onSelectionChange],
+  );
+
   const normalizedSearch = searchTerm.trim().toLowerCase();
   const normalizedOtherSearch = otherSearchTerm.trim().toLowerCase();
-  const otherDisabled = !includeOther;
-  const excludedKeys = React.useMemo(
-    () => controlledExcludedKeys ?? [],
-    [controlledExcludedKeys],
-  );
+  const excludedKeys = selectionValue.excludedKeys;
   const excludedSearchLabel = excludedSearchPlaceholder ?? searchPlaceholder;
-  const toggleOthersButtonLabel = includeOther ? "Pastro" : "Të gjitha";
 
   const totalsWithValues = React.useMemo(
     () => totals.filter((item) => item.total !== 0),
@@ -88,36 +284,45 @@ export function StackedKeySelector({
 
   const handleToggleKey = React.useCallback(
     (key: string) => {
-      const isSelected = selectedKeys.includes(key);
-      const next = isSelected
-        ? selectedKeys.filter((item) => item !== key)
-        : [...selectedKeys, key];
-      if (!isSelected && excludedKeys.includes(key)) {
-        onExcludedKeysChange?.(excludedKeys.filter((item) => item !== key));
-      }
-      onSelectedKeysChange(next.length ? next : [key]);
+      updateSelection((current) => {
+        const isSelected = current.selectedKeys.includes(key);
+        let nextSelected = isSelected
+          ? current.selectedKeys.filter((item) => item !== key)
+          : [...current.selectedKeys, key];
+        if (!nextSelected.length) {
+          nextSelected = [key];
+        }
+        const nextExcluded = isSelected
+          ? current.excludedKeys
+          : current.excludedKeys.filter((item) => item !== key);
+        return {
+          ...current,
+          selectedKeys: nextSelected,
+          excludedKeys: nextExcluded,
+        };
+      });
     },
-    [selectedKeys, onSelectedKeysChange, excludedKeys, onExcludedKeysChange],
+    [updateSelection],
   );
 
   const handleSelectTop = React.useCallback(() => {
     const source = normalizedSearch ? filteredTotals : totalsWithValues;
     const next = source.slice(0, Math.max(1, topCount)).map((item) => item.key);
     if (next.length) {
-      onSelectedKeysChange(next);
+      updateSelection((current) => ({ ...current, selectedKeys: next }));
     }
   }, [
     filteredTotals,
     normalizedSearch,
-    onSelectedKeysChange,
     topCount,
     totalsWithValues,
+    updateSelection,
   ]);
 
   const others = React.useMemo(() => {
     const excludedSet = new Set(excludedKeys);
     const base = totalsWithValues.filter(
-      (item) => !selectedKeys.includes(item.key),
+      (item) => !selectionValue.selectedKeys.includes(item.key),
     );
     base.sort((a, b) => {
       const aExcluded = excludedSet.has(a.key);
@@ -126,7 +331,7 @@ export function StackedKeySelector({
       return aExcluded ? -1 : 1;
     });
     return base;
-  }, [totalsWithValues, selectedKeys, excludedKeys]);
+  }, [totalsWithValues, selectionValue.selectedKeys, excludedKeys]);
 
   const visibleOthers = React.useMemo(() => {
     if (!normalizedOtherSearch) {
@@ -139,35 +344,47 @@ export function StackedKeySelector({
 
   const handleExcludedStateChange = React.useCallback(
     (key: string, included: boolean) => {
-      if (otherDisabled) {
-        return;
-      }
-      const isExcluded = excludedKeys.includes(key);
-      if (!included && !isExcluded) {
-        onExcludedKeysChange?.([...excludedKeys, key]);
-        return;
-      }
-      if (included && isExcluded) {
-        onExcludedKeysChange?.(excludedKeys.filter((item) => item !== key));
-      }
+      updateSelection((current) => {
+        const isExcluded = current.excludedKeys.includes(key);
+        if (!included && !isExcluded) {
+          return { ...current, excludedKeys: [...current.excludedKeys, key] };
+        }
+        if (included && isExcluded) {
+          return {
+            ...current,
+            excludedKeys: current.excludedKeys.filter((item) => item !== key),
+          };
+        }
+        return current;
+      });
     },
-    [otherDisabled, excludedKeys, onExcludedKeysChange],
+    [updateSelection],
   );
 
-  const handleToggleOthers = React.useCallback(() => {
+  const handleIncludeAllOthers = React.useCallback(() => {
     setOtherSearchTerm("");
-    if (includeOther) {
-      onIncludeOtherChange(false);
-      onExcludedKeysChange?.([]);
-      return;
-    }
-    onIncludeOtherChange(true);
-  }, [includeOther, onIncludeOtherChange, onExcludedKeysChange]);
+    updateSelection((current) => ({
+      ...current,
+      includeOther: true,
+      excludedKeys: [],
+    }));
+  }, [updateSelection]);
+
+  const handleClearOthers = React.useCallback(() => {
+    setOtherSearchTerm("");
+    updateSelection((current) => ({
+      ...current,
+      includeOther: false,
+      excludedKeys: totalsWithValues
+        .filter((item) => !current.selectedKeys.includes(item.key))
+        .map((item) => item.key),
+    }));
+  }, [totalsWithValues, updateSelection]);
 
   return (
     <Collapsible
       defaultOpen={defaultOpen}
-      className="flex min-w-0 flex-col gap-6"
+      className="flex min-w-0 flex-col gap-3"
     >
       <div className="flex items-center justify-between">
         <CollapsibleTrigger className="group flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground/90 hover:text-foreground outline-none">
@@ -176,7 +393,7 @@ export function StackedKeySelector({
         </CollapsibleTrigger>
         <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 px-2.5 py-1 rounded-full border border-border/50">
           <span className="font-medium text-foreground">
-            {selectedKeys.length}
+            {selectionValue.selectedKeys.length}
           </span>
           <span>të zgjedhura</span>
           <span className="text-border">|</span>
@@ -185,7 +402,7 @@ export function StackedKeySelector({
       </div>
 
       <CollapsibleContent className="data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down overflow-hidden">
-        <div className="grid gap-6 md:grid-cols-2 md:items-start pt-2">
+        <div className="grid gap-3 md:grid-cols-2 md:items-start">
           <SearchableListSection
             icon={<Layers className="size-4 text-primary" />}
             title="Grupime"
@@ -213,7 +430,7 @@ export function StackedKeySelector({
             }
             items={filteredTotals}
             getItemConfig={(item) => {
-              const checked = selectedKeys.includes(item.key);
+              const checked = selectionValue.selectedKeys.includes(item.key);
               const checkboxId = `${selectedListIdPrefix}-${item.key}`;
               return {
                 key: item.key,
@@ -232,45 +449,33 @@ export function StackedKeySelector({
             searchValue={otherSearchTerm}
             onSearchValueChange={setOtherSearchTerm}
             searchPlaceholder={excludedSearchLabel}
-            searchDisabled={otherDisabled}
             action={
-              <Button
-                variant={includeOther ? "secondary" : "outline"}
-                size="sm"
-                onClick={handleToggleOthers}
-                className={cn(
-                  "h-7 gap-1.5 px-2.5 text-[11px] font-medium transition-all",
-                  includeOther
-                    ? "bg-primary/10 text-primary hover:bg-primary/20 border-primary/20"
-                    : "text-muted-foreground hover:text-foreground",
-                )}
-              >
-                {includeOther ? (
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleClearOthers}
+                  className="h-7 gap-1.5 px-2.5 text-[11px] font-medium text-muted-foreground hover:text-foreground"
+                >
                   <X className="size-3.5" />
-                ) : (
+                  Pastro
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleIncludeAllOthers}
+                  className="h-7 gap-1.5 px-2.5 text-[11px] font-medium bg-primary/10 text-primary hover:bg-primary/20 border-primary/20"
+                >
                   <Check className="size-3.5" />
-                )}
-                {toggleOthersButtonLabel}
-              </Button>
+                  Të gjitha
+                </Button>
+              </div>
             }
-            className={cn(
-              "transition-opacity duration-300",
-              otherDisabled && "opacity-80",
-            )}
-            listProps={{ role: "listbox", "aria-disabled": otherDisabled }}
+            listProps={{ role: "listbox" }}
             emptyState={
               <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-sm text-muted-foreground">
-                {otherDisabled ? (
-                  <>
-                    <Layers className="size-8 opacity-20" />
-                    <p>Aktivizo "Të gjitha" për të parë listën.</p>
-                  </>
-                ) : (
-                  <>
-                    <Search className="size-8 opacity-20" />
-                    <p>Nuk u gjet asnjë rezultat.</p>
-                  </>
-                )}
+                <Search className="size-8 opacity-20" />
+                <p>Nuk u gjet asnjë rezultat.</p>
               </div>
             }
             items={visibleOthers}
@@ -283,11 +488,6 @@ export function StackedKeySelector({
                 checkboxId,
                 label: item.label,
                 checked: isIncluded,
-                disabled: otherDisabled,
-                ariaDisabled: otherDisabled,
-                className: otherDisabled
-                  ? "cursor-not-allowed opacity-50"
-                  : undefined,
                 onCheckedChange: (checked) =>
                   handleExcludedStateChange(item.key, checked === true),
               };

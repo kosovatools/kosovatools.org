@@ -13,7 +13,7 @@ import type {
   CitiesDatasetView,
   CityCategoryYearlyDatasetView,
   MonthlyCategoryCityDatasetView,
-} from "./types";
+} from "@workspace/dataset-api";
 
 import { CategoriesOverYearsChart } from "./charts/categories-over-years-chart";
 import { MonthlyCategoryStackedChart } from "./charts/monthly-category-stacked-chart";
@@ -137,7 +137,7 @@ function TopCategoryByCitySection({
         </p>
       }
       title="Kategoritë dominuese sipas komunave"
-      description="Zgjidh një komunë për të parë cilat kategori biznesi kanë dominuar qarkullimin në vite. Grafiku i grumbulluar tregon shpërndarjen e kategorive sipas qarkullimit të raportuar."
+      description="Zgjedh një komunë për të parë cilat kategori biznesi kanë dominuar qarkullimin në vite. Grafiku i grumbulluar tregon shpërndarjen e kategorive kryesore sipas qarkullimit të raportuar."
     >
       {(dataset) => <TopCategoryByCityStackedChart dataset={dataset} />}
     </DatasetRenderer>

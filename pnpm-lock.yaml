@@ -313,6 +313,10 @@ importers:
         version: 5.9.3
 
   packages/dataset-api:
+    dependencies:
+      '@workspace/kas-data':
+        specifier: workspace:*
+        version: link:../kas-data
     devDependencies:
       '@workspace/eslint-config':
         specifier: workspace:*

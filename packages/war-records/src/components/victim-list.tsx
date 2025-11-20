@@ -8,7 +8,7 @@ import { cn } from "@workspace/ui/lib/utils";
 import { formatDate } from "@workspace/utils";
 
 import { formatLabel } from "../lib/format";
-import type { MemorialVictim } from "../types";
+import type { MemorialVictim } from "@workspace/dataset-api";
 
 const FALLBACK_NAME = "Emër i panjohur";
 

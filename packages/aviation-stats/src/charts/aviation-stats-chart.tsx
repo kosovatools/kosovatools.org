@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { Area, AreaChart, CartesianGrid, Line, XAxis, YAxis } from "recharts";
 
-import { AirTransportDataset, ToDatasetView } from "@workspace/kas-data";
+import { AirTransportDatasetView } from "@workspace/kas-data";
 import {
   formatCount,
   getPeriodFormatter,
@@ -44,7 +44,7 @@ export function AviationStatsChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: ToDatasetView<AirTransportDataset>;
+  dataset: AirTransportDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(

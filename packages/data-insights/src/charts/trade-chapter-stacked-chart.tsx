@@ -20,23 +20,21 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
-import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
+import {
+  StackedKeySelector,
+  createInitialStackedKeySelection,
+  type StackedKeySelectionState,
+} from "@workspace/ui/custom-components/stacked-key-selector";
 import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import {
-  type ToDatasetView,
-  type TradeChaptersMonthlyDataset,
-} from "@workspace/kas-data";
-
-type TradeChaptersDatasetView = ToDatasetView<TradeChaptersMonthlyDataset>;
+import { type TradeChaptersMonthlyDatasetView } from "@workspace/kas-data";
 
 type TradeChapterMetric =
-  TradeChaptersMonthlyDataset["meta"]["metrics"][number];
+  TradeChaptersMonthlyDatasetView["meta"]["metrics"][number];
 
 const DEFAULT_TOP_CHAPTERS = 6;
 const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
@@ -46,7 +44,7 @@ export function TradeChapterStackedChart({
   top = DEFAULT_TOP_CHAPTERS,
   timelineEvents,
 }: {
-  dataset: TradeChaptersDatasetView;
+  dataset: TradeChaptersMonthlyDatasetView;
   top?: number;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
@@ -76,18 +74,14 @@ export function TradeChapterStackedChart({
     [datasetView, metricKey],
   );
 
-  const {
-    selectedKeys,
-    includeOther,
-    excludedKeys,
-    setExcludedKeys,
-    onSelectedKeysChange,
-    onIncludeOtherChange,
-  } = useStackedKeySelection({
-    totals,
-    topCount: top,
-    initialIncludeOther: true,
-  });
+  const [selection, setSelection] = React.useState<StackedKeySelectionState>(
+    () =>
+      createInitialStackedKeySelection({
+        totals,
+        topCount: top,
+        initialIncludeOther: true,
+      }),
+  );
 
   const stackResult = React.useMemo(() => {
     if (!datasetView.records.length) {
@@ -98,19 +92,12 @@ export function TradeChapterStackedChart({
       keyAccessor: (record) => record.chapter,
       valueAccessor: (record) => record[metricKey],
       dimension: "chapter",
-      selectedKeys,
-      excludedKeys,
-      includeOther,
+      selectedKeys: selection.selectedKeys,
+      excludedKeys: selection.excludedKeys,
+      includeOther: selection.includeOther,
       periodGrouping,
     });
-  }, [
-    datasetView,
-    metricKey,
-    selectedKeys,
-    excludedKeys,
-    includeOther,
-    periodGrouping,
-  ]);
+  }, [datasetView, metricKey, selection, periodGrouping]);
 
   const { chartKeys, chartData, chartConfig } = React.useMemo(
     () => buildStackedChartData(stackResult),
@@ -146,15 +133,11 @@ export function TradeChapterStackedChart({
       </div>
       <StackedKeySelector
         totals={totals}
-        selectedKeys={selectedKeys}
-        onSelectedKeysChange={onSelectedKeysChange}
+        selection={selection}
+        onSelectionChange={setSelection}
         topCount={top}
-        selectionLabel="Zgjidh kapitujt"
+        selectionLabel="Zgjedh kapitujt"
         searchPlaceholder="Kërko kapitujt..."
-        includeOther={includeOther}
-        onIncludeOtherChange={onIncludeOtherChange}
-        excludedKeys={excludedKeys}
-        onExcludedKeysChange={setExcludedKeys}
       />
       <ChartContainer
         config={chartConfig}

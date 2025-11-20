@@ -4,10 +4,4 @@ export {
   loadDailyDataset,
   loadMonthlyDataset,
 } from "./flow-service";
-export type {
-  EnergyDailyDataset,
-  EnergyDailyDatasetView,
-  EnergyMonthlyDataset,
-  EnergyMonthlyDatasetView,
-} from "./types";
 export { EnergyImportAndProduction } from "./energy-static";

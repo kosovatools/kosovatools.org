@@ -10,7 +10,7 @@ import {
 import type {
   BuildingPermitRecord,
   BuildingPermitsYearSummary,
-} from "../../types";
+} from "@workspace/dataset-api";
 type PermitRecordsTableProps = {
   records: BuildingPermitRecord[];
   hasFilters: boolean;

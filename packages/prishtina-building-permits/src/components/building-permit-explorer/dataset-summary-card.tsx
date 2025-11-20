@@ -21,7 +21,7 @@ import type {
   BuildingPermitsIndex,
   BuildingPermitsYearDataset,
   BuildingPermitsYearSummary,
-} from "../../types";
+} from "@workspace/dataset-api";
 import { sumRecords } from "./helpers";
 
 type DatasetSummaryCardProps = {
@@ -62,7 +62,7 @@ export function DatasetSummaryCard({
         </div>
         <div className="w-full sm:w-40">
           <NativeSelect
-            aria-label="Zgjidh vitin"
+            aria-label="Zgjedh vitin"
             value={String(selectedSummary.year)}
             onChange={(event) => onYearChange(Number(event.target.value))}
           >

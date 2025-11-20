@@ -17,7 +17,10 @@ import {
   OptionSelector,
   type SelectorOptionDefinition,
 } from "@workspace/ui/custom-components/option-selector";
-import type { TurnoverCityRecord, TurnoverMetric } from "../types";
+import type {
+  TurnoverCityRecord,
+  TurnoverMetric,
+} from "@workspace/dataset-api";
 import { formatCount, formatCurrencyCompact } from "@workspace/utils";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 

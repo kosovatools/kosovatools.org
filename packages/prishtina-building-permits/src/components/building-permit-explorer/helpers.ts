@@ -1,4 +1,4 @@
-import type { BuildingPermitRecord } from "../../types";
+import type { BuildingPermitRecord } from "@workspace/dataset-api";
 
 export const collator = new Intl.Collator("sq");
 

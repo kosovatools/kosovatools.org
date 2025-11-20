@@ -1,4 +1,4 @@
-import type { DrugPriceSnapshot } from "../types";
+import type { DrugPriceSnapshot } from "@workspace/dataset-api";
 import { formatCurrency, formatDate } from "@workspace/utils";
 type VersionHistoryTableProps = {
   entries: DrugPriceSnapshot[];

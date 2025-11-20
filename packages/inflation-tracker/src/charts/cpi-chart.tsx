@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import { CpiDataset, ToDatasetView } from "@workspace/kas-data";
+import { CpiDatasetView } from "@workspace/kas-data";
 import {
   formatNumber,
   formatSignedPercent,
@@ -53,7 +53,7 @@ export function CpiChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: ToDatasetView<CpiDataset>;
+  dataset: CpiDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(
@@ -66,7 +66,7 @@ export function CpiChart({
   const [timeRange, setTimeRange] =
     useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
   const [metric, setMetric] =
-    useState<CpiDataset["meta"]["metrics"][number]>("index");
+    useState<CpiDatasetView["meta"]["metrics"][number]>("index");
   const [selectedGroups, setSelectedGroups] = useState<string[]>([
     CPI_DEFAULT_GROUP_CODE,
   ]);

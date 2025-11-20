@@ -24,7 +24,7 @@ import {
 import type {
   BuildingPermitsYearDataset,
   BuildingPermitsYearSummary,
-} from "../../types";
+} from "@workspace/dataset-api";
 import { collator, sumRecords, toOptionLabel } from "./helpers";
 import { PermitRecordsTable } from "./permit-records-table";
 

@@ -1,9 +1,7 @@
 import type {
-  Dataset,
   DatasetMeta,
   DatasetMetaBaseExtras,
   DatasetMetaMonthly,
-  DatasetView,
 } from "@workspace/kas-data";
 
 export type EnergyMonthlyMetric = "import" | "export" | "net";
@@ -22,16 +20,6 @@ export type EnergyMonthlyDatasetMeta = DatasetMetaMonthly<
   "neighbor"
 >;
 
-export type EnergyMonthlyDataset = Dataset<
-  EnergyMonthlyRecord,
-  EnergyMonthlyDatasetMeta
->;
-
-export type EnergyMonthlyDatasetView = DatasetView<
-  EnergyMonthlyRecord,
-  EnergyMonthlyDatasetMeta
->;
-
 export type EnergyDailyRecord = {
   period: string;
   import: number;
@@ -44,16 +32,6 @@ export type EnergyDailyDatasetMeta = DatasetMeta<
   never,
   "daily",
   DatasetMetaBaseExtras
->;
-
-export type EnergyDailyDataset = Dataset<
-  EnergyDailyRecord,
-  EnergyDailyDatasetMeta
->;
-
-export type EnergyDailyDatasetView = DatasetView<
-  EnergyDailyRecord,
-  EnergyDailyDatasetMeta
 >;
 
 export type EnergyFlowTotals = {

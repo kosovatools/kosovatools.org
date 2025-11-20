@@ -88,7 +88,7 @@ export function SearchableListSection<Item>({
       {/* List */}
       <ul
         className={cn(
-          "flex h-[280px] flex-col gap-1 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent",
+          "flex h-[200px] flex-col gap-1 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent",
           listClassName,
         )}
         {...restListProps}

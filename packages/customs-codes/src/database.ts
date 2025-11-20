@@ -1,23 +1,17 @@
 import Dexie, { type Table } from "dexie";
 import MiniSearch from "minisearch";
-import { createDatasetFetcher } from "@workspace/dataset-api";
+import { loadCustomsTariffs } from "@workspace/dataset-api";
 
 import type {
   CustomsFlatRow,
   CustomsRecord,
   CustomsTreeNode,
   InitializationProgress,
-} from "./types";
+} from "@workspace/dataset-api";
 
 const MINISEARCH_HIGHLIGHT_TEMPLATE =
   '<span class="bg-amber-200 text-gray-900 rounded px-0.5">$&</span>';
 const INDEX_CHUNK_SIZE = 2_000;
-const DATASET_PREFIX = ["customs"] as const;
-const fetchCustomsDataset = createDatasetFetcher(DATASET_PREFIX, {
-  label: "customs-codes",
-  defaultInit: { cache: "no-cache", mode: "cors" },
-});
-const CUSTOMS_TARRIFS_PATH = "tarrifs.json";
 
 function parseValidFromTimestamp(
   value: string | null | undefined,
@@ -111,8 +105,7 @@ export class CustomsDataService {
         message: "Duke ngarkuar të dhënat e tarifave...",
       });
 
-      const data =
-        await fetchCustomsDataset<CustomsRecord[]>(CUSTOMS_TARRIFS_PATH);
+      const data = await loadCustomsTariffs();
 
       const total = data.length;
       if (total === 0) {

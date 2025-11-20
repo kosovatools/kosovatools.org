@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { FuelDataset, ToDatasetView } from "@workspace/kas-data";
+import { FuelDatasetView } from "@workspace/kas-data";
 import {
   formatCount,
   getPeriodFormatter,
@@ -41,7 +41,7 @@ export function FuelBalanceChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: ToDatasetView<FuelDataset>;
+  dataset: FuelDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
@@ -50,7 +50,7 @@ export function FuelBalanceChart({
   const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
 
   const [metricKey, setMetricKey] =
-    React.useState<FuelDataset["meta"]["metrics"][number]>("import");
+    React.useState<FuelDatasetView["meta"]["metrics"][number]>("import");
   const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
     dataset.meta.time.granularity,
   );

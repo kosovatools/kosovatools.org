@@ -22,10 +22,9 @@ import { Separator } from "@workspace/ui/components/separator";
 import { cn } from "@workspace/ui/lib/utils";
 import { formatCount } from "@workspace/utils";
 
-import { crimeStats, findBreakdownCount } from "../data";
+import { crimeStats, findBreakdownCount, type CrimeStats } from "../data";
 import { formatLabel } from "../lib/format";
 import { AgeDistributionPlot } from "./age-distribution-plot";
-import type { CrimeStats } from "../types";
 
 // --- Helper Components for cleaner UI ---
 

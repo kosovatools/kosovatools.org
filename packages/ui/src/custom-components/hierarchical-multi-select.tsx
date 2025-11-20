@@ -256,7 +256,7 @@ export function HierarchicalMultiSelect({
                     updateSelection(node.id, value === true)
                   }
                   className="h-3.5 w-3.5"
-                  aria-label={`Zgjidh ${node.label}`}
+                  aria-label={`Zgjedh ${node.label}`}
                 />
                 <span className="truncate font-medium whitespace-nowrap">
                   {node.label}

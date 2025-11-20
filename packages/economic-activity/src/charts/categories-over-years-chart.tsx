@@ -12,13 +12,14 @@ import {
 } from "@workspace/ui/components/chart";
 import {
   StackedKeySelector,
+  createInitialStackedKeySelection,
+  type StackedKeySelectionState,
   type StackedKeyTotal,
 } from "@workspace/ui/custom-components/stacked-key-selector";
 import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
   formatCurrencyCompact,
@@ -29,7 +30,10 @@ import {
   type TimeRangeOption,
 } from "@workspace/utils";
 
-import type { CategoriesDatasetView, TurnoverCategoryRecord } from "../types";
+import type {
+  CategoriesDatasetView,
+  TurnoverCategoryRecord,
+} from "@workspace/dataset-api";
 import { CATEGORY_STACK_TOP, OTHER_LABEL } from "./constants";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
@@ -77,36 +81,25 @@ export function CategoriesOverYearsChart({
       }),
     [datasetView, stackConfig, periodGrouping],
   );
-  const {
-    selectedKeys,
-    includeOther,
-    excludedKeys,
-    setExcludedKeys,
-    onSelectedKeysChange,
-    onIncludeOtherChange,
-  } = useStackedKeySelection({
-    totals,
-    topCount: CATEGORY_STACK_TOP,
-  });
+  const [selection, setSelection] = React.useState<StackedKeySelectionState>(
+    () =>
+      createInitialStackedKeySelection({
+        totals,
+        topCount: CATEGORY_STACK_TOP,
+      }),
+  );
 
   const stackResult = React.useMemo(
     () =>
       datasetView.viewAsStack({
         ...stackConfig,
         top: CATEGORY_STACK_TOP,
-        selectedKeys,
-        includeOther,
-        excludedKeys,
+        selectedKeys: selection.selectedKeys,
+        includeOther: selection.includeOther,
+        excludedKeys: selection.excludedKeys,
         periodGrouping,
       }),
-    [
-      datasetView,
-      stackConfig,
-      selectedKeys,
-      includeOther,
-      excludedKeys,
-      periodGrouping,
-    ],
+    [datasetView, stackConfig, selection, periodGrouping],
   );
   const { chartKeys, chartData, chartConfig } = React.useMemo(
     () => buildStackedChartData(stackResult),
@@ -146,15 +139,11 @@ export function CategoriesOverYearsChart({
       {totals.length > 0 ? (
         <StackedKeySelector
           totals={totals}
-          selectedKeys={selectedKeys}
-          onSelectedKeysChange={onSelectedKeysChange}
+          selection={selection}
+          onSelectionChange={setSelection}
           topCount={CATEGORY_STACK_TOP}
-          selectionLabel="Zgjidh kategoritë"
+          selectionLabel="Zgjedh kategoritë"
           searchPlaceholder="Kërko kategoritë..."
-          includeOther={includeOther}
-          onIncludeOtherChange={onIncludeOtherChange}
-          excludedKeys={excludedKeys}
-          onExcludedKeysChange={setExcludedKeys}
         />
       ) : null}
       <ChartContainer

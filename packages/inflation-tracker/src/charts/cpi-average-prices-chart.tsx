@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import { CpiAveragePriceDataset, ToDatasetView } from "@workspace/kas-data";
+import { CpiAveragePriceDatasetView } from "@workspace/kas-data";
 import {
   formatCurrency,
   getPeriodFormatter,
@@ -30,7 +30,7 @@ const MAX_SELECTED_ARTICLES = 10;
 const DEFAULT_VISIBLE_ARTICLES = 3;
 
 type Props = {
-  dataset: ToDatasetView<CpiAveragePriceDataset>;
+  dataset: CpiAveragePriceDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 };
 
@@ -122,7 +122,7 @@ export function CpiAveragePricesChart({ dataset, timelineEvents }: Props) {
         maxSelectedPlaceholder="Maksimumi i arritur"
         searchPlaceholder="Kërko artikull..."
         emptyMessage="Asnjë artikull nuk përputhet."
-        emptySelectionMessage="Zgjidh të paktën një artikull për të shfaqur grafikun."
+        emptySelectionMessage="Zgjedh të paktën një artikull për të shfaqur grafikun."
       />
       <div className="space-y-2">
         <OptionSelector

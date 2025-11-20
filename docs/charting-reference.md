@@ -39,7 +39,7 @@ This document captures the pattern used in `apps/web/app/(tools)/aviation-stats/
 
 ## 6. Stacked Series & Key Selection
 
-- Derive totals for stacked selectors with `datasetView.summarizeStack({ keyAccessor, valueAccessor, dimension })` and pass the result into `useStackedKeySelection` to manage `selectedKeys`, `includeOther`, and `excludedKeys`.
+- Derive totals for stacked selectors with `datasetView.summarizeStack({ keyAccessor, valueAccessor, dimension })` and render `<StackedKeySelector>` with `selection`/`onSelectionChange` (seed with `createInitialStackedKeySelection`) to manage `selectedKeys`, `includeOther`, and `excludedKeys`.
 - Build the chart series via `datasetView.viewAsStack({ keyAccessor, valueAccessor, dimension, selectedKeys, excludedKeys, includeOther, periodGrouping })`.
 - Feed the stack result through `buildStackedChartData` (see `packages/data-insights/src/lib/stacked-chart.ts`) to get `{ chartKeys, chartData, chartConfig }` and avoid hand-written color assignments.
 - Keep the `chartData` rows as `{ period, ...metrics }` and format axis labels via `XAxis tickFormatter` so we never duplicate `periodLabel` copies inside the dataset.

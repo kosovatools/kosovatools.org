@@ -1,4 +1,7 @@
-import type { DrugPriceRecord, DrugReferenceCountry } from "./types";
+import type {
+  DrugPriceRecord,
+  DrugReferenceCountry,
+} from "@workspace/dataset-api";
 
 export const PAGE_SIZE = 25;
 

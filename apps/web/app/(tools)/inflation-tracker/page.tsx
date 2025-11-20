@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import { InflationTracker } from "@workspace/inflation-tracker";
 
 export const metadata: Metadata = {
-  title: "Indeksi i Çmimeve për Konsumatorin – Vizualizime mujore",
+  title: "Inflacioni në Kosovë – IHÇK, çmimet mesatare dhe kostot e ndërtimit",
   description:
-    "Eksploro indeksin e çmimeve (2015 = 100) dhe ndryshimet mujore të IHÇK-së sipas grupeve COICOP në Kosovë.",
+    "Monitoro indeksin e çmimeve të konsumatorit (2015 = 100), ndryshimet mujore të IHÇK-së sipas COICOP, çmimet mesatare vjetore dhe indeksin e kostos së ndërtimit.",
   keywords: [
     "inflacioni kosovë",
     "ihçk",
@@ -19,17 +19,19 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "/inflation-tracker",
-    title: "Indeksi i Çmimeve për Konsumatorin – Vizualizime mujore",
+    title:
+      "Inflacioni në Kosovë – IHÇK, çmimet mesatare dhe kostot e ndërtimit",
     description:
-      "Grafikë interaktive për indeksin e çmimeve dhe ndryshimet mujore sipas grupeve COICOP në Kosovë.",
+      "Grafikë interaktive për IHÇK-në mujore, shportën e çmimeve mesatare dhe indeksin tremujor të kostos së ndërtimit në Kosovë.",
     siteName: "Kosova Tools",
     locale: "sq_AL",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Indeksi i Çmimeve për Konsumatorin – Vizualizime mujore",
+    title:
+      "Inflacioni në Kosovë – IHÇK, çmimet mesatare dhe kostot e ndërtimit",
     description:
-      "Analizo trendet mujore të inflacionit dhe grupeve COICOP për Kosovën.",
+      "Analizo IHÇK-në mujore, çmimet mesatare vjetore dhe kostot e ndërtimit për Kosovën.",
   },
 };
 
@@ -38,8 +40,8 @@ import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 export default function InflationTrackerPage() {
   return (
     <ToolPage
-      title="Gjurmuesi i inflacionit në Kosovë"
-      description="Vëzhgo indeksin e çmimeve të konsumatorit (2015 = 100) ose ndryshimet mujore të IHÇK-së sipas grupeve COICOP për të kuptuar trendet kryesore të inflacionit."
+      title="Gjurmuesi i inflacionit dhe kostove në Kosovë"
+      description="Vëzhgo IHÇK-në (2015 = 100) me ndryshimet mujore sipas COICOP, krahaso çmimet mesatare vjetore të produkteve dhe analizo indeksin e kostos së ndërtimit."
     >
       <InflationTracker />
     </ToolPage>

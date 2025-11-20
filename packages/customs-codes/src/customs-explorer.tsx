@@ -10,7 +10,10 @@ import {
 } from "@workspace/ui/components/alert";
 import { AlertTriangle } from "lucide-react";
 import { CustomsDataService } from "./database";
-import type { CustomsTreeNode, InitializationProgress } from "./types";
+import type {
+  CustomsTreeNode,
+  InitializationProgress,
+} from "@workspace/dataset-api";
 import { formatDate } from "@workspace/utils";
 
 import { createCustomsColumns } from "./customs-table/columns";

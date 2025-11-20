@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Vegla qytetare për të dhëna, tregti dhe financa në Kosovë",
     description:
-      "Kalkulatorë dhe pultë të dhënash në shqip që mbështeten në statistika zyrtare të Kosovës.",
+      "Kalkulatorë dhe grafe të dhënash në shqip që mbështeten në statistika zyrtare të Kosovës.",
   },
 };
 
@@ -90,10 +90,10 @@ const tools: ToolCard[] = [
     category: "Tregtia & dogana",
   },
   {
-    name: "Analiza të të dhënave",
+    name: "Statistika të përgjithshme",
     href: "/data-insights",
     description:
-      "Pultë vizuale nga të dhënat e ASK për të kuptuar demografinë, punësimin dhe çmimet.",
+      "Grafe vizuale nga ASK për tregtinë e jashtme, karburantet, mjetet motorike dhe turizmin.",
     cta: "Shiko grafet",
     icon: BarChart3,
     category: "Statistika",
@@ -102,7 +102,7 @@ const tools: ToolCard[] = [
     name: "Aktiviteti ekonomik",
     href: "/economic-activity",
     description:
-      "Qarkullimi vjetor i bizneseve të Kosovës sipas kategorive ekonomike dhe komunave, i bazuar në të dhënat e Ministria e Financave.",
+      "Qarkullimi vjetor i bizneseve të Kosovës sipas kategorive ekonomike dhe komunave, i bazuar në të dhënat e Ministrisë së Financave.",
     cta: "Shiko qarkullimin",
     icon: LineChart,
     category: "Statistika",
@@ -111,7 +111,7 @@ const tools: ToolCard[] = [
     name: "Indeksi i çmimeve",
     href: "/inflation-tracker",
     description:
-      "Monitoro inflacionin e Kosovës sipas klasifikimit COICOP dhe krahaso grupet kryesore të shpenzimeve.",
+      "Monitoro IHÇK-në mujore, çmimet mesatare vjetore dhe indeksin e kostos së ndërtimit për Kosovën.",
     cta: "Analizo çmimet",
     icon: TrendingUp,
     category: "Statistika",
@@ -217,12 +217,15 @@ export default function Page() {
           </span>
           <div className="space-y-6 lg:max-w-2xl">
             <h1 className="text-balance text-4xl font-semibold leading-tight sm:text-5xl xl:text-6xl">
-              Vegla praktike për banorët e Kosovës, sipërmarrësit dhe hartuesit
-              e politikave.
+              Kthe të dhënat publike në vendime
             </h1>
             <p className="text-balance text-muted-foreground text-sm sm:text-lg">
-              Kosova Tools bashkon kalkulatorë, eksplorues dhe pultë që të
-              merrni vendime të informuara me të dhëna publike të besueshme.
+              Kalkulatorë, grafe dhe eksplorues nga burime zyrtare të Kosovës –
+              për qytetarë, biznese dhe politika.
+            </p>
+            <p className="text-balance text-muted-foreground text-sm sm:text-base">
+              Përfshihen doganat, pagat, tregtia, inflacioni, energjia dhe më
+              shumë.
             </p>
             <p className="text-xs text-muted-foreground sm:text-sm">
               Ndërtuar për interes publik dhe licencuar nën GNU Affero General
@@ -238,10 +241,10 @@ export default function Page() {
               dhe kontribuoni lirshëm.
             </p>
             <p className="text-xs text-amber-700 sm:text-sm">
-              Të dhënat burimore mbeten pronë e institucioneve përkatëse; jo
-              çdo dataset është në domen publik. Ne japim atributet për
-              burimet, respektojmë licencat e tyre dhe nuk pretendojmë pronësi
-              mbi përmbajtjen.
+              Të dhënat burimore mbeten pronë e institucioneve përkatëse; jo çdo
+              dataset është në domen publik. Ne japim atributet për burimet,
+              respektojmë licencat e tyre dhe nuk pretendojmë pronësi mbi
+              përmbajtjen.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
@@ -267,7 +270,7 @@ export default function Page() {
               {totalTools} vegla të licencuara hapur për komunitetin
             </h2>
             <p className="text-sm text-muted-foreground">
-              Zgjidhni shërbimet që ju duhen për taksa, paga dhe analiza
+              Zgjedhni shërbimet që ju duhen për taksa, paga dhe analiza
               statistikore. Gjithçka ndërtohet me transparencë dhe baza të
               përditësuara të të dhënave.
             </p>

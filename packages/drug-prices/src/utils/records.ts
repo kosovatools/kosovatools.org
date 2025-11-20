@@ -1,4 +1,7 @@
-import type { DrugPriceRecord, DrugReferencePrices } from "../types";
+import type {
+  DrugPriceRecord,
+  DrugReferencePrices,
+} from "@workspace/dataset-api";
 import { REFERENCE_PRICE_LABELS } from "../constants";
 
 export type ReferenceSection = {

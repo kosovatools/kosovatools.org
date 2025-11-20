@@ -19,16 +19,18 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
+import {
+  StackedKeySelector,
+  createInitialStackedKeySelection,
+  type StackedKeySelectionState,
+} from "@workspace/ui/custom-components/stacked-key-selector";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
-
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { ToDatasetView, TourismCountryDataset } from "@workspace/kas-data";
+import { TourismCountryDatasetView } from "@workspace/kas-data";
 
 const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
 const DEFAULT_TOP_COUNTRIES = 5;
@@ -38,7 +40,7 @@ export function TourismCountryStackedChart({
   top = DEFAULT_TOP_COUNTRIES,
   timelineEvents,
 }: {
-  dataset: ToDatasetView<TourismCountryDataset>;
+  dataset: TourismCountryDatasetView;
   top?: number;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
@@ -48,7 +50,7 @@ export function TourismCountryStackedChart({
   const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
 
   const [metricKey, setMetricKey] =
-    React.useState<TourismCountryDataset["meta"]["metrics"][number]>(
+    React.useState<TourismCountryDatasetView["meta"]["metrics"][number]>(
       "visitors",
     );
   const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
@@ -72,18 +74,14 @@ export function TourismCountryStackedChart({
     [datasetView, metricKey],
   );
 
-  const {
-    selectedKeys,
-    includeOther,
-    excludedKeys,
-    setExcludedKeys,
-    onSelectedKeysChange,
-    onIncludeOtherChange,
-  } = useStackedKeySelection({
-    totals,
-    topCount: top,
-    initialIncludeOther: true,
-  });
+  const [selection, setSelection] = React.useState<StackedKeySelectionState>(
+    () =>
+      createInitialStackedKeySelection({
+        totals,
+        topCount: top,
+        initialIncludeOther: true,
+      }),
+  );
 
   const stackResult = React.useMemo(() => {
     if (!datasetView.records.length) {
@@ -94,19 +92,12 @@ export function TourismCountryStackedChart({
       keyAccessor: (record) => record.country,
       valueAccessor: (record) => record[metricKey],
       dimension: "country",
-      selectedKeys,
-      excludedKeys,
-      includeOther,
+      selectedKeys: selection.selectedKeys,
+      excludedKeys: selection.excludedKeys,
+      includeOther: selection.includeOther,
       periodGrouping,
     });
-  }, [
-    datasetView,
-    metricKey,
-    selectedKeys,
-    excludedKeys,
-    includeOther,
-    periodGrouping,
-  ]);
+  }, [datasetView, metricKey, selection, periodGrouping]);
 
   const { chartKeys, chartData, chartConfig } = React.useMemo(
     () => buildStackedChartData(stackResult),
@@ -142,15 +133,11 @@ export function TourismCountryStackedChart({
       </div>
       <StackedKeySelector
         totals={totals}
-        selectedKeys={selectedKeys}
-        onSelectedKeysChange={onSelectedKeysChange}
+        selection={selection}
+        onSelectionChange={setSelection}
         topCount={top}
-        selectionLabel="Zgjidh vendet"
+        selectionLabel="Zgjedh vendet"
         searchPlaceholder="Kërko vende..."
-        includeOther={includeOther}
-        onIncludeOtherChange={onIncludeOtherChange}
-        excludedKeys={excludedKeys}
-        onExcludedKeysChange={setExcludedKeys}
       />
       <ChartContainer config={chartConfig}>
         <AreaChart data={chartData} margin={CHART_MARGIN}>

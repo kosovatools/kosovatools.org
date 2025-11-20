@@ -191,7 +191,7 @@ export function PublicWageCalculator() {
           <CardHeader>
             <CardTitle>Futni të dhënat</CardTitle>
             <CardDescription>
-              Zgjidhni vitin, muajin dhe pozitën ose shënoni koeficientin manual
+              Zgjedhni vitin, muajin dhe pozitën ose shënoni koeficientin manual
               për të përllogaritur pagën bazë dhe shtesat.
             </CardDescription>
           </CardHeader>
@@ -283,7 +283,7 @@ export function PublicWageCalculator() {
           <p>
             Shtesat mujore shtesë mund të shprehen si përqindje e pagës bazë, e
             pagës bashkë me përvojën, e pagës bruto totale ose si shuma fikse.
-            Kur shtesat varen nga paga bruto, kalkulatori zgjidh ekuacionin në
+            Kur shtesat varen nga paga bruto, kalkulatori Zgjedh ekuacionin në
             mënyrë që të shmangë llogaritjen rrethore.
           </p>
           <div className="rounded-lg border border-dashed bg-muted/30 p-4">

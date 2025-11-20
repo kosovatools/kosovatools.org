@@ -3,10 +3,7 @@
 import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import {
-  type ToDatasetView,
-  type VehicleTypesDataset,
-} from "@workspace/kas-data";
+import { type VehicleTypesDatasetView } from "@workspace/kas-data";
 import {
   ChartContainer,
   ChartLegend,
@@ -22,7 +19,7 @@ const CHART_MARGIN = { top: 16, right: 16, bottom: 0, left: 0 };
 export function VehicleTypesStackedChart({
   dataset,
 }: {
-  dataset: ToDatasetView<VehicleTypesDataset>;
+  dataset: VehicleTypesDatasetView;
 }) {
   const stackResult = useMemo(() => {
     if (!dataset.records.length) return null;

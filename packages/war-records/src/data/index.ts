@@ -1,8 +1,8 @@
 import crimeStatsJson from "../../data/crime-stats.json" assert { type: "json" };
 
-import type { CrimeStats } from "../types";
-
-export const crimeStats = crimeStatsJson as CrimeStats;
+const crimeStats = crimeStatsJson;
+export type CrimeStats = typeof crimeStats;
+export { crimeStats };
 
 export function findBreakdownCount(
   entries: CrimeStats["statusBreakdown"],

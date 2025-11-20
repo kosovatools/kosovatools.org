@@ -32,7 +32,7 @@ export function MultiSelectCombobox({
   maxSelectedPlaceholder = "Maksimumi i arritur",
   searchPlaceholder = "Kërko artikull...",
   emptyMessage = "Asnjë artikull nuk përputhet.",
-  emptySelectionMessage = "Zgjidh të paktën një artikull për të shfaqur grafikun.",
+  emptySelectionMessage = "Zgjedh të paktën një artikull për të shfaqur grafikun.",
   removeButtonLabel = "Hiq artikullin",
 }: Props) {
   const labelMap = useMemo(() => {

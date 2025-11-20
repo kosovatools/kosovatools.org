@@ -4,9 +4,10 @@ import { DataInsightsDashboard } from "@workspace/data-insights";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export const metadata: Metadata = {
-  title: "Analiza të të dhënave të Kosovës – Dashboard nga ASK",
+  title:
+    "Statistika të përgjithshme të Kosovës – Tregtia, energjia, transporti dhe turizmi",
   description:
-    "Vizualizoni trendet e tregtisë, energjisë dhe turizmit me grafika interaktive të bazuara në të dhënat e Agjencisë së Statistikave të Kosovës.",
+    "Vizualizoni eksportet/importet, furnizimin me karburante, flotën e mjeteve dhe prurjet e turizmit me grafika interaktive të bazuara në të dhënat e Agjencisë së Statistikave të Kosovës.",
   keywords: [
     "statistika kosovë",
     "të dhëna të hapura",
@@ -20,25 +21,27 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "/data-insights",
-    title: "Analiza të të dhënave të Kosovës – Dashboard nga ASK",
+    title:
+      "Statistika të përgjithshme të Kosovës – Tregtia, energjia, transporti dhe turizmi",
     description:
-      "Grafika dinamike për tregtinë, energjinë dhe turizmin bazuar në të dhënat zyrtare të Kosovës.",
+      "Grafika dinamike për tregtinë e jashtme, karburantet, mjetet motorike dhe turizmin bazuar në të dhënat zyrtare të Kosovës.",
     siteName: "Kosova Tools",
     locale: "sq_AL",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Analiza të të dhënave të Kosovës – Dashboard nga ASK",
+    title:
+      "Statistika të përgjithshme të Kosovës – Tregtia, energjia, transporti dhe turizmi",
     description:
-      "Exploroni dashboard-e interaktive me statistika të përditësuara të Kosovës.",
+      "Exploroni dashboard-e interaktive për tregtinë, karburantet, mjetet motorike dhe turizmin në Kosovë.",
   },
 };
 
 export default function DataInsightsPage() {
   return (
     <ToolPage
-      title="Analiza të të dhënave të Kosovës – Dashboard nga ASK"
-      description="Vizualizoni trendet e tregtisë, energjisë dhe turizmit me grafika interaktive të bazuara në të dhënat e Agjencisë së Statistikave të Kosovës."
+      title="Statistika të përgjithshme të Kosovës – Dashboard nga ASK"
+      description="Vizualizoni trendet e tregtisë, energjisë, transportit dhe turizmit me grafika interaktive të bazuara në të dhënat e Agjencisë së Statistikave të Kosovës."
     >
       <DataInsightsDashboard />
     </ToolPage>

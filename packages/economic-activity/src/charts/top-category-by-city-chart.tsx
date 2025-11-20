@@ -15,15 +15,15 @@ import { Label } from "@workspace/ui/components/label";
 import { NativeSelect } from "@workspace/ui/components/native-select";
 import {
   StackedKeySelector,
+  createInitialStackedKeySelection,
+  type StackedKeySelectionState,
   type StackedKeyTotal,
 } from "@workspace/ui/custom-components/stacked-key-selector";
 import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 import {
-  formatCurrency,
   formatCurrencyCompact,
   getPeriodFormatter,
 } from "@workspace/utils";
@@ -32,7 +32,7 @@ import type {
   CityCategoryYearlyDatasetView,
   CityCategoryYearlyMeta,
   CityCategoryYearlyRecord,
-} from "../types";
+} from "@workspace/dataset-api";
 import { CITY_STACK_TOP, OTHER_LABEL } from "./constants";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
@@ -116,44 +116,33 @@ export function TopCategoryByCityStackedChart({
     return chartDataset.summarizeStack(stackConfig);
   }, [chartDataset, stackConfig]);
 
-  const {
-    selectedKeys,
-    includeOther,
-    setIncludeOther,
-    excludedKeys,
-    setExcludedKeys,
-    onSelectedKeysChange,
-    onIncludeOtherChange,
-    resetSelection,
-    defaultKeys,
-  } = useStackedKeySelection({
-    totals,
-    topCount: CITY_STACK_TOP,
-  });
+  const [selection, setSelection] = React.useState<StackedKeySelectionState>(
+    () =>
+      createInitialStackedKeySelection({
+        totals,
+        topCount: CITY_STACK_TOP,
+      }),
+  );
 
   React.useEffect(() => {
-    resetSelection();
-    setIncludeOther(totals.length > defaultKeys.length);
-    setExcludedKeys([]);
-  }, [
-    selectedCity,
-    totals.length,
-    defaultKeys,
-    resetSelection,
-    setIncludeOther,
-    setExcludedKeys,
-  ]);
+    setSelection(
+      createInitialStackedKeySelection({
+        totals,
+        topCount: CITY_STACK_TOP,
+      }),
+    );
+  }, [selectedCity, totals]);
 
   const stackResult = React.useMemo(() => {
     if (!chartDataset) return null;
     return chartDataset.viewAsStack({
       ...stackConfig,
       top: CITY_STACK_TOP,
-      selectedKeys,
-      includeOther,
-      excludedKeys,
+      selectedKeys: selection.selectedKeys,
+      includeOther: selection.includeOther,
+      excludedKeys: selection.excludedKeys,
     });
-  }, [chartDataset, stackConfig, selectedKeys, includeOther, excludedKeys]);
+  }, [chartDataset, stackConfig, selection]);
 
   const { chartKeys, chartData, chartConfig } = React.useMemo(
     () => buildStackedChartData(stackResult),
@@ -186,47 +175,39 @@ export function TopCategoryByCityStackedChart({
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-end gap-3">
-        <div className="grid gap-2">
-          <Label htmlFor="economic-activity-city">Zgjidh komunën</Label>
-          <NativeSelect
-            id="economic-activity-city"
-            value={selectedCity ?? ""}
-            onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-              setSelectedCity(
-                event.target.value ? String(event.target.value) : null,
-              )
-            }
-          >
-            {citySummaries.map((entry) => (
-              <option key={entry.city} value={entry.city}>
-                {entry.city}
-              </option>
-            ))}
-          </NativeSelect>
-        </div>
-        {selectedSummary ? (
-          <div className="text-xs text-muted-foreground">
-            Totali ({selectedSummary.yearCount} vite):{" "}
-            <span className="font-semibold text-foreground">
-              {formatCurrency(selectedSummary.turnover)}
-            </span>
-          </div>
-        ) : null}
+      <div className="flex flex-1 items-center gap-3">
+        <Label
+          htmlFor="economic-activity-city"
+          className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+        >
+          Komuna
+        </Label>
+        <NativeSelect
+          id="economic-activity-city"
+          value={selectedCity ?? ""}
+          onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+            setSelectedCity(
+              event.target.value ? String(event.target.value) : null,
+            )
+          }
+          className="w-full max-w-[280px]"
+        >
+          {citySummaries.map((entry) => (
+            <option key={entry.city} value={entry.city}>
+              {entry.city}
+            </option>
+          ))}
+        </NativeSelect>
       </div>
 
       {totals.length > 0 ? (
         <StackedKeySelector
           totals={totals}
-          selectedKeys={selectedKeys}
-          onSelectedKeysChange={onSelectedKeysChange}
+          selection={selection}
+          onSelectionChange={setSelection}
           topCount={CITY_STACK_TOP}
-          selectionLabel="Zgjidh kategoritë kryesore"
+          selectionLabel="Zgjedh kategoritë kryesore"
           searchPlaceholder="Kërko kategoritë..."
-          includeOther={includeOther}
-          onIncludeOtherChange={onIncludeOtherChange}
-          excludedKeys={excludedKeys}
-          onExcludedKeysChange={setExcludedKeys}
         />
       ) : null}
       <ChartContainer

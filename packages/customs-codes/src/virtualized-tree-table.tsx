@@ -12,7 +12,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
-import type { CustomsTreeNode } from "./types";
+import type { CustomsTreeNode } from "@workspace/dataset-api";
 
 type VirtualizedTreeTableProps = {
   columns: ColumnDef<CustomsTreeNode, unknown>[];

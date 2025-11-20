@@ -83,7 +83,7 @@ export function WageCalculator() {
           <CardHeader>
             <CardTitle>Shënoni të dhënat e pagës</CardTitle>
             <CardDescription>
-              Zgjidhni nëse po nisni nga paga bruto apo nga paga neto dhe më pas
+              Zgjedhni nëse po nisni nga paga bruto apo nga paga neto dhe më pas
               përshtatni kontributet në pension sipas nevojës.
             </CardDescription>
           </CardHeader>

@@ -18,7 +18,10 @@ import {
   type SelectorOptionDefinition,
 } from "@workspace/ui/custom-components/option-selector";
 
-import type { TurnoverCategoryRecord, TurnoverMetric } from "../types";
+import type {
+  TurnoverCategoryRecord,
+  TurnoverMetric,
+} from "@workspace/dataset-api";
 import { formatCount, formatCurrencyCompact } from "@workspace/utils";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 const CHART_CLASS = "w-full aspect-[1/1.5] sm:aspect-video";

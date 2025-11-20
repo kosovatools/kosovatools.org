@@ -26,7 +26,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { ToDatasetView, TourismRegionDataset } from "@workspace/kas-data";
+import { TourismRegionDatasetView } from "@workspace/kas-data";
 
 const DEFAULT_GROUP_LABEL = "Total";
 const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
@@ -48,7 +48,7 @@ export function TourismRegionCharts({
   dataset,
   timelineEvents,
 }: {
-  dataset: ToDatasetView<TourismRegionDataset>;
+  dataset: TourismRegionDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
@@ -58,7 +58,7 @@ export function TourismRegionCharts({
 
   const [group, setGroup] =
     React.useState<
-      TourismRegionDataset["meta"]["dimensions"]["visitor_group"][number]["key"]
+      TourismRegionDatasetView["meta"]["dimensions"]["visitor_group"][number]["key"]
     >("total");
   const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
     dataset.meta.time.granularity,

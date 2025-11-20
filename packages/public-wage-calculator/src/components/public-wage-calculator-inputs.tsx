@@ -302,7 +302,7 @@ export function PublicWageCalculatorInputs({
       </Field>
       <FieldSet className="space-y-3">
         <FieldLegend className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Zgjidhni mënyrën e llogaritjes
+          Zgjedhni mënyrën e llogaritjes
         </FieldLegend>
         <div className="grid gap-2 sm:grid-cols-2">
           {[
@@ -346,7 +346,7 @@ export function PublicWageCalculatorInputs({
         <div className="space-y-4 min-w-0">
           <Field>
             <FieldLabel htmlFor="public-wage-sector">
-              Zgjidh sektorin
+              Zgjedhni sektorin
             </FieldLabel>
             <FieldContent>
               <NativeSelect
@@ -364,7 +364,7 @@ export function PublicWageCalculatorInputs({
                 }}
               >
                 <NativeSelectOption value="">
-                  Zgjidhni sektorin
+                  Zgjedhni sektorin
                 </NativeSelectOption>
                 {sectorOptions.map((sector) => (
                   <NativeSelectOption value={sector} key={sector}>
@@ -374,12 +374,12 @@ export function PublicWageCalculatorInputs({
               </NativeSelect>
             </FieldContent>
             <FieldDescription className="text-xs text-muted-foreground">
-              Zgjidhni sektorin për të ngushtuar listën e pozitave në katalog.
+              Zgjedhni sektorin për të ngushtuar listën e pozitave në katalog.
             </FieldDescription>
           </Field>
           <Field>
             <FieldLabel htmlFor="public-wage-position">
-              Zgjidh pozitën
+              Zgjedhni pozitën
             </FieldLabel>
             <FieldContent className="min-w-0">
               <FilterableCombobox
@@ -388,14 +388,14 @@ export function PublicWageCalculatorInputs({
                 options={comboboxOptions}
                 placeholder={
                   selectedSector
-                    ? "Zgjidh pozitën..."
-                    : "Së pari zgjidhni sektorin"
+                    ? "Zgjedhni pozitën..."
+                    : "Së pari zgjedhni sektorin"
                 }
                 searchPlaceholder="Kërkoni sipas titullit, institucionit ose kodit..."
                 emptyMessage={
                   selectedSector
                     ? "Asnjë pozitë nuk u gjet."
-                    : "Zgjidhni sektorin për të parë listën."
+                    : "Zgjedhni sektorin për të parë listën."
                 }
                 maxResults={100}
                 contentClassName="w-[480px]"
@@ -657,7 +657,7 @@ export function PublicWageCalculatorInputs({
             </NativeSelect>
           </FieldContent>
           <FieldDescription className="text-xs text-muted-foreground">
-            Përzgjidhni nëse orët me shtesa dhe paga orare duhet të llogariten
+            PërZgjedhni nëse orët me shtesa dhe paga orare duhet të llogariten
             vetëm mbi bazën apo mbi bazën me përvojën.
           </FieldDescription>
         </Field>
@@ -689,7 +689,7 @@ export function PublicWageCalculatorInputs({
             </NativeSelect>
           </FieldContent>
           <FieldDescription className="text-xs text-muted-foreground">
-            Zgjidhni si trajtohen orët në rast të rregullave të brendshme të
+            Zgjedhni si trajtohen orët në rast të rregullave të brendshme të
             institucionit.
           </FieldDescription>
         </Field>

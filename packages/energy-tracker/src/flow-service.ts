@@ -1,23 +1,4 @@
-import { createDatasetFetcher } from "@workspace/dataset-api";
-import { createDataset } from "@workspace/kas-data";
-
-import type {
-  EnergyDailyDataset,
-  EnergyDailyDatasetView,
-  EnergyMonthlyDataset,
-  EnergyMonthlyDatasetView,
-} from "./types";
-
-const DATASET_PREFIX = ["energy"] as const;
-const MONTHLY_FILE = "energy_crossborder_monthly.json";
-const DAILY_FILE = "energy_crossborder_daily.json";
-
-const fetchEnergyDataset = createDatasetFetcher(DATASET_PREFIX, {
-  label: "energy-flow",
-});
-
-let monthlyDatasetPromise: Promise<EnergyMonthlyDatasetView> | null = null;
-let dailyDatasetPromise: Promise<EnergyDailyDatasetView> | null = null;
+import { loadDailyDataset, loadMonthlyDataset } from "@workspace/dataset-api";
 
 export function getMonthlyPeriodRange(period: string): {
   start: string;
@@ -37,20 +18,4 @@ export function getMonthlyPeriodRange(period: string): {
   };
 }
 
-export async function loadMonthlyDataset(): Promise<EnergyMonthlyDatasetView> {
-  if (!monthlyDatasetPromise) {
-    monthlyDatasetPromise = fetchEnergyDataset<EnergyMonthlyDataset>(
-      MONTHLY_FILE,
-    ).then((data) => createDataset(data));
-  }
-  return monthlyDatasetPromise;
-}
-
-export async function loadDailyDataset(): Promise<EnergyDailyDatasetView> {
-  if (!dailyDatasetPromise) {
-    dailyDatasetPromise = fetchEnergyDataset<EnergyDailyDataset>(
-      DAILY_FILE,
-    ).then((data) => createDataset(data));
-  }
-  return dailyDatasetPromise;
-}
+export { loadMonthlyDataset, loadDailyDataset };

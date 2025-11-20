@@ -61,7 +61,7 @@ function WageCalculatorInputs({
     <div className="grid gap-4">
       <FieldSet className="space-y-3">
         <FieldLegend className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Zgjidhni llogaritjen
+          Zgjedhni llogaritjen
         </FieldLegend>
         <div className="grid grid-cols-1 gap-2 sm:max-w-md sm:grid-cols-2">
           {[

@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { ToDatasetView, TradePartnersDataset } from "@workspace/kas-data";
+import { TradePartnersDatasetView } from "@workspace/kas-data";
 import {
   formatCurrencyCompact,
   getPeriodFormatter,
@@ -27,9 +27,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { StackedKeySelector } from "@workspace/ui/custom-components/stacked-key-selector";
+import {
+  StackedKeySelector,
+  createInitialStackedKeySelection,
+  type StackedKeySelectionState,
+} from "@workspace/ui/custom-components/stacked-key-selector";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
-import { useStackedKeySelection } from "@workspace/ui/hooks/use-stacked-key-selection";
 import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
@@ -45,7 +48,7 @@ export function TradePartnersStackedChart({
   top = DEFAULT_TOP_PARTNERS,
   timelineEvents,
 }: {
-  dataset: ToDatasetView<TradePartnersDataset>;
+  dataset: TradePartnersDatasetView;
   top?: number;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
@@ -60,7 +63,9 @@ export function TradePartnersStackedChart({
   const [timeRange, setTimeRange] =
     React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
   const [metric, setMetric] =
-    React.useState<TradePartnersDataset["meta"]["metrics"][number]>("imports");
+    React.useState<TradePartnersDatasetView["meta"]["metrics"][number]>(
+      "imports",
+    );
 
   const datasetView = React.useMemo(
     () => dataset.limit(timeRange),
@@ -77,18 +82,14 @@ export function TradePartnersStackedChart({
     [datasetView, metric],
   );
 
-  const {
-    selectedKeys,
-    includeOther,
-    excludedKeys,
-    setExcludedKeys,
-    onSelectedKeysChange,
-    onIncludeOtherChange,
-  } = useStackedKeySelection({
-    totals,
-    topCount: top,
-    initialIncludeOther: true,
-  });
+  const [selection, setSelection] = React.useState<StackedKeySelectionState>(
+    () =>
+      createInitialStackedKeySelection({
+        totals,
+        topCount: top,
+        initialIncludeOther: true,
+      }),
+  );
 
   const stackResult = React.useMemo(() => {
     if (!datasetView.records.length) {
@@ -99,19 +100,12 @@ export function TradePartnersStackedChart({
       keyAccessor: (record) => record.partner,
       valueAccessor: (record) => record[metric],
       dimension: "partner",
-      selectedKeys,
-      excludedKeys,
-      includeOther,
+      selectedKeys: selection.selectedKeys,
+      excludedKeys: selection.excludedKeys,
+      includeOther: selection.includeOther,
       periodGrouping,
     });
-  }, [
-    datasetView,
-    includeOther,
-    metric,
-    periodGrouping,
-    selectedKeys,
-    excludedKeys,
-  ]);
+  }, [datasetView, metric, periodGrouping, selection]);
 
   const { chartKeys, chartData, chartConfig } = React.useMemo(
     () => buildStackedChartData(stackResult),
@@ -147,15 +141,11 @@ export function TradePartnersStackedChart({
       </div>
       <StackedKeySelector
         totals={totals}
-        selectedKeys={selectedKeys}
-        onSelectedKeysChange={onSelectedKeysChange}
+        selection={selection}
+        onSelectionChange={setSelection}
         topCount={top}
-        selectionLabel="Zgjidh partnerët"
+        selectionLabel="Zgjedh partnerët"
         searchPlaceholder="Kërko shtetet..."
-        includeOther={includeOther}
-        onIncludeOtherChange={onIncludeOtherChange}
-        excludedKeys={excludedKeys}
-        onExcludedKeysChange={setExcludedKeys}
       />
       <ChartContainer config={chartConfig}>
         <AreaChart data={chartData} margin={CHART_MARGIN}>

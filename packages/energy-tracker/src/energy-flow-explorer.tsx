@@ -5,7 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { DailyFlowChart } from "./charts/energy-flow-daily-chart";
 import { MonthlyFlowTrendChart } from "./charts/energy-flow-monthly-trend-chart";
 import { loadDailyDataset, loadMonthlyDataset } from "./flow-service";
-import type { EnergyDailyDatasetView, EnergyMonthlyDatasetView } from "./types";
+import type {
+  EnergyDailyDatasetView,
+  EnergyMonthlyDatasetView,
+} from "@workspace/dataset-api";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
 export function EnergyFlowExplorer() {

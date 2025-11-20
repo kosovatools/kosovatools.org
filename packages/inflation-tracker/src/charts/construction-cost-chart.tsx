@@ -3,10 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import {
-  ConstructionCostIndexDataset,
-  ToDatasetView,
-} from "@workspace/kas-data";
+import { ConstructionCostIndexDatasetView } from "@workspace/kas-data";
 import {
   formatNumber,
   getPeriodFormatter,
@@ -47,7 +44,7 @@ const TIME_RANGE_OPTIONS = [
 type ChartRow = { period: string } & Record<string, number | string | null>;
 
 type Props = {
-  dataset: ToDatasetView<ConstructionCostIndexDataset>;
+  dataset: ConstructionCostIndexDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 };
 
