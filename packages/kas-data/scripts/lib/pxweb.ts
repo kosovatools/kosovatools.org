@@ -343,19 +343,6 @@ export function metaValueMap(
   ]);
 }
 
-export function requireVariable(
-  meta: PxMeta,
-  code: string,
-  datasetId?: string,
-): PxVariable {
-  const variable = metaVariables(meta).find((entry) => entry?.code === code);
-  if (!variable) {
-    const context = datasetId ? `${datasetId}: ` : "";
-    throw new PxError(`${context}expected dimension "${code}" in metadata`);
-  }
-  return variable;
-}
-
 export function buildValuePairs(variable: PxVariable): Array<[string, string]> {
   const values = Array.isArray(variable.values) ? variable.values : [];
   let texts = Array.isArray(variable.valueTexts) ? variable.valueTexts : [];
@@ -366,12 +353,6 @@ export function buildValuePairs(variable: PxVariable): Array<[string, string]> {
     String(value),
     String(texts[index] ?? value),
   ]);
-}
-
-export function extractTimeCodes(variable: PxVariable): string[] {
-  const values = Array.isArray(variable.values) ? [...variable.values] : [];
-  if (variable.time === true) values.reverse();
-  return values.map((value) => String(value));
 }
 
 export function readCubeMetadata(cube: unknown): {
