@@ -10,6 +10,7 @@ const staticRoutes = [
   "energy-flows",
   "prishtina-building-permits",
   "customs-codes",
+  "about",
   "car-import-taxes",
   "data-insights",
   "drug-prices",

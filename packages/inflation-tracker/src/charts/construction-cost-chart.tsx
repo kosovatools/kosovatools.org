@@ -7,6 +7,8 @@ import { ConstructionCostIndexDatasetView } from "@workspace/kas-data";
 import {
   formatNumber,
   getPeriodFormatter,
+  limitTimeRangeOptions,
+  TimeRangeOption,
   type PeriodFormatter,
 } from "@workspace/utils";
 import {
@@ -31,24 +33,18 @@ import {
   constructionCostLabelMap,
 } from "../construction-cost-groups";
 
-type TimeRangeOption = number | null;
-
-const DEFAULT_TIME_RANGE: TimeRangeOption = 12; // last 12 quarters (~3 years)
-const TIME_RANGE_OPTIONS = [
-  { key: 8, label: "2 vjet" },
-  { key: 12, label: "3 vjet" },
-  { key: 20, label: "5 vjet" },
-  { key: null, label: "Gjithë seria" },
-] as const satisfies ReadonlyArray<{ key: TimeRangeOption; label: string }>;
-
 type ChartRow = { period: string } & Record<string, number | string | null>;
 
 type Props = {
   dataset: ConstructionCostIndexDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 };
-
 export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
+  const TIME_RANGE_OPTIONS = useMemo(
+    () => limitTimeRangeOptions(dataset.meta.time),
+    [dataset],
+  );
+
   const labelMap = useMemo(
     () => new Map(Object.entries(constructionCostLabelMap)),
     [],
@@ -69,8 +65,7 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     () => defaultSelection,
   );
-  const [timeRange, setTimeRange] =
-    useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
+  const [timeRange, setTimeRange] = useState<TimeRangeOption>(12);
 
   useEffect(() => {
     setSelectedCategories((prev) => {

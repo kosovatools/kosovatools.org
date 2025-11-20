@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Github, LayoutGrid } from "lucide-react";
+import { Github } from "lucide-react";
 import { Geist } from "next/font/google";
 import Script from "next/script";
 
@@ -88,7 +88,6 @@ export default function RootLayout({
                     href="/"
                     className="flex items-center gap-2 text-sm font-semibold tracking-tight transition hover:text-primary sm:text-base"
                   >
-                    <LayoutGrid aria-hidden className="h-4 w-4" />
                     Kosova Tools
                   </Link>
                   <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex md:text-base">
@@ -100,9 +99,9 @@ export default function RootLayout({
                     </Link>
                     <Link
                       className="transition hover:text-primary"
-                      href="/#about"
+                      href="/about"
                     >
-                      Përfshihu
+                      Transparenca
                     </Link>
                   </nav>
                 </div>
