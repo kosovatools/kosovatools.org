@@ -9,14 +9,15 @@ import ReactQueryProvider from "@/components/react-query-provider";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export const metadata: Metadata = {
-  title: "Aktiviteti ekonomik – Qarkullimi sipas kategorive dhe komunave",
+  title: "Aktiviteti ekonomik dhe financat publike të Kosovës",
   description:
-    "Vizualizoni qarkullimin vjetor të bizneseve dhe bruto produktin vendor sipas aktiviteteve ekonomike me të dhëna nga Ministria e Financave dhe ASK.",
+    "Analizoni BPV-në sipas aktiviteteve, qarkullimin e bizneseve dhe të hyrat/shpenzimet e Qeverisë së Përgjithshme me të dhëna nga ASK dhe Ministria e Financave.",
   keywords: [
     "aktiviteti ekonomik",
+    "financat publike",
+    "BPV Kosova",
+    "të hyrat e qeverisë",
     "qarkullimi i bizneseve",
-    "Ministria e Financave",
-    "të dhëna tatimore Kosovë",
     "komunat e Kosovës",
   ],
   alternates: {
@@ -25,17 +26,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "/economic-activity",
-    title: "Aktiviteti ekonomik – Qarkullimi sipas kategorive dhe komunave",
+    title: "Aktiviteti ekonomik dhe financat publike të Kosovës",
     description:
-      "Qarkullimi vjetor i bizneseve në Kosovë sipas kategorive ekonomike dhe komunave, dhe BPV tremujor sipas aktiviteteve nga ASK.",
+      "BPV tremujor sipas aktiviteteve, qarkullimi i bizneseve sipas kategorive/komunave dhe struktura e të hyrave/shpenzimeve të Qeverisë së Përgjithshme.",
     siteName: "Kosova Tools",
     locale: "sq_AL",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aktiviteti ekonomik – Qarkullimi i bizneseve në Kosovë",
+    title: "Aktiviteti ekonomik dhe financat publike të Kosovës",
     description:
-      "Analizoni qarkullimin e bizneseve dhe BPV sipas aktiviteteve ekonomike me të dhënat më të fundit të MFK dhe ASK.",
+      "BPV sipas aktiviteteve, qarkullimi i bizneseve dhe balanca e të hyrave/shpenzimeve qeveritare me të dhëna të ASK dhe Ministrisë së Financave.",
   },
 };
 
@@ -43,8 +44,8 @@ export default function EconomicActivityPage() {
   return (
     <ReactQueryProvider>
       <ToolPage
-        title="Qarkullimi i bizneseve në Kosovë"
-        description="Vizualizime të qarkullimit sipas degëve ekonomike dhe komunave, dhe BPV tremujor sipas aktiviteteve për të kuptuar dinamiken e ekonomisë."
+        title="Aktiviteti ekonomik dhe financat publike"
+        description="BPV tremujor sipas aktiviteteve ekonomike, qarkullimi i bizneseve sipas kategorive/komunave dhe të hyrat/shpenzimet e Qeverisë së Përgjithshme në një dashboard të vetëm."
       >
         <div className="space-y-12">
           <GovernmentFinanceSection />

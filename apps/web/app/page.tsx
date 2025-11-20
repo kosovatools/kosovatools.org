@@ -81,29 +81,11 @@ type ToolCard = {
 
 const tools: ToolCard[] = [
   {
-    name: "Tarifat Doganore",
-    href: "/customs-codes",
-    description:
-      "Kërko listën e tarifave të Kosovës, krahaso normat doganore dhe llogarit detyrimet e importit në çast.",
-    cta: "Shfleto kodet doganore",
-    icon: PackageSearch,
-    category: "Tregtia & dogana",
-  },
-  {
-    name: "Statistika të përgjithshme",
-    href: "/data-insights",
-    description:
-      "Grafe vizuale nga ASK për tregtinë e jashtme, karburantet, mjetet motorike dhe turizmin.",
-    cta: "Shiko grafet",
-    icon: BarChart3,
-    category: "Statistika",
-  },
-  {
-    name: "Aktiviteti ekonomik",
+    name: "Aktiviteti ekonomik dhe financat publike",
     href: "/economic-activity",
     description:
-      "Qarkullimi vjetor i bizneseve të Kosovës sipas kategorive ekonomike dhe komunave, i bazuar në të dhënat e Ministrisë së Financave.",
-    cta: "Shiko qarkullimin",
+      "BPV sipas aktiviteteve, qarkullimi i bizneseve dhe të hyrat/shpenzimet e Qeverisë së Përgjithshme me të dhëna nga ASK dhe Ministria e Financave.",
+    cta: "Shiko ekonominë",
     icon: LineChart,
     category: "Statistika",
   },
@@ -115,6 +97,42 @@ const tools: ToolCard[] = [
     cta: "Analizo çmimet",
     icon: TrendingUp,
     category: "Statistika",
+  },
+  {
+    name: "Statistika të përgjithshme",
+    href: "/data-insights",
+    description:
+      "Grafe vizuale nga ASK për tregtinë e jashtme, karburantet, mjetet motorike dhe turizmin.",
+    cta: "Shiko grafet",
+    icon: BarChart3,
+    category: "Statistika",
+  },
+  {
+    name: "Kalkulatori i pagave",
+    href: "/wage-calculator",
+    description:
+      "Parashiko pagën neto pas trustit, tatimit në të ardhura dhe kontributeve sipas rregullave në Kosovë.",
+    cta: "Planifiko pagën",
+    icon: HandCoins,
+    category: "Financa",
+  },
+  {
+    name: "Pagat e shërbyesve civilë",
+    href: "/public-wage-calculator",
+    description:
+      "Llogarit pagën mujore bruto sipas koeficientit C, vlerës Z, përvojës dhe orëve shtesë në sektorin publik.",
+    cta: "Llogarit pagat publike",
+    icon: Building2,
+    category: "Administrata publike",
+  },
+  {
+    name: "Tarifat Doganore",
+    href: "/customs-codes",
+    description:
+      "Kërko listën e tarifave të Kosovës, krahaso normat doganore dhe llogarit detyrimet e importit në çast.",
+    cta: "Shfleto kodet doganore",
+    icon: PackageSearch,
+    category: "Tregtia & dogana",
   },
   {
     name: "Taksat e importit të veturave",
@@ -135,33 +153,6 @@ const tools: ToolCard[] = [
     category: "Transport",
   },
   {
-    name: "Lejet e ndërtimit të Prishtinës",
-    href: "/prishtina-building-permits",
-    description:
-      "Shfleto lejet e ndërtimit të publikuara nga Komuna e Prishtinës, filtro sipas lagjes, destinimit ose pronarit",
-    cta: "Shiko lejet",
-    icon: Hammer,
-    category: "Administrata publike",
-  },
-  {
-    name: "Pagat e shërbyesve civilë",
-    href: "/public-wage-calculator",
-    description:
-      "Llogarit pagën mujore bruto sipas koeficientit C, vlerës Z, përvojës dhe orëve shtesë në sektorin publik.",
-    cta: "Llogarit pagat publike",
-    icon: Building2,
-    category: "Administrata publike",
-  },
-  {
-    name: "Kalkulatori i pagave",
-    href: "/wage-calculator",
-    description:
-      "Parashiko pagën neto pas trustit, tatimit në të ardhura dhe kontributeve sipas rregullave në Kosovë.",
-    cta: "Planifiko pagën",
-    icon: HandCoins,
-    category: "Financa",
-  },
-  {
     name: "Gjurmuesi i energjisë",
     href: "/energy-flows",
     description:
@@ -169,6 +160,15 @@ const tools: ToolCard[] = [
     cta: "Analizo rrjedhat e energjisë",
     icon: Zap,
     category: "Energjia",
+  },
+  {
+    name: "Lejet e ndërtimit të Prishtinës",
+    href: "/prishtina-building-permits",
+    description:
+      "Shfleto lejet e ndërtimit të publikuara nga Komuna e Prishtinës, filtro sipas lagjes, destinimit ose pronarit",
+    cta: "Shiko lejet",
+    icon: Hammer,
+    category: "Administrata publike",
   },
   {
     name: "Çmimet e barnave",
@@ -190,6 +190,12 @@ const tools: ToolCard[] = [
   },
 ];
 
+const slugifyCategory = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 const groupedTools = tools.reduce<
   Array<{ category: string; tools: ToolCard[] }>
 >((acc, tool) => {
@@ -205,7 +211,10 @@ const groupedTools = tools.reduce<
 }, []);
 
 const totalTools = tools.length;
-const toolCategories = Array.from(new Set(tools.map((tool) => tool.category)));
+const categoryAnchors = groupedTools.map((group) => ({
+  category: group.category,
+  slug: slugifyCategory(group.category),
+}));
 
 export default function Page() {
   return (
@@ -280,7 +289,7 @@ export default function Page() {
               <dt className="text-xs font-semibold uppercase tracking-wide text-primary">
                 Seksione
               </dt>
-              <dd className="text-lg font-semibold">{toolCategories.length}</dd>
+              <dd className="text-lg font-semibold">{categoryAnchors.length}</dd>
             </div>
             <div className="rounded-2xl bg-muted/40 p-4">
               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -296,13 +305,14 @@ export default function Page() {
             </div>
           </dl>
           <div className="flex flex-wrap gap-2">
-            {toolCategories.map((category) => (
-              <span
+            {categoryAnchors.map(({ category, slug }) => (
+              <Link
                 key={category}
-                className="rounded-full border border-border/60 px-3 py-1 text-xs uppercase tracking-wide text-muted-foreground"
+                className="rounded-full border border-border/60 px-3 py-1 text-xs uppercase tracking-wide text-muted-foreground transition hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                href={`#${slug}`}
               >
                 {category}
-              </span>
+              </Link>
             ))}
           </div>
         </div>
@@ -325,43 +335,49 @@ export default function Page() {
           </p>
         </header>
         <div className="space-y-7">
-          {groupedTools.map((group) => (
-            <div key={group.category} className="space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="text-xs font-semibold uppercase tracking-wide text-primary text-nowrap">
-                  {group.category}
-                </span>
-                <span className="h-px w-full bg-border/60" />
-              </div>
-              <div className="grid gap-2">
-                {group.tools.map((tool) => {
-                  const Icon = tool.icon;
+          {groupedTools.map((group) => {
+            const slug = slugifyCategory(group.category);
 
-                  return (
-                    <Link
-                      key={tool.name}
-                      className="group flex items-start gap-4 rounded-2xl border border-border/50 bg-background/60 px-4 py-3 transition hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                      href={tool.href}
-                    >
-                      <span className="mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:bg-primary/15">
-                        <Icon aria-hidden className="h-4 w-4" />
-                      </span>
-                      <span className="flex flex-1 flex-col gap-1">
-                        <span className="text-sm font-medium">{tool.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {tool.description}
+            return (
+              <div key={group.category} className="space-y-4" id={slug}>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-primary text-nowrap">
+                    {group.category}
+                  </span>
+                  <span className="h-px w-full bg-border/60" />
+                </div>
+                <div className="grid gap-2">
+                  {group.tools.map((tool) => {
+                    const Icon = tool.icon;
+
+                    return (
+                      <Link
+                        key={tool.name}
+                        className="group flex items-start gap-4 rounded-2xl border border-border/50 bg-background/60 px-4 py-3 transition hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                        href={tool.href}
+                      >
+                        <span className="mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:bg-primary/15">
+                          <Icon aria-hidden className="h-4 w-4" />
                         </span>
-                      </span>
-                      <ArrowRight
-                        aria-hidden
-                        className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary"
-                      />
-                    </Link>
-                  );
-                })}
+                        <span className="flex flex-1 flex-col gap-1">
+                          <span className="text-sm font-medium">
+                            {tool.name}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {tool.description}
+                          </span>
+                        </span>
+                        <ArrowRight
+                          aria-hidden
+                          className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary"
+                        />
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
