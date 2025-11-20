@@ -4,6 +4,7 @@ import {
   type PeriodGrouping,
 } from "./period";
 import { sanitizeValue, type NumericInput } from "./number";
+import { DEFAULT_OTHER_LABEL } from "./labels";
 
 type StackAccessors<TRecord, TKey extends string> = {
   period: (record: TRecord) => string;
@@ -43,7 +44,6 @@ export type StackBuildResult<TKey extends string> = {
 };
 
 // ==== Internals ====
-const DEFAULT_OTHER_LABEL = "Të tjerët";
 const byTotalDesc = <TKey extends string>(
   a: StackTotal<TKey>,
   b: StackTotal<TKey>,

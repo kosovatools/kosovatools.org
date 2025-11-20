@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { DEFAULT_OTHER_LABEL } from "@workspace/utils";
 import {
   Check,
   ChevronDown,
@@ -444,7 +445,7 @@ export function StackedKeySelector({
 
           <SearchableListSection
             icon={<MoreHorizontal className="size-4 text-muted-foreground" />}
-            title="Të tjerat"
+            title={DEFAULT_OTHER_LABEL}
             countLabel={`${visibleOthers.length}`}
             searchValue={otherSearchTerm}
             onSearchValueChange={setOtherSearchTerm}

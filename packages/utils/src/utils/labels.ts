@@ -33,3 +33,5 @@ export function buildKeyLabelMap<TKey extends string>(
 
   return map as Readonly<Record<TKey, string>>;
 }
+
+export const DEFAULT_OTHER_LABEL = "Të tjerët";

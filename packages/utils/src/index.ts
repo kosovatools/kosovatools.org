@@ -53,5 +53,5 @@ export type {
   GetSearchParamNumberOptions,
   GetSearchParamStringOptions,
 } from "./utils/search-params";
-export { buildKeyLabelMap } from "./utils/labels";
+export { buildKeyLabelMap, DEFAULT_OTHER_LABEL } from "./utils/labels";
 export type { KeyLabelOption } from "./utils/labels";
