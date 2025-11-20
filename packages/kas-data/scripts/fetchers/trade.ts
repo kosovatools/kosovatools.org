@@ -33,8 +33,7 @@ export async function fetchTradeChaptersMonthly(
             const parsed = parseTradeChapterLabel(
               entry.metaLabel || entry.label || entry.code,
             );
-            const key =
-              parsed.code || slugifyLabel(parsed.label) || entry.code;
+            const key = parsed.code || slugifyLabel(parsed.label) || entry.code;
             const label =
               parsed.description ||
               parsed.label ||
