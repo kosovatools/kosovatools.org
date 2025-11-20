@@ -132,7 +132,13 @@ export async function fetchTourismCountry(outDir: string, generatedAt: string) {
         alias: "country",
         resolveValues: ({ baseValues }) =>
           baseValues
-            .filter((v) => v.metaLabel.toLowerCase() !== "external")
+            // Drop the aggregated "Të jashtëm" row which is the sum of all countries.
+            .filter((v) => {
+              const label = (v.metaLabel || v.label || "").toLowerCase();
+              return (
+                v.code !== "0" && label !== "external" && label !== "të jashtëm"
+              );
+            })
             .map((v) => ({
               code: v.code,
               label: v.metaLabel || v.label || v.code,

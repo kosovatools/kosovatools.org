@@ -23,10 +23,7 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import {
-  formatCurrencyCompact,
-  getPeriodFormatter,
-} from "@workspace/utils";
+import { formatCurrencyCompact, getPeriodFormatter } from "@workspace/utils";
 
 import type {
   CityCategoryYearlyDatasetView,
