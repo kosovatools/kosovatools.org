@@ -81,16 +81,16 @@ export default function RootLayout({
         />
         <Providers>
           <div className="flex min-h-svh flex-col bg-background">
-            <header className="border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/20">
               <div className="mx-auto flex w-full max-w-[1500px] items-center justify-between gap-4 px-6 py-3 sm:py-4">
                 <div className="flex items-center gap-6">
                   <Link
                     href="/"
-                    className="flex items-center gap-2 text-sm font-semibold tracking-tight transition hover:text-primary sm:text-base"
+                    className="flex items-center gap-2 text-sm font-bold tracking-tight transition hover:text-primary sm:text-base"
                   >
                     Kosova Tools
                   </Link>
-                  <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex md:text-base">
+                  <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground md:flex md:text-base">
                     <Link
                       className="transition hover:text-primary"
                       href="/#tools"
@@ -107,7 +107,7 @@ export default function RootLayout({
                 </div>
                 <div className="flex items-center gap-2 text-xs sm:text-sm">
                   <a
-                    className="inline-flex items-center gap-2 rounded-full border border-border/60 px-2.5 py-1 font-medium transition hover:border-primary hover:text-primary"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 font-medium transition hover:bg-white/10 hover:text-primary backdrop-blur-sm"
                     href={GITHUB_REPO_URL}
                     rel="noreferrer"
                     target="_blank"
@@ -121,17 +121,17 @@ export default function RootLayout({
             </header>
 
             <div className="flex-1">{children}</div>
-            <footer className="border-t border-border/60 bg-background/80">
-              <div className="mx-auto flex w-full max-w-[1500px] items-center justify-center px-6 py-4">
-                <div className="flex flex-col items-center gap-2 text-center">
+            <footer className="border-t border-white/10 bg-background/40 backdrop-blur-sm">
+              <div className="mx-auto flex w-full max-w-[1500px] items-center justify-center px-6 py-8">
+                <div className="flex flex-col items-center gap-4 text-center">
                   <a
-                    className="flex items-center gap-1.5 text-md font-semibold text-foreground transition hover:text-primary sm:text-lg"
+                    className="flex items-center gap-2 text-lg font-semibold text-foreground transition hover:text-primary"
                     href={GITHUB_REPO_URL}
                     rel="noreferrer"
                     target="_blank"
                   >
                     Ndërtuar me
-                    <span aria-label="zemër e kuqe" role="img">
+                    <span aria-label="zemër e kuqe" role="img" className="animate-pulse">
                       ❤️
                     </span>
                     në
@@ -139,7 +139,7 @@ export default function RootLayout({
                       🇽🇰
                     </span>
                   </a>
-                  <span className="text-xs text-muted-foreground sm:text-sm">
+                  <span className="text-sm text-muted-foreground">
                     © {currentYear} Kosova Tools · Licensed under GPL
                   </span>
                 </div>

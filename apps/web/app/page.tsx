@@ -17,6 +17,7 @@ import {
   Zap,
   type LucideIcon,
   type LucideProps,
+  Github,
 } from "lucide-react";
 import { candlestick } from "@lucide/lab";
 import { Button } from "@workspace/ui/components/button";
@@ -219,103 +220,43 @@ const categoryAnchors = groupedTools.map((group) => ({
 export default function Page() {
   return (
     <main className="flex flex-col gap-24 px-3 sm:px-6 py-16 sm:py-24">
-      <section className="mx-auto grid w-full max-w-[1500px] gap-12 text-center lg:grid-cols-12 lg:items-center lg:gap-16 lg:text-left">
-        <div className="flex flex-col items-center gap-8 lg:col-span-7 lg:items-start">
-          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1 text-xs font-medium uppercase tracking-wide text-primary">
-            Të dhëna të hapura për të gjithë
-          </span>
-          <div className="space-y-6 lg:max-w-2xl">
-            <h1 className="text-balance text-4xl font-semibold leading-tight sm:text-5xl xl:text-6xl">
-              Kthe të dhënat publike në vendime
+      <section className="relative overflow-hidden pt-16 md:pt-20 lg:pt-32">
+        {/* Background Elements */}
+        <div className="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-black bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)]"></div>
+        <div className="absolute -left-[10%] -top-[10%] -z-10 h-[500px] w-[500px] rounded-full bg-primary/20 blur-[100px] opacity-50 dark:opacity-20 pointer-events-none"></div>
+        <div className="absolute -right-[10%] top-[20%] -z-10 h-[500px] w-[500px] rounded-full bg-secondary/40 blur-[100px] opacity-50 dark:opacity-20 pointer-events-none"></div>
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,119,198,0.3),rgba(0,0,0,0))]"></div>
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 max-w-4xl mx-auto">
+            <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary backdrop-blur-sm">
+              <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
+              Të dhëna të hapura për të gjithë
+            </div>
+
+            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl text-balance">
+              Kthe të dhënat publike në <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">vendime</span>
             </h1>
-            <p className="text-balance text-muted-foreground text-sm sm:text-lg">
-              Kalkulatorë, grafe dhe eksplorues nga burime zyrtare të Kosovës –
-              për qytetarë, biznese dhe politika.
+
+            <p className="text-lg text-muted-foreground max-w-2xl text-balance leading-relaxed">
+              Eksploro kalkulatorë, grafe dhe analiza nga burime zyrtare të Kosovës.
+              Një platformë e hapur për qytetarë, biznese dhe politikëbërës.
             </p>
-            <p className="text-balance text-muted-foreground text-sm sm:text-base">
-              Përfshihen doganat, pagat, tregtia, inflacioni, energjia dhe më
-              shumë.
-            </p>
-            <p className="text-xs text-muted-foreground sm:text-sm">
-              Ndërtuar për interes publik dhe licencuar nën GNU Affero General
-              Public License v3.{" "}
-              <a
-                className="font-medium underline hover:text-primary"
-                href={GITHUB_LICENSE_URL}
-                rel="noreferrer"
-                target="_blank"
-              >
-                Shikoni kodin burimor
-              </a>{" "}
-              dhe kontribuoni lirshëm.
-            </p>
-            <p className="text-xs text-amber-700 sm:text-sm">
-              Të dhënat burimore mbeten pronë e institucioneve përkatëse; jo çdo
-              dataset është në domen publik. Ne japim atributet për burimet,
-              respektojmë licencat e tyre dhe nuk pretendojmë pronësi mbi
-              përmbajtjen.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-            <Button asChild size="lg">
-              <Link href="/#tools">
-                Eksploro veglat
-                <ArrowRight aria-hidden className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <a href={GITHUB_REPO_URL} rel="noreferrer" target="_blank">
-                Kontribuo në GitHub
-              </a>
-            </Button>
-          </div>
-        </div>
-        <div className="mx-auto flex w-full max-w-lg flex-col gap-6 rounded-3xl border border-border/60 bg-background/80 p-8 text-left shadow-sm backdrop-blur lg:col-span-5 lg:mx-0 lg:max-w-none">
-          <div className="space-y-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
-              Panorama e veglave
-            </span>
-            <h2 className="text-2xl font-semibold leading-snug">
-              {totalTools} vegla të licencuara hapur për komunitetin
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Zgjedhni shërbimet që ju duhen për taksa, paga dhe analiza
-              statistikore. Gjithçka ndërtohet me transparencë dhe baza të
-              përditësuara të të dhënave.
-            </p>
-          </div>
-          <dl className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl bg-primary/5 p-4">
-              <dt className="text-xs font-semibold uppercase tracking-wide text-primary">
-                Seksione
-              </dt>
-              <dd className="text-lg font-semibold">
-                {categoryAnchors.length}
-              </dd>
+
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
+              <Button asChild size="lg" className="h-12 px-8 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">
+                <Link href="/#tools">
+                  Eksploro veglat
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="h-12 px-8 text-base backdrop-blur-sm bg-background/50">
+                <a href={GITHUB_REPO_URL} rel="noreferrer" target="_blank">
+                  <Github className="mr-2 h-4 w-4" />
+                  Kontribuo në GitHub
+                </a>
+              </Button>
             </div>
-            <div className="rounded-2xl bg-muted/40 p-4">
-              <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Qasje
-              </dt>
-              <dd className="text-lg font-semibold">Falas</dd>
-            </div>
-            <div className="rounded-2xl bg-muted/40 p-4">
-              <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Licenca
-              </dt>
-              <dd className="text-lg font-semibold">AGPL-3.0</dd>
-            </div>
-          </dl>
-          <div className="flex flex-wrap gap-2">
-            {categoryAnchors.map(({ category, slug }) => (
-              <Link
-                key={category}
-                className="rounded-full border border-border/60 px-3 py-1 text-xs uppercase tracking-wide text-muted-foreground transition hover:border-primary/50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                href={`#${slug}`}
-              >
-                {category}
-              </Link>
-            ))}
           </div>
         </div>
       </section>
@@ -324,55 +265,58 @@ export default function Page() {
         className="mx-auto flex w-full max-w-[1500px] flex-col gap-10"
         id="tools"
       >
-        <header className="flex flex-col gap-3 text-center sm:text-left">
+        <header className="flex flex-col gap-3 text-center items-center max-w-2xl mx-auto">
           <span className="text-xs font-semibold uppercase tracking-wide text-primary">
             Përzgjedhja aktuale
           </span>
-          <h2 className="text-3xl font-semibold sm:text-4xl">
-            Vegla qytetare gati për t'u përdorur sot
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-balance">
+            Vegla qytetare gati për t'u <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">përdorur sot</span>
           </h2>
-          <p className="text-muted-foreground text-sm sm:text-base">
+          <p className="text-muted-foreground text-lg">
             Çdo vegël është përgatitur me ndërfaqe në shqip, llogaritje të sakta
             dhe referenca të përditësuara nga institucionet e Kosovës.
           </p>
         </header>
-        <div className="space-y-7">
+        <div className="space-y-12">
           {groupedTools.map((group) => {
             const slug = slugifyCategory(group.category);
 
             return (
-              <div key={group.category} className="space-y-4" id={slug}>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-primary text-nowrap">
+              <div key={group.category} className="space-y-6" id={slug}>
+                <div className="flex items-center gap-4">
+                  <span className="text-sm font-bold uppercase tracking-wider text-primary/80 text-nowrap px-3 py-1 rounded-full bg-primary/5 border border-primary/10">
                     {group.category}
                   </span>
-                  <span className="h-px w-full bg-border/60" />
+                  <span className="h-px w-full bg-gradient-to-r from-border/60 to-transparent" />
                 </div>
-                <div className="grid gap-2">
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {group.tools.map((tool) => {
                     const Icon = tool.icon;
 
                     return (
                       <Link
                         key={tool.name}
-                        className="group flex items-start gap-4 rounded-2xl border border-border/50 bg-background/60 px-4 py-3 transition hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                        className="group relative flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/50 dark:bg-white/5 px-6 py-5 transition-all hover:border-primary/20 hover:bg-primary/5 hover:shadow-lg hover:shadow-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 backdrop-blur-sm"
                         href={tool.href}
                       >
-                        <span className="mt-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:bg-primary/15">
-                          <Icon aria-hidden className="h-4 w-4" />
-                        </span>
-                        <span className="flex flex-1 flex-col gap-1">
-                          <span className="text-sm font-medium">
+                        <div className="flex items-start justify-between">
+                          <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-inset ring-primary/20 transition-colors group-hover:bg-primary/20">
+                            <Icon aria-hidden className="h-5 w-5" />
+                          </span>
+                          <ArrowRight
+                            aria-hidden
+                            className="h-5 w-5 text-muted-foreground/50 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-primary"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <h3 className="font-semibold text-lg tracking-tight">
                             {tool.name}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
+                          </h3>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
                             {tool.description}
-                          </span>
-                        </span>
-                        <ArrowRight
-                          aria-hidden
-                          className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary"
-                        />
+                          </p>
+                        </div>
                       </Link>
                     );
                   })}
@@ -384,36 +328,37 @@ export default function Page() {
       </section>
 
       <section
-        className="mx-auto flex w-full max-w-[1500px] flex-col gap-8 text-center sm:text-left"
+        className="mx-auto flex w-full max-w-[1500px] flex-col gap-12 text-center items-center py-12"
         id="about"
       >
-        <span className="text-xs font-semibold uppercase tracking-wide text-primary">
-          Plani i zhvillimit
-        </span>
-        <div className="space-y-4">
-          <h2 className="text-3xl font-semibold sm:text-4xl">
+        <div className="space-y-4 max-w-2xl">
+          <span className="text-xs font-semibold uppercase tracking-wide text-primary">
+            Plani i zhvillimit
+          </span>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-balance">
             Më shumë vegla për interes publik në rrugë e sipër
           </h2>
-          <p className="text-muted-foreground text-sm sm:text-base">
+          <p className="text-muted-foreground text-lg">
             Kosova Tools është projekt i hapur me kod të publikuar në GitHub. Na
             ndihmoni të përcaktojmë veglën e radhës që i shërben komunitetit.
           </p>
         </div>
-        <Card className="border-dashed border-border/60 bg-background/60">
-          <CardHeader className="flex flex-col gap-4 text-center sm:flex-row sm:items-start sm:justify-between sm:text-left">
-            <div className="space-y-2 sm:w-2/3">
-              <CardTitle className="text-2xl font-semibold leading-tight">
+
+        <Card className="w-full max-w-3xl border border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md shadow-xl">
+          <CardHeader className="flex flex-col gap-6 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left p-8">
+            <div className="space-y-3 sm:w-2/3">
+              <CardTitle className="text-2xl font-bold leading-tight">
                 Kemi ide të reja, por duam t'i dëgjojmë edhe tuajat
               </CardTitle>
-              <CardDescription className="text-sm">
+              <CardDescription className="text-base text-muted-foreground/80">
                 Sugjeroni kalkulatorë, eksplorues të të dhënave ose shërbime të
                 tjera që do t'ua lehtësonin punën banorëve dhe institucioneve.
               </CardDescription>
             </div>
             <Button
               asChild
-              className="w-full sm:w-auto sm:self-center"
-              variant="secondary"
+              className="w-full sm:w-auto sm:self-center h-12 px-6 text-base shadow-lg shadow-primary/10"
+              size="lg"
             >
               <a href={GITHUB_NEW_ISSUE_URL} rel="noreferrer" target="_blank">
                 Sugjero një ide
