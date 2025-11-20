@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "updated_at": null,
+    "time": {
+      "key": "period",
+      "granularity": "yearly",
+      "first": "2012",
+      "last": "2024",
+      "count": 13
+    },
+    "fields": [
+      {
+        "key": "gross_eur",
+        "label": "Pagë bruto",
+        "unit": "EUR"
+      },
+      {
+        "key": "net_eur",
+        "label": "Pagë neto",
+        "unit": "EUR"
+      }
+    ],
+    "metrics": ["gross_eur", "net_eur"],
+    "dimensions": {
+      "group": [
+        {
+          "key": "average",
+          "label": "Pagë mesatare"
+        },
+        {
+          "key": "public_sector",
+          "label": "Sektori publik"
+        },
+        {
+          "key": "public_enterprises",
+          "label": "Ndërmarrjet publike"
+        },
+        {
+          "key": "private_sector",
+          "label": "Sektori privat"
+        }
+      ]
+    },
+    "source": "Table 01 in Labour market",
+    "source_urls": ["ASKdata/Labour market/Niveli i Pagave/tab01.px"],
+    "notes": [],
+    "id": "kas_labour_wages_yearly",
+    "generated_at": "2025-11-20T11:28:14.008Z",
+    "title": null
+  },
+  "records": []
+}

@@ -43,6 +43,10 @@ import {
   fetchAirTransportMonthly,
   fetchMotorVehiclesByType,
 } from "./fetchers/transport";
+import {
+  fetchLabourEmploymentActivityGender,
+  fetchWageLevels,
+} from "./fetchers/labour";
 
 type CliArgs = {
   out: string | null;
@@ -145,6 +149,10 @@ export async function main(): Promise<void> {
   await runTask("Motor Vehicles by Type", () =>
     fetchMotorVehiclesByType(outDir, started),
   );
+  await runTask("Labour Employment (activity x gender)", () =>
+    fetchLabourEmploymentActivityGender(outDir, started),
+  );
+  await runTask("Labour Wages", () => fetchWageLevels(outDir, started));
 
   await runTask("CPI Monthly", () => fetchCpiMonthly(outDir, started));
   await runTask("CPI Average Prices", () =>

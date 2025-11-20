@@ -40,6 +40,14 @@ export const PATHS = {
     "Treguesit mujorë",
     "tab02.px",
   ],
+  labour_wages: ["ASKdata", "Labour market", "Niveli i Pagave", "tab01.px"],
+  labour_employment_activity_gender: [
+    "ASKdata",
+    "Labour market",
+    "Anketa e Fuqisë Punëtore",
+    "Quarterly labour market",
+    "tab11.px",
+  ],
   transport_air_passengers_inbound: [
     "ASKdata",
     "Transport",

@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "updated_at": null,
+    "time": {
+      "key": "period",
+      "granularity": "quarterly",
+      "first": "2016-Q1",
+      "last": "2024-Q4",
+      "count": 36
+    },
+    "fields": [
+      {
+        "key": "employment",
+        "label": "Punësimi",
+        "unit": "persona"
+      }
+    ],
+    "metrics": ["employment"],
+    "dimensions": {
+      "quarter": [
+        {
+          "key": "Q1",
+          "label": "Q4"
+        },
+        {
+          "key": "Q2",
+          "label": "Q3"
+        },
+        {
+          "key": "Q3",
+          "label": "Q2"
+        },
+        {
+          "key": "Q4",
+          "label": "Q1"
+        }
+      ],
+      "activity": [
+        {
+          "key": "bujq_si_pylltari_dhe_peshkim",
+          "label": "Bujqësi, pylltari dhe peshkim"
+        },
+        {
+          "key": "minierat_dhe_xehroret",
+          "label": "Minierat dhe xehroret"
+        },
+        {
+          "key": "prodhimi",
+          "label": "Prodhimi"
+        },
+        {
+          "key": "furnizimi_me_elektricitet_gaz_avull_dhe_klimatizim",
+          "label": "Furnizimi me elektricitet, gaz, avull dhe klimatizim"
+        },
+        {
+          "key": "furnizimi_me_uj_uj_rat_e_zeza_menaxhim_i_mbetjeve",
+          "label": "Furnizimi me ujë, ujërat e zeza, menaxhim i mbetjeve"
+        },
+        {
+          "key": "nd_rtimtari",
+          "label": "Ndërtimtari"
+        },
+        {
+          "key": "tregti_me_shumic_dhe_pakic_riparime_automjetesh_dhe_moto_ikletash",
+          "label": "Tregti me shumicë dhe pakicë, riparime automjetesh dhe motoçikletash"
+        },
+        {
+          "key": "aktivitete_akomodimi_dhe_sh_rbimesh_ushqimi",
+          "label": "Aktivitete akomodimi dhe shërbimesh ushqimi"
+        },
+        {
+          "key": "transport_dhe_depozitim",
+          "label": "Transport dhe depozitim"
+        },
+        {
+          "key": "informim_dhe_komunikim",
+          "label": "Informim dhe komunikim"
+        },
+        {
+          "key": "aktivitete_financiare_dhe_sigurimesh",
+          "label": "Aktivitete financiare dhe sigurimesh"
+        },
+        {
+          "key": "aktivitete_me_prona_t_paluajtshme",
+          "label": "Aktivitete me prona të paluajtshme"
+        },
+        {
+          "key": "aktivitete_profesionale_shkencore_dhe_teknike",
+          "label": "Aktivitete profesionale, shkencore dhe teknike"
+        },
+        {
+          "key": "aktivitete_administrative_dhe_sh_rbime_mb_shtet_se",
+          "label": "Aktivitete administrative dhe shërbime mbështetëse"
+        },
+        {
+          "key": "administrata_publike_dhe_mbrojtja_sigurimi_i_detyruesh_m_social",
+          "label": "Administrata publike dhe mbrojtja, sigurimi i detyrueshëm social"
+        },
+        {
+          "key": "arsimi",
+          "label": "Arsimi"
+        },
+        {
+          "key": "aktivitetet_e_sh_ndetit_njer_zor_dhe_pun_s_sociale",
+          "label": "Aktivitetet e shëndetit njerëzor dhe punës sociale"
+        },
+        {
+          "key": "arti_zbavitja_dhe_rekreacioni",
+          "label": "Arti, zbavitja dhe rekreacioni"
+        },
+        {
+          "key": "aktivitete_t_sh_rbimeve_t_tjera",
+          "label": "Aktivitete të shërbimeve të tjera"
+        },
+        {
+          "key": "aktivitetet_e_ekonomive_familjare_si_pun_dh_n_s_aktivitete_prodhuese_t_mallrave_dhe_sh_rbimeve_t_padiferencuara_t_ekonomive_familjare_p_r_p_rdorim_vetanak",
+          "label": "Aktivitetet e ekonomive familjare si punëdhënës; aktivitete prodhuese të mallrave dhe shërbimeve të padiferencuara të ekonomive familjare për përdorim vetanak"
+        },
+        {
+          "key": "aktivitete_t_institucioneve_dhe_organizatave_jasht",
+          "label": "Aktivitete të institucioneve dhe organizatave jashtë"
+        }
+      ],
+      "gender": [
+        {
+          "key": "male",
+          "label": "Meshkuj"
+        },
+        {
+          "key": "female",
+          "label": "Femra"
+        },
+        {
+          "key": "total",
+          "label": "Gjithsej"
+        }
+      ]
+    },
+    "source": "Table 11 in Labour market",
+    "source_urls": [
+      "ASKdata/Labour market/Anketa e Fuqisë Punëtore/Quarterly labour market/tab11.px"
+    ],
+    "notes": [
+      "Vlerat origjinale janë në mijë persona; të konvertuara këtu në numër personash (x1000)."
+    ],
+    "id": "kas_labour_employment_activity_gender_quarterly",
+    "generated_at": "2025-11-20T11:28:14.008Z",
+    "title": null
+  },
+  "records": []
+}

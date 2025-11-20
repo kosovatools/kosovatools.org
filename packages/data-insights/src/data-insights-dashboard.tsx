@@ -4,6 +4,8 @@ import {
   fuelDataset,
   tradeChaptersMonthly,
   vehicleTypesYearly,
+  employmentActivityGender,
+  wageLevels,
   tourismCountry,
   tourismRegion,
 } from "@workspace/kas-data";
@@ -12,6 +14,8 @@ import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-rendere
 import { FuelBalanceChart } from "./charts/fuel-balance-chart";
 import { TradeChapterStackedChart } from "./charts/trade-chapter-stacked-chart";
 import { TradePartnersStackedChart } from "./charts/trade-partners-stacked-chart";
+import { EmploymentActivityChart } from "./charts/employment-activity-chart";
+import { WageLevelsChart } from "./charts/wage-levels-chart";
 import { TourismCountryStackedChart } from "./charts/tourism-country-stacked-chart";
 import { TourismRegionCharts } from "./charts/tourism-region-stacked-chart";
 import { VehicleTypesStackedChart } from "./charts/vehicle-types-stacked-chart";
@@ -36,6 +40,24 @@ export function DataInsightsDashboard() {
           description='Partnerët kryesorë tregtarë gjatë vitit të fundit. Rregullo përzgjedhjen ose aktivizo kategorinë "Të tjerët" për të parë partnerët më të vegjël.'
         >
           {(dataset) => <TradePartnersStackedChart dataset={dataset} top={6} />}
+        </DatasetRenderer>
+      </section>
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-semibold tracking-tight">Tregu i punës</h2>
+        <DatasetRenderer
+          dataset={wageLevels}
+          title="Pagat mesatare sipas sektorit"
+          description="Pagat bruto/neto vjetore për sektorin publik, ndërmarrjet publike dhe sektorin privat. Ndrysho metrikën ose intervalin kohor për të parë dallimet mes grupeve."
+        >
+          {(dataset) => <WageLevelsChart dataset={dataset} />}
+        </DatasetRenderer>
+        <DatasetRenderer
+          dataset={employmentActivityGender}
+          title="Punësimi sipas aktivitetit dhe gjinisë"
+          description="Punësimi tremujor (persona) sipas aktivitetit ekonomik dhe gjinisë. Filtro gjininë ose ndrysho grupimin për të parë tendencat kryesore."
+        >
+          {(dataset) => <EmploymentActivityChart dataset={dataset} />}
         </DatasetRenderer>
       </section>
 

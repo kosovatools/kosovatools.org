@@ -251,7 +251,7 @@ export async function runPxDatasetPipeline<
     if (!alias || !values.length) return;
     if (alias === resolvedTime.alias) return; // never include period in dimensions
     dimensionOptions[alias] = values.map((v) => {
-      const label = v.metaLabel || v.label || v.code;
+      const label = v.label || v.metaLabel || v.code;
       const optionKey =
         typeof v.key === "string" && v.key.length ? v.key : v.code;
       return {

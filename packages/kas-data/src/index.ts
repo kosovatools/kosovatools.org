@@ -5,8 +5,10 @@ export * from "./datasets/tourism";
 export * from "./datasets/transport";
 export * from "./datasets/cpi";
 export * from "./datasets/construction-cost-index";
+export * from "./datasets/labour";
 export * from "./types/cpi";
 export * from "./types/construction-cost-index";
+export * from "./types/labour";
 export * from "./types/trade";
 
 export type {
