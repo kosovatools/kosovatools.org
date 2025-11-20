@@ -38,6 +38,16 @@ export const DEFAULT_YEARLY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinitio
     { key: null, label: "Gjithë seria" },
   ];
 
+export const DEFAULT_QUARTERLY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> =
+  [
+    { key: 4, label: "4 tremujorë" },
+    { key: 8, label: "8 tremujorë" },
+    { key: 12, label: "3 vjet" },
+    { key: 20, label: "5 vjet" },
+    { key: 40, label: "10 vjet" },
+    { key: null, label: "Gjithë seria" },
+  ];
+
 export const DEFAULT_TIME_RANGE: TimeRangeOption = 36;
 
 export type DatasetTimeMetadata = Readonly<{
@@ -49,12 +59,14 @@ export function limitTimeRangeOptions(
   timeMeta: DatasetTimeMetadata | null | undefined,
 ): ReadonlyArray<TimeRangeDefinition> {
   const granularity = timeMeta?.granularity;
-  const baseOptions =
-    granularity === "yearly"
-      ? DEFAULT_YEARLY_TIME_RANGE_OPTIONS
-      : DEFAULT_TIME_RANGE_OPTIONS;
+  const baseOptions = getDefaultTimeRangeOptions(granularity);
 
-  if (!granularity || (granularity !== "monthly" && granularity !== "yearly")) {
+  if (
+    !granularity ||
+    (granularity !== "monthly" &&
+      granularity !== "quarterly" &&
+      granularity !== "yearly")
+  ) {
     return baseOptions;
   }
 
@@ -81,4 +93,17 @@ export function limitTimeRangeOptions(
 
   const fallback = baseOptions.filter((option) => option.key == null);
   return fallback.length ? fallback : limited;
+}
+
+function getDefaultTimeRangeOptions(
+  granularity: PeriodGrouping | null | undefined,
+): ReadonlyArray<TimeRangeDefinition> {
+  switch (granularity) {
+    case "yearly":
+      return DEFAULT_YEARLY_TIME_RANGE_OPTIONS;
+    case "quarterly":
+      return DEFAULT_QUARTERLY_TIME_RANGE_OPTIONS;
+    default:
+      return DEFAULT_TIME_RANGE_OPTIONS;
+  }
 }

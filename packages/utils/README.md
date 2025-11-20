@@ -28,6 +28,7 @@ import {
   getPeriodFormatter,
   DEFAULT_TIME_RANGE,
   DEFAULT_TIME_RANGE_OPTIONS,
+  DEFAULT_QUARTERLY_TIME_RANGE_OPTIONS,
   DEFAULT_YEARLY_TIME_RANGE_OPTIONS,
 } from "@workspace/utils";
 ```
@@ -36,8 +37,8 @@ Use `@workspace/kas-data` when you need the KAS datasets or domain-specific
 stack wrappers.
 
 For time range selectors, call `limitTimeRangeOptions(meta.time)` so monthly
-datasets receive month-based intervals and yearly datasets get year-based
-intervals automatically.
+datasets receive month-based intervals, quarterly datasets get quarter-based
+intervals, and yearly datasets get year-based intervals automatically.
 
 ## Maintenance
 
