@@ -237,6 +237,12 @@ export default function Page() {
               </a>{" "}
               dhe kontribuoni lirshëm.
             </p>
+            <p className="text-xs text-amber-700 sm:text-sm">
+              Të dhënat burimore mbeten pronë e institucioneve përkatëse; jo
+              çdo dataset është në domen publik. Ne japim atributet për
+              burimet, respektojmë licencat e tyre dhe nuk pretendojmë pronësi
+              mbi përmbajtjen.
+            </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
             <Button asChild size="lg">
