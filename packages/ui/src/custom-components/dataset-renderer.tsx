@@ -29,6 +29,7 @@ type DatasetRendererPropsWithDataset<TDataset> = {
   isEmpty?: (dataset: TDataset) => boolean;
   emptyState?: React.ReactNode;
   className?: string;
+  id?: string;
 };
 
 // Props when using query
@@ -41,6 +42,7 @@ type DatasetRendererPropsWithQuery<TDataset> = {
   isEmpty?: (dataset: TDataset) => boolean;
   emptyState?: React.ReactNode;
   className?: string;
+  id?: string;
 };
 
 export type DatasetRendererProps<TDataset> =
@@ -61,6 +63,7 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
   isEmpty,
   emptyState,
   className,
+  id,
 }: DatasetRendererProps<TDataset>) {
   // Handle query-based loading
   if (query) {
@@ -125,11 +128,22 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
     typeof children === "function" ? children(resolvedDataset) : children;
 
   return (
-    <section className={cn("space-y-4", className)}>
+    <section id={id} className={cn("space-y-4", className)}>
       {hasHeader ? (
         <div className="space-y-2">
           {typeof title === "string" ? (
-            <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
+            <h2 className="text-2xl font-semibold tracking-tight">
+              {id ? (
+                <a
+                  href={`#${id}`}
+                  className="hover:underline decoration-muted-foreground/50 underline-offset-4"
+                >
+                  {title}
+                </a>
+              ) : (
+                title
+              )}
+            </h2>
           ) : (
             title
           )}

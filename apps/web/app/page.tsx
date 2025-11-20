@@ -289,7 +289,9 @@ export default function Page() {
               <dt className="text-xs font-semibold uppercase tracking-wide text-primary">
                 Seksione
               </dt>
-              <dd className="text-lg font-semibold">{categoryAnchors.length}</dd>
+              <dd className="text-lg font-semibold">
+                {categoryAnchors.length}
+              </dd>
             </div>
             <div className="rounded-2xl bg-muted/40 p-4">
               <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">

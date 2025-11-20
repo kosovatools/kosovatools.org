@@ -12,13 +12,18 @@ import { CpiAveragePricesChart } from "./charts/cpi-average-prices-chart";
 export function InflationTracker() {
   return (
     <div className="space-y-12">
-      <DatasetRenderer dataset={cpiDataset}>
+      <DatasetRenderer
+        dataset={cpiDataset}
+        id="cpi-index"
+        title="Indeksi i Çmimeve të Konsumit"
+      >
         {(dataset) => <CpiChart dataset={dataset} />}
       </DatasetRenderer>
 
       <DatasetRenderer
         dataset={cpiAveragePricesYearly}
         title="Çmimet mesatare vjetore"
+        id="cpi-average-prices"
         description="Analizo trendet e çmimeve për artikuj specifikë të shportës së CPI-së dhe krahaso deri në pesë produkte / shërbime në të njëjtin grafik."
       >
         {(dataset) => <CpiAveragePricesChart dataset={dataset} />}
@@ -27,6 +32,7 @@ export function InflationTracker() {
       <DatasetRenderer
         dataset={constructionCostIndexDataset}
         title="Indeksi i kostos së ndërtimit"
+        id="construction-cost-index"
         description="Krahaso kostot tremujore të materialeve, pagave dhe komponentëve të tjerë për ndërtesat shumëkatëshe (baza 2015 = 100)."
       >
         {(dataset) => <ConstructionCostIndexChart dataset={dataset} />}

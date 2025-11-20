@@ -10,6 +10,7 @@ export function EnergyImportAndProduction() {
       <DatasetRenderer
         dataset={electricityDataset}
         title="Importet kundrejt prodhimit vendas"
+        id="energy-imports-vs-production"
         description="Krahaso importet mujore të energjisë elektrike me prodhimin vendor për të parë se si ndryshon varësia nga energjia e importuar në periudha të shkurtra ose të zgjatura."
       >
         {(dataset) => <ElectricityBalanceStackedAreaChart dataset={dataset} />}
@@ -17,6 +18,7 @@ export function EnergyImportAndProduction() {
       <DatasetRenderer
         dataset={electricityDataset}
         title="Si ndryshon prodhimi vendas sipas burimit"
+        id="energy-production-by-source"
         description="Shiko sa kontribuojnë termocentralet, hidrocentralet dhe burimet me erë ose diell në prodhimin total vendor për të identifikuar periudhat kur burimet e ripërtritshme mbulojnë më shumë kërkesën."
       >
         {(dataset) => (

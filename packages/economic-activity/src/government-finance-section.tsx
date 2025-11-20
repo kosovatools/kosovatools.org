@@ -18,6 +18,7 @@ export function GovernmentFinanceSection() {
         dataset={governmentRevenueQuarterly}
         isEmpty={(data) => data.records.length === 0}
         title="Të hyrat e Qeverisë së Përgjithshme (ESA 2010)"
+        id="government-revenue"
         description="Struktura tremujore e të hyrave sipas ESA: tatime, transferta dhe hyrje nga prona."
       >
         {(dataset) => <GovernmentRevenueStackedChart dataset={dataset} />}
@@ -27,6 +28,7 @@ export function GovernmentFinanceSection() {
         dataset={governmentExpenditureQuarterly}
         isEmpty={(data) => data.records.length === 0}
         title="Shpenzimet e Qeverisë së Përgjithshme (ESA 2010)"
+        id="government-expenditure"
         description="Shpenzimet tremujore sipas funksioneve ESA, përfshirë kompensimet, subvencionet dhe investimet kapitale."
       >
         {(dataset) => (

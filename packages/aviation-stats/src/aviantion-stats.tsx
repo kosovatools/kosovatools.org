@@ -5,7 +5,11 @@ import { AviationStatsChart } from "./charts/aviation-stats-chart";
 
 export function AviationStats() {
   return (
-    <DatasetRenderer dataset={airTransportMonthly}>
+    <DatasetRenderer
+      dataset={airTransportMonthly}
+      id="aviation-stats"
+      title="Statistikat e Aviacionit"
+    >
       {(dataset) => <AviationStatsChart dataset={dataset} />}
     </DatasetRenderer>
   );

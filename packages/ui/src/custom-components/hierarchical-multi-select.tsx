@@ -331,7 +331,16 @@ export function HierarchicalMultiSelect({
         );
       });
     },
-    [descendants, expanded, minSelected, nodeClassName, selectedSet, selectionBehavior, toggleExpand, updateSelection],
+    [
+      descendants,
+      expanded,
+      minSelected,
+      nodeClassName,
+      selectedSet,
+      selectionBehavior,
+      toggleExpand,
+      updateSelection,
+    ],
   );
 
   const handleCollapseAll = React.useCallback(() => {

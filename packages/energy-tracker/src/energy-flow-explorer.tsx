@@ -35,6 +35,7 @@ export function EnergyFlowExplorer() {
           </div>
         }
         title="Trendi i flukseve mujore"
+        id="monthly-flow-trend"
         description="Analizo importet, eksportet dhe bilancin neto të energjisë elektrike të Kosovës përgjatë periudhave të disponueshme nga ENTSO-E."
       >
         {(dataset) => <MonthlyFlowTrendChart dataset={dataset} />}
@@ -49,6 +50,7 @@ export function EnergyFlowExplorer() {
           </p>
         }
         title="Modeli ditor i flukseve"
+        id="daily-flow-pattern"
         description="Shiko importet dhe eksportet ditore për muajin më të fundit të përpunuar nga ENTSO-E Transparency Platform."
       >
         {(dataset) => <DailyFlowChart dataset={dataset} />}

@@ -30,6 +30,7 @@ function CategorySection({
   return (
     <DatasetRenderer
       title="Qarkullimi sipas kategorive kryesore"
+      id="turnover-by-category"
       description={
         "Shuma totale vjetore e qarkullimit sipas degëve të biznesit për vitin e fundit të përditësuar."
       }
@@ -64,6 +65,7 @@ function CitySection({
         </p>
       }
       title="Qarkullimi sipas komunave të Kosovës"
+      id="turnover-by-city"
       description={
         "Komunat me qarkullimin më të lartë për vitin e fundit në dispozicion."
       }
@@ -91,6 +93,7 @@ function CategoryTrendSection({
         </p>
       }
       title="Trendi shumëvjeçar i kategorive kryesore"
+      id="category-trend"
       description="Krahaso qarkullimin vjetor të degëve më të mëdha të biznesit. Shifrat paraqiten në kolonë të grumbulluar për të parë kontributin e çdo kategorie përgjatë viteve."
     >
       {(dataset) => <CategoriesOverYearsChart dataset={dataset} />}
@@ -113,6 +116,7 @@ function MonthlyCategorySection({
         </p>
       }
       title="Dinamika mujore e kategorive"
+      id="monthly-category-dynamics"
       description={
         "Grafiku i grumbulluar paraqet kontributet mujore të kategorive më të mëdha, të agreguara nga të gjitha komunat."
       }
@@ -137,6 +141,7 @@ function TopCategoryByCitySection({
         </p>
       }
       title="Kategoritë dominuese sipas komunave"
+      id="top-category-by-city"
       description="Zgjedh një komunë për të parë cilat kategori biznesi kanë dominuar qarkullimin në vite. Grafiku i grumbulluar tregon shpërndarjen e kategorive kryesore sipas qarkullimit të raportuar."
     >
       {(dataset) => <TopCategoryByCityStackedChart dataset={dataset} />}
