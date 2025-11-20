@@ -47,6 +47,11 @@ import {
   fetchLabourEmploymentActivityGender,
   fetchWageLevels,
 } from "./fetchers/labour";
+import { fetchGdpByActivityQuarterly } from "./fetchers/gdp";
+import {
+  fetchGovernmentExpenditure,
+  fetchGovernmentRevenue,
+} from "./fetchers/government";
 
 type CliArgs = {
   out: string | null;
@@ -121,6 +126,15 @@ export async function main(): Promise<void> {
   const tradeChaptersMonthlyDataset = await runTask(
     "Trade Chapters Monthly",
     () => fetchTradeChaptersMonthly(outDir, started),
+  );
+  await runTask("GDP by Activity (quarterly)", () =>
+    fetchGdpByActivityQuarterly(outDir, started),
+  );
+  await runTask("Government Expenditure (quarterly)", () =>
+    fetchGovernmentExpenditure(outDir, started),
+  );
+  await runTask("Government Revenue (quarterly)", () =>
+    fetchGovernmentRevenue(outDir, started),
   );
   const energyDataset = await runTask("Energy Monthly", () =>
     fetchEnergyMonthly(outDir, started),

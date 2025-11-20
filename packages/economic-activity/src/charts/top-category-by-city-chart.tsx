@@ -76,11 +76,6 @@ export function TopCategoryByCityStackedChart({
     }
   }, [citySummaries, selectedCity]);
 
-  const selectedSummary = React.useMemo(() => {
-    if (!selectedCity) return null;
-    return citySummaries.find((entry) => entry.city === selectedCity) ?? null;
-  }, [citySummaries, selectedCity]);
-
   const filteredRecords = React.useMemo(() => {
     if (!selectedCity) return [];
     return dataset.records.filter((record) => record.city === selectedCity);

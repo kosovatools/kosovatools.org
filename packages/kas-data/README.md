@@ -94,7 +94,8 @@ with the exported structures.
 
 1. **Identify the PX path**: add a key to `src/types/paths.ts` so the table parts are reusable.
 2. **Define types**: if needed, add record/metric types under `src/types/` to keep downstream usage typed.
-3. **Write a fetcher**: create `scripts/fetchers/<name>.ts` using `runPxDatasetPipeline`. Normalize labels with `resolveValues` (strip prefixes, slugify keys) and set required units. If the source reports “thousands” or similar, scale values and note the conversion in `meta.notes`.
-4. **Register in the CLI**: import and call the fetcher from `scripts/fetch_kas.ts` so `pnpm --filter @workspace/kas-data fetch-data` picks it up.
-5. **Add a loader**: import the generated JSON under `src/datasets/`, wrap with `createDataset`, and re-export from `src/index.ts`.
-6. **Fetch + check in**: run the fetcher (or `fetch-data`) to generate `data/<file>.json`. Clear any skip-worktree flags for files you intend to commit (`git update-index --no-skip-worktree ...`) and include the JSON when sharing the dataset.
+3. **Write a fetcher**: create `scripts/fetchers/<name>.ts` using `runPxDatasetPipeline`. Normalize labels with `resolveValues` (strip code prefixes before saving and slugify keys) and set required units. If the source reports “thousands/millions” (or any other multiplier), scale values and note the conversion in `meta.notes`.
+4. **Handle hierarchies/totals**: if dimensions are hierarchical (codes like `D21`, `D211`), keep hierarchy info in `dimension_hierarchies` but store human labels _without the prefixes_ (and filter out “Gjithsej” totals from selectable options when stacking). Hierarchy metadata is just for structure; labels should stay prefix-free throughout the dataset.
+5. **Register in the CLI**: import and call the fetcher from `scripts/fetch_kas.ts` so `pnpm --filter @workspace/kas-data fetch-data` picks it up.
+6. **Add a loader**: import the generated JSON under `src/datasets/`, wrap with `createDataset`, and re-export from `src/index.ts`.
+7. **Fetch + check in**: run the fetcher (or `fetch-data`) to generate `data/<file>.json`. Clear any skip-worktree flags for files you intend to commit (`git update-index --no-skip-worktree ...`) and include the JSON when sharing the dataset.

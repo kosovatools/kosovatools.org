@@ -160,9 +160,9 @@ export function CpiChart({
         nodes={hierarchicalNodes}
         selectedIds={selectedGroups}
         defaultExpandedIds={[CPI_DEFAULT_GROUP_CODE]}
-        onSelectionChange={(ids) =>
-          setSelectedGroups(ids.length ? ids : [CPI_DEFAULT_GROUP_CODE])
-        }
+        onSelectionChange={(ids) => setSelectedGroups(ids)}
+        selectionBehavior="toggle-children"
+        minSelected={1}
       />
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-between gap-3">

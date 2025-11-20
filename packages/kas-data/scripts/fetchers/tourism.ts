@@ -94,11 +94,8 @@ export async function fetchTourismRegion(outDir: string, generatedAt: string) {
       const r = axes.region;
       const g = axes.visitor_group;
       if (!r || !g) return null;
-      const visitorLabel = g.metaLabel || g.label || g.code;
-      const visitorSlug = normalizeGroupLabel(visitorLabel) as
-        | "total"
-        | "local"
-        | "external";
+      const visitorSlug =
+        (g.value.key as TourismRegionRecord["visitor_group"]) || "total";
       return {
         period,
         region: r.code,

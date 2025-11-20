@@ -1,6 +1,10 @@
 import type { WageGroup, WageMetric, WageRecord } from "../../src/types/labour";
 import { PATHS } from "../../src/types/paths";
-import { normalizeWhitespace, slugifyLabel } from "../lib/utils";
+import {
+  normalizeQuarterCode,
+  normalizeWhitespace,
+  slugifyLabel,
+} from "../lib/utils";
 import { runPxDatasetPipeline } from "../pipeline/px-dataset";
 import type {
   EmploymentActivityGenderRecord,
@@ -132,30 +136,9 @@ export async function fetchWageLevels(outDir: string, generatedAt: string) {
   });
 }
 
-function normalizeQuarterLabel(label: string): string {
-  const text = label.trim().toUpperCase();
-  switch (text) {
-    case "TM1":
-    case "Q1":
-      return "Q1";
-    case "TM2":
-    case "Q2":
-      return "Q2";
-    case "TM3":
-    case "Q3":
-      return "Q3";
-    case "TM4":
-    case "Q4":
-      return "Q4";
-    default:
-      return text || "Q1";
-  }
-}
-
 function cleanActivityLabel(label: string): string {
   const trimmed = label.trim();
   const stripped = trimmed.split("-", 2).at(-1)!.trim();
-  console.log({ trimmed, stripped });
   return stripped.length ? stripped : trimmed;
 }
 
@@ -181,7 +164,7 @@ export async function fetchLabourEmploymentActivityGender(
         text: "Tremujoret",
         alias: "quarter",
         toLabel: (valueCode, context) =>
-          normalizeQuarterLabel(
+          normalizeQuarterCode(
             context.value.metaLabel || context.value.label || valueCode,
           ),
       },
@@ -245,7 +228,7 @@ export async function fetchLabourEmploymentActivityGender(
       const quarter = axes.quarter;
       if (!activity || !gender || !quarter) return null;
 
-      const normalizedQuarter = normalizeQuarterLabel(
+      const normalizedQuarter = normalizeQuarterCode(
         quarter.metaLabel || quarter.label || quarter.code,
       );
       const normalizedPeriod = `${period}-${normalizedQuarter}`;

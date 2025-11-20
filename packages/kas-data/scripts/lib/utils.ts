@@ -194,6 +194,34 @@ export function normalizeWhitespace(text: string | null | undefined): string {
     .trim();
 }
 
+export function stripCodePrefix(label: string): string {
+  const cleaned = label
+    .replace(/^[A-Z]*\d+(?:[./-]?\d+|[A-Z0-9])*(?:\s+|[.-]\s*)/i, "")
+    .trim();
+  return cleaned.length ? cleaned : label;
+}
+
+export function normalizeQuarterCode(label: string): string {
+  const text = String(label ?? "")
+    .trim()
+    .toUpperCase();
+  const match = text.match(/(?:TM|Q)?\s*([1-4])/);
+  if (match && match[1]) return `Q${match[1]}`;
+  return "Q1";
+}
+
+export function normalizeQuarterPeriod(raw: string): string {
+  const cleaned = String(raw ?? "").replace(/\s+/g, "");
+  const match = cleaned.match(/(\d{4}).*?([1-4])/);
+  if (match) {
+    const [, year, quarter] = match;
+    return `${year}-Q${quarter}`;
+  }
+  const yearOnly = cleaned.match(/(\d{4})$/);
+  if (yearOnly) return `${yearOnly[1]}-Q1`;
+  return cleaned || "0000-Q1";
+}
+
 const UPPERCASE_WORDS = new Set(["FOB", "CIF", "EU", "USA", "UK", "VAT"]);
 
 export function smartTitleCase(word: string): string {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import { ConstructionCostIndexDatasetView } from "@workspace/kas-data";
@@ -67,14 +67,6 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
   );
   const [timeRange, setTimeRange] = useState<TimeRangeOption>(12);
 
-  useEffect(() => {
-    setSelectedCategories((prev) => {
-      const filtered = prev.filter((key) => labelMap.has(key));
-      if (filtered.length) return filtered;
-      return defaultSelection;
-    });
-  }, [defaultSelection, labelMap]);
-
   const datasetView = useMemo(
     () => dataset.limit(timeRange),
     [dataset, timeRange],
@@ -121,11 +113,6 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
     };
   }, [datasetView, labelMap, selectedCategories]);
 
-  const handleSelectionChange = (ids: string[]) => {
-    const filtered = ids.filter((id) => labelMap.has(id));
-    setSelectedCategories(filtered.length ? filtered : defaultSelection);
-  };
-
   const hasData = chartData.length > 0 && Object.keys(chartConfig).length > 0;
 
   const formatAxisValue = (value: number) =>
@@ -145,8 +132,10 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
         nodes={hierarchicalNodes}
         selectedIds={selectedCategories}
         defaultExpandedIds={[...CONSTRUCTION_DEFAULT_EXPANDED_CODES]}
-        onSelectionChange={handleSelectionChange}
+        onSelectionChange={setSelectedCategories}
         emptyMessage="Nuk ka kategori të disponueshme."
+        selectionBehavior="toggle-children"
+        minSelected={1}
       />
       <div className="space-y-2">
         <OptionSelector

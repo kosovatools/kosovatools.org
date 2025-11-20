@@ -182,6 +182,14 @@ export async function fetchCpiMonthly(outDir: string, generatedAt: string) {
   const records = mergeCpiRecords(indexDataset, changeDataset);
   const { first, last, count } = collectPeriodStats(records);
   const groupOptions = collectGroupOptions(indexDataset, changeDataset);
+  const groupHierarchy = buildNumberedHierarchy(groupOptions);
+  const groupLabelMap = new Map(
+    groupHierarchy.map((node) => [node.key, node.label]),
+  );
+  const normalizedGroupOptions = groupOptions.map((option) => ({
+    ...option,
+    label: groupLabelMap.get(option.key) ?? option.label,
+  }));
 
   const { description: source, urls: sourceUrls } = describePxSources([
     PATHS.cpi_index,
@@ -189,7 +197,6 @@ export async function fetchCpiMonthly(outDir: string, generatedAt: string) {
   ]);
   const fields = CPI_METRIC_FIELDS.map((field) => ({ ...field }));
   const metrics = fields.map((field) => field.key);
-  const groupHierarchy = buildNumberedHierarchy(groupOptions);
 
   const meta = createMeta<CpiMetaExtras>(CPI_DATASET_ID, generatedAt, {
     updated_at: latestTimestamp([
@@ -199,7 +206,7 @@ export async function fetchCpiMonthly(outDir: string, generatedAt: string) {
     time: { key: "period", granularity: "monthly", first, last, count },
     fields,
     metrics,
-    dimensions: { group: groupOptions },
+    dimensions: { group: normalizedGroupOptions },
     dimension_hierarchies: { group: groupHierarchy },
     source,
     source_urls: sourceUrls,

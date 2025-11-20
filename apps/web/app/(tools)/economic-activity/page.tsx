@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 
-import { TurnoverDashboard } from "@workspace/economic-activity";
+import {
+  GdpByActivitySection,
+  GovernmentFinanceSection,
+  TurnoverDashboard,
+} from "@workspace/economic-activity";
 import ReactQueryProvider from "@/components/react-query-provider";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export const metadata: Metadata = {
   title: "Aktiviteti ekonomik – Qarkullimi sipas kategorive dhe komunave",
   description:
-    "Vizualizoni qarkullimin vjetor të bizneseve sipas kategorive ekonomike dhe komunave të Kosovës me të dhëna nga Ministria e Financave.",
+    "Vizualizoni qarkullimin vjetor të bizneseve dhe bruto produktin vendor sipas aktiviteteve ekonomike me të dhëna nga Ministria e Financave dhe ASK.",
   keywords: [
     "aktiviteti ekonomik",
     "qarkullimi i bizneseve",
@@ -23,7 +27,7 @@ export const metadata: Metadata = {
     url: "/economic-activity",
     title: "Aktiviteti ekonomik – Qarkullimi sipas kategorive dhe komunave",
     description:
-      "Qarkullimi vjetor i bizneseve në Kosovë sipas kategorive ekonomike dhe komunave, i publikuar nga Ministria e Financave.",
+      "Qarkullimi vjetor i bizneseve në Kosovë sipas kategorive ekonomike dhe komunave, dhe BPV tremujor sipas aktiviteteve nga ASK.",
     siteName: "Kosova Tools",
     locale: "sq_AL",
   },
@@ -31,7 +35,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Aktiviteti ekonomik – Qarkullimi i bizneseve në Kosovë",
     description:
-      "Analizoni qarkullimin e bizneseve sipas degëve ekonomike dhe komunave të Kosovës me të dhënat më të fundit të MFK.",
+      "Analizoni qarkullimin e bizneseve dhe BPV sipas aktiviteteve ekonomike me të dhënat më të fundit të MFK dhe ASK.",
   },
 };
 
@@ -40,9 +44,13 @@ export default function EconomicActivityPage() {
     <ReactQueryProvider>
       <ToolPage
         title="Qarkullimi i bizneseve në Kosovë"
-        description="Vizualizime të qarkullimit sipas degëve ekonomike dhe komunave për të kuptuar ku përqëndrohen bizneset që gjenerojnë më shumë të ardhura."
+        description="Vizualizime të qarkullimit sipas degëve ekonomike dhe komunave, dhe BPV tremujor sipas aktiviteteve për të kuptuar dinamiken e ekonomisë."
       >
-        <TurnoverDashboard />
+        <div className="space-y-12">
+          <GovernmentFinanceSection />
+          <GdpByActivitySection />
+          <TurnoverDashboard />
+        </div>
       </ToolPage>
     </ReactQueryProvider>
   );

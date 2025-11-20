@@ -3,16 +3,10 @@ import { runPxDatasetPipeline } from "../pipeline/px-dataset";
 import { PATHS } from "../../src/types/paths";
 import type { ConstructionCostIndexRecord } from "../../src/types/construction-cost-index";
 import { buildNumberedHierarchy } from "../lib/hierarchy";
+import { normalizeQuarterCode, stripCodePrefix } from "../lib/utils";
 
 const DATASET_ID = "kas_construction_cost_index_quarterly";
 const FILENAME = "kas_construction_cost_index_quarterly.json";
-
-const QUARTER_LABELS: Record<string, string> = {
-  TM1: "Q1",
-  TM2: "Q2",
-  TM3: "Q3",
-  TM4: "Q4",
-};
 
 const PERIOD_AXIS_VALUES = [
   { code: "4", label: "TM1" },
@@ -72,7 +66,7 @@ export async function fetchConstructionCostIndex(
         throw new PxError(`${datasetId}: missing period or cost axes`);
       }
 
-      const normalizedQuarter = normalizeQuarter(
+      const normalizedQuarter = normalizeQuarterCode(
         quarter.metaLabel || quarter.label,
       );
       const normalizedPeriod = `${period}-${normalizedQuarter}`;
@@ -146,11 +140,26 @@ export async function fetchConstructionCostIndex(
 
       const dimensionHierarchy = buildNumberedHierarchy(
         sanitizedDimensions.cost_category ?? [],
+      ).map((node) => ({
+        ...node,
+        label: stripCodePrefix(node.label),
+      }));
+      const labelMap = new Map(
+        dimensionHierarchy.map((node) => [node.key, node.label]),
       );
+      const normalizedDimensions = {
+        ...sanitizedDimensions,
+        cost_category: (sanitizedDimensions.cost_category ?? []).map(
+          (option) => ({
+            ...option,
+            label: labelMap.get(option.key) ?? option.label,
+          }),
+        ),
+      };
 
       const nextMeta = {
         ...nextMetaBase,
-        dimensions: sanitizedDimensions,
+        dimensions: normalizedDimensions,
         dimension_hierarchies: {
           cost_category: dimensionHierarchy,
         },
@@ -159,17 +168,6 @@ export async function fetchConstructionCostIndex(
       return { meta: nextMeta, records: filteredRecords };
     },
   });
-}
-
-function normalizeQuarter(label: string): string {
-  const normalized = label.trim().toUpperCase();
-  const mapped = QUARTER_LABELS[normalized];
-  if (!mapped) {
-    throw new PxError(
-      `${DATASET_ID}: unexpected period label "${label}", expected TM1–TM4`,
-    );
-  }
-  return mapped;
 }
 
 const COST_CATEGORY_NUMBERING: Record<string, string> = {

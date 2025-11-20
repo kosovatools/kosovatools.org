@@ -24,6 +24,8 @@ type NodeMeta = {
   idSet: Set<string>;
 };
 
+type SelectionBehavior = "independent" | "toggle-children";
+
 export type HierarchicalMultiSelectProps = {
   nodes: HierarchicalNode[];
   selectedIds: string[];
@@ -35,6 +37,8 @@ export type HierarchicalMultiSelectProps = {
   emptyMessage?: string;
   scrollContainerClassName?: string;
   showCollapseAllButton?: boolean;
+  selectionBehavior?: SelectionBehavior;
+  minSelected?: number;
 };
 
 function buildMeta(nodes: HierarchicalNode[]): NodeMeta {
@@ -103,6 +107,8 @@ export function HierarchicalMultiSelect({
   emptyMessage = "Nuk ka elemente të disponueshme.",
   scrollContainerClassName = "max-h-[420px]",
   showCollapseAllButton = true,
+  selectionBehavior = "independent",
+  minSelected = 0,
 }: HierarchicalMultiSelectProps) {
   const {
     nodes: normalizedNodes,
@@ -148,6 +154,38 @@ export function HierarchicalMultiSelect({
     [selectedIds, idSet],
   );
 
+  const getBranchIds = React.useCallback(
+    (id: string) => {
+      if (!idSet.has(id)) return [];
+      if (selectionBehavior === "toggle-children") {
+        return [id, ...(descendants.get(id) ?? [])];
+      }
+      return [id];
+    },
+    [descendants, idSet, selectionBehavior],
+  );
+
+  const applySelectionChange = React.useCallback(
+    (id: string, shouldSelect: boolean) => {
+      const branchIds = getBranchIds(id);
+      if (!branchIds.length) return;
+
+      const next = new Set(selectedSet);
+      if (shouldSelect) {
+        branchIds.forEach((branchId) => next.add(branchId));
+      } else {
+        branchIds.forEach((branchId) => next.delete(branchId));
+      }
+
+      if (minSelected > 0 && next.size < minSelected) {
+        return;
+      }
+
+      onSelectionChange(Array.from(next));
+    },
+    [getBranchIds, minSelected, onSelectionChange, selectedSet],
+  );
+
   const toggleExpand = React.useCallback((id: string) => {
     setExpanded((prev) => {
       const next = new Set(prev);
@@ -162,15 +200,9 @@ export function HierarchicalMultiSelect({
 
   const updateSelection = React.useCallback(
     (id: string, checked: boolean) => {
-      const next = new Set(selectedSet);
-      if (checked) {
-        next.add(id);
-      } else {
-        next.delete(id);
-      }
-      onSelectionChange(Array.from(next));
+      applySelectionChange(id, checked);
     },
-    [onSelectionChange, selectedSet],
+    [applySelectionChange],
   );
 
   const renderNodes = React.useCallback(
@@ -193,7 +225,34 @@ export function HierarchicalMultiSelect({
             }
           }
         }
-        const isIndeterminate = !isChecked && selectedCount > 0;
+        const allDescendantsSelected =
+          selectionBehavior === "toggle-children" &&
+          descendantIds.length > 0 &&
+          selectedCount === descendantIds.length;
+        const isPartiallyChecked =
+          selectionBehavior === "toggle-children" &&
+          isChecked &&
+          selectedCount > 0 &&
+          selectedCount < descendantIds.length;
+        const displayChecked = isChecked || allDescendantsSelected;
+        const isIndeterminate =
+          (!displayChecked && selectedCount > 0) || isPartiallyChecked;
+        const branchIds =
+          selectionBehavior === "toggle-children"
+            ? [node.id, ...descendantIds]
+            : [node.id];
+        const selectedInBranch = branchIds.reduce(
+          (count, branchId) => count + (selectedSet.has(branchId) ? 1 : 0),
+          0,
+        );
+        const preventsDeselection =
+          minSelected > 0 &&
+          selectedInBranch > 0 &&
+          selectedSet.size - selectedInBranch < minSelected;
+        const handleToggle = (targetChecked: boolean) => {
+          if (!targetChecked && preventsDeselection) return;
+          updateSelection(node.id, targetChecked);
+        };
 
         return (
           <li key={node.id} className="flex min-w-0 flex-col gap-1">
@@ -207,20 +266,21 @@ export function HierarchicalMultiSelect({
               )}
               style={{ paddingLeft: depth * 16 }}
               role="checkbox"
-              aria-checked={isIndeterminate ? "mixed" : isChecked}
+              aria-checked={isIndeterminate ? "mixed" : displayChecked}
               aria-label={node.label}
+              aria-disabled={preventsDeselection && displayChecked}
               tabIndex={0}
               onClick={(event) => {
                 const target = event.target as HTMLElement | null;
                 if (target?.closest("[data-hms-stop]")) {
                   return;
                 }
-                updateSelection(node.id, !isChecked);
+                handleToggle(!displayChecked);
               }}
               onKeyDown={(event) => {
                 if (event.key === " " || event.key === "Enter") {
                   event.preventDefault();
-                  updateSelection(node.id, !isChecked);
+                  handleToggle(!displayChecked);
                 }
               }}
             >
@@ -251,12 +311,11 @@ export function HierarchicalMultiSelect({
               <div className="flex min-w-0 items-center gap-2 overflow-hidden">
                 <Checkbox
                   data-hms-stop
-                  checked={isIndeterminate ? "indeterminate" : isChecked}
-                  onCheckedChange={(value) =>
-                    updateSelection(node.id, value === true)
-                  }
+                  checked={isIndeterminate ? "indeterminate" : displayChecked}
+                  onCheckedChange={(value) => handleToggle(value === true)}
                   className="h-3.5 w-3.5"
                   aria-label={`Zgjedh ${node.label}`}
+                  disabled={preventsDeselection && displayChecked}
                 />
                 <span className="truncate font-medium whitespace-nowrap">
                   {node.label}
@@ -272,14 +331,7 @@ export function HierarchicalMultiSelect({
         );
       });
     },
-    [
-      descendants,
-      expanded,
-      nodeClassName,
-      selectedSet,
-      toggleExpand,
-      updateSelection,
-    ],
+    [descendants, expanded, minSelected, nodeClassName, selectedSet, selectionBehavior, toggleExpand, updateSelection],
   );
 
   const handleCollapseAll = React.useCallback(() => {

@@ -12,7 +12,6 @@ export type DimensionOption<TKey extends string> = Readonly<{
 export type DimensionHierarchyNode = Readonly<{
   key: string;
   label: string;
-  short_label: string;
   parent: string | null;
   children: ReadonlyArray<string>;
   level: number;

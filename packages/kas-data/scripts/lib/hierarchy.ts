@@ -8,7 +8,6 @@ type DimensionOptionLike = Readonly<{
 type InternalHierarchyNode = {
   key: string;
   label: string;
-  short_label: string;
   parent: string | null;
   children: string[];
   level: number;
@@ -28,8 +27,7 @@ export function buildNumberedHierarchy(
     if (numbering) numberingToKey.set(numbering, option.key);
     nodes.set(option.key, {
       key: option.key,
-      label: option.label,
-      short_label: shortLabel,
+      label: shortLabel,
       parent: null,
       children: [],
       level: 0,

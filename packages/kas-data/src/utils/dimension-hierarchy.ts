@@ -50,7 +50,7 @@ export function buildUiHierarchy(
       .filter((child): child is DimensionHierarchyUiNode => Boolean(child));
     const uiNode: DimensionHierarchyUiNode = {
       id: node.key,
-      label: node.short_label || node.label,
+      label: node.label,
       children: uiChildren,
     };
     uiNodeCache.set(key, uiNode);
@@ -66,7 +66,7 @@ export function buildUiHierarchy(
 
   const labelMap: Record<string, string> = {};
   dimensionHierarchy.forEach((node) => {
-    labelMap[node.key] = node.short_label || node.label;
+    labelMap[node.key] = node.label;
   });
 
   return {

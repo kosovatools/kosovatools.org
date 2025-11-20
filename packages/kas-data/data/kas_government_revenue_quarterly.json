@@ -1,0 +1,208 @@
+{
+  "meta": {
+    "updated_at": null,
+    "time": {
+      "key": "period",
+      "granularity": "quarterly",
+      "first": "2016-Q1",
+      "last": "2025-Q4",
+      "count": 40
+    },
+    "fields": [
+      {
+        "key": "amount_eur",
+        "label": "Shuma",
+        "unit": "EUR"
+      }
+    ],
+    "metrics": ["amount_eur"],
+    "dimensions": {
+      "quarter": [
+        {
+          "key": "0",
+          "label": "TM4"
+        },
+        {
+          "key": "1",
+          "label": "TM3"
+        },
+        {
+          "key": "2",
+          "label": "TM2"
+        },
+        {
+          "key": "3",
+          "label": "TM1"
+        }
+      ],
+      "category": [
+        {
+          "key": "d21_tatimet_n_produkte",
+          "label": "Tatimet në produkte"
+        },
+        {
+          "key": "d211_tatimi_mbi_vleren_e_shtuar_tvsh",
+          "label": "Tatimi mbi vleren e shtuar(TVSH)"
+        },
+        {
+          "key": "d212_tatimi_dhe_dogana_ne_importe_duke_perjashtuar_tvsh",
+          "label": "Tatimi dhe dogana ne importe duke perjashtuar TVSH"
+        },
+        {
+          "key": "d2121_detyrimet_e_importit",
+          "label": "Detyrimet e importit"
+        },
+        {
+          "key": "d2122_taksat_p_r_importet_pa_tvsh_dhe_detyrimet",
+          "label": "Taksat për importet pa TVSH dhe detyrimet"
+        },
+        {
+          "key": "d214_tatimi_mbi_produktet_me_p_rjashtim_t_tvsh_s_dhe_tatimet_e_importit",
+          "label": "Tatimi mbi produktet, me përjashtim të TVSH-së dhe tatimet e importit"
+        },
+        {
+          "key": "d29_tatimet_tjera_n_prodhim",
+          "label": "Tatimet tjera në prodhim"
+        },
+        {
+          "key": "d4_t_hyrat_nga_prona",
+          "label": "Të hyrat nga prona"
+        },
+        {
+          "key": "d5_tatimet_rrjedh_se_n_t_ardhura_pasuri_etj",
+          "label": "Tatimet rrjedhëse në të ardhura, pasuri, etj."
+        },
+        {
+          "key": "d7_transfertat_e_tjera_aktuale",
+          "label": "Transfertat e tjera aktuale"
+        },
+        {
+          "key": "f_aktivet_dhe_detyrimet_financiare",
+          "label": "F Aktivet dhe detyrimet financiare *"
+        },
+        {
+          "key": "p131_pagesat_p_r_output_jo_tregut_shitjet",
+          "label": "Pagesat për output jo-tregut (Shitjet)"
+        }
+      ]
+    },
+    "source": "Table kga01 in National and government accounts",
+    "source_urls": [
+      "ASKdata/National and government accounts/Government accounts/Quarterly government accounts/kga01.px"
+    ],
+    "notes": [
+      "Vlerat burimore duken të raportuara në milion EUR; këtu janë shkallëzuar në EUR."
+    ],
+    "id": "kas_government_revenue_quarterly",
+    "generated_at": "2025-11-20T15:54:41.068Z",
+    "title": null,
+    "dimension_hierarchies": {
+      "category": [
+        {
+          "key": "d21_tatimet_n_produkte",
+          "label": "Tatimet në produkte",
+          "short_label": "Tatimet në produkte",
+          "parent": null,
+          "children": [
+            "d211_tatimi_mbi_vleren_e_shtuar_tvsh",
+            "d212_tatimi_dhe_dogana_ne_importe_duke_perjashtuar_tvsh",
+            "d214_tatimi_mbi_produktet_me_p_rjashtim_t_tvsh_s_dhe_tatimet_e_importit"
+          ],
+          "level": 0
+        },
+        {
+          "key": "d211_tatimi_mbi_vleren_e_shtuar_tvsh",
+          "label": "Tatimi mbi vleren e shtuar(TVSH)",
+          "short_label": "Tatimi mbi vleren e shtuar(TVSH)",
+          "parent": "d21_tatimet_n_produkte",
+          "children": [],
+          "level": 1
+        },
+        {
+          "key": "d212_tatimi_dhe_dogana_ne_importe_duke_perjashtuar_tvsh",
+          "label": "Tatimi dhe dogana ne importe duke perjashtuar TVSH",
+          "short_label": "Tatimi dhe dogana ne importe duke perjashtuar TVSH",
+          "parent": "d21_tatimet_n_produkte",
+          "children": [
+            "d2121_detyrimet_e_importit",
+            "d2122_taksat_p_r_importet_pa_tvsh_dhe_detyrimet"
+          ],
+          "level": 1
+        },
+        {
+          "key": "d2121_detyrimet_e_importit",
+          "label": "Detyrimet e importit",
+          "short_label": "Detyrimet e importit",
+          "parent": "d212_tatimi_dhe_dogana_ne_importe_duke_perjashtuar_tvsh",
+          "children": [],
+          "level": 2
+        },
+        {
+          "key": "d2122_taksat_p_r_importet_pa_tvsh_dhe_detyrimet",
+          "label": "Taksat për importet pa TVSH dhe detyrimet",
+          "short_label": "Taksat për importet pa TVSH dhe detyrimet",
+          "parent": "d212_tatimi_dhe_dogana_ne_importe_duke_perjashtuar_tvsh",
+          "children": [],
+          "level": 2
+        },
+        {
+          "key": "d214_tatimi_mbi_produktet_me_p_rjashtim_t_tvsh_s_dhe_tatimet_e_importit",
+          "label": "Tatimi mbi produktet, me përjashtim të TVSH-së dhe tatimet e importit",
+          "short_label": "Tatimi mbi produktet, me përjashtim të TVSH-së dhe tatimet e importit",
+          "parent": "d21_tatimet_n_produkte",
+          "children": [],
+          "level": 1
+        },
+        {
+          "key": "d29_tatimet_tjera_n_prodhim",
+          "label": "Tatimet tjera në prodhim",
+          "short_label": "Tatimet tjera në prodhim",
+          "parent": null,
+          "children": [],
+          "level": 0
+        },
+        {
+          "key": "d4_t_hyrat_nga_prona",
+          "label": "Të hyrat nga prona",
+          "short_label": "Të hyrat nga prona",
+          "parent": null,
+          "children": [],
+          "level": 0
+        },
+        {
+          "key": "d5_tatimet_rrjedh_se_n_t_ardhura_pasuri_etj",
+          "label": "Tatimet rrjedhëse në të ardhura, pasuri, etj.",
+          "short_label": "Tatimet rrjedhëse në të ardhura, pasuri, etj.",
+          "parent": null,
+          "children": [],
+          "level": 0
+        },
+        {
+          "key": "d7_transfertat_e_tjera_aktuale",
+          "label": "Transfertat e tjera aktuale",
+          "short_label": "Transfertat e tjera aktuale",
+          "parent": null,
+          "children": [],
+          "level": 0
+        },
+        {
+          "key": "f_aktivet_dhe_detyrimet_financiare",
+          "label": "F Aktivet dhe detyrimet financiare *",
+          "short_label": "F Aktivet dhe detyrimet financiare *",
+          "parent": null,
+          "children": [],
+          "level": 0
+        },
+        {
+          "key": "p131_pagesat_p_r_output_jo_tregut_shitjet",
+          "label": "Pagesat për output jo-tregut (Shitjet)",
+          "short_label": "Pagesat për output jo-tregut (Shitjet)",
+          "parent": null,
+          "children": [],
+          "level": 0
+        }
+      ]
+    }
+  },
+  "records": []
+}

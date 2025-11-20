@@ -99,6 +99,34 @@ export const PATHS = {
     "Construction Cost Index",
     "CCI01.px",
   ],
+  gdp_quarterly_nominal: [
+    "ASKdata",
+    "National and government accounts",
+    "National accounts",
+    "Quarterly national accounts",
+    "BPV_Current02.px",
+  ],
+  gdp_quarterly_constant: [
+    "ASKdata",
+    "National and government accounts",
+    "National accounts",
+    "Quarterly national accounts",
+    "BPV_Constant01.px",
+  ],
+  government_revenue_quarterly: [
+    "ASKdata",
+    "National and government accounts",
+    "Government accounts",
+    "Quarterly government accounts",
+    "kga01.px",
+  ],
+  government_expenditure_quarterly: [
+    "ASKdata",
+    "National and government accounts",
+    "Government accounts",
+    "Quarterly government accounts",
+    "kga02.px",
+  ],
 } as const satisfies Record<string, readonly string[]>;
 
 export type PxPathKey = keyof typeof PATHS;

@@ -1,0 +1,75 @@
+{
+  "meta": {
+    "updated_at": null,
+    "time": {
+      "key": "period",
+      "granularity": "quarterly",
+      "first": "2016-Q4",
+      "last": "2025-Q2",
+      "count": 35
+    },
+    "fields": [
+      {
+        "key": "amount_eur",
+        "label": "Shuma",
+        "unit": "EUR"
+      }
+    ],
+    "metrics": ["amount_eur"],
+    "dimensions": {
+      "category": [
+        {
+          "key": "d1_kompensimi_i_pun_tor_ve",
+          "label": "Kompensimi i punëtorëve"
+        },
+        {
+          "key": "d3_subvencionet",
+          "label": "Subvencionet"
+        },
+        {
+          "key": "d4_t_ardhurat_nga_prona_t_pagueshme",
+          "label": "Të ardhurat nga prona, të pagueshme"
+        },
+        {
+          "key": "d6_kontributet_sociale_dhe_p_rfitimet",
+          "label": "Kontributet sociale dhe përfitimet"
+        },
+        {
+          "key": "d6_transfertat_e_tjera_aktuale",
+          "label": "Transfertat e tjera aktuale"
+        },
+        {
+          "key": "d7_transfertat_kapitale",
+          "label": "Transfertat kapitale"
+        },
+        {
+          "key": "f_aktivet_dhe_detyrimet_financiare",
+          "label": "F Aktivet dhe detyrimet financiare"
+        },
+        {
+          "key": "np_posedimi_i_aktiveve_jo_prodhuese",
+          "label": "NP Posedimi i aktiveve jo-prodhuese"
+        },
+        {
+          "key": "p2_konsumi_i_nd_rmjet_m",
+          "label": "Konsumi i ndërmjetëm"
+        },
+        {
+          "key": "p5_formimi_i_kapitalit_bruto",
+          "label": "Formimi i kapitalit bruto"
+        }
+      ]
+    },
+    "source": "Table kga02 in National and government accounts",
+    "source_urls": [
+      "ASKdata/National and government accounts/Government accounts/Quarterly government accounts/kga02.px"
+    ],
+    "notes": [
+      "Vlerat burimore duken të raportuara në milion EUR; këtu janë shkallëzuar në EUR."
+    ],
+    "id": "kas_government_expenditure_quarterly",
+    "generated_at": "2025-11-20T15:54:41.068Z",
+    "title": null
+  },
+  "records": []
+}

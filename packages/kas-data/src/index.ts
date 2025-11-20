@@ -6,10 +6,14 @@ export * from "./datasets/transport";
 export * from "./datasets/cpi";
 export * from "./datasets/construction-cost-index";
 export * from "./datasets/labour";
+export * from "./datasets/gdp";
+export * from "./datasets/government";
 export * from "./types/cpi";
 export * from "./types/construction-cost-index";
 export * from "./types/labour";
 export * from "./types/trade";
+export * from "./types/gdp";
+export * from "./types/government";
 
 export type {
   Dataset,

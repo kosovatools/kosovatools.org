@@ -1,0 +1,140 @@
+{
+  "meta": {
+    "updated_at": null,
+    "time": {
+      "key": "period",
+      "granularity": "quarterly",
+      "first": "2010-Q1",
+      "last": "2025-Q2",
+      "count": 62
+    },
+    "fields": [
+      {
+        "key": "nominal_eur",
+        "label": "BPV në çmime aktuale",
+        "unit": "EUR"
+      },
+      {
+        "key": "real_eur",
+        "label": "BPV në çmime të vitit paraprak",
+        "unit": "EUR"
+      }
+    ],
+    "metrics": ["nominal_eur", "real_eur"],
+    "dimensions": {
+      "activity": [
+        {
+          "key": "bujq_sia_pylltaria_dhe_peshkimi",
+          "label": "Bujqësia, pylltaria dhe peshkimi"
+        },
+        {
+          "key": "industria_nxjerr_se",
+          "label": "Industria nxjerrëse"
+        },
+        {
+          "key": "industria_p_rpunuese",
+          "label": "Industria përpunuese"
+        },
+        {
+          "key": "furnizimi_me_energji_elektrike_dhe_gaz",
+          "label": "Furnizimi me energji elektrike dhe gaz"
+        },
+        {
+          "key": "furnizimi_me_uj",
+          "label": "Furnizimi me ujë"
+        },
+        {
+          "key": "nd_rtimtaria",
+          "label": "Ndërtimtaria"
+        },
+        {
+          "key": "tregtia_me_shumic_dhe_pakic_riparimi_i_automjeteve_dhe_moto_ikletave",
+          "label": "Tregtia me shumicë dhe pakicë; riparimi i automjeteve dhe motoçikletave"
+        },
+        {
+          "key": "transporti_dhe_magazinimi",
+          "label": "Transporti dhe magazinimi"
+        },
+        {
+          "key": "hotelet_dhe_restorantet",
+          "label": "Hotelet dhe restorantet"
+        },
+        {
+          "key": "informimi_dhe_komunikimi",
+          "label": "Informimi dhe komunikimi"
+        },
+        {
+          "key": "aktivitetetet_financiare_dhe_t_sigurimit",
+          "label": "Aktivitetetet financiare dhe të sigurimit"
+        },
+        {
+          "key": "afarizmi_me_pasuri_t_patundshme",
+          "label": "Afarizmi me pasuri të patundshme"
+        },
+        {
+          "key": "aktivitetet_profesional_shkencore_dhe_teknike",
+          "label": "Aktivitetet profesional, shkencore dhe teknike"
+        },
+        {
+          "key": "aktivitetet_administrative_dhe_mb_shtet_se",
+          "label": "Aktivitetet administrative dhe mbështetëse"
+        },
+        {
+          "key": "administrimi_publik_dhe_i_mbrojtjes_sigurimi_i_detyruesh_m_social",
+          "label": "Administrimi publik dhe i mbrojtjes; sigurimi i detyrueshëm social"
+        },
+        {
+          "key": "edukimi",
+          "label": "Edukimi"
+        },
+        {
+          "key": "sh_ndet_sia_dhe_aktivitetet_e_pun_s_sociale",
+          "label": "Shëndetësia dhe aktivitetet e punës sociale"
+        },
+        {
+          "key": "art_zbavitje_dhe_rekreacion",
+          "label": "Art, zbavitje dhe rekreacion"
+        },
+        {
+          "key": "sh_rbime_tjera",
+          "label": "Shërbime tjera"
+        },
+        {
+          "key": "aktivitetet_e_ekonomive_familjare_si_pun_dh_n_s_mallrat_dhe_sh_rbimet_e_padiferencuara_q_prodhojn_aktivitetet_e_familjeve_p_r_p_rdorim_vetanak",
+          "label": "Aktivitetet e ekonomive familjare si punëdhënës; Mallrat dhe shërbimet e padiferencuara që prodhojnë aktivitetet e familjeve për përdorim vetanak"
+        },
+        {
+          "key": "aktivitetet_e_organizatave_dhe_trupave_ekstra_territoriale",
+          "label": "Aktivitetet e organizatave dhe trupave ekstra-territoriale"
+        },
+        {
+          "key": "gva_total",
+          "label": "Bruto vlera e shtuar, gjithsej"
+        },
+        {
+          "key": "net_taxes_on_products",
+          "label": "Taksa neto në produkte"
+        },
+        {
+          "key": "gdp_total",
+          "label": "BPV gjithsej"
+        }
+      ]
+    },
+    "source": "Data derived from Table BPV_Current02, Table BPV_Constant01 in National and government accounts",
+    "source_urls": [
+      "ASKdata/National and government accounts/National accounts/Quarterly national accounts/BPV_Current02.px",
+      "ASKdata/National and government accounts/National accounts/Quarterly national accounts/BPV_Constant01.px"
+    ],
+    "notes": [
+      "Vlerat burimore paraqiten në mijë EUR; këtu janë shkallëzuar në EUR.",
+      "Seria kombinon BPV sipas aktiviteteve ekonomike në çmime aktuale (nominale) dhe në çmime të vitit paraprak (reale).",
+      "Rreshtat agregat (Bruto vlera e shtuar, taksat neto në produkte dhe BPV gjithsej) përfshihen për referencë; mos i grumbullo përmes kategorive kur krahaso degët."
+    ],
+    "aggregates": ["gva_total", "net_taxes_on_products", "gdp_total"],
+    "id": "kas_gdp_by_activity_quarterly",
+    "generated_at": "2025-11-20T15:54:41.068Z",
+    "title": null
+  },
+  "records": []
+}
