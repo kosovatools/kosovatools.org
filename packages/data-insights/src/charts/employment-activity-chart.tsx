@@ -135,6 +135,7 @@ export function EmploymentActivityChart({
           <ChartTooltip
             content={
               <ChartTooltipContent
+                labelFormatter={(value) => periodFormatter(value as string)}
                 valueFormatter={(value) =>
                   `${formatCount(value as number)} persona`
                 }

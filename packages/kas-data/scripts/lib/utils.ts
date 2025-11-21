@@ -1,3 +1,4 @@
+import { slugify } from "@workspace/utils";
 import type {
   DatasetMeta,
   DatasetMetaField,
@@ -145,13 +146,7 @@ export function tidyNumber(value: unknown): number | null {
 }
 
 export function slugifyLabel(text: string): string {
-  const slug = text
-    .toLowerCase()
-    .trim()
-    .replace(/[^0-9a-z]+/gi, "_")
-    .replace(/_+/g, "_")
-    .replace(/^_+|_+$/g, "");
-  return slug || "value";
+  return slugify(text, { fallback: "value" });
 }
 
 export function normalizeFuelField(label: string): string {

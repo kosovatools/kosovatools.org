@@ -2,6 +2,9 @@ export * from "./formatters";
 export { sanitizeValue, isFiniteNumber } from "./utils/number";
 export type { NumericInput } from "./utils/number";
 
+export { slugify } from "./utils/slug";
+export type { SlugifyOptions } from "./utils/slug";
+
 export type {
   StackBuildResult,
   StackSeriesRow,

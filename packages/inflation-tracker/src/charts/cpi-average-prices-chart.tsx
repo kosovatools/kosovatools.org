@@ -167,6 +167,7 @@ export function CpiAveragePricesChart({ dataset, timelineEvents }: Props) {
               cursor={false}
               content={
                 <ChartTooltipContent
+                  labelFormatter={(value) => periodFormatter(value as string)}
                   valueFormatter={(value) => formatCurrency(value as number)}
                 />
               }

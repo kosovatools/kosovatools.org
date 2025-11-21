@@ -2,6 +2,7 @@ export type DatasetMetaField<TKey extends string> = Readonly<{
   key: TKey;
   label: string;
   unit: string; // REQUIRED per v1.1
+  value_type?: "stock" | "flow" | "rate";
 }>;
 
 export type DimensionOption<TKey extends string> = Readonly<{
@@ -37,11 +38,6 @@ export type DatasetMeta<
     last: string;
     count: number;
   }>;
-  /**
-   * Describes whether values are stocks (point-in-time) or flows.
-   * Flows default to summing when grouped; stocks default to latest/average.
-   */
-  value_type?: "stock" | "flow";
   fields: ReadonlyArray<DatasetMetaField<TFieldKey>>;
   metrics: ReadonlyArray<TFieldKey>;
   dimensions: { [K in TDimensionKey]: ReadonlyArray<DimensionOption<string>> };

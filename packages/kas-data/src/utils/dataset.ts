@@ -15,6 +15,7 @@ import type {
   Dataset,
   DatasetMeta,
   DimensionOption,
+  DatasetMetaField,
   TimeGranularity,
 } from "../types/dataset";
 import { createLabelMap } from "./meta";
@@ -135,6 +136,7 @@ export function createDataset<
   data: Dataset<TRecord, TMeta>,
   options: DatasetViewOptions = {},
 ): DatasetView<TRecord, TMeta> {
+  ensureSlugSafeDimensionKeys(data.meta, data.records);
   const initialRecords = applyViewOptions(data.records, options);
   return buildDatasetView(data.meta, initialRecords);
 }
@@ -173,6 +175,37 @@ function applyViewOptions<TRecord extends DatasetRecordBase>(
   if (options.limit != null) next = limitRecords(next, options.limit);
   if (options.slice) next = sliceRecords(next, options.slice);
   return next;
+}
+
+const SLUG_SAFE_KEY = /^[A-Za-z0-9._-]+$/;
+
+function ensureSlugSafeDimensionKeys<
+  TRecord extends DatasetRecordBase,
+  TMeta extends DatasetMeta<string, string, TimeGranularity, object>,
+>(meta: TMeta, records: ReadonlyArray<TRecord>): void {
+  const dimensions = meta.dimensions ?? {};
+  const datasetId = meta.id ?? "dataset";
+
+  for (const [dimension, options] of Object.entries(dimensions)) {
+    for (const option of options ?? []) {
+      if (option?.key && !SLUG_SAFE_KEY.test(String(option.key))) {
+        throw new Error(
+          `Dataset "${datasetId}" has an unsafe key "${option.key}" in dimension "${dimension}". Use slugifyLabel to normalize values during fetch.`,
+        );
+      }
+    }
+  }
+
+  for (const record of records) {
+    for (const dimension of Object.keys(dimensions)) {
+      const value = (record as Record<string, unknown>)[dimension];
+      if (typeof value === "string" && !SLUG_SAFE_KEY.test(value)) {
+        throw new Error(
+          `Dataset "${datasetId}" contains an unsafe "${dimension}" value "${value}". Ensure fetchers slugify dimension values.`,
+        );
+      }
+    }
+  }
 }
 
 function limitRecords<TRecord extends DatasetRecordBase>(
@@ -254,14 +287,10 @@ function buildStackView<
   const mergedAllowedKeys = (baseOptions.allowedKeys ?? allowedKeys) as
     | readonly TKey[]
     | undefined;
-  const groupedValueMode =
-    baseOptions.groupedValueMode ??
-    (meta.value_type === "stock" ? "latest" : undefined);
 
   const stackOptions: StackOptions<TKey> = {
     ...baseOptions,
     baseGrouping: meta.time.granularity,
-    groupedValueMode,
     allowedKeys: mergedAllowedKeys,
     labelForKey: labelForKey ?? ((key: TKey) => labelMap[key] ?? key),
   };
@@ -302,14 +331,10 @@ function summarizeStackView<
   const mergedAllowedKeys = (baseOptions.allowedKeys ?? allowedKeys) as
     | readonly TKey[]
     | undefined;
-  const groupedValueMode =
-    baseOptions.groupedValueMode ??
-    (meta.value_type === "stock" ? "latest" : undefined);
 
   const options: StackOptions<TKey> = {
     ...baseOptions,
     baseGrouping: meta.time.granularity,
-    groupedValueMode,
     allowedKeys: mergedAllowedKeys,
     labelForKey: labelForKey ?? ((key: TKey) => labelMap[key] ?? key),
   };
@@ -397,7 +422,7 @@ function aggregateRecords<
     (field) => ({
       key: field.key,
       getValue: (record) => field.valueAccessor(record) ?? null,
-      mode: field.mode,
+      mode: field.mode ?? inferFieldAggregationMode(meta.fields, field.key),
     }),
   );
 
@@ -406,4 +431,19 @@ function aggregateRecords<
     grouping,
     fields,
   });
+}
+
+function inferFieldAggregationMode(
+  fields: ReadonlyArray<DatasetMetaField<string>>,
+  key: string,
+) {
+  const metaField = fields.find((field) => field.key === key);
+  switch (metaField?.value_type) {
+    case "stock":
+      return "average";
+    case "rate":
+      return "rate";
+    default:
+      return undefined;
+  }
 }

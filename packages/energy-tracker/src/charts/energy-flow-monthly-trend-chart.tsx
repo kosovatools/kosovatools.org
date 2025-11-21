@@ -159,6 +159,7 @@ export function MonthlyFlowTrendChart({
           <ChartTooltip
             content={
               <ChartTooltipContent
+                labelFormatter={(value) => periodFormatter(value as string)}
                 valueFormatter={(value) =>
                   formatAuto(value as number, { includeUnit: true })
                 }

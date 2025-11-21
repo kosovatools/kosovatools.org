@@ -2,13 +2,10 @@
 
 import * as React from "react";
 import type { TreemapNode } from "recharts/types/chart/Treemap";
+import { slugify } from "@workspace/utils";
 
 export const defaultTreemapColorKey = (label: string) => {
-  const slug = label
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-  return slug || "slice";
+  return slugify(label, { fallback: "slice" });
 };
 
 const DEFAULT_CHAR_WIDTH = 8;

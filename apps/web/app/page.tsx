@@ -27,10 +27,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import {
-  GITHUB_NEW_ISSUE_URL,
-  GITHUB_REPO_URL,
-} from "@/constants/links";
+import { GITHUB_NEW_ISSUE_URL, GITHUB_REPO_URL } from "@/constants/links";
 
 const CandleIcon: LucideIcon = forwardRef<SVGSVGElement, LucideProps>(
   (props, ref) => <Icon ref={ref} iconNode={candlestick} {...props} />,

@@ -11,7 +11,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
-import { Label } from "@workspace/ui/components/label";
 import {
   NativeSelect,
   NativeSelectOption,

@@ -99,3 +99,7 @@ with the exported structures.
 5. **Register in the CLI**: import and call the fetcher from `scripts/fetch_kas.ts` so `pnpm --filter @workspace/kas-data fetch-data` picks it up.
 6. **Add a loader**: import the generated JSON under `src/datasets/`, wrap with `createDataset`, and re-export from `src/index.ts`.
 7. **Fetch + check in**: run the fetcher (or `fetch-data`) to generate `data/<file>.json`. Clear any skip-worktree flags for files you intend to commit (`git update-index --no-skip-worktree ...`) and include the JSON when sharing the dataset.
+
+## Key hygiene
+
+- All dataset keys (dimension values, stack keys) must already be slugified/safe for CSS variables. Use `slugifyLabel` from `scripts/lib/utils` (underscored) when deriving keys to avoid spaces or symbols, otherwise chart color tokens will break.

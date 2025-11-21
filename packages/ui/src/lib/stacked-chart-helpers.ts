@@ -38,21 +38,6 @@ export function buildStackedChartData<TKey extends string>(
     };
   }
 
-  const usedKeys = new Map<string, number>();
-  const slugify = (value: string) =>
-    value
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  const toKeyId = (stackKey: TKey | "Other") => {
-    const base =
-      slugify(String(stackKey)) ||
-      slugify(stackKey === "Other" ? "other" : "series");
-    const seen = usedKeys.get(base) ?? 0;
-    usedKeys.set(base, seen + 1);
-    return seen === 0 ? base : `${base}-${seen + 1}`;
-  };
-
   type StackEntry = {
     stackKey: TKey | "Other";
     chartKey: string;
@@ -63,7 +48,7 @@ export function buildStackedChartData<TKey extends string>(
       stackKey === "Other"
         ? (otherKey ?? "Other")
         : (stack.labelMap[stackKey] ?? (stackKey as string));
-    const chartKey = toKeyId(stackKey);
+    const chartKey = String(stackKey);
     return { stackKey, chartKey, label: rawLabel };
   });
 

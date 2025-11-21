@@ -132,6 +132,7 @@ export function FuelBalanceChart({
           <ChartTooltip
             content={
               <ChartTooltipContent
+                labelFormatter={(value) => periodFormatter(value as string)}
                 valueFormatter={(value) =>
                   `${formatCount(value as number)} tonë`
                 }

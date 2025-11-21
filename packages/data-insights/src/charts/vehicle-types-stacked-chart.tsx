@@ -58,7 +58,6 @@ export function VehicleTypesStackedChart({
         <ChartTooltip
           content={
             <ChartTooltipContent
-              indicator="dot"
               valueFormatter={(value) => formatCount(value as number)}
             />
           }

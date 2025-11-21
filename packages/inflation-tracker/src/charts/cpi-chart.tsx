@@ -108,7 +108,7 @@ export function CpiChart({
             {
               key: "change",
               valueAccessor: (record) => record.change,
-              mode: "compoundChange",
+              mode: "rate",
             },
           ],
         }),
@@ -227,6 +227,7 @@ export function CpiChart({
                 cursor={false}
                 content={
                   <ChartTooltipContent
+                    labelFormatter={(value) => periodFormatter(value as string)}
                     valueFormatter={(value) => axisFormatter(value as number)}
                   />
                 }

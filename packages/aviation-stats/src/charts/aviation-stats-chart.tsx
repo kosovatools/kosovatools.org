@@ -165,6 +165,7 @@ export function AviationStatsChart({
             content={
               <ChartTooltipContent
                 indicator="dot"
+                labelFormatter={(value) => periodFormatter(value as string)}
                 valueFormatter={(value) => formatCount(value as number)}
               />
             }

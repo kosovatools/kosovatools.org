@@ -186,6 +186,7 @@ export function GdpActivityStackedChart({
           <ChartTooltip
             content={
               <ChartTooltipContent
+                labelFormatter={(value) => periodFormatter(value as string)}
                 valueFormatter={(value) =>
                   formatCurrencyCompact(value as number, { currency: "EUR" })
                 }

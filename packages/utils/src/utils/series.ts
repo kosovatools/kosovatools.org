@@ -1,7 +1,7 @@
 import { groupPeriod, type PeriodGrouping } from "./period";
 import { isFiniteNumber, type NumericInput } from "./number";
 
-export type SeriesAggregationMode = "sum" | "average" | "compoundChange";
+export type SeriesAggregationMode = "sum" | "average" | "rate";
 
 export type SeriesAggregationField<TRecord, TKey extends string> = {
   key: TKey;
@@ -51,7 +51,7 @@ function aggregateValue(
       state.sum += value;
       state.count += 1;
       break;
-    case "compoundChange": {
+    case "rate": {
       const normalized = Math.abs(value) > 1 ? value / 100 : value;
       state.product *= 1 + normalized;
       break;
@@ -73,7 +73,7 @@ function resolveAggregatedValue(
   switch (mode) {
     case "average":
       return state.count > 0 ? state.sum / state.count : null;
-    case "compoundChange":
+    case "rate":
       return state.product - 1;
     default:
       return state.sum;
