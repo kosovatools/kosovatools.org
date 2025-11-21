@@ -24,8 +24,11 @@ async function fetchDataset<TDataset>(file: string): Promise<TDataset> {
   return fetchEconomicActivity<TDataset>(file);
 }
 
-type CategoriesDataset = Dataset<TurnoverCategoryRecord, CategoriesDatasetMeta>;
-type CitiesDataset = Dataset<TurnoverCityRecord, CitiesDatasetMeta>;
+type TurnoverCategoriesDataset = Dataset<
+  TurnoverCategoryRecord,
+  CategoriesDatasetMeta
+>;
+type TurnoverCitiesDataset = Dataset<TurnoverCityRecord, CitiesDatasetMeta>;
 type CityCategoryYearlyDataset = Dataset<
   CityCategoryYearlyRecord,
   CityCategoryYearlyMeta
@@ -34,22 +37,23 @@ type MonthlyCategoryCityDataset = Dataset<
   MonthlyCategoryCityRecord,
   MonthlyCategoryCityMeta
 >;
-export type CategoriesDatasetView = ToDatasetView<CategoriesDataset>;
-export type CitiesDatasetView = ToDatasetView<CitiesDataset>;
+export type TurnoverCategoriesDatasetView =
+  ToDatasetView<TurnoverCategoriesDataset>;
+export type TurnoverCitiesDatasetView = ToDatasetView<TurnoverCitiesDataset>;
 export type CityCategoryYearlyDatasetView =
   ToDatasetView<CityCategoryYearlyDataset>;
 export type MonthlyCategoryCityDatasetView =
   ToDatasetView<MonthlyCategoryCityDataset>;
 
-export async function fetchCategoriesDataset(): Promise<CategoriesDatasetView> {
-  const data = await fetchDataset<CategoriesDataset>(
+export async function fetchCategoriesDataset(): Promise<TurnoverCategoriesDatasetView> {
+  const data = await fetchDataset<TurnoverCategoriesDataset>(
     "mfk_turnover_categories_yearly.json",
   );
   return createDataset(data);
 }
 
-export async function fetchCitiesDataset(): Promise<CitiesDatasetView> {
-  const data = await fetchDataset<CitiesDataset>(
+export async function fetchCitiesDataset(): Promise<TurnoverCitiesDatasetView> {
+  const data = await fetchDataset<TurnoverCitiesDataset>(
     "mfk_turnover_cities_yearly.json",
   );
   return createDataset(data);

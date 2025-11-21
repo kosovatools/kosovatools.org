@@ -56,6 +56,7 @@ type ChartTooltipContentProps = Omit<
     ) => React.ReactNode;
     hideLabel?: boolean;
     hideValueLabel?: boolean;
+    labelTruncate?: number;
     hideIndicator?: boolean;
     indicator?: "line" | "dot" | "dashed";
     nameKey?: string;
@@ -159,6 +160,7 @@ function ChartTooltipContent({
   hideLabel = false,
   hideIndicator = false,
   hideValueLabel = false,
+  labelTruncate = 40,
   label,
   labelFormatter,
   valueFormatter,
@@ -279,6 +281,7 @@ function ChartTooltipContent({
                           <span className="text-muted-foreground mr-0.5">
                             {truncateLabel(
                               (itemConfig?.label as string) ?? item.name,
+                              labelTruncate,
                             )}
                           </span>
                         ) : null}

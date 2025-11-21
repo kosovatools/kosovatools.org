@@ -42,41 +42,10 @@ export function TopCategoryByCityStackedChart({
   dataset: CityCategoryYearlyDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const datasetMeta = dataset.meta;
-  const citySummaries = React.useMemo(() => {
-    const map = new Map<string, { turnover: number; years: Set<number> }>();
-    for (const record of dataset.records) {
-      const year = Number(record.period?.slice(0, 4));
-      const summary = map.get(record.city) ?? {
-        turnover: 0,
-        years: new Set<number>(),
-      };
-      summary.turnover += record.turnover;
-      if (!Number.isNaN(year)) {
-        summary.years.add(year);
-      }
-      map.set(record.city, summary);
-    }
-    return Array.from(map.entries())
-      .map(([city, details]) => ({
-        city,
-        turnover: details.turnover,
-        yearCount: details.years.size,
-      }))
-      .sort((a, b) => b.turnover - a.turnover);
-  }, [dataset.records]);
-
-  const [selectedCity, setSelectedCity] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    if (!citySummaries.length) {
-      setSelectedCity(null);
-      return;
-    }
-    if (!selectedCity || !citySummaries.some((c) => c.city === selectedCity)) {
-      setSelectedCity(citySummaries[0]?.city ?? null);
-    }
-  }, [citySummaries, selectedCity]);
+  const cities = dataset.meta.dimensions.city;
+  const [selectedCity, setSelectedCity] = React.useState<string | null>(
+    cities?.at(0)?.key ?? null,
+  );
 
   const filteredRecords = React.useMemo(() => {
     if (!selectedCity) return [];
@@ -88,10 +57,10 @@ export function TopCategoryByCityStackedChart({
       return null;
     }
     return createDataset<CityCategoryYearlyRecord, CityCategoryYearlyMeta>({
-      meta: datasetMeta,
+      meta: dataset.meta,
       records: filteredRecords,
     });
-  }, [datasetMeta, filteredRecords]);
+  }, [dataset.meta, filteredRecords]);
 
   const stackConfig = React.useMemo(
     () => ({
@@ -143,8 +112,8 @@ export function TopCategoryByCityStackedChart({
     [stackResult],
   );
   const periodFormatter = React.useMemo(
-    () => getPeriodFormatter(datasetMeta.time.granularity ?? "yearly"),
-    [datasetMeta.time.granularity],
+    () => getPeriodFormatter(dataset.meta.time.granularity ?? "yearly"),
+    [dataset.meta.time.granularity],
   );
 
   if (!selectedCity) {
@@ -178,12 +147,12 @@ export function TopCategoryByCityStackedChart({
               event.target.value ? String(event.target.value) : null,
             )
           }
-          className="w-full max-w-[280px]"
+          className="w-full"
         >
           <NativeSelectOption disabled>Zgjedh Qytetin</NativeSelectOption>
-          {citySummaries.map((entry) => (
-            <NativeSelectOption key={entry.city} value={entry.city}>
-              {entry.city}
+          {cities.map((entry) => (
+            <NativeSelectOption key={entry.key} value={entry.key}>
+              {entry.label}
             </NativeSelectOption>
           ))}
         </NativeSelect>
@@ -220,7 +189,7 @@ export function TopCategoryByCityStackedChart({
           />
           <TimelineEventMarkers
             data={chartData}
-            grouping={datasetMeta.time.granularity ?? "yearly"}
+            grouping={dataset.meta.time.granularity ?? "yearly"}
             enabled={timelineEvents?.enabled}
             includeCategories={timelineEvents?.includeCategories}
           />

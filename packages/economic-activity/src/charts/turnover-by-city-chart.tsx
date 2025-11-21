@@ -18,11 +18,13 @@ import {
   type SelectorOptionDefinition,
 } from "@workspace/ui/custom-components/option-selector";
 import type {
+  TurnoverCitiesDatasetView,
   TurnoverCityRecord,
   TurnoverMetric,
 } from "@workspace/dataset-api";
 import { formatCount, formatCurrencyCompact } from "@workspace/utils";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
+import { createLabelMap } from "@workspace/kas-data";
 
 const CHART_CLASS = "w-full aspect-[1/1.5] sm:aspect-video";
 const METRIC_OPTIONS: ReadonlyArray<SelectorOptionDefinition<TurnoverMetric>> =
@@ -36,18 +38,34 @@ const METRIC_FORMATTERS: Record<TurnoverMetric, (value: number) => string> = {
   taxpayers: (value) => formatCount(value),
 };
 
+type CityTreemapDatum = TurnoverCityRecord & {
+  label: string;
+  colorKey: string;
+};
+
 export function TurnoverByCityChart({
-  records: raw,
+  dataset,
 }: {
-  records: TurnoverCityRecord[];
+  dataset: TurnoverCitiesDatasetView;
 }) {
   const [metricKey, setMetricKey] = React.useState<TurnoverMetric>("turnover");
-  const records = React.useMemo(() => {
-    const sorted = [...raw];
+  const labelMap = React.useMemo(
+    () => createLabelMap(dataset.meta.dimensions.city),
+    [dataset.meta.dimensions.city],
+  );
+  const records = React.useMemo<CityTreemapDatum[]>(() => {
+    const sorted = [...dataset.records];
 
     sorted.sort((b, a) => a[metricKey] - b[metricKey]);
-    return sorted;
-  }, [raw, metricKey]);
+    return sorted.map((record) => {
+      const label = labelMap[record.city] ?? record.city;
+      return {
+        ...record,
+        label,
+        colorKey: defaultTreemapColorKey(label),
+      };
+    });
+  }, [dataset.records, labelMap, metricKey]);
   const valueFormatter = React.useMemo(
     () => METRIC_FORMATTERS[metricKey],
     [metricKey],
@@ -56,10 +74,9 @@ export function TurnoverByCityChart({
   const chartConfig = React.useMemo(() => {
     const chartConfig: ChartConfig = {};
 
-    records.forEach((r) => {
-      const colorKey = defaultTreemapColorKey(r.city);
-      chartConfig[colorKey] = {
-        label: r.city,
+    records.forEach((record) => {
+      chartConfig[record.colorKey] = {
+        label: record.label,
       };
     });
 
@@ -80,7 +97,7 @@ export function TurnoverByCityChart({
         <Treemap
           data={records}
           dataKey={metricKey}
-          nameKey="city"
+          nameKey="label"
           content={(props) => (
             <TreemapCellContent valueFormatter={valueFormatter} {...props} />
           )}
@@ -90,9 +107,9 @@ export function TurnoverByCityChart({
             cursor={false}
             content={
               <ChartTooltipContent
-                nameKey="city"
-                labelFormatter={(_, payload) => payload[0]?.name}
-                hideValueLabel
+                nameKey="colorKey"
+                labelKey="colorKey"
+                labelTruncate={100}
                 hideIndicator
                 valueFormatter={(value) => valueFormatter(value as number)}
               />

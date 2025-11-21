@@ -31,7 +31,7 @@ import {
 } from "@workspace/utils";
 
 import type {
-  CategoriesDatasetView,
+  TurnoverCategoriesDatasetView,
   TurnoverCategoryRecord,
 } from "@workspace/dataset-api";
 import { CATEGORY_STACK_TOP, OTHER_LABEL } from "./constants";
@@ -41,7 +41,7 @@ export function CategoriesOverYearsChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: CategoriesDatasetView;
+  dataset: TurnoverCategoriesDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const periodGroupingOptions = React.useMemo(

@@ -19,11 +19,13 @@ import {
 } from "@workspace/ui/custom-components/option-selector";
 
 import type {
+  TurnoverCategoriesDatasetView,
   TurnoverCategoryRecord,
   TurnoverMetric,
 } from "@workspace/dataset-api";
 import { formatCount, formatCurrencyCompact } from "@workspace/utils";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
+import { createLabelMap } from "@workspace/kas-data";
 const CHART_CLASS = "w-full aspect-[1/1.5] sm:aspect-video";
 const METRIC_OPTIONS: ReadonlyArray<SelectorOptionDefinition<TurnoverMetric>> =
   [
@@ -36,18 +38,34 @@ const METRIC_FORMATTERS: Record<TurnoverMetric, (value: number) => string> = {
   taxpayers: (value) => formatCount(value),
 };
 
+type CategoryTreemapDatum = TurnoverCategoryRecord & {
+  label: string;
+  colorKey: string;
+};
+
 export function TurnoverByCategoryChart({
-  records: raw,
+  dataset,
 }: {
-  records: TurnoverCategoryRecord[];
+  dataset: TurnoverCategoriesDatasetView;
 }) {
   const [metricKey, setMetricKey] = React.useState<TurnoverMetric>("turnover");
-  const records = React.useMemo(() => {
-    const sorted = [...raw];
+  const labelMap = React.useMemo(
+    () => createLabelMap(dataset.meta.dimensions.category),
+    [dataset.meta.dimensions.category],
+  );
+  const records = React.useMemo<CategoryTreemapDatum[]>(() => {
+    const sorted = [...dataset.records];
 
     sorted.sort((b, a) => a[metricKey] - b[metricKey]);
-    return sorted;
-  }, [raw, metricKey]);
+    return sorted.map((record) => {
+      const label = labelMap[record.category] ?? record.category;
+      return {
+        ...record,
+        label,
+        colorKey: defaultTreemapColorKey(label),
+      };
+    });
+  }, [dataset.records, labelMap, metricKey]);
   const valueFormatter = React.useMemo(
     () => METRIC_FORMATTERS[metricKey],
     [metricKey],
@@ -56,9 +74,8 @@ export function TurnoverByCategoryChart({
   const chartConfig = React.useMemo(() => {
     const chartConfig: ChartConfig = {};
     records.forEach((slice) => {
-      const colorKey = defaultTreemapColorKey(slice.category);
-      chartConfig[colorKey] = {
-        label: slice.category,
+      chartConfig[slice.colorKey] = {
+        label: slice.label,
       };
     });
 
@@ -79,7 +96,7 @@ export function TurnoverByCategoryChart({
         <Treemap
           data={records}
           dataKey={metricKey}
-          nameKey="category"
+          nameKey="label"
           content={(props) => (
             <TreemapCellContent valueFormatter={valueFormatter} {...props} />
           )}
@@ -89,9 +106,8 @@ export function TurnoverByCategoryChart({
             cursor={false}
             content={
               <ChartTooltipContent
-                nameKey="category"
-                labelFormatter={(_, p) => p[0]?.name}
-                hideValueLabel
+                nameKey="colorKey"
+                labelTruncate={100}
                 hideIndicator
                 valueFormatter={(v) => valueFormatter(v as number)}
               />

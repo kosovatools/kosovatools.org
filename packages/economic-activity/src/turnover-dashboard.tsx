@@ -9,8 +9,8 @@ import {
   fetchMonthlyCityCategoryDataset,
 } from "./api";
 import type {
-  CategoriesDatasetView,
-  CitiesDatasetView,
+  TurnoverCategoriesDatasetView,
+  TurnoverCitiesDatasetView,
   CityCategoryYearlyDatasetView,
   MonthlyCategoryCityDatasetView,
 } from "@workspace/dataset-api";
@@ -25,7 +25,7 @@ import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-rendere
 function CategorySection({
   query,
 }: {
-  query: UseQueryResult<CategoriesDatasetView, Error>;
+  query: UseQueryResult<TurnoverCategoriesDatasetView, Error>;
 }) {
   return (
     <DatasetRenderer
@@ -43,8 +43,8 @@ function CategorySection({
       }
     >
       {(data) => {
-        const latestRecords = [...data.limit(1).records];
-        return <TurnoverByCategoryChart records={latestRecords} />;
+        const latestDataset = data.limit(1);
+        return <TurnoverByCategoryChart dataset={latestDataset} />;
       }}
     </DatasetRenderer>
   );
@@ -53,7 +53,7 @@ function CategorySection({
 function CitySection({
   query,
 }: {
-  query: UseQueryResult<CitiesDatasetView, Error>;
+  query: UseQueryResult<TurnoverCitiesDatasetView, Error>;
 }) {
   return (
     <DatasetRenderer
@@ -71,8 +71,8 @@ function CitySection({
       }
     >
       {(data) => {
-        const latestRecords = [...data.limit(1).records];
-        return <TurnoverByCityChart records={latestRecords} />;
+        const latestDataset = data.limit(1);
+        return <TurnoverByCityChart dataset={latestDataset} />;
       }}
     </DatasetRenderer>
   );
@@ -81,7 +81,7 @@ function CitySection({
 function CategoryTrendSection({
   query,
 }: {
-  query: UseQueryResult<CategoriesDatasetView, Error>;
+  query: UseQueryResult<TurnoverCategoriesDatasetView, Error>;
 }) {
   return (
     <DatasetRenderer
@@ -150,13 +150,13 @@ function TopCategoryByCitySection({
 }
 
 export function TurnoverDashboard() {
-  const categoriesQuery = useQuery<CategoriesDatasetView, Error>({
+  const categoriesQuery = useQuery<TurnoverCategoriesDatasetView, Error>({
     queryKey: ["mfk", "turnover", "categories", "dataset"],
     queryFn: fetchCategoriesDataset,
     staleTime: 6 * 60 * 1000,
   });
 
-  const citiesQuery = useQuery<CitiesDatasetView, Error>({
+  const citiesQuery = useQuery<TurnoverCitiesDatasetView, Error>({
     queryKey: ["mfk", "turnover", "cities", "dataset"],
     queryFn: fetchCitiesDataset,
     staleTime: 6 * 60 * 1000,
