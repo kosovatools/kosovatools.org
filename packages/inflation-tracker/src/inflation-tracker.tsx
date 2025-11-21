@@ -17,7 +17,19 @@ export function InflationTracker() {
         id="cpi-index"
         title="Indeksi i Çmimeve të Konsumit"
       >
-        {(dataset) => <CpiChart dataset={dataset} />}
+        {(dataset) => (
+          <CpiChart
+            dataset={dataset}
+            timelineEvents={{
+              enabled: true,
+              includeCategories: [
+                "public_health",
+                "security",
+                "government_change",
+              ],
+            }}
+          />
+        )}
       </DatasetRenderer>
 
       <DatasetRenderer
@@ -35,7 +47,15 @@ export function InflationTracker() {
         id="construction-cost-index"
         description="Krahaso kostot tremujore të materialeve, pagave dhe komponentëve të tjerë për ndërtesat shumëkatëshe (baza 2015 = 100)."
       >
-        {(dataset) => <ConstructionCostIndexChart dataset={dataset} />}
+        {(dataset) => (
+          <ConstructionCostIndexChart
+            dataset={dataset}
+            timelineEvents={{
+              enabled: true,
+              includeCategories: ["security", "public_health"],
+            }}
+          />
+        )}
       </DatasetRenderer>
     </div>
   );

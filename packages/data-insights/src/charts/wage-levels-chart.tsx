@@ -20,6 +20,10 @@ import {
   ChartTooltip,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
@@ -27,24 +31,22 @@ const CHART_MARGIN = { top: 24, right: 16, bottom: 16, left: 16 };
 
 export function WageLevelsChart({
   dataset,
+  timelineEvents,
 }: {
   dataset: WageLevelsDatasetView;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const periodOptions: ReadonlyArray<PeriodGroupingOption> =
     getPeriodGroupingOptions(dataset.meta.time.granularity);
   const timeRangeOptions = limitTimeRangeOptions(dataset.meta.time);
-  const DEFAULT_TIME_RANGE: TimeRangeOption =
-    timeRangeOptions.find((option) => option.key === 10)?.key ?? null;
 
   const [metric, setMetric] =
     React.useState<WageLevelsDatasetView["meta"]["metrics"][number]>(
       "gross_eur",
     );
-  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    dataset.meta.time.granularity,
-  );
-  const [timeRange, setTimeRange] =
-    React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
+  const [periodGrouping, setPeriodGrouping] =
+    React.useState<PeriodGrouping>("yearly");
+  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
 
   const datasetView = React.useMemo(
     () => dataset.limit(timeRange),
@@ -111,6 +113,12 @@ export function WageLevelsChart({
             width="auto"
             tickFormatter={(value) => formatCurrencyCompact(value as number)}
             axisLine={false}
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
             valueFormatter={(value) =>

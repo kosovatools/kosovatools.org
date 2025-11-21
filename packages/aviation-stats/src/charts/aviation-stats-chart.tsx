@@ -50,10 +50,9 @@ export function AviationStatsChart({
     dataset.meta.time.granularity,
   );
   const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
-  const [periodGrouping, setPeriodGrouping] = useState<PeriodGrouping>(
-    dataset.meta.time.granularity,
-  );
-  const [timeRange, setTimeRange] = useState<TimeRangeOption>(24);
+  const [periodGrouping, setPeriodGrouping] =
+    useState<PeriodGrouping>("yearly");
+  const [timeRange, setTimeRange] = useState<TimeRangeOption>(null);
 
   const datasetView = useMemo(() => {
     if (timeRange == null || Number.isNaN(timeRange)) {

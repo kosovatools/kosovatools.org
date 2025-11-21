@@ -53,7 +53,15 @@ export function DataInsightsDashboard() {
           id="wage-levels"
           description="Pagat bruto/neto vjetore për sektorin publik, ndërmarrjet publike dhe sektorin privat. Ndrysho metrikën ose intervalin kohor për të parë dallimet mes grupeve."
         >
-          {(dataset) => <WageLevelsChart dataset={dataset} />}
+          {(dataset) => (
+            <WageLevelsChart
+              dataset={dataset}
+              timelineEvents={{
+                enabled: true,
+                includeCategories: ["government_change", "public_health"],
+              }}
+            />
+          )}
         </DatasetRenderer>
         <DatasetRenderer
           dataset={employmentActivityGender}
@@ -61,7 +69,15 @@ export function DataInsightsDashboard() {
           id="employment-activity"
           description="Punësimi tremujor (persona) sipas aktivitetit ekonomik dhe gjinisë. Filtro gjininë ose ndrysho grupimin për të parë tendencat kryesore."
         >
-          {(dataset) => <EmploymentActivityChart dataset={dataset} />}
+          {(dataset) => (
+            <EmploymentActivityChart
+              dataset={dataset}
+              timelineEvents={{
+                enabled: true,
+                includeCategories: ["public_health", "government_change"],
+              }}
+            />
+          )}
         </DatasetRenderer>
       </section>
 
@@ -98,7 +114,14 @@ export function DataInsightsDashboard() {
           description="Vendet e origjinës kryesuese të radhitura sipas vizitorëve ose netëve të qëndrimit gjatë vitit të fundit."
         >
           {(dataset) => (
-            <TourismCountryStackedChart dataset={dataset} top={5} />
+            <TourismCountryStackedChart
+              dataset={dataset}
+              top={5}
+              timelineEvents={{
+                enabled: true,
+                includeCategories: ["travel", "public_health"],
+              }}
+            />
           )}
         </DatasetRenderer>
         <DatasetRenderer
@@ -107,7 +130,15 @@ export function DataInsightsDashboard() {
           id="tourism-region"
           description="Vizualizime të shumëfishta për rajonet e Kosovës me filtra sipas grupeve të vizitorëve."
         >
-          {(dataset) => <TourismRegionCharts dataset={dataset} />}
+          {(dataset) => (
+            <TourismRegionCharts
+              dataset={dataset}
+              timelineEvents={{
+                enabled: true,
+                includeCategories: ["travel", "public_health"],
+              }}
+            />
+          )}
         </DatasetRenderer>
       </section>
     </div>

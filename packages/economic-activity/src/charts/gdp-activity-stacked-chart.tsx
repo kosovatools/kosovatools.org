@@ -60,12 +60,9 @@ export function GdpActivityStackedChart({
 
   const [metricKey, setMetricKey] =
     React.useState<GdpByActivityMetric>("nominal_eur");
-  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    "yearly",
-  );
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(
-    TIME_RANGE_OPTIONS[2]?.key ?? null,
-  );
+  const [periodGrouping, setPeriodGrouping] =
+    React.useState<PeriodGrouping>("yearly");
+  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
 
   const datasetView = React.useMemo(
     () => baseDataset.limit(timeRange),

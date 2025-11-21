@@ -54,13 +54,10 @@ export function TradePartnersStackedChart({
   const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
     getPeriodGroupingOptions(dataset.meta.time.granularity);
   const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
-  const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
 
-  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    dataset.meta.time.granularity,
-  );
-  const [timeRange, setTimeRange] =
-    React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
+  const [periodGrouping, setPeriodGrouping] =
+    React.useState<PeriodGrouping>("yearly");
+  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
   const [metric, setMetric] =
     React.useState<TradePartnersDatasetView["meta"]["metrics"][number]>(
       "imports",

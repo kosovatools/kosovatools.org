@@ -53,10 +53,9 @@ export function TradeChapterStackedChart({
 
   const [metricKey, setMetricKey] =
     React.useState<TradeChapterMetric>("imports");
-  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    dataset.meta.time.granularity,
-  );
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(60);
+  const [periodGrouping, setPeriodGrouping] =
+    React.useState<PeriodGrouping>("yearly");
+  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
 
   const datasetView = React.useMemo(
     () => dataset.limit(timeRange),

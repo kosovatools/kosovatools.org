@@ -47,7 +47,7 @@ export function CpiAveragePricesChart({ dataset, timelineEvents }: Props) {
     [dataset.meta.time],
   );
 
-  const [timeRange, setTimeRange] = useState<TimeRangeOption>(5);
+  const [timeRange, setTimeRange] = useState<TimeRangeOption>(null);
 
   const datasetView = useMemo(
     () => dataset.limit(timeRange),

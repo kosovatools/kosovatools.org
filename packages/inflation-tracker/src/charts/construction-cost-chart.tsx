@@ -64,7 +64,7 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     () => defaultSelection,
   );
-  const [timeRange, setTimeRange] = useState<TimeRangeOption>(12);
+  const [timeRange, setTimeRange] = useState<TimeRangeOption>(null);
 
   const datasetView = useMemo(
     () => dataset.limit(timeRange),

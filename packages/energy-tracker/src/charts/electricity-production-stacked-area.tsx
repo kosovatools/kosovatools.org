@@ -48,7 +48,6 @@ export function ElectricityProductionStackedAreaChart({
     dataset.meta.time.granularity,
   );
   const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
-  const DEFAULT_TIME_RANGE = 24;
 
   const chartConfig = addThemeToChartConfig({
     production_thermal_gwh: { label: labelMap.production_thermal_gwh },
@@ -58,11 +57,9 @@ export function ElectricityProductionStackedAreaChart({
 
   const chartClassName = "w-full aspect-[1/1.5] sm:aspect-video";
   const chartMargin = { top: 24, right: 0, left: 0, bottom: 0 };
-  const [periodGrouping, setPeriodGrouping] = useState<PeriodGrouping>(
-    dataset.meta.time.granularity,
-  );
-  const [timeRange, setTimeRange] =
-    useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
+  const [periodGrouping, setPeriodGrouping] =
+    useState<PeriodGrouping>("yearly");
+  const [timeRange, setTimeRange] = useState<TimeRangeOption>(null);
 
   const datasetView = useMemo(
     () => dataset.limit(timeRange),

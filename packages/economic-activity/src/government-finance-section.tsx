@@ -21,7 +21,19 @@ export function GovernmentFinanceSection() {
         id="government-revenue"
         description="Struktura tremujore e të hyrave sipas ESA: tatime, transferta dhe hyrje nga prona."
       >
-        {(dataset) => <GovernmentRevenueStackedChart dataset={dataset} />}
+        {(dataset) => (
+          <GovernmentRevenueStackedChart
+            dataset={dataset}
+            timelineEvents={{
+              enabled: true,
+              includeCategories: [
+                "government_change",
+                "public_health",
+                "other",
+              ],
+            }}
+          />
+        )}
       </DatasetRenderer>
 
       <DatasetRenderer<GovernmentExpenditureDatasetView>
@@ -37,6 +49,14 @@ export function GovernmentFinanceSection() {
             title="Shpenzimet tremujore"
             selectionLabel="Zgjedh kategoritë e shpenzimeve"
             searchPlaceholder="Kërko në kategoritë e shpenzimeve..."
+            timelineEvents={{
+              enabled: true,
+              includeCategories: [
+                "government_change",
+                "public_health",
+                "security",
+              ],
+            }}
           />
         )}
       </DatasetRenderer>

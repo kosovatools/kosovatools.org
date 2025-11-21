@@ -55,16 +55,13 @@ export function MonthlyFlowTrendChart({
     () => getPeriodGroupingOptions(dataset.meta.time.granularity),
     [dataset.meta.time.granularity],
   );
-  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    dataset.meta.time.granularity,
-  );
+  const [periodGrouping, setPeriodGrouping] =
+    React.useState<PeriodGrouping>("yearly");
   const timeRangeOptions = React.useMemo(
     () => limitTimeRangeOptions(dataset.meta.time),
     [dataset.meta.time],
   );
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(
-    () => timeRangeOptions[0]?.key ?? null,
-  );
+  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
 
   const limitedDataset = React.useMemo(
     () => dataset.limit(timeRange ?? null),

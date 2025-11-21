@@ -32,7 +32,6 @@ export {
   DEFAULT_TIME_RANGE_OPTIONS,
   DEFAULT_YEARLY_TIME_RANGE_OPTIONS,
   DEFAULT_QUARTERLY_TIME_RANGE_OPTIONS,
-  DEFAULT_TIME_RANGE,
   limitTimeRangeOptions,
 } from "./utils/time-range";
 export type { TimeRangeOption, DatasetTimeMetadata } from "./utils/time-range";

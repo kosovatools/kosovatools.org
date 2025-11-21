@@ -14,7 +14,6 @@ KAS fetch scripts live in `@workspace/kas-data`.
 - `src/utils/stack.ts` — generic stack builders used by domain wrappers in
   `@workspace/kas-data` (e.g., `buildStackSeries`, `summarizeStackTotals`,
   `getPeriodFormatter`).
-- `src/utils/time-range.ts` — shared presets like `DEFAULT_TIME_RANGE`,
   `DEFAULT_TIME_RANGE_OPTIONS`, `DEFAULT_YEARLY_TIME_RANGE_OPTIONS`, plus
   `limitTimeRangeOptions` for deriving selector options from dataset metadata.
 
@@ -26,7 +25,6 @@ import {
   formatNumber,
   getPeriodGroupingOptions,
   getPeriodFormatter,
-  DEFAULT_TIME_RANGE,
   DEFAULT_TIME_RANGE_OPTIONS,
   DEFAULT_QUARTERLY_TIME_RANGE_OPTIONS,
   DEFAULT_YEARLY_TIME_RANGE_OPTIONS,

@@ -45,8 +45,6 @@ export const DEFAULT_QUARTERLY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefini
     { key: null, label: "Maks." },
   ];
 
-export const DEFAULT_TIME_RANGE: TimeRangeOption = 36;
-
 export type DatasetTimeMetadata = Readonly<{
   granularity?: PeriodGrouping | null;
   count?: number | null;

@@ -26,6 +26,10 @@ import {
 } from "@workspace/ui/custom-components/stacked-key-selector";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { type GovernmentExpenditureDatasetView } from "@workspace/kas-data";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 
 const DEFAULT_TOP_CATEGORIES = 5;
 const CHART_MARGIN = { top: 24, right: 32, bottom: 16, left: 16 };
@@ -35,19 +39,20 @@ export function GovernmentExpenditureStackedChart({
   title,
   selectionLabel,
   searchPlaceholder,
+  timelineEvents,
 }: {
   dataset: GovernmentExpenditureDatasetView;
   title: string;
   selectionLabel: string;
   searchPlaceholder: string;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const periodGroupingOptions: ReadonlyArray<PeriodGroupingOption> =
     getPeriodGroupingOptions(dataset.meta.time.granularity);
   const timeRangeOptions = limitTimeRangeOptions(dataset.meta.time);
 
-  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    "yearly",
-  );
+  const [periodGrouping, setPeriodGrouping] =
+    React.useState<PeriodGrouping>("yearly");
   const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(
     timeRangeOptions[2]?.key ?? null,
   );
@@ -160,6 +165,12 @@ export function GovernmentExpenditureStackedChart({
             width="auto"
             tickFormatter={(value) => formatCurrencyCompact(value as number)}
             axisLine={false}
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
             labelFormatter={periodFormatter}

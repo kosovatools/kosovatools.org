@@ -25,6 +25,10 @@ import {
   buildUiHierarchy,
   type GovernmentRevenueDatasetView,
 } from "@workspace/kas-data";
+import {
+  TimelineEventMarkers,
+  type TimelineEventMarkerControls,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 
 const DEFAULT_TOP_CATEGORIES = 8;
 const CHART_MARGIN = { top: 24, right: 32, bottom: 16, left: 16 };
@@ -76,8 +80,10 @@ function expandSelectionToLeaves(
 
 export function GovernmentRevenueStackedChart({
   dataset,
+  timelineEvents,
 }: {
   dataset: GovernmentRevenueDatasetView;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const { nodes: hierarchyNodes, labelMap } = React.useMemo(
     () =>
@@ -109,12 +115,9 @@ export function GovernmentRevenueStackedChart({
     [dataset.meta.dimensions.category, leaves],
   );
 
-  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    "yearly",
-  );
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(
-    timeRangeOptions[2]?.key ?? null,
-  );
+  const [periodGrouping, setPeriodGrouping] =
+    React.useState<PeriodGrouping>("yearly");
+  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
 
   const [selectedCategoryNodes, setSelectedCategoryNodes] = React.useState<
     string[]
@@ -210,6 +213,12 @@ export function GovernmentRevenueStackedChart({
               width="auto"
               tickFormatter={(value) => formatCurrencyCompact(value as number)}
               axisLine={false}
+            />
+            <TimelineEventMarkers
+              data={chartData}
+              grouping={periodGrouping}
+              enabled={timelineEvents?.enabled}
+              includeCategories={timelineEvents?.includeCategories}
             />
             <ChartTooltip
               labelFormatter={periodFormatter}

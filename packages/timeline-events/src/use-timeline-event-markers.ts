@@ -4,8 +4,11 @@ import timelineEventsJson from "../data/events.json" with { type: "json" };
 import {
   PeriodGrouping,
   type TimelineEvent,
+  type TimelineEventCategory,
   groupPeriod,
 } from "@workspace/utils";
+
+export type { TimelineEventCategory };
 
 const timelineEvents = timelineEventsJson as TimelineEvent[];
 
@@ -21,8 +24,6 @@ export type ChartEventMarker = {
   description?: string;
   details?: string;
 };
-
-export type TimelineEventCategory = TimelineEvent["category"];
 
 export type UseTimelineEventMarkersOptions = {
   includeCategories?: ReadonlyArray<TimelineEventCategory>;
@@ -45,7 +46,9 @@ export function useTimelineEventMarkers(
         ? new Set(includeCategories)
         : null;
     const visibleEvents = includeCategorySet
-      ? timelineEvents.filter((event) => includeCategorySet.has(event.category))
+      ? timelineEvents.filter((event) =>
+          event.category.some((cat) => includeCategorySet.has(cat)),
+        )
       : timelineEvents;
 
     const periodSet = new Set(data.map((row) => row.period));

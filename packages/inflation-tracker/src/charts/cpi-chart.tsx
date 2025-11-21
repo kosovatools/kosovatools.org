@@ -33,8 +33,6 @@ import {
   cpiGroupLabelsByCode,
 } from "../cpi-groups";
 
-const DEFAULT_TIME_RANGE = 36;
-
 const METRIC_FORMATTER = {
   index: (value: number | null) =>
     formatNumber(
@@ -59,11 +57,9 @@ export function CpiChart({
     dataset.meta.time.granularity,
   );
   const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
-  const [periodGrouping, setPeriodGrouping] = useState<PeriodGrouping>(
-    dataset.meta.time.granularity,
-  );
-  const [timeRange, setTimeRange] =
-    useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
+  const [periodGrouping, setPeriodGrouping] =
+    useState<PeriodGrouping>("yearly");
+  const [timeRange, setTimeRange] = useState<TimeRangeOption>(null);
   const [metric, setMetric] =
     useState<CpiDatasetView["meta"]["metrics"][number]>("index");
   const [selectedGroups, setSelectedGroups] = useState<string[]>([

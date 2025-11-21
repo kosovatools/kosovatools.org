@@ -10,7 +10,15 @@ export function AviationStats() {
       id="aviation-stats"
       title="Statistikat e Aviacionit"
     >
-      {(dataset) => <AviationStatsChart dataset={dataset} />}
+      {(dataset) => (
+        <AviationStatsChart
+          dataset={dataset}
+          timelineEvents={{
+            enabled: true,
+            includeCategories: ["travel", "public_health"],
+          }}
+        />
+      )}
     </DatasetRenderer>
   );
 }

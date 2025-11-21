@@ -46,17 +46,14 @@ export function TourismCountryStackedChart({
   const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
     getPeriodGroupingOptions(dataset.meta.time.granularity);
   const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
-  const DEFAULT_TIME_RANGE: TimeRangeOption = 24;
 
   const [metricKey, setMetricKey] =
     React.useState<TourismCountryDatasetView["meta"]["metrics"][number]>(
       "visitors",
     );
-  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    dataset.meta.time.granularity,
-  );
-  const [timeRange, setTimeRange] =
-    React.useState<TimeRangeOption>(DEFAULT_TIME_RANGE);
+  const [periodGrouping, setPeriodGrouping] =
+    React.useState<PeriodGrouping>("yearly");
+  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
 
   const datasetView = React.useMemo(
     () => dataset.limit(timeRange),

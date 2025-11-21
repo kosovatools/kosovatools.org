@@ -51,10 +51,9 @@ export function CategoriesOverYearsChart({
     () => limitTimeRangeOptions(dataset.meta.time),
     [dataset.meta.time],
   );
-  const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    dataset.meta.time.granularity,
-  );
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(5);
+  const [periodGrouping, setPeriodGrouping] =
+    React.useState<PeriodGrouping>("yearly");
+  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
 
   const datasetView = React.useMemo(() => {
     if (timeRange == null || Number.isNaN(timeRange)) {
