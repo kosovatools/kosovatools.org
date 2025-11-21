@@ -110,10 +110,10 @@ export function GovernmentRevenueStackedChart({
   );
 
   const [periodGrouping, setPeriodGrouping] = React.useState<PeriodGrouping>(
-    dataset.meta.time.granularity,
+    "yearly",
   );
   const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(
-    timeRangeOptions[4]?.key ?? null,
+    timeRangeOptions[2]?.key ?? null,
   );
 
   const [selectedCategoryNodes, setSelectedCategoryNodes] = React.useState<
