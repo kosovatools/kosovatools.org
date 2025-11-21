@@ -23,6 +23,13 @@ export type StackOptions<TKey extends string> = {
   labelForKey?: (key: TKey) => string;
   otherLabel?: string;
   periodGrouping?: PeriodGrouping;
+  /**
+   * How values should be combined when multiple records fall within the same
+   * grouped period. Defaults to summing values; set to "latest" to keep only
+   * the most recent value for that grouped period, or "average" to average
+   * within grouped periods.
+   */
+  groupedValueMode?: "sum" | "latest" | "average";
 };
 
 export type StackTotal<TKey extends string> = {
@@ -70,21 +77,6 @@ function collectSortedPeriods<TRecord, TKey extends string>(
   return all.slice(-months);
 }
 
-function buildTotalsMap<TRecord, TKey extends string>(
-  records: readonly TRecord[],
-  accessors: StackAccessors<TRecord, TKey>,
-  periodSet: Set<string>,
-): Map<TKey, number> {
-  const totals = new Map<TKey, number>();
-  for (const r of records) {
-    if (!periodSet.has(accessors.period(r))) continue;
-    const k = accessors.key(r);
-    const v = toNumber(accessors.value(r));
-    totals.set(k, (totals.get(k) ?? 0) + v);
-  }
-  return totals;
-}
-
 function pickAllowedKeys<TKey extends string>(
   totals: Map<TKey, number>,
   opts: StackOptions<TKey>,
@@ -112,7 +104,59 @@ export function summarizeStackTotals<TRecord, TKey extends string>(
   if (!periods.length) return [];
 
   const periodSet = new Set(periods);
-  const totalsByKey = buildTotalsMap(records, accessors, periodSet);
+  const periodRank = new Map(periods.map((p, index) => [p, index]));
+  const grouping = options.periodGrouping ?? "monthly";
+  const groupedValueMode = options.groupedValueMode ?? "sum";
+
+  type GroupValue = { value: number; count: number; periodIndex: number };
+  const groupedValues = new Map<string, Map<TKey, GroupValue>>();
+
+  for (const record of records) {
+    const period = accessors.period(record);
+    if (!periodSet.has(period)) continue;
+    const groupedPeriod = groupPeriod(period, grouping);
+    const key = accessors.key(record);
+    const value = toNumber(accessors.value(record));
+    const periodIndex = periodRank.get(period) ?? -1;
+
+    const groupMap =
+      groupedValues.get(groupedPeriod) ??
+      new Map<TKey, GroupValue>();
+    const prev = groupMap.get(key);
+
+    if (groupedValueMode === "latest") {
+      if (!prev || periodIndex >= prev.periodIndex) {
+        groupMap.set(key, { value, count: 1, periodIndex });
+      }
+    } else if (groupedValueMode === "average") {
+      if (!prev) groupMap.set(key, { value, count: 1, periodIndex });
+      else
+        groupMap.set(key, {
+          value: prev.value + value,
+          count: prev.count + 1,
+          periodIndex,
+        });
+    } else {
+      groupMap.set(key, {
+        value: (prev?.value ?? 0) + value,
+        count: (prev?.count ?? 0) + 1,
+        periodIndex,
+      });
+    }
+
+    groupedValues.set(groupedPeriod, groupMap);
+  }
+
+  const totalsByKey = new Map<TKey, number>();
+  for (const groupMap of groupedValues.values()) {
+    for (const [key, entry] of groupMap.entries()) {
+      const aggregated =
+        groupedValueMode === "average" && entry.count > 0
+          ? entry.value / entry.count
+          : entry.value;
+      totalsByKey.set(key, (totalsByKey.get(key) ?? 0) + aggregated);
+    }
+  }
   const keys = pickAllowedKeys(totalsByKey, options);
 
   const totals = keys.map((key) => ({
@@ -135,10 +179,12 @@ export function buildStackSeries<TRecord, TKey extends string>(
   if (!rawPeriods.length) return emptyBuildResult();
 
   const grouping = options.periodGrouping ?? "monthly";
+  const groupedValueMode = options.groupedValueMode ?? "sum";
   const groupedPeriods = buildGroupedPeriodList(rawPeriods, grouping);
   if (!groupedPeriods.length) return emptyBuildResult();
 
   const periodSet = new Set(rawPeriods);
+  const periodRank = new Map(rawPeriods.map((p, index) => [p, index]));
   const totals = summarizeStackTotals(records, accessors, options);
 
   // Determine primary keys
@@ -170,15 +216,51 @@ export function buildStackSeries<TRecord, TKey extends string>(
 
   const series = groupedPeriods.map<StackSeriesRow<TKey>>((gp) => {
     const rows = byGrouped.get(gp) ?? [];
+    const aggregatedValues = new Map<
+      TKey,
+      { value: number; count: number; periodIndex: number }
+    >();
+
+    for (const row of rows) {
+      const key = accessors.key(row);
+      if (excluded.has(key)) continue;
+
+      const value = toNumber(accessors.value(row));
+      const periodIndex = periodRank.get(accessors.period(row)) ?? -1;
+      const prev = aggregatedValues.get(key);
+
+      if (groupedValueMode === "latest") {
+        const prevIndex = prev?.periodIndex;
+        if (prevIndex == null || periodIndex >= prevIndex) {
+          aggregatedValues.set(key, { value, count: 1, periodIndex });
+        }
+      } else if (groupedValueMode === "average") {
+        if (!prev) aggregatedValues.set(key, { value, count: 1, periodIndex });
+        else
+          aggregatedValues.set(key, {
+            value: prev.value + value,
+            count: prev.count + 1,
+            periodIndex,
+          });
+      } else {
+        aggregatedValues.set(key, {
+          value: (prev?.value ?? 0) + value,
+          count: (prev?.count ?? 0) + 1,
+          periodIndex,
+        });
+      }
+    }
+
     const acc: Record<string, number> = {};
     let other = 0;
 
-    for (const row of rows) {
-      const k = accessors.key(row);
-      const v = toNumber(accessors.value(row));
-      if (excluded.has(k)) continue;
-      if (primarySet.has(k)) acc[k] = (acc[k] ?? 0) + v;
-      else if (includeOther) other += v;
+    for (const [key, entry] of aggregatedValues.entries()) {
+      const aggregated =
+        groupedValueMode === "average" && entry.count > 0
+          ? entry.value / entry.count
+          : entry.value;
+      if (primarySet.has(key)) acc[key] = aggregated;
+      else if (includeOther) other += aggregated;
     }
 
     // Ensure stable key presence

@@ -30,9 +30,9 @@ const WAGE_METRICS: ReadonlyArray<{
   label: string;
   unit: string;
 }> = [
-  { code: "0", key: "gross_eur", label: "Pagë bruto", unit: "EUR" },
-  { code: "1", key: "net_eur", label: "Pagë neto", unit: "EUR" },
-];
+    { code: "0", key: "gross_eur", label: "Pagë bruto", unit: "EUR" },
+    { code: "1", key: "net_eur", label: "Pagë neto", unit: "EUR" },
+  ];
 
 const EMPLOYMENT_METRIC = {
   code: "__value__",
@@ -269,6 +269,7 @@ export async function fetchLabourEmploymentActivityGender(
             last: uniquePeriods[uniquePeriods.length - 1] ?? meta.time.last,
             count: uniquePeriods.length || meta.time.count,
           },
+          value_type: "stock",
           notes: [
             ...(meta.notes ?? []),
             "Vlerat origjinale janë në mijë persona; të konvertuara këtu në numër personash (x1000).",
