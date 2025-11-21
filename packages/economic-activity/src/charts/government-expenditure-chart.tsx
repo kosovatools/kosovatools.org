@@ -120,7 +120,7 @@ export function GovernmentExpenditureStackedChart({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap justify-between items-center gap-4">
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
