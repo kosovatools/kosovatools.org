@@ -134,15 +134,15 @@ export function GovernmentExpenditureStackedChart({
           options={timeRangeOptions}
           label="Intervali"
         />
+        <StackedKeySelector
+          totals={totals}
+          selection={selection}
+          onSelectionChange={setSelection}
+          topCount={DEFAULT_TOP_CATEGORIES}
+          selectionLabel={selectionLabel}
+          searchPlaceholder={searchPlaceholder}
+        />
       </div>
-      <StackedKeySelector
-        totals={totals}
-        selection={selection}
-        onSelectionChange={setSelection}
-        topCount={DEFAULT_TOP_CATEGORIES}
-        selectionLabel={selectionLabel}
-        searchPlaceholder={searchPlaceholder}
-      />
       <ChartContainer
         config={chartConfig}
         className="aspect-[1/1.4] sm:aspect-video"

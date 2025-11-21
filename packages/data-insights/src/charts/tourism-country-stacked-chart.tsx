@@ -130,15 +130,15 @@ export function TourismCountryStackedChart({
           options={TIME_RANGE_OPTIONS}
           label="Intervali"
         />
+        <StackedKeySelector
+          totals={totals}
+          selection={selection}
+          onSelectionChange={setSelection}
+          topCount={top}
+          selectionLabel="Zgjedh vendet"
+          searchPlaceholder="Kërko vende..."
+        />
       </div>
-      <StackedKeySelector
-        totals={totals}
-        selection={selection}
-        onSelectionChange={setSelection}
-        topCount={top}
-        selectionLabel="Zgjedh vendet"
-        searchPlaceholder="Kërko vende..."
-      />
       <ChartContainer config={chartConfig}>
         <AreaChart data={chartData} margin={CHART_MARGIN}>
           <CartesianGrid strokeDasharray="3 3" />

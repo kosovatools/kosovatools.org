@@ -219,8 +219,8 @@ const categoryAnchors = groupedTools.map((group) => ({
 
 export default function Page() {
   return (
-    <main className="flex flex-col gap-24 px-3 sm:px-6 py-16 sm:py-24">
-      <section className="relative overflow-hidden pt-16 md:pt-20 lg:pt-32">
+    <main className="flex flex-col gap-24 px-3 sm:px-6 pb-16 sm:pb-24">
+      <section className="relative isolate -mx-3 sm:-mx-6 overflow-hidden pt-16 pb-12 md:pt-20 md:pb-16 lg:pt-32 lg:pb-20">
         {/* Background Elements */}
         <div className="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-black bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)]"></div>
         <div className="absolute -left-[10%] -top-[10%] -z-10 h-[500px] w-[500px] rounded-full bg-primary/20 blur-[100px] opacity-50 dark:opacity-20 pointer-events-none"></div>
@@ -235,22 +235,35 @@ export default function Page() {
             </div>
 
             <h1 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl text-balance">
-              Kthe të dhënat publike në <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">vendime</span>
+              Kthe të dhënat publike në{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
+                vendime
+              </span>
             </h1>
 
             <p className="text-lg text-muted-foreground max-w-2xl text-balance leading-relaxed">
-              Eksploro kalkulatorë, grafe dhe analiza nga burime zyrtare të Kosovës.
-              Një platformë e hapur për qytetarë, biznese dhe politikëbërës.
+              Eksploro kalkulatorë, grafe dhe analiza nga burime zyrtare të
+              Kosovës. Një platformë e hapur për qytetarë, biznese dhe
+              politikëbërës.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
-              <Button asChild size="lg" className="h-12 px-8 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">
+              <Button
+                asChild
+                size="lg"
+                className="h-12 px-8 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+              >
                 <Link href="/#tools">
                   Eksploro veglat
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="h-12 px-8 text-base backdrop-blur-sm bg-background/50">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="h-12 px-8 text-base backdrop-blur-sm bg-background/50"
+              >
                 <a href={GITHUB_REPO_URL} rel="noreferrer" target="_blank">
                   <Github className="mr-2 h-4 w-4" />
                   Kontribuo në GitHub
@@ -270,7 +283,10 @@ export default function Page() {
             Përzgjedhja aktuale
           </span>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-balance">
-            Vegla qytetare gati për t'u <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">përdorur sot</span>
+            Vegla qytetare gati për t'u{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
+              përdorur sot
+            </span>
           </h2>
           <p className="text-muted-foreground text-lg">
             Çdo vegël është përgatitur me ndërfaqe në shqip, llogaritje të sakta

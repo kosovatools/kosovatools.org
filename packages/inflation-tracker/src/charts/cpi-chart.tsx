@@ -154,94 +154,97 @@ export function CpiChart({
   // Helper function for XAxis tick formatting
   const formatPeriodTick = (value: string) => periodFormatter(value);
   return (
-    <div className="space-y-6">
-      <HierarchicalMultiSelect
-        title="Grupet COICOP"
-        nodes={hierarchicalNodes}
-        selectedIds={selectedGroups}
-        defaultExpandedIds={[CPI_DEFAULT_GROUP_CODE]}
-        onSelectionChange={(ids) => setSelectedGroups(ids)}
-        selectionBehavior="toggle-children"
-        minSelected={1}
-      />
-      <div className="space-y-2">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <OptionSelector
-            label="Metrika"
-            value={metric}
-            onChange={setMetric}
-            options={dataset.meta.fields}
-          />
-          <OptionSelector
-            label="Grupimi"
-            value={periodGrouping}
-            onChange={setPeriodGrouping}
-            options={PERIOD_GROUPING_OPTIONS}
-          />
-          <OptionSelector
-            label="Periudha"
-            value={timeRange}
-            onChange={setTimeRange}
-            options={TIME_RANGE_OPTIONS}
-          />
-        </div>
-        <ChartContainer
-          config={chartConfig}
-          className="w-full aspect-[1/1.5] sm:aspect-video"
-        >
-          <LineChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 0,
-              right: 0,
-              top: 10,
-              bottom: 0,
-            }}
+    <div className="flex flex-col gap-4">
+      <div className="grid gap-3 lg:grid-cols-[320px_1fr]">
+        <HierarchicalMultiSelect
+          title="Grupet COICOP"
+          nodes={hierarchicalNodes}
+          selectedIds={selectedGroups}
+          defaultExpandedIds={[CPI_DEFAULT_GROUP_CODE]}
+          onSelectionChange={(ids) => setSelectedGroups(ids)}
+          selectionBehavior="toggle-children"
+          minSelected={1}
+          scrollContainerClassName="max-h-[420px] border rounded-md"
+        />
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <OptionSelector
+              label="Metrika"
+              value={metric}
+              onChange={setMetric}
+              options={dataset.meta.fields}
+            />
+            <OptionSelector
+              label="Grupimi"
+              value={periodGrouping}
+              onChange={setPeriodGrouping}
+              options={PERIOD_GROUPING_OPTIONS}
+            />
+            <OptionSelector
+              label="Periudha"
+              value={timeRange}
+              onChange={setTimeRange}
+              options={TIME_RANGE_OPTIONS}
+            />
+          </div>
+          <ChartContainer
+            config={chartConfig}
+            className="w-full aspect-[1/1.5] sm:aspect-video"
           >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="period"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={10}
-              tickFormatter={formatPeriodTick}
-              minTickGap={30}
-            />
-            <YAxis
-              tickLine={false}
-              axisLine={false}
-              domain={["auto", "auto"]}
-              tickMargin={10}
-              tickFormatter={(value) => axisFormatter(value as number)}
-            />
-            <TimelineEventMarkers
+            <LineChart
+              accessibilityLayer
               data={chartData}
-              grouping={periodGrouping}
-              enabled={timelineEvents?.enabled}
-              includeCategories={timelineEvents?.includeCategories}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  valueFormatter={(value) => axisFormatter(value as number)}
-                />
-              }
-            />
-            <ChartLegend content={<ChartLegendContent />} />
-            {Object.keys(chartConfig).map((key) => (
-              <Line
-                key={key}
-                dataKey={key}
-                type="monotone"
-                stroke={`var(--color-${key})`}
-                strokeWidth={2}
-                dot={false}
+              margin={{
+                left: 0,
+                right: 0,
+                top: 10,
+                bottom: 0,
+              }}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="period"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={10}
+                tickFormatter={formatPeriodTick}
+                minTickGap={30}
               />
-            ))}
-          </LineChart>
-        </ChartContainer>
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                domain={["auto", "auto"]}
+                tickMargin={10}
+                tickFormatter={(value) => axisFormatter(value as number)}
+              />
+              <TimelineEventMarkers
+                data={chartData}
+                grouping={periodGrouping}
+                enabled={timelineEvents?.enabled}
+                includeCategories={timelineEvents?.includeCategories}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={
+                  <ChartTooltipContent
+                    valueFormatter={(value) => axisFormatter(value as number)}
+                  />
+                }
+              />
+              <ChartLegend content={<ChartLegendContent />} />
+              {Object.keys(chartConfig).map((key) => (
+                <Line
+                  key={key}
+                  dataKey={key}
+                  type="monotone"
+                  stroke={`var(--color-${key})`}
+                  strokeWidth={2}
+                  dot={false}
+                />
+              ))}
+            </LineChart>
+          </ChartContainer>
+        </div>
       </div>
     </div>
   );

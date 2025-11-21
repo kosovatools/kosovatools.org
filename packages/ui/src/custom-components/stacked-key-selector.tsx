@@ -14,10 +14,11 @@ import {
 
 import { Button } from "@workspace/ui/components/button";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@workspace/ui/components/collapsible";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@workspace/ui/components/popover";
+import { cn } from "@workspace/ui/lib/utils";
 import { SearchableListSection } from "./searchable-list-section";
 
 export type StackedKeyTotal = {
@@ -179,7 +180,6 @@ export function StackedKeySelector({
   topCount,
   selectionLabel,
   searchPlaceholder,
-  defaultOpen = true,
   excludedSearchPlaceholder,
   selection,
   onSelectionChange,
@@ -189,6 +189,7 @@ export function StackedKeySelector({
 }: StackedKeySelectorProps) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [otherSearchTerm, setOtherSearchTerm] = React.useState("");
+  const [activeTab, setActiveTab] = React.useState<"main" | "other">("main");
   const selectedListIdPrefix = React.useId();
   const excludedListIdPrefix = React.useId();
 
@@ -383,126 +384,158 @@ export function StackedKeySelector({
   }, [totalsWithValues, updateSelection]);
 
   return (
-    <Collapsible
-      defaultOpen={defaultOpen}
-      className="flex min-w-0 flex-col gap-3"
-    >
-      <div className="flex items-center justify-between">
-        <CollapsibleTrigger className="group flex items-center gap-2 text-sm font-semibold tracking-tight text-foreground/90 hover:text-foreground outline-none">
-          {selectionLabel}
-          <ChevronDown className="size-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
-        </CollapsibleTrigger>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 px-2.5 py-1 rounded-full border border-border/50">
-          <span className="font-medium text-foreground">
-            {selectionValue.selectedKeys.length}
-          </span>
-          <span>të zgjedhura</span>
-          <span className="text-border">|</span>
-          <span>{totalsWithValues.length} total</span>
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          className="h-9 w-full justify-between bg-background/50 px-3 font-normal hover:bg-accent hover:text-accent-foreground sm:w-[280px]"
+        >
+          <div className="flex items-center gap-2 truncate">
+            <span className="truncate text-sm font-medium">
+              {selectionLabel}
+            </span>
+            <span className="flex h-5 items-center justify-center rounded-full bg-secondary px-2 text-[11px] font-medium text-secondary-foreground">
+              {selectionValue.selectedKeys.length}
+            </span>
+          </div>
+          <ChevronDown className="ml-2 size-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[340px] p-0" align="start">
+        <div className="flex items-center border-b p-1">
+          <Button
+            variant={activeTab === "main" ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setActiveTab("main")}
+            className={cn(
+              "flex-1 h-8 text-xs font-medium",
+              activeTab === "main" && "bg-muted shadow-sm",
+            )}
+          >
+            <Layers className="mr-2 size-3.5" />
+            Grupime
+            <span className="ml-1.5 text-[10px] text-muted-foreground">
+              {filteredTotals.length}
+            </span>
+          </Button>
+          <Button
+            variant={activeTab === "other" ? "secondary" : "ghost"}
+            size="sm"
+            onClick={() => setActiveTab("other")}
+            className={cn(
+              "flex-1 h-8 text-xs font-medium",
+              activeTab === "other" && "bg-muted shadow-sm",
+            )}
+          >
+            <MoreHorizontal className="mr-2 size-3.5" />
+            {DEFAULT_OTHER_LABEL}
+            <span className="ml-1.5 text-[10px] text-muted-foreground">
+              {visibleOthers.length}
+            </span>
+          </Button>
         </div>
-      </div>
 
-      <CollapsibleContent className="data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down overflow-hidden">
-        <div className="grid gap-3 md:grid-cols-2 md:items-start">
-          <SearchableListSection
-            icon={<Layers className="size-4 text-primary" />}
-            title="Grupime"
-            countLabel={`${filteredTotals.length}`}
-            searchValue={searchTerm}
-            onSearchValueChange={setSearchTerm}
-            searchPlaceholder={searchPlaceholder}
-            action={
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleSelectTop}
-                className="h-7 gap-1.5 px-2.5 text-[11px] font-medium text-muted-foreground hover:text-foreground"
-              >
-                <ListFilter className="size-3.5" />
-                Top {topCount}
-              </Button>
-            }
-            listProps={{ role: "listbox", "aria-multiselectable": true }}
-            emptyState={
-              <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-sm text-muted-foreground">
-                <Search className="size-8 opacity-20" />
-                <p>Nuk u gjet asnjë rezultat.</p>
-              </div>
-            }
-            items={filteredTotals}
-            getItemConfig={(item) => {
-              const checked = selectionValue.selectedKeys.includes(item.key);
-              const checkboxId = `${selectedListIdPrefix}-${item.key}`;
-              return {
-                key: item.key,
-                checkboxId,
-                label: item.label,
-                checked,
-                onCheckedChange: () => handleToggleKey(item.key),
-              };
-            }}
-          />
-
-          <SearchableListSection
-            icon={<MoreHorizontal className="size-4 text-muted-foreground" />}
-            title={DEFAULT_OTHER_LABEL}
-            countLabel={`${visibleOthers.length}`}
-            searchValue={otherSearchTerm}
-            onSearchValueChange={setOtherSearchTerm}
-            searchPlaceholder={excludedSearchLabel}
-            action={
-              <div className="flex gap-2">
+        <div className="p-2">
+          {activeTab === "main" ? (
+            <SearchableListSection
+              searchValue={searchTerm}
+              onSearchValueChange={setSearchTerm}
+              searchPlaceholder={searchPlaceholder}
+              className="border-0 shadow-none"
+              listProps={{ className: "h-[240px] p-0" }}
+              action={
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleClearOthers}
+                  onClick={handleSelectTop}
                   className="h-7 gap-1.5 px-2.5 text-[11px] font-medium text-muted-foreground hover:text-foreground"
                 >
-                  <X className="size-3.5" />
-                  Pastro
+                  <ListFilter className="size-3.5" />
+                  Top {topCount}
                 </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={handleIncludeAllOthers}
-                  className="h-7 gap-1.5 px-2.5 text-[11px] font-medium bg-primary/10 text-primary hover:bg-primary/20 border-primary/20"
-                >
-                  <Check className="size-3.5" />
-                  Të gjitha
-                </Button>
-              </div>
-            }
-            listProps={{ role: "listbox" }}
-            emptyState={
-              <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-sm text-muted-foreground">
-                <Search className="size-8 opacity-20" />
-                <p>Nuk u gjet asnjë rezultat.</p>
-              </div>
-            }
-            items={visibleOthers}
-            getItemConfig={(item) => {
-              const isExcluded = excludedKeys.includes(item.key);
-              const isIncluded = !isExcluded;
-              const checkboxId = `${excludedListIdPrefix}-${item.key}`;
-              return {
-                key: item.key,
-                checkboxId,
-                label: item.label,
-                checked: isIncluded,
-                onCheckedChange: (checked) =>
-                  handleExcludedStateChange(item.key, checked === true),
-              };
-            }}
-          />
+              }
+              emptyState={
+                <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-sm text-muted-foreground">
+                  <Search className="size-8 opacity-20" />
+                  <p>Nuk u gjet asnjë rezultat.</p>
+                </div>
+              }
+              items={filteredTotals}
+              getItemConfig={(item) => {
+                const checked = selectionValue.selectedKeys.includes(item.key);
+                const checkboxId = `${selectedListIdPrefix}-${item.key}`;
+                return {
+                  key: item.key,
+                  checkboxId,
+                  label: item.label,
+                  checked,
+                  onCheckedChange: () => handleToggleKey(item.key),
+                };
+              }}
+            />
+          ) : (
+            <SearchableListSection
+              searchValue={otherSearchTerm}
+              onSearchValueChange={setOtherSearchTerm}
+              searchPlaceholder={excludedSearchLabel}
+              className="border-0 shadow-none"
+              listProps={{ className: "h-[240px] p-0" }}
+              action={
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleClearOthers}
+                    className="h-7 gap-1.5 px-2.5 text-[11px] font-medium text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="size-3.5" />
+                    Pastro
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={handleIncludeAllOthers}
+                    className="h-7 gap-1.5 px-2.5 text-[11px] font-medium bg-primary/10 text-primary hover:bg-primary/20 border-primary/20"
+                  >
+                    <Check className="size-3.5" />
+                    Të gjitha
+                  </Button>
+                </div>
+              }
+              emptyState={
+                <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-sm text-muted-foreground">
+                  <Search className="size-8 opacity-20" />
+                  <p>Nuk u gjet asnjë rezultat.</p>
+                </div>
+              }
+              items={visibleOthers}
+              getItemConfig={(item) => {
+                const isExcluded = excludedKeys.includes(item.key);
+                const isIncluded = !isExcluded;
+                const checkboxId = `${excludedListIdPrefix}-${item.key}`;
+                return {
+                  key: item.key,
+                  checkboxId,
+                  label: item.label,
+                  checked: isIncluded,
+                  onCheckedChange: (checked) =>
+                    handleExcludedStateChange(item.key, checked === true),
+                };
+              }}
+            />
+          )}
         </div>
 
         {hasZeroTotals && (
-          <p className="flex items-center gap-2 text-[11px] text-muted-foreground/70 mt-6">
-            <span className="block size-1.5 rounded-full bg-muted-foreground/40" />
-            Elementet me total zero fshihen automatikisht nga listat.
-          </p>
+          <div className="border-t bg-muted/30 px-3 py-2">
+            <p className="flex items-center gap-2 text-[10px] text-muted-foreground/70">
+              <span className="block size-1.5 rounded-full bg-muted-foreground/40" />
+              Elementet me total zero fshihen automatikisht.
+            </p>
+          </div>
         )}
-      </CollapsibleContent>
-    </Collapsible>
+      </PopoverContent>
+    </Popover>
   );
 }

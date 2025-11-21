@@ -119,7 +119,7 @@ export function TradePartnersStackedChart({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap justify-between items-center gap-4">
         <OptionSelector
           value={metric}
           onChange={(value) => setMetric(value)}
@@ -138,15 +138,15 @@ export function TradePartnersStackedChart({
           options={TIME_RANGE_OPTIONS}
           label="Intervali"
         />
+        <StackedKeySelector
+          totals={totals}
+          selection={selection}
+          onSelectionChange={setSelection}
+          topCount={top}
+          selectionLabel="Zgjedh partnerët"
+          searchPlaceholder="Kërko shtetet..."
+        />
       </div>
-      <StackedKeySelector
-        totals={totals}
-        selection={selection}
-        onSelectionChange={setSelection}
-        topCount={top}
-        selectionLabel="Zgjedh partnerët"
-        searchPlaceholder="Kërko shtetet..."
-      />
       <ChartContainer config={chartConfig}>
         <AreaChart data={chartData} margin={CHART_MARGIN}>
           <CartesianGrid strokeDasharray="3 3" />

@@ -64,23 +64,35 @@ export default function AboutPage() {
 
         <div className="space-y-6 max-w-3xl">
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl text-balance">
-            Rreth <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">Kosova Tools</span>
+            Rreth{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
+              Kosova Tools
+            </span>
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
             Ky projekt ekziston që qytetarët dhe institucionet të kenë qasje
-            praktike në të dhëna publike pa pasur nevojë të besojnë në një
-            burim të vetëm. Të dhënat, përpunimi dhe kodi burimor janë të
-            hapura që secili të mund t&apos;i inspektojë dhe verifikojë.
+            praktike në të dhëna publike pa pasur nevojë të besojnë në një burim
+            të vetëm. Të dhënat, përpunimi dhe kodi burimor janë të hapura që
+            secili të mund t&apos;i inspektojë dhe verifikojë.
           </p>
         </div>
 
         <div className="flex flex-wrap justify-center gap-4">
-          <Button asChild size="lg" className="h-12 px-8 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all">
+          <Button
+            asChild
+            size="lg"
+            className="h-12 px-8 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
+          >
             <a href={GITHUB_REPO_URL} rel="noreferrer" target="_blank">
               Shiko kodin në GitHub
             </a>
           </Button>
-          <Button asChild size="lg" variant="outline" className="h-12 px-8 text-base backdrop-blur-sm bg-background/50">
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="h-12 px-8 text-base backdrop-blur-sm bg-background/50"
+          >
             <a href={GITHUB_NEW_ISSUE_URL} rel="noreferrer" target="_blank">
               Raporto ose sugjero
             </a>
@@ -107,8 +119,8 @@ export default function AboutPage() {
             Përpunimi dhe kodi burimor janë të hapur
           </h2>
           <p className="text-muted-foreground text-lg">
-            Çdo metrikë që shihni vjen nga një burim i verifikueshëm.
-            Proceset e pastrimit dokumentohen që të mos mbetet asgjë e paqartë.
+            Çdo metrikë që shihni vjen nga një burim i verifikueshëm. Proceset e
+            pastrimit dokumentohen që të mos mbetet asgjë e paqartë.
           </p>
         </div>
 
@@ -162,7 +174,10 @@ export default function AboutPage() {
           <CardContent className="p-8 pt-0">
             <ul className="space-y-4 text-left">
               {responsibilityNotes.map((note) => (
-                <li key={note} className="flex items-start gap-3 text-amber-900/90 dark:text-amber-100/90">
+                <li
+                  key={note}
+                  className="flex items-start gap-3 text-amber-900/90 dark:text-amber-100/90"
+                >
                   <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0" />
                   <span className="text-base leading-relaxed">{note}</span>
                 </li>

@@ -182,7 +182,7 @@ export function GovernmentRevenueStackedChart({
           label="Intervali"
         />
       </div>
-      <div className="grid gap-3 lg:grid-cols-[320px,1fr]">
+      <div className="grid gap-3 lg:grid-cols-[320px_1fr]">
         <HierarchicalMultiSelect
           nodes={hierarchyNodes}
           selectedIds={selectedCategoryNodes}

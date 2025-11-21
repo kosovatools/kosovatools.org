@@ -122,7 +122,7 @@ export function CategoriesOverYearsChart({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap  justify-between items-center gap-3">
         <OptionSelector
           label="Grupimi"
           value={periodGrouping}
@@ -135,17 +135,17 @@ export function CategoriesOverYearsChart({
           onChange={(value) => setTimeRange(value)}
           options={timeRangeOptions}
         />
+        {totals.length > 0 ? (
+          <StackedKeySelector
+            totals={totals}
+            selection={selection}
+            onSelectionChange={setSelection}
+            topCount={CATEGORY_STACK_TOP}
+            selectionLabel="Zgjedh kategoritë"
+            searchPlaceholder="Kërko kategoritë..."
+          />
+        ) : null}
       </div>
-      {totals.length > 0 ? (
-        <StackedKeySelector
-          totals={totals}
-          selection={selection}
-          onSelectionChange={setSelection}
-          topCount={CATEGORY_STACK_TOP}
-          selectionLabel="Zgjedh kategoritë"
-          searchPlaceholder="Kërko kategoritë..."
-        />
-      ) : null}
       <ChartContainer
         config={chartConfig}
         className="aspect-[1/1.5] sm:aspect-video"

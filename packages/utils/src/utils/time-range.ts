@@ -20,8 +20,7 @@ export function normalizeTimeRange<T extends TimeRangeOption>(
 }
 
 export const DEFAULT_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> = [
-  { key: 12, label: "12 muaj" },
-  { key: 24, label: "24 muaj" },
+  { key: 12, label: "1 vjet" },
   { key: 36, label: "3 vjet" },
   { key: 60, label: "5 vjet" },
   { key: 120, label: "10 vjet" },
@@ -31,21 +30,19 @@ export const DEFAULT_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> = [
 export const DEFAULT_YEARLY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> =
   [
     { key: 1, label: "1 vjet" },
-    { key: 2, label: "2 vjet" },
     { key: 3, label: "3 vjet" },
     { key: 5, label: "5 vjet" },
     { key: 10, label: "10 vjet" },
-    { key: null, label: "Gjithë seria" },
+    { key: null, label: "Maks." },
   ];
 
 export const DEFAULT_QUARTERLY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> =
   [
-    { key: 4, label: "4 tremujorë" },
-    { key: 8, label: "8 tremujorë" },
+    { key: 8, label: "1 vjet" },
     { key: 12, label: "3 vjet" },
     { key: 20, label: "5 vjet" },
     { key: 40, label: "10 vjet" },
-    { key: null, label: "Gjithë seria" },
+    { key: null, label: "Maks." },
   ];
 
 export const DEFAULT_TIME_RANGE: TimeRangeOption = 36;

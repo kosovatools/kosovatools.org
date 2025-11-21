@@ -131,7 +131,11 @@ export default function RootLayout({
                     target="_blank"
                   >
                     Ndërtuar me
-                    <span aria-label="zemër e kuqe" role="img" className="animate-pulse">
+                    <span
+                      aria-label="zemër e kuqe"
+                      role="img"
+                      className="animate-pulse"
+                    >
                       ❤️
                     </span>
                     në

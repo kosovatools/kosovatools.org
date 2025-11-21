@@ -70,6 +70,7 @@ export function EmploymentActivityChart({
         record.gender === gender ? record.employment : null,
       dimension: "activity",
       periodGrouping,
+      groupedValueMode: "latest",
       includeOther: true,
       top,
     });

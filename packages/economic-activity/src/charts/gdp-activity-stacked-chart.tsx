@@ -137,7 +137,7 @@ export function GdpActivityStackedChart({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap justify-between items-center gap-4">
         <OptionSelector
           value={metricKey}
           onChange={(nextKey) => setMetricKey(nextKey)}
@@ -156,15 +156,15 @@ export function GdpActivityStackedChart({
           options={TIME_RANGE_OPTIONS}
           label="Intervali"
         />
+        <StackedKeySelector
+          totals={totals}
+          selection={selection}
+          onSelectionChange={setSelection}
+          topCount={DEFAULT_TOP_ACTIVITIES}
+          selectionLabel="Zgjedh aktivitetet"
+          searchPlaceholder="Kërko sipas aktivitetit..."
+        />
       </div>
-      <StackedKeySelector
-        totals={totals}
-        selection={selection}
-        onSelectionChange={setSelection}
-        topCount={DEFAULT_TOP_ACTIVITIES}
-        selectionLabel="Zgjedh aktivitetet"
-        searchPlaceholder="Kërko sipas aktivitetit..."
-      />
       <ChartContainer
         config={chartConfig}
         className="aspect-[1/1.4] sm:aspect-video"

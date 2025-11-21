@@ -111,7 +111,7 @@ export function TradeChapterStackedChart({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap justify-between items-center gap-4">
         <OptionSelector
           value={metricKey}
           onChange={(nextKey) => setMetricKey(nextKey)}
@@ -130,15 +130,15 @@ export function TradeChapterStackedChart({
           options={TIME_RANGE_OPTIONS}
           label="Intervali"
         />
+        <StackedKeySelector
+          totals={totals}
+          selection={selection}
+          onSelectionChange={setSelection}
+          topCount={top}
+          selectionLabel="Zgjedh kapitujt"
+          searchPlaceholder="Kërko kapitujt..."
+        />
       </div>
-      <StackedKeySelector
-        totals={totals}
-        selection={selection}
-        onSelectionChange={setSelection}
-        topCount={top}
-        selectionLabel="Zgjedh kapitujt"
-        searchPlaceholder="Kërko kapitujt..."
-      />
       <ChartContainer
         config={chartConfig}
         className="aspect-[1/1.5] sm:aspect-video"

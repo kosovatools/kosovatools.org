@@ -20,8 +20,6 @@ export type SearchableListItemConfig = {
 };
 
 export type SearchableListSectionProps<Item> = {
-  title: string;
-  countLabel: string;
   searchValue: string;
   onSearchValueChange: (value: string) => void;
   searchPlaceholder: string;
@@ -32,12 +30,9 @@ export type SearchableListSectionProps<Item> = {
   searchDisabled?: boolean;
   className?: string;
   listProps?: React.HTMLAttributes<HTMLUListElement>;
-  icon?: React.ReactNode;
 };
 
 export function SearchableListSection<Item>({
-  title,
-  countLabel,
   searchValue,
   onSearchValueChange,
   searchPlaceholder,
@@ -48,7 +43,6 @@ export function SearchableListSection<Item>({
   searchDisabled,
   className,
   listProps,
-  icon,
 }: SearchableListSectionProps<Item>) {
   const { className: listClassName, ...restListProps } = listProps ?? {};
   return (
@@ -58,37 +52,26 @@ export function SearchableListSection<Item>({
         className,
       )}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-border/40 bg-muted/30 px-3 py-2.5">
-        <div className="flex items-center gap-2">
-          {icon && <div className="text-muted-foreground/70">{icon}</div>}
-          <span className="text-xs font-semibold text-foreground/80">
-            {title}
-          </span>
-          <span className="rounded-md bg-background px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground shadow-sm border border-border/50">
-            {countLabel}
-          </span>
+      {/* Search & Action */}
+      <div className="flex items-center gap-2 px-2 py-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
+          <Input
+            type="search"
+            value={searchValue}
+            onChange={(event) => onSearchValueChange(event.target.value)}
+            placeholder={searchPlaceholder}
+            disabled={searchDisabled}
+            className="h-8 w-full border-border/40 bg-background/50 pl-8 text-xs focus-visible:bg-background focus-visible:ring-1 focus-visible:ring-primary/20"
+          />
         </div>
         {action}
-      </div>
-
-      {/* Search */}
-      <div className="relative border-b border-border/40 px-3 py-2">
-        <Search className="absolute left-5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
-        <Input
-          type="search"
-          value={searchValue}
-          onChange={(event) => onSearchValueChange(event.target.value)}
-          placeholder={searchPlaceholder}
-          disabled={searchDisabled}
-          className="h-8 border-border/40 bg-background/50 pl-8 text-xs focus-visible:bg-background focus-visible:ring-1 focus-visible:ring-primary/20"
-        />
       </div>
 
       {/* List */}
       <ul
         className={cn(
-          "flex h-[200px] flex-col gap-1 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent",
+          "flex h-[200px] flex-col gap-1 overflow-y-auto p-1 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent",
           listClassName,
         )}
         {...restListProps}

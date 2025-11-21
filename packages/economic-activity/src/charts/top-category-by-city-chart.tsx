@@ -190,18 +190,17 @@ export function TopCategoryByCityStackedChart({
             </option>
           ))}
         </NativeSelect>
+        {totals.length > 0 ? (
+          <StackedKeySelector
+            totals={totals}
+            selection={selection}
+            onSelectionChange={setSelection}
+            topCount={CITY_STACK_TOP}
+            selectionLabel="Zgjedh kategoritë kryesore"
+            searchPlaceholder="Kërko kategoritë..."
+          />
+        ) : null}
       </div>
-
-      {totals.length > 0 ? (
-        <StackedKeySelector
-          totals={totals}
-          selection={selection}
-          onSelectionChange={setSelection}
-          topCount={CITY_STACK_TOP}
-          selectionLabel="Zgjedh kategoritë kryesore"
-          searchPlaceholder="Kërko kategoritë..."
-        />
-      ) : null}
       <ChartContainer
         config={chartConfig}
         className="aspect-[1/1.5] sm:aspect-video"

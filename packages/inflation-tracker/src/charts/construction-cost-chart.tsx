@@ -126,83 +126,88 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
     );
 
   return (
-    <div className="space-y-6">
-      <HierarchicalMultiSelect
-        title="Kategoritë e kostove"
-        nodes={hierarchicalNodes}
-        selectedIds={selectedCategories}
-        defaultExpandedIds={[...CONSTRUCTION_DEFAULT_EXPANDED_CODES]}
-        onSelectionChange={setSelectedCategories}
-        emptyMessage="Nuk ka kategori të disponueshme."
-        selectionBehavior="toggle-children"
-        minSelected={1}
-      />
-      <div className="space-y-2">
-        <OptionSelector
-          label="Periudha"
-          value={timeRange}
-          onChange={setTimeRange}
-          options={TIME_RANGE_OPTIONS}
+    <div className="flex flex-col gap-4">
+      <div className="grid gap-3 lg:grid-cols-[320px_1fr]">
+        <HierarchicalMultiSelect
+          title="Kategoritë e kostove"
+          nodes={hierarchicalNodes}
+          selectedIds={selectedCategories}
+          defaultExpandedIds={[...CONSTRUCTION_DEFAULT_EXPANDED_CODES]}
+          onSelectionChange={setSelectedCategories}
+          emptyMessage="Nuk ka kategori të disponueshme."
+          selectionBehavior="toggle-children"
+          minSelected={1}
+          scrollContainerClassName="max-h-[420px] border rounded-md"
         />
-        <ChartContainer
-          config={chartConfig}
-          className="w-full aspect-[1/1.5] sm:aspect-video"
-        >
-          {hasData ? (
-            <LineChart
-              accessibilityLayer
-              data={chartData}
-              margin={{ top: 10, bottom: 0, left: 0, right: 0 }}
-            >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="period"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={10}
-                minTickGap={24}
-                tickFormatter={(value) => periodFormatter(String(value))}
-              />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                domain={["auto", "auto"]}
-                tickMargin={10}
-                tickFormatter={(value) => formatAxisValue(value as number)}
-              />
-              <TimelineEventMarkers
+        <div className="space-y-2">
+          <OptionSelector
+            label="Periudha"
+            value={timeRange}
+            onChange={setTimeRange}
+            options={TIME_RANGE_OPTIONS}
+          />
+          <ChartContainer
+            config={chartConfig}
+            className="w-full aspect-[1/1.5] sm:aspect-video"
+          >
+            {hasData ? (
+              <LineChart
+                accessibilityLayer
                 data={chartData}
-                grouping={dataset.meta.time.granularity}
-                enabled={timelineEvents?.enabled}
-                includeCategories={timelineEvents?.includeCategories}
-              />
-              <ChartTooltip
-                cursor={false}
-                content={
-                  <ChartTooltipContent
-                    valueFormatter={(value) => formatAxisValue(value as number)}
-                  />
-                }
-              />
-              <ChartLegend content={<ChartLegendContent />} />
-              {Object.keys(chartConfig).map((key) => (
-                <Line
-                  key={key}
-                  dataKey={key}
-                  type="monotone"
-                  stroke={`var(--color-${key})`}
-                  strokeWidth={2}
-                  dot={false}
-                  connectNulls
+                margin={{ top: 10, bottom: 0, left: 0, right: 0 }}
+              >
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="period"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={10}
+                  minTickGap={24}
+                  tickFormatter={(value) => periodFormatter(String(value))}
                 />
-              ))}
-            </LineChart>
-          ) : (
-            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-              Nuk ka të dhëna për përzgjedhjet aktuale.
-            </div>
-          )}
-        </ChartContainer>
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  domain={["auto", "auto"]}
+                  tickMargin={10}
+                  tickFormatter={(value) => formatAxisValue(value as number)}
+                />
+                <TimelineEventMarkers
+                  data={chartData}
+                  grouping={dataset.meta.time.granularity}
+                  enabled={timelineEvents?.enabled}
+                  includeCategories={timelineEvents?.includeCategories}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={
+                    <ChartTooltipContent
+                      valueFormatter={(value) =>
+                        formatAxisValue(value as number)
+                      }
+                    />
+                  }
+                />
+                <ChartLegend content={<ChartLegendContent />} />
+                {Object.keys(chartConfig).map((key) => (
+                  <Line
+                    key={key}
+                    dataKey={key}
+                    type="monotone"
+                    stroke={`var(--color-${key})`}
+                    strokeWidth={2}
+                    dot={false}
+                    connectNulls
+                  />
+                ))}
+              </LineChart>
+            ) : (
+              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                Nuk ka të dhëna për përzgjedhjet aktuale.
+              </div>
+            )}
+          </ChartContainer>
+        </div>
       </div>
     </div>
   );

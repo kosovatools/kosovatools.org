@@ -75,7 +75,7 @@ export function WageLevelsChart({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap  justify-between items-center gap-3">
         <OptionSelector
           value={metric}
           onChange={(value) => setMetric(value)}
