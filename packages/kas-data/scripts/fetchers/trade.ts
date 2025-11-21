@@ -1,8 +1,10 @@
 import { TradeChapterRecord } from "../../src/types/trade";
 import { PATHS } from "../../src/types/paths";
-import { slugifyLabel } from "../lib/utils";
-import { parseTradeChapterLabel } from "../lib/utils";
-import { normalizeYM } from "../lib/utils";
+import {
+  normalizeYM,
+  parseTradeChapterLabel,
+  slugifyLabel,
+} from "../lib/utils";
 import { runPxDatasetPipeline } from "../pipeline/px-dataset";
 
 const DATASET_ID = "kas_trade_chapters_monthly";

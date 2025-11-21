@@ -25,6 +25,24 @@ type RequestFail = {
 
 type RequestResult = RequestOk | RequestFail;
 
+function formatUnknownError(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (
+    typeof error === "string" ||
+    typeof error === "number" ||
+    typeof error === "boolean" ||
+    typeof error === "bigint"
+  ) {
+    return String(error);
+  }
+  if (typeof error === "symbol") return error.toString();
+  try {
+    return JSON.stringify(error ?? {});
+  } catch {
+    return "Unknown error";
+  }
+}
+
 export type PxVariable = {
   code: string;
   text?: string | null;
@@ -107,33 +125,22 @@ export async function requestJson(
     try {
       return { ok: true, json: text ? JSON.parse(text) : {} };
     } catch (err) {
-      const parseErrorMessage =
-        err instanceof Error
-          ? err.message
-          : typeof err === "string"
-            ? err
-            : typeof err === "number" ||
-                typeof err === "boolean" ||
-                typeof err === "bigint"
-              ? String(err)
-              : typeof err === "symbol"
-                ? err.toString()
-                : JSON.stringify(err ?? {});
       return {
         ok: false,
         status: res.status,
         statusText: res.statusText,
-        text: `invalid json: ${parseErrorMessage}`,
+        text: `invalid json: ${formatUnknownError(err)}`,
       };
     }
   } catch (err) {
     if (err instanceof Error && err.name === "AbortError") {
       return { ok: false, statusText: "timeout", text: "Request timed out" };
     }
+    const message = formatUnknownError(err);
     return {
       ok: false,
-      statusText: err instanceof Error ? err.message : "error",
-      text: String(err),
+      statusText: message || "error",
+      text: message,
     };
   } finally {
     clearTimeout(timer);
@@ -251,18 +258,14 @@ type VarMatcher =
       >;
     };
 
-export function metaFindVarCode(
-  meta: PxMeta,
-  ...matchers: VarMatcher[]
-): string | null {
-  const variables = metaVariables(meta);
-  if (!variables.length) return null;
+type VarMatcherInput = VarMatcher | VarMatcher[] | null | undefined;
 
+function flattenVarMatchers(matchers: VarMatcher[]): VarMatcher[] {
   const ordered: VarMatcher[] = [];
-  const enqueue = (matcher: VarMatcher | VarMatcher[] | null | undefined) => {
+  const enqueue = (matcher: VarMatcherInput) => {
     if (matcher === undefined || matcher === null) return;
     if (Array.isArray(matcher)) {
-      for (const inner of matcher) enqueue(inner);
+      matcher.forEach(enqueue);
       return;
     }
     if (
@@ -271,18 +274,29 @@ export function metaFindVarCode(
       !(matcher instanceof RegExp)
     ) {
       const { code, codes, text, texts, predicate, predicates } = matcher;
-      enqueue(code ?? null);
-      enqueue(codes ?? null);
-      enqueue(text ?? null);
-      enqueue(texts ?? null);
-      enqueue(predicate ?? null);
-      enqueue(predicates ?? null);
+      enqueue(code);
+      enqueue(codes);
+      enqueue(text);
+      enqueue(texts);
+      enqueue(predicate);
+      enqueue(predicates);
       return;
     }
     ordered.push(matcher);
   };
 
   enqueue(matchers);
+  return ordered;
+}
+
+export function metaFindVarCode(
+  meta: PxMeta,
+  ...matchers: VarMatcher[]
+): string | null {
+  const variables = metaVariables(meta);
+  if (!variables.length) return null;
+
+  const ordered = flattenVarMatchers(matchers);
   if (!ordered.length) return null;
 
   const normalize = (value: unknown) => {
@@ -331,27 +345,26 @@ export function metaValueMap(
   varCode: string,
 ): Array<[string, string]> {
   const variable = metaVariables(meta).find((v) => v?.code === varCode);
-  if (!variable) return [];
-  const values = Array.isArray(variable.values) ? variable.values : [];
-  let texts = Array.isArray(variable.valueTexts) ? variable.valueTexts : [];
-  if (!texts.length || texts.length !== values.length) {
-    texts = values.map((c) => String(c));
-  }
-  return values.map((value, index) => [
-    String(value),
-    String(texts[index] ?? value),
-  ]);
+  return buildValuePairsFromVariable(variable);
 }
 
 export function buildValuePairs(variable: PxVariable): Array<[string, string]> {
+  return buildValuePairsFromVariable(variable);
+}
+
+function buildValuePairsFromVariable(
+  variable: PxVariable | null | undefined,
+): Array<[string, string]> {
+  if (!variable) return [];
   const values = Array.isArray(variable.values) ? variable.values : [];
-  let texts = Array.isArray(variable.valueTexts) ? variable.valueTexts : [];
-  if (!texts.length || texts.length !== values.length) {
-    texts = values.map((value) => String(value));
-  }
+  const texts = Array.isArray(variable.valueTexts) ? variable.valueTexts : [];
+  const normalizedTexts =
+    texts.length === values.length && texts.length
+      ? texts
+      : values.map((value) => String(value));
   return values.map((value, index) => [
     String(value),
-    String(texts[index] ?? value),
+    String(normalizedTexts[index] ?? value),
   ]);
 }
 

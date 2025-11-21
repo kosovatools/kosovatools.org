@@ -16,9 +16,9 @@ import type {
   DatasetMeta,
   DimensionOption,
   DatasetMetaField,
-  TimeGranularity,
 } from "../types/dataset";
 import { createLabelMap } from "./meta";
+import { TimeGranularity } from "@workspace/utils/utils/time-range";
 
 type GenericDatasetMeta = DatasetMeta<string, string, TimeGranularity, object>;
 
@@ -185,25 +185,30 @@ function ensureSlugSafeDimensionKeys<
 >(meta: TMeta, records: ReadonlyArray<TRecord>): void {
   const dimensions = meta.dimensions ?? {};
   const datasetId = meta.id ?? "dataset";
+  const assertSlugSafe = (value: string, context: string) => {
+    if (!SLUG_SAFE_KEY.test(value)) {
+      throw new Error(
+        `Dataset "${datasetId}" ${context} "${value}". Use slugifyLabel to normalize values during fetch.`,
+      );
+    }
+  };
 
   for (const [dimension, options] of Object.entries(dimensions)) {
     for (const option of options ?? []) {
-      if (option?.key && !SLUG_SAFE_KEY.test(String(option.key))) {
-        throw new Error(
-          `Dataset "${datasetId}" has an unsafe key "${option.key}" in dimension "${dimension}". Use slugifyLabel to normalize values during fetch.`,
-        );
-      }
+      const key = option?.key;
+      if (key === undefined || key === null) continue;
+      assertSlugSafe(
+        String(key),
+        `has an unsafe key in dimension "${dimension}":`,
+      );
     }
   }
 
   for (const record of records) {
     for (const dimension of Object.keys(dimensions)) {
       const value = (record as Record<string, unknown>)[dimension];
-      if (typeof value === "string" && !SLUG_SAFE_KEY.test(value)) {
-        throw new Error(
-          `Dataset "${datasetId}" contains an unsafe "${dimension}" value "${value}". Ensure fetchers slugify dimension values.`,
-        );
-      }
+      if (typeof value === "string")
+        assertSlugSafe(value, `contains an unsafe "${dimension}" value`);
     }
   }
 }
@@ -262,40 +267,9 @@ function buildStackView<
   records: ReadonlyArray<TRecord>,
   config: DatasetStackConfig<TRecord, TKey>,
 ): DatasetStackResult<TKey> {
-  const {
-    keyAccessor,
-    valueAccessor,
-    dimension,
-    dimensionOptions,
-    labelForKey,
-    ...rest
-  } = config;
+  const { accessors, options } = prepareStackContext(meta, config);
 
-  const { labelMap, allowedKeys } = buildDimensionContext(
-    meta,
-    dimension,
-    dimensionOptions,
-  );
-
-  const accessors = {
-    period: (record: TRecord) => record.period,
-    key: (record: TRecord) => keyAccessor(record),
-    value: (record: TRecord) => valueAccessor(record) ?? 0,
-  };
-
-  const baseOptions = rest as StackOptions<TKey>;
-  const mergedAllowedKeys = (baseOptions.allowedKeys ?? allowedKeys) as
-    | readonly TKey[]
-    | undefined;
-
-  const stackOptions: StackOptions<TKey> = {
-    ...baseOptions,
-    baseGrouping: meta.time.granularity,
-    allowedKeys: mergedAllowedKeys,
-    labelForKey: labelForKey ?? ((key: TKey) => labelMap[key] ?? key),
-  };
-
-  const result = buildStackSeries(records, accessors, stackOptions);
+  const result = buildStackSeries(records, accessors, options);
   return {
     keys: result.keys,
     series: result.series,
@@ -312,39 +286,7 @@ function summarizeStackView<
   records: ReadonlyArray<TRecord>,
   config: DatasetStackConfig<TRecord, TKey>,
 ): StackTotal<TKey>[] {
-  const {
-    keyAccessor,
-    valueAccessor,
-    dimension,
-    dimensionOptions,
-    labelForKey,
-    ...rest
-  } = config;
-
-  const { labelMap, allowedKeys } = buildDimensionContext(
-    meta,
-    dimension,
-    dimensionOptions,
-  );
-
-  const baseOptions = rest as StackOptions<TKey>;
-  const mergedAllowedKeys = (baseOptions.allowedKeys ?? allowedKeys) as
-    | readonly TKey[]
-    | undefined;
-
-  const options: StackOptions<TKey> = {
-    ...baseOptions,
-    baseGrouping: meta.time.granularity,
-    allowedKeys: mergedAllowedKeys,
-    labelForKey: labelForKey ?? ((key: TKey) => labelMap[key] ?? key),
-  };
-
-  const accessors = {
-    period: (record: TRecord) => record.period,
-    key: (record: TRecord) => keyAccessor(record),
-    value: (record: TRecord) => valueAccessor(record) ?? 0,
-  };
-
+  const { accessors, options } = prepareStackContext(meta, config);
   return summarizeStackTotals(records, accessors, options);
 }
 
@@ -390,6 +332,7 @@ function aggregateRecords<
   const relevantRecords = options.filter
     ? records.filter(options.filter)
     : records;
+  const metaFieldLookup = buildMetaFieldLookup(meta.fields);
 
   if (!relevantRecords.length || !options.fields.length) {
     return [];
@@ -422,7 +365,7 @@ function aggregateRecords<
     (field) => ({
       key: field.key,
       getValue: (record) => field.valueAccessor(record) ?? null,
-      mode: field.mode ?? inferFieldAggregationMode(meta.fields, field.key),
+      mode: field.mode ?? inferFieldAggregationMode(metaFieldLookup, field.key),
     }),
   );
 
@@ -433,11 +376,69 @@ function aggregateRecords<
   });
 }
 
-function inferFieldAggregationMode(
+function prepareStackContext<
+  TRecord extends DatasetRecordBase,
+  TMeta extends DatasetMeta<string, string, TimeGranularity, object>,
+  TKey extends string,
+>(
+  meta: TMeta,
+  config: DatasetStackConfig<TRecord, TKey>,
+): {
+  options: StackOptions<TKey>;
+  accessors: {
+    period: (record: TRecord) => string;
+    key: (record: TRecord) => TKey;
+    value: (record: TRecord) => number;
+  };
+  labelMap: Readonly<Record<TKey, string>>;
+} {
+  const {
+    keyAccessor,
+    valueAccessor,
+    dimension,
+    dimensionOptions,
+    labelForKey,
+    ...rest
+  } = config;
+
+  const { labelMap, allowedKeys } = buildDimensionContext(
+    meta,
+    dimension,
+    dimensionOptions,
+  );
+
+  const baseOptions = rest as StackOptions<TKey>;
+  const mergedAllowedKeys = (baseOptions.allowedKeys ?? allowedKeys) as
+    | readonly TKey[]
+    | undefined;
+
+  const options: StackOptions<TKey> = {
+    ...baseOptions,
+    baseGrouping: meta.time.granularity,
+    allowedKeys: mergedAllowedKeys,
+    labelForKey: labelForKey ?? ((key: TKey) => labelMap[key] ?? key),
+  };
+
+  const accessors = {
+    period: (record: TRecord) => record.period,
+    key: (record: TRecord) => keyAccessor(record),
+    value: (record: TRecord) => valueAccessor(record) ?? 0,
+  };
+
+  return { options, accessors, labelMap };
+}
+
+function buildMetaFieldLookup(
   fields: ReadonlyArray<DatasetMetaField<string>>,
+): Map<string, DatasetMetaField<string>> {
+  return new Map(fields.map((field) => [field.key, field]));
+}
+
+function inferFieldAggregationMode(
+  fields: Map<string, DatasetMetaField<string>>,
   key: string,
 ) {
-  const metaField = fields.find((field) => field.key === key);
+  const metaField = fields.get(key);
   switch (metaField?.value_type) {
     case "stock":
       return "average";

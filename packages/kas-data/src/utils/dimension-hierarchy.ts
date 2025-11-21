@@ -17,27 +17,26 @@ export function buildUiHierarchy(
   options: ReadonlyArray<DimensionOption<string>> | undefined,
 ): UiHierarchyResult {
   if (!hierarchy?.length) {
-    const fallbackNodes =
-      options?.map<DimensionHierarchyUiNode>((option) => ({
+    const fallbackOptions = options?.filter(Boolean) ?? [];
+    const fallbackNodes = fallbackOptions.map<DimensionHierarchyUiNode>(
+      (option) => ({
         id: option.key,
         label: option.label,
         children: [],
-      })) ?? [];
-    const fallbackLabelMap: Record<string, string> = {};
-    options?.forEach((option) => {
-      fallbackLabelMap[option.key] = option.label;
-    });
+      }),
+    );
+    const fallbackLabelMap = Object.fromEntries(
+      fallbackOptions.map((option) => [option.key, option.label]),
+    );
     return {
       nodes: fallbackNodes,
       labelMap: fallbackLabelMap,
-      defaultId: options?.[0]?.key ?? null,
+      defaultId: fallbackOptions[0]?.key ?? null,
     };
   }
 
-  const dimensionHierarchy = hierarchy;
-
   const nodeMap = new Map<string, DimensionHierarchyNode>();
-  dimensionHierarchy.forEach((node) => nodeMap.set(node.key, node));
+  hierarchy.forEach((node) => nodeMap.set(node.key, node));
 
   const uiNodeCache = new Map<string, DimensionHierarchyUiNode>();
 
@@ -57,7 +56,7 @@ export function buildUiHierarchy(
     return uiNode;
   };
 
-  const rootKeys = dimensionHierarchy
+  const rootKeys = hierarchy
     .filter((node) => !node.parent)
     .map((node) => node.key);
   const nodes = rootKeys
@@ -65,13 +64,13 @@ export function buildUiHierarchy(
     .filter((node): node is DimensionHierarchyUiNode => Boolean(node));
 
   const labelMap: Record<string, string> = {};
-  dimensionHierarchy.forEach((node) => {
+  hierarchy.forEach((node) => {
     labelMap[node.key] = node.label;
   });
 
   return {
     nodes,
     labelMap,
-    defaultId: rootKeys[0] ?? dimensionHierarchy[0]?.key ?? null,
+    defaultId: rootKeys[0] ?? hierarchy[0]?.key ?? null,
   };
 }

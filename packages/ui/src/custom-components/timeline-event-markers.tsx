@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { Label, ReferenceLine } from "recharts";
 
 import {
@@ -14,6 +15,7 @@ type ChartDatum = { period: string };
 export type TimelineEventMarkerControls = {
   enabled?: boolean;
   includeCategories?: UseTimelineEventMarkersOptions["includeCategories"];
+  yAxisId?: string;
 };
 
 export type TimelineEventsProps = {
@@ -26,6 +28,7 @@ export function TimelineEventMarkers({
   grouping,
   enabled = true,
   includeCategories,
+  yAxisId,
 }: {
   data: ChartDatum[];
   grouping: PeriodGrouping;
@@ -45,6 +48,7 @@ export function TimelineEventMarkers({
   return markers.map((event) => (
     <ReferenceLine
       key={event.id}
+      yAxisId={yAxisId}
       x={event.x}
       stroke="var(--muted-foreground)"
       strokeDasharray="3 3"

@@ -1,4 +1,5 @@
-import type { DatasetMeta, TimeGranularity } from "../types/dataset";
+import { TimeGranularity } from "@workspace/utils/utils/time-range";
+import type { DatasetMeta } from "../types/dataset";
 import { formatDate } from "@workspace/utils";
 
 type KeyLabelOption<TKey extends string = string> = Readonly<{
@@ -33,11 +34,13 @@ export function formatGeneratedAt(
 export function latestUpdatedAt(
   metas: Array<GenericDatasetMeta | undefined>,
 ): string | null {
-  const timestamps = metas
-    .map((m) => m?.updated_at ?? null)
-    .filter((v): v is string => Boolean(v));
-  if (!timestamps.length) return null;
-  return timestamps.sort().at(-1) ?? null;
+  let latest: string | null = null;
+  for (const meta of metas) {
+    const updatedAt = meta?.updated_at;
+    if (!updatedAt) continue;
+    if (!latest || updatedAt > latest) latest = updatedAt;
+  }
+  return latest;
 }
 
 function getSafeLabel<TKey extends string>(
@@ -51,13 +54,10 @@ function getSafeLabel<TKey extends string>(
 export function createLabelMap<TKey extends string>(
   options?: ReadonlyArray<KeyLabelOption<TKey> | null | undefined>,
 ): Readonly<Record<TKey, string>> {
-  if (!options) return {} as Readonly<Record<TKey, string>>;
-  const map: Record<string, string> = {};
-  for (const option of options) {
-    if (!option) continue;
-    const key = option.key;
-    if (!key) continue;
-    map[key] = getSafeLabel(option);
-  }
-  return map as Readonly<Record<TKey, string>>;
+  if (!options?.length) return {} as Readonly<Record<TKey, string>>;
+  const filtered = options.filter((option): option is KeyLabelOption<TKey> =>
+    Boolean(option?.key && typeof option.key === "string"),
+  );
+  const entries = filtered.map((option) => [option.key, getSafeLabel(option)]);
+  return Object.fromEntries(entries) as Readonly<Record<TKey, string>>;
 }

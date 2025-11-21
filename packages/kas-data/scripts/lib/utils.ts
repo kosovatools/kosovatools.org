@@ -3,11 +3,9 @@ import type {
   DatasetMeta,
   DatasetMetaField,
   DimensionOption as DatasetDimensionOption,
-  TimeGranularity,
   DatasetMetaBaseExtras,
 } from "../../src/types/dataset";
-
-export type { TimeGranularity };
+import { TimeGranularity } from "@workspace/utils/utils/time-range";
 
 export type MetaField<TKey extends string = string> = DatasetMetaField<TKey>;
 

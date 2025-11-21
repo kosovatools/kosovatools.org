@@ -121,7 +121,15 @@ function MonthlyCategorySection({
         "Grafiku i grumbulluar paraqet kontributet mujore të kategorive më të mëdha, të agreguara nga të gjitha komunat."
       }
     >
-      {(dataset) => <MonthlyCategoryStackedChart dataset={dataset} />}
+      {(dataset) => (
+        <MonthlyCategoryStackedChart
+          dataset={dataset}
+          timelineEvents={{
+            enabled: true,
+            includeCategories: ["government_change", "public_health", "other"],
+          }}
+        />
+      )}
     </DatasetRenderer>
   );
 }

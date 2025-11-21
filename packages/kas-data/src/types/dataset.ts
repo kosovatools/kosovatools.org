@@ -1,3 +1,4 @@
+import { TimeGranularity } from "@workspace/utils/utils/time-range";
 export type DatasetMetaField<TKey extends string> = Readonly<{
   key: TKey;
   label: string;
@@ -17,8 +18,6 @@ export type DimensionHierarchyNode = Readonly<{
   children: ReadonlyArray<string>;
   level: number;
 }>;
-
-export type TimeGranularity = "yearly" | "quarterly" | "monthly" | "daily";
 
 export type DatasetMetaBaseExtras = Record<never, never>;
 

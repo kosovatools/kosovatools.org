@@ -33,14 +33,20 @@ import {
   type GdpByActivityMetric,
   type GdpByActivityRecord,
 } from "@workspace/kas-data";
+import {
+  TimelineEventMarkerControls,
+  TimelineEventMarkers,
+} from "@workspace/ui/custom-components/timeline-event-markers";
 
 const DEFAULT_TOP_ACTIVITIES = 5;
 const CHART_MARGIN = { top: 24, right: 32, bottom: 16, left: 16 };
 
 export function GdpActivityStackedChart({
   dataset,
+  timelineEvents,
 }: {
   dataset: GdpByActivityDatasetView;
+  timelineEvents?: TimelineEventMarkerControls;
 }) {
   const baseDataset = React.useMemo(
     () =>
@@ -178,6 +184,12 @@ export function GdpActivityStackedChart({
             width="auto"
             tickFormatter={(value) => formatCurrencyCompact(value as number)}
             axisLine={false}
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
             labelFormatter={periodFormatter}

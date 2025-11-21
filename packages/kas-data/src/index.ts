@@ -21,7 +21,6 @@ export type {
   DatasetMetaField,
   DimensionOption,
   DimensionHierarchyNode,
-  TimeGranularity,
   DatasetMetaBaseExtras,
   DatasetMetaMonthly,
   DatasetMetaQuarterly,

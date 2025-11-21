@@ -155,6 +155,12 @@ export function EmploymentActivityChart({
               isAnimationActive={false}
             />
           ))}
+          <ReferenceLine
+            x="2020"
+            label={{ value: "position: start", fill: "black" }}
+            stroke="black"
+            position="start"
+          />
         </AreaChart>
       </ChartContainer>
     </div>

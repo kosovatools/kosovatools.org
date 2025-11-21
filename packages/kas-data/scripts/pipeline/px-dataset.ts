@@ -18,9 +18,9 @@ import {
   type Meta,
   type MetaField,
   type DimensionOption,
-  type TimeGranularity,
 } from "../lib/utils";
 import { writeJson } from "../lib/io";
+import { TimeGranularity } from "@workspace/utils/utils/time-range";
 
 export class PxPipelineSkip extends PxError {
   constructor(message: string) {
@@ -265,7 +265,7 @@ export async function runPxDatasetPipeline<
     captureDimensionOptions(axis.alias, axis.values),
   );
 
-  const resolvedGranularity: TimeGranularity =
+  const resolvedGranularity =
     timeDimension.granularity ??
     ((): TimeGranularity => {
       throw new PxError(`${datasetId}: time granularity is required`);

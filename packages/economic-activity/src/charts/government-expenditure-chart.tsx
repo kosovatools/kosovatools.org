@@ -53,9 +53,7 @@ export function GovernmentExpenditureStackedChart({
 
   const [periodGrouping, setPeriodGrouping] =
     React.useState<PeriodGrouping>("yearly");
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(
-    timeRangeOptions[2]?.key ?? null,
-  );
+  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
 
   const datasetView = React.useMemo(
     () => dataset.limit(timeRange),

@@ -1,7 +1,14 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Area, AreaChart, CartesianGrid, Line, XAxis, YAxis } from "recharts";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Line,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import { AirTransportDatasetView } from "@workspace/kas-data";
 import {
@@ -118,11 +125,10 @@ export function AviationStatsChart({
         className="w-full aspect-[1/1.5] sm:aspect-video"
       >
         <AreaChart
-          accessibilityLayer
           data={chartData}
           margin={{
-            left: 0,
-            right: 0,
+            left: 16,
+            right: 32,
             top: 10,
             bottom: 0,
           }}
@@ -130,13 +136,22 @@ export function AviationStatsChart({
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="period"
+            tickFormatter={formatPeriodTick}
+            tickMargin={8}
+            minTickGap={24}
+            axisLine={false}
+          />
+          <YAxis
+            yAxisId="passengers"
             tickLine={false}
             axisLine={false}
             tickMargin={10}
-            tickFormatter={formatPeriodTick}
-            minTickGap={30}
+            tickFormatter={(value) => formatCount(value as number)}
+            width="auto"
           />
           <YAxis
+            yAxisId="flights"
+            orientation="right"
             tickLine={false}
             axisLine={false}
             tickMargin={10}
@@ -148,15 +163,7 @@ export function AviationStatsChart({
             grouping={periodGrouping}
             enabled={timelineEvents?.enabled}
             includeCategories={timelineEvents?.includeCategories}
-          />
-          <YAxis
-            yAxisId="flights"
-            orientation="right"
-            tickLine={false}
-            axisLine={false}
-            tickMargin={10}
-            tickFormatter={(value) => formatCount(value as number)}
-            width="auto"
+            yAxisId="passengers"
           />
           <ChartTooltip
             labelFormatter={periodFormatter}

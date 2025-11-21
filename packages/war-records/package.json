@@ -16,9 +16,9 @@
   },
   "dependencies": {
     "@tanstack/react-virtual": "^3.13.12",
+    "@workspace/dataset-api": "workspace:*",
     "@workspace/ui": "workspace:*",
     "@workspace/utils": "workspace:*",
-    "@workspace/dataset-api": "workspace:*",
     "lucide-react": "^0.475.0",
     "recharts": "3.4.1"
   },
@@ -28,7 +28,7 @@
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "@tanstack/react-query": "^5.90.8",
+    "@tanstack/react-query": "^5.90.10",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "@workspace/eslint-config": "workspace:*",

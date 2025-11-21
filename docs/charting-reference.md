@@ -7,8 +7,8 @@ This document captures the pattern used in `apps/web/app/(tools)/aviation-stats/
 - Import the dataset view plus its record type (e.g., `airTransportMonthly`, `AirTransportRecord`).
 - Use metadata to build UI controls and limits:
   - `getPeriodGroupingOptions(meta.time.granularity)` ⇢ grouping selector options.
-  - `limitTimeRangeOptions(meta.time)` ⇢ interval selector (monthly datasets get month-based options; quarterly datasets get quarter-based options; yearly datasets get year-based options).
-- Default `periodGrouping` to the dataset granularity and prefer the `24`-month option (falling back to the first available entry) for `timeRange`.
+- `limitTimeRangeOptions(meta.time)` ⇢ interval selector (daily datasets get day-based options; monthly datasets get month-based options; quarterly datasets get quarter-based options; yearly datasets get year-based options).
+- Default `periodGrouping` to the "yearly" and null (All series) `timeRange`.
 - Never duplicate shapes: subtype with `Pick<>` or `keyof` on the dataset record when you need local types.
 - Preserve dataset semantics—keep values as `number | null` and only format at render-time. Avoid coercing to `undefined`, strings, or other sentinels unless the dataset itself uses them.
 

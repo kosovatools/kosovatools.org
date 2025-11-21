@@ -1,13 +1,14 @@
 type MaybeNumber = number | null | undefined;
-type YearMonthDay = {
+type YearMonthDay = Readonly<{
   year: number;
   month: number;
   day: number;
-};
-type IsoWeekKey = {
+}>;
+type IsoWeekKey = Readonly<{
   year: number;
   week: number;
-};
+}>;
+type Season = "winter" | "spring" | "summer" | "autumn";
 
 export type PeriodGrouping =
   | "hourly"
@@ -70,15 +71,14 @@ const DAY_KEY_PATTERN = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
 const HOUR_KEY_PATTERN = /^(\d{1,2})(?::(\d{1,2}))?$/;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
-const SEASON_ORDER: Record<"winter" | "spring" | "summer" | "autumn", number> =
-  {
-    winter: 0,
-    spring: 1,
-    summer: 2,
-    autumn: 3,
-  };
+const SEASON_ORDER: Record<Season, number> = {
+  winter: 0,
+  spring: 1,
+  summer: 2,
+  autumn: 3,
+};
 
-const SEASON_LABEL_MAP: Record<keyof typeof SEASON_ORDER, string> = {
+const SEASON_LABEL_MAP: Record<Season, string> = {
   winter: "Dimër",
   spring: "Pranverë",
   summer: "Verë",
@@ -98,8 +98,8 @@ const GROUPING_TO_MONTHS: Record<PeriodGrouping, number> = {
 export function getPeriodGroupingOptions(
   granularity?: PeriodGrouping,
 ): ReadonlyArray<PeriodGroupingOption> {
-  if (!granularity) return PERIOD_GROUPING_OPTION_DEFINITIONS;
-  const allowed = PERIOD_GROUPING_OPTIONS_BY_GRANULARITY[granularity];
+  const allowed =
+    granularity && PERIOD_GROUPING_OPTIONS_BY_GRANULARITY[granularity];
   if (!allowed) return PERIOD_GROUPING_OPTION_DEFINITIONS;
   return PERIOD_GROUPING_OPTION_DEFINITIONS.filter((option) =>
     allowed.includes(option.key),
@@ -109,7 +109,16 @@ export function getPeriodGroupingOptions(
 // ==== Small utils ====
 const isFiniteNum = (v: unknown): v is number =>
   typeof v === "number" && Number.isFinite(v);
+
+const isWithinRange = (value: number, min: number, max: number): boolean =>
+  isFiniteNum(value) && value >= min && value <= max;
+
 const toInt = (s: string | undefined): number => Number.parseInt(s ?? "", 10);
+
+const coalesceKey = (
+  key: string | null | undefined,
+  fallback: string,
+): string => key ?? fallback;
 
 const padNumber = (value: number, length = 2): string =>
   value.toString().padStart(length, "0");
@@ -124,13 +133,9 @@ const parseYearMonthDay = (period: string): YearMonthDay | null => {
   const month = toInt(m);
   const day = toInt(d);
   if (
-    !Number.isFinite(year) ||
-    !Number.isFinite(month) ||
-    !Number.isFinite(day) ||
-    month < 1 ||
-    month > 12 ||
-    day < 1 ||
-    day > 31
+    !isFiniteNum(year) ||
+    !isWithinRange(month, 1, 12) ||
+    !isWithinRange(day, 1, 31)
   ) {
     return null;
   }
@@ -143,12 +148,7 @@ const parseWeekKey = (period: string): IsoWeekKey | null => {
   const [, y, w] = match;
   const year = toInt(y);
   const week = toInt(w);
-  if (
-    !Number.isFinite(year) ||
-    !Number.isFinite(week) ||
-    week < 1 ||
-    week > 53
-  ) {
+  if (!isFiniteNum(year) || !isWithinRange(week, 1, 53)) {
     return null;
   }
   return { year, week };
@@ -160,14 +160,7 @@ const parseHourKey = (period: string): number | null => {
   const [, h, m] = match;
   const hour = toInt(h);
   const minute = m ? toInt(m) : 0;
-  if (
-    !Number.isFinite(hour) ||
-    hour < 0 ||
-    hour > 23 ||
-    !Number.isFinite(minute) ||
-    minute < 0 ||
-    minute > 59
-  ) {
+  if (!isWithinRange(hour, 0, 23) || !isWithinRange(minute, 0, 59)) {
     return null;
   }
   return hour;
@@ -209,12 +202,7 @@ export function parseYearMonth(
   const [y, m] = period.split("-");
   const year = toInt(y);
   const month = toInt(m);
-  if (
-    Number.isFinite(year) &&
-    Number.isFinite(month) &&
-    month >= 1 &&
-    month <= 12
-  ) {
+  if (isFiniteNum(year) && isWithinRange(month, 1, 12)) {
     return { year, month };
   }
   const week = parseWeekKey(period);
@@ -224,6 +212,43 @@ export function parseYearMonth(
   }
   return null;
 }
+
+type SeasonalMatch = Readonly<{
+  year: string;
+  season: Season;
+}>;
+
+const matchSeasonalPeriod = (period: string): SeasonalMatch | null => {
+  const match = SEASONAL_LABEL_PATTERN.exec(period);
+  if (!match) return null;
+  const year = match[1];
+  const season = match[2] as Season | undefined;
+  if (!year || !season) return null;
+  return { year, season };
+};
+
+const parseSeasonalPeriod = (
+  period: string,
+): { year: number; order: number } | null => {
+  const match = matchSeasonalPeriod(period);
+  if (!match) return null;
+  const year = toInt(match.year);
+  const order = SEASON_ORDER[match.season];
+  if (!isFiniteNum(year) || typeof order !== "number") return null;
+  return { year, order };
+};
+
+const parseQuarterPeriod = (
+  period: string,
+): { year: number; quarter: number } | null => {
+  const match = QUARTER_PATTERN.exec(period);
+  if (!match) return null;
+  const [, yStr, qStr] = match;
+  const year = toInt(yStr);
+  const quarter = toInt(qStr);
+  if (!isFiniteNum(year) || !isWithinRange(quarter, 1, 4)) return null;
+  return { year, quarter };
+};
 
 const toMonthlyKey = (period: string): string | null => {
   const parsed = parseYearMonth(period);
@@ -264,7 +289,7 @@ const toSeasonalKey = (period: string): string => {
   if (!parsed) return period;
   const { year, month } = parsed;
 
-  let season: keyof typeof SEASON_ORDER;
+  let season: Season;
   let seasonYear = year;
   if (month === 12) {
     season = "winter";
@@ -283,30 +308,20 @@ export function groupPeriod(
   grouping: PeriodGrouping = DEFAULT_PERIOD_GROUPING,
 ): string {
   switch (grouping) {
-    case "hourly": {
-      const key = toHourlyKey(period);
-      return key ?? period;
-    }
-    case "daily": {
-      const key = toDailyKey(period);
-      return key ?? period;
-    }
-    case "weekly": {
-      const key = toWeeklyKey(period);
-      return key ?? period;
-    }
-    case "monthly": {
-      const key = toMonthlyKey(period);
-      return key ?? period;
-    }
+    case "hourly":
+      return coalesceKey(toHourlyKey(period), period);
+    case "daily":
+      return coalesceKey(toDailyKey(period), period);
+    case "weekly":
+      return coalesceKey(toWeeklyKey(period), period);
+    case "monthly":
+      return coalesceKey(toMonthlyKey(period), period);
     case "seasonal":
       return toSeasonalKey(period);
     case "yearly":
-      return period.split("-")[0] ?? period;
-    case "quarterly": {
-      const key = toQuarterKey(period);
-      return key ?? period;
-    }
+      return coalesceKey(period.split("-")[0], period);
+    case "quarterly":
+      return coalesceKey(toQuarterKey(period), period);
     default:
       return period;
   }
@@ -318,24 +333,21 @@ export function buildGroupedPeriodList(
 ): string[] {
   const seen = new Set<string>();
   const out: string[] = [];
-  for (const p of periods) {
-    const g = groupPeriod(p, grouping);
-    if (!seen.has(g)) {
-      seen.add(g);
-      out.push(g);
-    }
+  for (const period of periods) {
+    const grouped = groupPeriod(period, grouping);
+    if (seen.has(grouped)) continue;
+    seen.add(grouped);
+    out.push(grouped);
   }
   return out;
 }
 
 // ==== Formatting ====
 const formatSeasonalPeriod = (period: string): string => {
-  const m = SEASONAL_LABEL_PATTERN.exec(period);
-  if (!m) return period;
-  const [, year, season] = m;
-  const label =
-    SEASON_LABEL_MAP[season as keyof typeof SEASON_LABEL_MAP] ?? season;
-  return `${label} ${year}`;
+  const match = matchSeasonalPeriod(period);
+  if (!match) return period;
+  const label = SEASON_LABEL_MAP[match.season] ?? match.season;
+  return `${label} ${match.year}`;
 };
 
 export function formatPeriodLabel(
@@ -344,12 +356,13 @@ export function formatPeriodLabel(
   options: PeriodFormatterOptions = {},
 ): string {
   const { locale = "sq", fallback } = options;
+  const fallbackLabel = fallback ?? period;
   if (!period) return fallback ?? "";
 
   switch (grouping) {
     case "hourly": {
       const parsed = parseHourKey(period);
-      if (parsed == null) return fallback ?? period;
+      if (parsed == null) return fallbackLabel;
       const base = `${padNumber(parsed)}:00`;
       return options.timeZoneLabel
         ? `${options.timeZoneLabel} ${base}`.trim()
@@ -357,7 +370,7 @@ export function formatPeriodLabel(
     }
     case "daily": {
       const parsed = parseYearMonthDay(period);
-      if (!parsed) return fallback ?? period;
+      if (!parsed) return fallbackLabel;
       const fmt = new Intl.DateTimeFormat(locale, {
         day: "numeric",
         month: "short",
@@ -368,16 +381,16 @@ export function formatPeriodLabel(
     }
     case "weekly": {
       const week = parseWeekKey(period);
-      if (!week) return fallback ?? period;
+      if (!week) return fallbackLabel;
       return `Java ${week.week} ${week.year}`;
     }
     case "seasonal": {
       const formatted = formatSeasonalPeriod(period);
-      return (formatted || fallback) ?? period;
+      return formatted || fallbackLabel;
     }
     case "monthly": {
       const parsed = parseYearMonth(period);
-      if (!parsed) return fallback ?? period;
+      if (!parsed) return fallbackLabel;
       const fmt = new Intl.DateTimeFormat(locale, {
         month: "short",
         year: "2-digit",
@@ -385,14 +398,14 @@ export function formatPeriodLabel(
       return fmt.format(new Date(Date.UTC(parsed.year, parsed.month - 1, 1)));
     }
     case "quarterly": {
-      const m = QUARTER_PATTERN.exec(period);
-      if (!m) return fallback ?? period;
-      const [, y, q] = m;
-      return `T${q} ${y}`;
+      const parsed = parseQuarterPeriod(period);
+      if (!parsed) return fallbackLabel;
+      const { quarter, year } = parsed;
+      return `T${quarter} ${year}`;
     }
     case "yearly": {
       const y = toInt(period);
-      if (!Number.isFinite(y)) return fallback ?? period;
+      if (!isFiniteNum(y)) return fallbackLabel;
       const fmt = new Intl.DateTimeFormat(locale, { year: "numeric" });
       return fmt.format(new Date(Date.UTC(y, 0, 1)));
     }
@@ -418,6 +431,25 @@ type ParsedGroupingKey =
   | { type: "yearly"; year: number }
   | { type: "seasonal"; year: number; order: number };
 
+const compareNumbersWithFallback = (
+  lhs: number[],
+  rhs: number[],
+  fallbackA: string,
+  fallbackB: string,
+): number => {
+  const limit = Math.min(lhs.length, rhs.length);
+  for (let i = 0; i < limit; i += 1) {
+    const left = lhs[i];
+    const right = rhs[i];
+    if (left === undefined || right === undefined) {
+      return fallbackA.localeCompare(fallbackB);
+    }
+    const diff = left - right;
+    if (diff) return diff;
+  }
+  return fallbackA.localeCompare(fallbackB);
+};
+
 function parseGroupedPeriodKey(
   period: string,
   grouping: PeriodGrouping,
@@ -441,26 +473,18 @@ function parseGroupedPeriodKey(
     }
     case "yearly": {
       const y = toInt(period);
-      return Number.isFinite(y) ? { type: "yearly", year: y } : null;
+      return isFiniteNum(y) ? { type: "yearly", year: y } : null;
     }
     case "quarterly": {
-      const m = QUARTER_PATTERN.exec(period);
-      if (!m) return null;
-      const [, yStr, qStr] = m;
-      const y = toInt(yStr);
-      const q = toInt(qStr);
-      return Number.isFinite(y) && q >= 1 && q <= 4
-        ? { type: "quarterly", year: y, quarter: q }
+      const parsed = parseQuarterPeriod(period);
+      return parsed
+        ? { type: "quarterly", year: parsed.year, quarter: parsed.quarter }
         : null;
     }
     case "seasonal": {
-      const m = SEASONAL_LABEL_PATTERN.exec(period);
-      if (!m) return null;
-      const [, yStr, s] = m;
-      const y = toInt(yStr);
-      const order = SEASON_ORDER[s as keyof typeof SEASON_ORDER];
-      return Number.isFinite(y) && typeof order === "number"
-        ? { type: "seasonal", year: y, order }
+      const parsed = parseSeasonalPeriod(period);
+      return parsed
+        ? { type: "seasonal", year: parsed.year, order: parsed.order }
         : null;
     }
   }
@@ -479,37 +503,57 @@ export function compareGroupedPeriods(
   if (A.type !== B.type) return a.localeCompare(b);
   switch (A.type) {
     case "hourly": {
-      if (B.type !== "hourly") return a.localeCompare(b);
-      return A.hour - B.hour || a.localeCompare(b);
+      const other = B as Extract<ParsedGroupingKey, { type: "hourly" }>;
+      return compareNumbersWithFallback([A.hour], [other.hour], a, b);
     }
     case "daily": {
-      if (B.type !== "daily") return a.localeCompare(b);
-      return (
-        A.year - B.year ||
-        A.month - B.month ||
-        A.day - B.day ||
-        a.localeCompare(b)
+      const other = B as Extract<ParsedGroupingKey, { type: "daily" }>;
+      return compareNumbersWithFallback(
+        [A.year, A.month, A.day],
+        [other.year, other.month, other.day],
+        a,
+        b,
       );
     }
     case "weekly": {
-      if (B.type !== "weekly") return a.localeCompare(b);
-      return A.year - B.year || A.week - B.week || a.localeCompare(b);
+      const other = B as Extract<ParsedGroupingKey, { type: "weekly" }>;
+      return compareNumbersWithFallback(
+        [A.year, A.week],
+        [other.year, other.week],
+        a,
+        b,
+      );
     }
     case "monthly": {
-      if (B.type !== "monthly") return a.localeCompare(b);
-      return A.year - B.year || A.month - B.month || a.localeCompare(b);
+      const other = B as Extract<ParsedGroupingKey, { type: "monthly" }>;
+      return compareNumbersWithFallback(
+        [A.year, A.month],
+        [other.year, other.month],
+        a,
+        b,
+      );
     }
     case "quarterly": {
-      if (B.type !== "quarterly") return a.localeCompare(b);
-      return A.year - B.year || A.quarter - B.quarter || a.localeCompare(b);
+      const other = B as Extract<ParsedGroupingKey, { type: "quarterly" }>;
+      return compareNumbersWithFallback(
+        [A.year, A.quarter],
+        [other.year, other.quarter],
+        a,
+        b,
+      );
     }
     case "yearly": {
-      if (B.type !== "yearly") return a.localeCompare(b);
-      return A.year - B.year || a.localeCompare(b);
+      const other = B as Extract<ParsedGroupingKey, { type: "yearly" }>;
+      return compareNumbersWithFallback([A.year], [other.year], a, b);
     }
     case "seasonal": {
-      if (B.type !== "seasonal") return a.localeCompare(b);
-      return A.year - B.year || A.order - B.order || a.localeCompare(b);
+      const other = B as Extract<ParsedGroupingKey, { type: "seasonal" }>;
+      return compareNumbersWithFallback(
+        [A.year, A.order],
+        [other.year, other.order],
+        a,
+        b,
+      );
     }
   }
 }

@@ -17,7 +17,15 @@ export function GdpByActivitySection() {
       id="gdp-by-activity"
       description="Kontributi tremujor i degëve ekonomike në bruto produktin vendor, si në çmime aktuale (nominale) ashtu edhe në çmime të vitit paraprak (reale)."
     >
-      {(dataset) => <GdpActivityStackedChart dataset={dataset} />}
+      {(dataset) => (
+        <GdpActivityStackedChart
+          dataset={dataset}
+          timelineEvents={{
+            enabled: true,
+            includeCategories: ["government_change", "public_health", "other"],
+          }}
+        />
+      )}
     </DatasetRenderer>
   );
 }
