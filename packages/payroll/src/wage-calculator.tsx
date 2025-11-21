@@ -125,7 +125,7 @@ export function WageCalculator() {
         </CardHeader>
         <CardContent className="space-y-4 text-sm leading-relaxed text-muted-foreground">
           <p>
-            Punëdhënësi dhe punonjësi kontribuojnë secili të paktën 5% të pagës
+            Punëdhënësi dhe punonjësi kontribojnë secili të paktën 5% të pagës
             bruto në Trustin e Kursimeve të Kosovës. Totali minimal është 10%,
             ndërsa shumave shtesë u mungon detyrimi ligjor, por shumë kompani
             ofrojnë kontribute më të larta për benefite shtesë. Kontributi i
@@ -188,7 +188,7 @@ export function WageCalculator() {
           <p>
             Mbani shënim përqindjet reale të Trustit nga kontrata juaj të punës.
             Disa kompani ofrojnë kontribute më të larta për punonjësin, ndërsa
-            të tjera kërkojnë që punonjësi të kontribuojë mbi minimumin 5%.
+            të tjera kërkojnë që punonjësi të Kontribojë mbi minimumin 5%.
           </p>
           <p>
             Nëse ndryshon numri i vendeve të punës gjatë vitit, ruani

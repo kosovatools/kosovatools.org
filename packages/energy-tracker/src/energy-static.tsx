@@ -19,7 +19,7 @@ export function EnergyImportAndProduction() {
         dataset={electricityDataset}
         title="Si ndryshon prodhimi vendas sipas burimit"
         id="energy-production-by-source"
-        description="Shiko sa kontribuojnë termocentralet, hidrocentralet dhe burimet me erë ose diell në prodhimin total vendor për të identifikuar periudhat kur burimet e ripërtritshme mbulojnë më shumë kërkesën."
+        description="Shiko sa kontribojnë termocentralet, hidrocentralet dhe burimet me erë ose diell në prodhimin total vendor për të identifikuar periudhat kur burimet e ripërtritshme mbulojnë më shumë kërkesën."
       >
         {(dataset) => (
           <ElectricityProductionStackedAreaChart dataset={dataset} />

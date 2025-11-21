@@ -28,7 +28,6 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import {
-  GITHUB_LICENSE_URL,
   GITHUB_NEW_ISSUE_URL,
   GITHUB_REPO_URL,
 } from "@/constants/links";
@@ -191,12 +190,6 @@ const tools: ToolCard[] = [
   },
 ];
 
-const slugifyCategory = (value: string) =>
-  value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
 const groupedTools = tools.reduce<
   Array<{ category: string; tools: ToolCard[] }>
 >((acc, tool) => {
@@ -210,12 +203,6 @@ const groupedTools = tools.reduce<
   acc.push({ category: tool.category, tools: [tool] });
   return acc;
 }, []);
-
-const totalTools = tools.length;
-const categoryAnchors = groupedTools.map((group) => ({
-  category: group.category,
-  slug: slugifyCategory(group.category),
-}));
 
 export default function Page() {
   return (
@@ -236,7 +223,7 @@ export default function Page() {
 
             <h1 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl text-balance">
               Kthe të dhënat publike në{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-600">
                 vendime
               </span>
             </h1>
@@ -266,7 +253,7 @@ export default function Page() {
               >
                 <a href={GITHUB_REPO_URL} rel="noreferrer" target="_blank">
                   <Github className="mr-2 h-4 w-4" />
-                  Kontribuo në GitHub
+                  Kontribo në GitHub
                 </a>
               </Button>
             </div>
@@ -284,7 +271,7 @@ export default function Page() {
           </span>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl text-balance">
             Vegla qytetare gati për t'u{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-600">
               përdorur sot
             </span>
           </h2>
@@ -295,15 +282,13 @@ export default function Page() {
         </header>
         <div className="space-y-12">
           {groupedTools.map((group) => {
-            const slug = slugifyCategory(group.category);
-
             return (
-              <div key={group.category} className="space-y-6" id={slug}>
+              <div key={group.category} className="space-y-6">
                 <div className="flex items-center gap-4">
                   <span className="text-sm font-bold uppercase tracking-wider text-primary/80 text-nowrap px-3 py-1 rounded-full bg-primary/5 border border-primary/10">
                     {group.category}
                   </span>
-                  <span className="h-px w-full bg-gradient-to-r from-border/60 to-transparent" />
+                  <span className="h-px w-full bg-linear-to-r from-border/60 to-transparent" />
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {group.tools.map((tool) => {
