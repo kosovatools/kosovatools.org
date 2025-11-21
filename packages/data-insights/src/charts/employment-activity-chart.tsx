@@ -71,6 +71,8 @@ export function EmploymentActivityChart({
       dimension: "activity",
       periodGrouping,
       groupedValueMode: "latest",
+      dropIncompletePeriods: true,
+      preserveLatestIncomplete: true,
       includeOther: true,
       top,
     });

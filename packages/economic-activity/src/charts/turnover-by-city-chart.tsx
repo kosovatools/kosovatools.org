@@ -69,7 +69,7 @@ export function TurnoverByCityChart({
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <OptionSelector<TurnoverMetric>
+        <OptionSelector
           value={metricKey}
           onChange={setMetricKey}
           options={METRIC_OPTIONS}

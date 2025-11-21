@@ -12,7 +12,10 @@ import {
   ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { Label } from "@workspace/ui/components/label";
-import { NativeSelect } from "@workspace/ui/components/native-select";
+import {
+  NativeSelect,
+  NativeSelectOption,
+} from "@workspace/ui/components/native-select";
 import {
   StackedKeySelector,
   createInitialStackedKeySelection,
@@ -167,13 +170,7 @@ export function TopCategoryByCityStackedChart({
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-1 items-center gap-3">
-        <Label
-          htmlFor="economic-activity-city"
-          className="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
-        >
-          Komuna
-        </Label>
+      <div className="flex flex-wrap justify-between items-center gap-3">
         <NativeSelect
           id="economic-activity-city"
           value={selectedCity ?? ""}
@@ -184,10 +181,11 @@ export function TopCategoryByCityStackedChart({
           }
           className="w-full max-w-[280px]"
         >
+          <NativeSelectOption disabled>Zgjedh Qytetin</NativeSelectOption>
           {citySummaries.map((entry) => (
-            <option key={entry.city} value={entry.city}>
+            <NativeSelectOption key={entry.city} value={entry.city}>
               {entry.city}
-            </option>
+            </NativeSelectOption>
           ))}
         </NativeSelect>
         {totals.length > 0 ? (

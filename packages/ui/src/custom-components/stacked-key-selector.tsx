@@ -402,7 +402,7 @@ export function StackedKeySelector({
           <ChevronDown className="ml-2 size-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[340px] p-0" align="start">
+      <PopoverContent className="w-[90vw] sm:w-[340px] p-0" align="center">
         <div className="flex items-center border-b p-1">
           <Button
             variant={activeTab === "main" ? "secondary" : "ghost"}

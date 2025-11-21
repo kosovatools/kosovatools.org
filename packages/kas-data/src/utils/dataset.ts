@@ -87,8 +87,8 @@ export type ToDatasetView<T> =
     infer TRecord extends DatasetRecordBase,
     infer TMeta extends DatasetMeta<string, string, TimeGranularity, object>
   >
-  ? DatasetView<TRecord, TMeta>
-  : never;
+    ? DatasetView<TRecord, TMeta>
+    : never;
 
 export type DatasetAggregateField<
   TRecord extends DatasetRecordBase,
@@ -121,7 +121,7 @@ export type DatasetStackConfig<
   dimension?: string;
   dimensionOptions?: ReadonlyArray<DimensionOption<string>>;
   labelForKey?: (key: TKey) => string;
-} & Omit<StackOptions<TKey>, "labelForKey">;
+} & Omit<StackOptions<TKey>, "labelForKey" | "baseGrouping">;
 
 export type DatasetStackResult<TKey extends string> = Pick<
   StackBuildResult<TKey>,
@@ -260,6 +260,7 @@ function buildStackView<
 
   const stackOptions: StackOptions<TKey> = {
     ...baseOptions,
+    baseGrouping: meta.time.granularity,
     groupedValueMode,
     allowedKeys: mergedAllowedKeys,
     labelForKey: labelForKey ?? ((key: TKey) => labelMap[key] ?? key),
@@ -307,6 +308,7 @@ function summarizeStackView<
 
   const options: StackOptions<TKey> = {
     ...baseOptions,
+    baseGrouping: meta.time.granularity,
     groupedValueMode,
     allowedKeys: mergedAllowedKeys,
     labelForKey: labelForKey ?? ((key: TKey) => labelMap[key] ?? key),
@@ -336,8 +338,8 @@ function buildDimensionContext<
     dimensionOptions ??
     (dimension
       ? (meta.dimensions?.[dimension] as
-        | ReadonlyArray<DimensionOption<TKey>>
-        | undefined)
+          | ReadonlyArray<DimensionOption<TKey>>
+          | undefined)
       : undefined);
 
   const labelMap = dimensionOpts

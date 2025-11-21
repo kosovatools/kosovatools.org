@@ -30,9 +30,9 @@ const WAGE_METRICS: ReadonlyArray<{
   label: string;
   unit: string;
 }> = [
-    { code: "0", key: "gross_eur", label: "Pagë bruto", unit: "EUR" },
-    { code: "1", key: "net_eur", label: "Pagë neto", unit: "EUR" },
-  ];
+  { code: "0", key: "gross_eur", label: "Pagë bruto", unit: "EUR" },
+  { code: "1", key: "net_eur", label: "Pagë neto", unit: "EUR" },
+];
 
 const EMPLOYMENT_METRIC = {
   code: "__value__",

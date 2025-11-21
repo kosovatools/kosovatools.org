@@ -23,6 +23,14 @@ export type StackOptions<TKey extends string> = {
   labelForKey?: (key: TKey) => string;
   otherLabel?: string;
   periodGrouping?: PeriodGrouping;
+  baseGrouping: PeriodGrouping;
+  /**
+   * Drop grouped periods that are missing underlying periods (e.g. after
+   * limiting to the last N base periods). Optional preservation of the most
+   * recent incomplete group.
+   */
+  dropIncompletePeriods?: boolean;
+  preserveLatestIncomplete?: boolean;
   /**
    * How values should be combined when multiple records fall within the same
    * grouped period. Defaults to summing values; set to "latest" to keep only
@@ -65,6 +73,46 @@ const emptyBuildResult = <TKey extends string>(): StackBuildResult<TKey> => ({
   totals: [],
 });
 
+const expectedPeriodsPerGroup = (
+  base: PeriodGrouping,
+  grouping: PeriodGrouping,
+): number | null => {
+  if (base === grouping) return 1;
+  if (base === "monthly") {
+    if (grouping === "quarterly" || grouping === "seasonal") return 3;
+    if (grouping === "yearly") return 12;
+    return null;
+  }
+  if (base === "quarterly") {
+    if (grouping === "yearly") return 4;
+    return null;
+  }
+  if (base === "yearly" && grouping === "yearly") return 1;
+  return null;
+};
+
+const resolveValidGroupedPeriods = (
+  groupedPeriods: string[],
+  groupPeriodSet: Map<string, Set<string>>,
+  expectedCount: number | null,
+  dropIncomplete: boolean,
+  preserveLatestIncomplete: boolean,
+): Set<string> | null => {
+  if (!dropIncomplete || !expectedCount) return null;
+  const valid = new Set<string>();
+  const latest = groupedPeriods[groupedPeriods.length - 1];
+
+  for (const gp of groupedPeriods) {
+    const coverage = groupPeriodSet.get(gp)?.size ?? 0;
+    const isComplete = coverage >= expectedCount;
+    if (isComplete || (preserveLatestIncomplete && gp === latest)) {
+      valid.add(gp);
+    }
+  }
+
+  return valid;
+};
+
 function collectSortedPeriods<TRecord, TKey extends string>(
   records: readonly TRecord[],
   accessors: StackAccessors<TRecord, TKey>,
@@ -96,7 +144,7 @@ function pickAllowedKeys<TKey extends string>(
 export function summarizeStackTotals<TRecord, TKey extends string>(
   records: readonly TRecord[],
   accessors: StackAccessors<TRecord, TKey>,
-  options: StackOptions<TKey> = {},
+  options: StackOptions<TKey>,
 ): StackTotal<TKey>[] {
   if (!records.length) return [];
 
@@ -105,23 +153,33 @@ export function summarizeStackTotals<TRecord, TKey extends string>(
 
   const periodSet = new Set(periods);
   const periodRank = new Map(periods.map((p, index) => [p, index]));
-  const grouping = options.periodGrouping ?? "monthly";
+  const baseGrouping = options.baseGrouping;
+  const grouping = options.periodGrouping ?? baseGrouping;
   const groupedValueMode = options.groupedValueMode ?? "sum";
+  const dropIncomplete =
+    options.dropIncompletePeriods ?? (grouping !== baseGrouping ? true : false);
+  const preserveLatestIncomplete = options.preserveLatestIncomplete ?? true;
+  const expectedGroupSize = expectedPeriodsPerGroup(baseGrouping, grouping);
+  const groupedPeriodList = buildGroupedPeriodList(periods, grouping);
 
   type GroupValue = { value: number; count: number; periodIndex: number };
   const groupedValues = new Map<string, Map<TKey, GroupValue>>();
+  const groupPeriodCoverage = new Map<string, Set<string>>();
 
   for (const record of records) {
     const period = accessors.period(record);
     if (!periodSet.has(period)) continue;
     const groupedPeriod = groupPeriod(period, grouping);
+    const coverage =
+      groupPeriodCoverage.get(groupedPeriod) ?? new Set<string>();
+    coverage.add(period);
+    groupPeriodCoverage.set(groupedPeriod, coverage);
     const key = accessors.key(record);
     const value = toNumber(accessors.value(record));
     const periodIndex = periodRank.get(period) ?? -1;
 
     const groupMap =
-      groupedValues.get(groupedPeriod) ??
-      new Map<TKey, GroupValue>();
+      groupedValues.get(groupedPeriod) ?? new Map<TKey, GroupValue>();
     const prev = groupMap.get(key);
 
     if (groupedValueMode === "latest") {
@@ -148,7 +206,16 @@ export function summarizeStackTotals<TRecord, TKey extends string>(
   }
 
   const totalsByKey = new Map<TKey, number>();
-  for (const groupMap of groupedValues.values()) {
+  const validGroups = resolveValidGroupedPeriods(
+    groupedPeriodList,
+    groupPeriodCoverage,
+    expectedGroupSize,
+    dropIncomplete,
+    preserveLatestIncomplete,
+  );
+
+  for (const [groupedPeriod, groupMap] of groupedValues.entries()) {
+    if (validGroups && !validGroups.has(groupedPeriod)) continue;
     for (const [key, entry] of groupMap.entries()) {
       const aggregated =
         groupedValueMode === "average" && entry.count > 0
@@ -171,15 +238,20 @@ export function summarizeStackTotals<TRecord, TKey extends string>(
 export function buildStackSeries<TRecord, TKey extends string>(
   records: readonly TRecord[],
   accessors: StackAccessors<TRecord, TKey>,
-  options: StackOptions<TKey> = {},
+  options: StackOptions<TKey>,
 ): StackBuildResult<TKey> {
   if (!records.length) return emptyBuildResult();
 
   const rawPeriods = collectSortedPeriods(records, accessors, options.months);
   if (!rawPeriods.length) return emptyBuildResult();
 
-  const grouping = options.periodGrouping ?? "monthly";
+  const baseGrouping = options.baseGrouping;
+  const grouping = options.periodGrouping ?? baseGrouping;
   const groupedValueMode = options.groupedValueMode ?? "sum";
+  const dropIncomplete =
+    options.dropIncompletePeriods ?? (grouping !== baseGrouping ? true : false);
+  const preserveLatestIncomplete = options.preserveLatestIncomplete ?? true;
+  const expectedGroupSize = expectedPeriodsPerGroup(baseGrouping, grouping);
   const groupedPeriods = buildGroupedPeriodList(rawPeriods, grouping);
   if (!groupedPeriods.length) return emptyBuildResult();
 
@@ -207,14 +279,31 @@ export function buildStackSeries<TRecord, TKey extends string>(
 
   // Index records by grouped period in a single pass
   const byGrouped = new Map<string, TRecord[]>();
+  const groupPeriodCoverage = new Map<string, Set<string>>();
   for (const r of records) {
     const p = accessors.period(r);
     if (!periodSet.has(p)) continue;
     const gp = groupPeriod(p, grouping);
     (byGrouped.get(gp) ?? byGrouped.set(gp, []).get(gp)!).push(r);
+    const coverage = groupPeriodCoverage.get(gp) ?? new Set<string>();
+    coverage.add(p);
+    groupPeriodCoverage.set(gp, coverage);
   }
 
-  const series = groupedPeriods.map<StackSeriesRow<TKey>>((gp) => {
+  const validGroups = resolveValidGroupedPeriods(
+    groupedPeriods,
+    groupPeriodCoverage,
+    expectedGroupSize,
+    dropIncomplete,
+    preserveLatestIncomplete,
+  );
+  const filteredGroupedPeriods = validGroups
+    ? groupedPeriods.filter((gp) => validGroups.has(gp))
+    : groupedPeriods;
+
+  if (!filteredGroupedPeriods.length) return emptyBuildResult();
+
+  const series = filteredGroupedPeriods.map<StackSeriesRow<TKey>>((gp) => {
     const rows = byGrouped.get(gp) ?? [];
     const aggregatedValues = new Map<
       TKey,
