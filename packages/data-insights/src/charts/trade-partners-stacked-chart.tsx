@@ -25,7 +25,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import {
   StackedKeySelector,
@@ -170,12 +169,8 @@ export function TradePartnersStackedChart({
           />
           <ReferenceLine y={0} stroke="var(--border)" />
           <ChartTooltip
-            content={
-              <ChartTooltipContent
-                valueFormatter={(value) =>
-                  formatCurrencyCompact(value as number, { currency: "EUR" })
-                }
-              />
+            valueFormatter={(value) =>
+              formatCurrencyCompact(value as number | null)
             }
           />
           <ChartLegend content={<ChartLegendContent />} />

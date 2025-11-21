@@ -6,41 +6,20 @@ import { Treemap } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
   type ChartConfig,
 } from "@workspace/ui/components/chart";
-import {
-  TreemapCellContent,
-  defaultTreemapColorKey,
-} from "@workspace/ui/custom-components/treemap-cell-content";
-import {
-  OptionSelector,
-  type SelectorOptionDefinition,
-} from "@workspace/ui/custom-components/option-selector";
-import type {
-  TurnoverCitiesDatasetView,
-  TurnoverCityRecord,
-  TurnoverMetric,
-} from "@workspace/dataset-api";
+import { TreemapCellContent } from "@workspace/ui/custom-components/treemap-cell-content";
+import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import type { TurnoverCitiesDatasetView } from "@workspace/dataset-api";
 import { formatCount, formatCurrencyCompact } from "@workspace/utils";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 import { createLabelMap } from "@workspace/kas-data";
 
 const CHART_CLASS = "w-full aspect-[1/1.5] sm:aspect-video";
-const METRIC_OPTIONS: ReadonlyArray<SelectorOptionDefinition<TurnoverMetric>> =
-  [
-    { key: "turnover", label: "Qarkullimi" },
-    { key: "taxpayers", label: "Tatimpaguesit" },
-  ];
 
-const METRIC_FORMATTERS: Record<TurnoverMetric, (value: number) => string> = {
-  turnover: (value) => formatCurrencyCompact(value),
-  taxpayers: (value) => formatCount(value),
-};
-
-type CityTreemapDatum = TurnoverCityRecord & {
-  label: string;
-  colorKey: string;
+const METRIC_FORMATTERS = {
+  turnover: (value: number | null) => formatCurrencyCompact(value),
+  taxpayers: (value: number | null) => formatCount(value),
 };
 
 export function TurnoverByCityChart({
@@ -48,24 +27,24 @@ export function TurnoverByCityChart({
 }: {
   dataset: TurnoverCitiesDatasetView;
 }) {
-  const [metricKey, setMetricKey] = React.useState<TurnoverMetric>("turnover");
+  const [metricKey, setMetricKey] =
+    React.useState<TurnoverCitiesDatasetView["meta"]["metrics"][number]>(
+      "turnover",
+    );
   const labelMap = React.useMemo(
     () => createLabelMap(dataset.meta.dimensions.city),
     [dataset.meta.dimensions.city],
   );
-  const records = React.useMemo<CityTreemapDatum[]>(() => {
+  const records = React.useMemo(() => {
     const sorted = [...dataset.records];
 
     sorted.sort((b, a) => a[metricKey] - b[metricKey]);
-    return sorted.map((record) => {
-      const label = labelMap[record.city] ?? record.city;
-      return {
-        ...record,
-        label,
-        colorKey: defaultTreemapColorKey(label),
-      };
-    });
+    return sorted.map((record) => ({
+      ...record,
+      label: labelMap[record.city] ?? record.city,
+    }));
   }, [dataset.records, labelMap, metricKey]);
+
   const valueFormatter = React.useMemo(
     () => METRIC_FORMATTERS[metricKey],
     [metricKey],
@@ -75,7 +54,7 @@ export function TurnoverByCityChart({
     const chartConfig: ChartConfig = {};
 
     records.forEach((record) => {
-      chartConfig[record.colorKey] = {
+      chartConfig[record.city] = {
         label: record.label,
       };
     });
@@ -89,7 +68,7 @@ export function TurnoverByCityChart({
         <OptionSelector
           value={metricKey}
           onChange={setMetricKey}
-          options={METRIC_OPTIONS}
+          options={dataset.meta.fields}
           label="Metrika"
         />
       </div>
@@ -99,21 +78,19 @@ export function TurnoverByCityChart({
           dataKey={metricKey}
           nameKey="label"
           content={(props) => (
-            <TreemapCellContent valueFormatter={valueFormatter} {...props} />
+            <TreemapCellContent
+              colorKey="city"
+              valueFormatter={valueFormatter}
+              {...props}
+            />
           )}
           isAnimationActive={false}
         >
           <ChartTooltip
-            cursor={false}
-            content={
-              <ChartTooltipContent
-                nameKey="colorKey"
-                labelKey="colorKey"
-                labelTruncate={100}
-                hideIndicator
-                valueFormatter={(value) => valueFormatter(value as number)}
-              />
-            }
+            nameKey="label"
+            truncateLabel={100}
+            showIndicator={false}
+            valueFormatter={(value) => valueFormatter(value as number | null)}
           />
         </Treemap>
       </ChartContainer>

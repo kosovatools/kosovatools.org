@@ -17,7 +17,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import {
   StackedKeySelector,
@@ -161,12 +160,8 @@ export function TourismCountryStackedChart({
             includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
-            content={
-              <ChartTooltipContent
-                labelFormatter={(value) => periodFormatter(value as string)}
-                valueFormatter={(value) => formatCount(value as number)}
-              />
-            }
+            labelFormatter={periodFormatter}
+            valueFormatter={(value) => formatCount(value as number | null)}
           />
           <ChartLegend content={<ChartLegendContent />} />
           {chartKeys.map((key) => {

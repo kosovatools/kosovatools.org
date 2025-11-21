@@ -17,7 +17,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import {
   TimelineEventMarkers,
@@ -93,12 +92,10 @@ export function DailyFlowChart({
           includeCategories={timelineEvents?.includeCategories}
         />
         <ChartTooltip
-          content={
-            <ChartTooltipContent
-              valueFormatter={(value) =>
-                formatAuto(value as number, { includeUnit: true })
-              }
-            />
+          valueFormatter={(value) =>
+            formatAuto(value as number | string | null | undefined, {
+              includeUnit: true,
+            })
           }
         />
         <ChartLegend content={<ChartLegendContent />} />

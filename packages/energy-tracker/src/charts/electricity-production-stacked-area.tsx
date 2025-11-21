@@ -24,7 +24,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
@@ -143,7 +142,9 @@ export function ElectricityProductionStackedAreaChart({
           <YAxis
             width="auto"
             tickFormatter={(value) =>
-              formatAuto(Number(value), { inputUnit: "MWh" })
+              formatAuto(value as number | string | null | undefined, {
+                inputUnit: "MWh",
+              })
             }
             axisLine={false}
           />
@@ -155,12 +156,10 @@ export function ElectricityProductionStackedAreaChart({
           />
           <ReferenceLine y={0} stroke="var(--border)" />
           <ChartTooltip
-            content={
-              <ChartTooltipContent
-                valueFormatter={(value) =>
-                  formatAuto(Number(value), { inputUnit: "MWh" })
-                }
-              />
+            valueFormatter={(value) =>
+              formatAuto(value as number | string | null | undefined, {
+                inputUnit: "MWh",
+              })
             }
           />
           <ChartLegend content={<ChartLegendContent />} />

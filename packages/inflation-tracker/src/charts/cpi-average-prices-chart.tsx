@@ -15,7 +15,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
   type ChartConfig,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
@@ -164,13 +163,8 @@ export function CpiAveragePricesChart({ dataset, timelineEvents }: Props) {
               includeCategories={timelineEvents?.includeCategories}
             />
             <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  labelFormatter={(value) => periodFormatter(value as string)}
-                  valueFormatter={(value) => formatCurrency(value as number)}
-                />
-              }
+              labelFormatter={periodFormatter}
+              valueFormatter={(value) => formatCurrency(value as number | null)}
             />
             <ChartLegend content={<ChartLegendContent />} />
             {Object.keys(chartConfig).map((key) => (

@@ -10,6 +10,7 @@ type IsoWeekKey = {
 };
 
 export type PeriodGrouping =
+  | "hourly"
   | "daily"
   | "weekly"
   | "monthly"
@@ -17,7 +18,11 @@ export type PeriodGrouping =
   | "yearly"
   | "seasonal";
 export type PeriodFormatter = (period: string) => string;
-export type PeriodFormatterOptions = { locale?: string; fallback?: string };
+export type PeriodFormatterOptions = {
+  locale?: string;
+  fallback?: string;
+  timeZoneLabel?: string;
+};
 
 // ==== Constants ====
 export type PeriodGroupingOption = Readonly<{
@@ -27,6 +32,7 @@ export type PeriodGroupingOption = Readonly<{
 
 const PERIOD_GROUPING_OPTION_DEFINITIONS: ReadonlyArray<PeriodGroupingOption> =
   [
+    { key: "hourly", label: "Orar" },
     { key: "daily", label: "Ditore" },
     { key: "weekly", label: "Javore" },
     { key: "monthly", label: "Mujor" },
@@ -39,6 +45,15 @@ const PERIOD_GROUPING_OPTIONS_BY_GRANULARITY: Record<
   PeriodGrouping,
   ReadonlyArray<PeriodGrouping>
 > = {
+  hourly: [
+    "hourly",
+    "daily",
+    "weekly",
+    "monthly",
+    "quarterly",
+    "seasonal",
+    "yearly",
+  ],
   daily: ["daily", "weekly", "monthly", "quarterly", "seasonal", "yearly"],
   weekly: ["weekly", "monthly", "quarterly", "seasonal", "yearly"],
   monthly: ["monthly", "quarterly", "seasonal", "yearly"],
@@ -52,6 +67,7 @@ const QUARTER_PATTERN = /^(\d{4})-Q([1-4])$/;
 const SEASONAL_LABEL_PATTERN = /^(\d{4})-(winter|spring|summer|autumn)$/;
 const WEEK_KEY_PATTERN = /^(\d{4})-W(\d{1,2})$/i;
 const DAY_KEY_PATTERN = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
+const HOUR_KEY_PATTERN = /^(\d{1,2})(?::(\d{1,2}))?$/;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 const SEASON_ORDER: Record<"winter" | "spring" | "summer" | "autumn", number> =
@@ -70,6 +86,7 @@ const SEASON_LABEL_MAP: Record<keyof typeof SEASON_ORDER, string> = {
 };
 
 const GROUPING_TO_MONTHS: Record<PeriodGrouping, number> = {
+  hourly: 1 / (24 * 30),
   daily: 1 / 30,
   weekly: 7 / 30,
   monthly: 1,
@@ -135,6 +152,25 @@ const parseWeekKey = (period: string): IsoWeekKey | null => {
     return null;
   }
   return { year, week };
+};
+
+const parseHourKey = (period: string): number | null => {
+  const match = HOUR_KEY_PATTERN.exec(period.trim());
+  if (!match) return null;
+  const [, h, m] = match;
+  const hour = toInt(h);
+  const minute = m ? toInt(m) : 0;
+  if (
+    !Number.isFinite(hour) ||
+    hour < 0 ||
+    hour > 23 ||
+    !Number.isFinite(minute) ||
+    minute < 0 ||
+    minute > 59
+  ) {
+    return null;
+  }
+  return hour;
 };
 
 const isoWeekAnchorDate = (key: IsoWeekKey): Date => {
@@ -207,6 +243,12 @@ const toDailyKey = (period: string): string | null => {
   return `${parsed.year}-${padNumber(parsed.month)}-${padNumber(parsed.day)}`;
 };
 
+const toHourlyKey = (period: string): string | null => {
+  const hour = parseHourKey(period);
+  if (hour == null) return null;
+  return padNumber(hour);
+};
+
 const toQuarterKey = (period: string): string | null => {
   const parsed = parseYearMonth(period);
   if (!parsed) return null;
@@ -241,6 +283,10 @@ export function groupPeriod(
   grouping: PeriodGrouping = DEFAULT_PERIOD_GROUPING,
 ): string {
   switch (grouping) {
+    case "hourly": {
+      const key = toHourlyKey(period);
+      return key ?? period;
+    }
     case "daily": {
       const key = toDailyKey(period);
       return key ?? period;
@@ -301,6 +347,14 @@ export function formatPeriodLabel(
   if (!period) return fallback ?? "";
 
   switch (grouping) {
+    case "hourly": {
+      const parsed = parseHourKey(period);
+      if (parsed == null) return fallback ?? period;
+      const base = `${padNumber(parsed)}:00`;
+      return options.timeZoneLabel
+        ? `${options.timeZoneLabel} ${base}`.trim()
+        : base;
+    }
     case "daily": {
       const parsed = parseYearMonthDay(period);
       if (!parsed) return fallback ?? period;
@@ -356,6 +410,7 @@ export function getPeriodFormatter(
 
 // ==== Sorting ====
 type ParsedGroupingKey =
+  | { type: "hourly"; hour: number }
   | { type: "daily"; year: number; month: number; day: number }
   | { type: "weekly"; year: number; week: number }
   | { type: "monthly"; year: number; month: number }
@@ -368,6 +423,10 @@ function parseGroupedPeriodKey(
   grouping: PeriodGrouping,
 ): ParsedGroupingKey | null {
   switch (grouping) {
+    case "hourly": {
+      const h = parseHourKey(period);
+      return h == null ? null : { type: "hourly", hour: h };
+    }
     case "daily": {
       const p = parseYearMonthDay(period);
       return p ? { type: "daily", ...p } : null;
@@ -419,6 +478,10 @@ export function compareGroupedPeriods(
 
   if (A.type !== B.type) return a.localeCompare(b);
   switch (A.type) {
+    case "hourly": {
+      if (B.type !== "hourly") return a.localeCompare(b);
+      return A.hour - B.hour || a.localeCompare(b);
+    }
     case "daily": {
       if (B.type !== "daily") return a.localeCompare(b);
       return (

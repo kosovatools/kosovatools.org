@@ -25,7 +25,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 
@@ -128,19 +127,13 @@ export function EmploymentActivityChart({
           />
           <YAxis
             width="auto"
-            tickFormatter={(value) => `${formatCount(value as number)} persona`}
+            tickFormatter={(value) => formatCount(value as number)}
             axisLine={false}
           />
           <ReferenceLine y={0} stroke="var(--border)" />
           <ChartTooltip
-            content={
-              <ChartTooltipContent
-                labelFormatter={(value) => periodFormatter(value as string)}
-                valueFormatter={(value) =>
-                  `${formatCount(value as number)} persona`
-                }
-              />
-            }
+            labelFormatter={periodFormatter}
+            valueFormatter={(value) => formatCount(value as number | null)}
           />
           <ChartLegend content={<ChartLegendContent />} />
           {chartKeys.map((key) => (

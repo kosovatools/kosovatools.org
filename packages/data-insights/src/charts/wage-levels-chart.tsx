@@ -18,7 +18,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 
@@ -110,18 +109,12 @@ export function WageLevelsChart({
           />
           <YAxis
             width="auto"
-            tickFormatter={(value) =>
-              formatCurrencyCompact(value as number, { currency: "EUR" })
-            }
+            tickFormatter={(value) => formatCurrencyCompact(value as number)}
             axisLine={false}
           />
           <ChartTooltip
-            content={
-              <ChartTooltipContent
-                valueFormatter={(value) =>
-                  formatCurrencyCompact(value as number, { currency: "EUR" })
-                }
-              />
+            valueFormatter={(value) =>
+              formatCurrencyCompact(value as number | null)
             }
           />
           <ChartLegend content={<ChartLegendContent />} />

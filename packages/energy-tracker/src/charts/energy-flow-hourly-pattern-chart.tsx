@@ -16,11 +16,11 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 
 import { energyFlowChartConfig } from "../utils/chart-config";
 import { formatAuto } from "../utils/number-format";
+import { getPeriodFormatter } from "@workspace/utils";
 
 export function HourlyFlowPatternChart({
   data,
@@ -29,16 +29,10 @@ export function HourlyFlowPatternChart({
 }) {
   const chartConfig = energyFlowChartConfig;
 
-  const hourlyLabelFormatter = React.useCallback((label: unknown) => {
-    const normalizedLabel =
-      label == null
-        ? ""
-        : typeof label === "string" || typeof label === "number"
-          ? String(label)
-          : "";
-
-    return `UTC ${normalizedLabel}`.trim();
-  }, []);
+  const periodFormatter = React.useMemo(
+    () => getPeriodFormatter("hourly", { timeZoneLabel: "UTC" }),
+    [],
+  );
 
   if (!data.length) {
     return (
@@ -86,23 +80,19 @@ export function HourlyFlowPatternChart({
           }
         />
         <ChartTooltip
-          content={
-            <ChartTooltipContent
-              labelFormatter={hourlyLabelFormatter}
-              valueFormatter={(value) =>
-                formatAuto(value as number, {
-                  includeUnit: true,
-                  smallUnitDigits: {
-                    minimumFractionDigits: 1,
-                    maximumFractionDigits: 1,
-                  },
-                  largeUnitDigits: {
-                    minimumFractionDigits: 1,
-                    maximumFractionDigits: 1,
-                  },
-                })
-              }
-            />
+          labelFormatter={periodFormatter}
+          valueFormatter={(value) =>
+            formatAuto(value as number | string | null | undefined, {
+              includeUnit: true,
+              smallUnitDigits: {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1,
+              },
+              largeUnitDigits: {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1,
+              },
+            })
           }
         />
         <ChartLegend content={<ChartLegendContent />} />

@@ -1,16 +1,11 @@
 "use client";
 
-import { useMemo, type ComponentProps } from "react";
+import { useMemo } from "react";
 import { cn } from "@workspace/ui/lib/utils";
-import { formatNumber } from "@workspace/utils";
 
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@workspace/ui/components/chart";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
-import type { LineProps } from "recharts";
+import { ChartContainer, ChartTooltip } from "@workspace/ui/components/chart";
+import { CartesianGrid, LineChart, Scatter, XAxis, YAxis } from "recharts";
+import type { ScatterProps } from "recharts";
 
 export type AgeDistributionPlotProps = {
   data: Record<string, number>;
@@ -24,11 +19,6 @@ type AgeDistributionPoint = {
 
 const MIN_POINT_RADIUS = 4;
 const MAX_POINT_RADIUS = 16;
-
-type ChartTooltipContentProps = ComponentProps<typeof ChartTooltipContent>;
-type ChartLabelFormatter = NonNullable<
-  ChartTooltipContentProps["labelFormatter"]
->;
 
 const chartConfig = {
   count: {
@@ -79,37 +69,6 @@ export function AgeDistributionPlot({
   if (!xTicks.includes(firstPoint.age)) xTicks.unshift(firstPoint.age);
   if (!xTicks.includes(lastPoint.age)) xTicks.push(lastPoint.age);
 
-  const formatAgeLabel: ChartLabelFormatter = (value, payload) => {
-    const chartPoint = payload?.[0]?.payload as
-      | AgeDistributionPoint
-      | undefined;
-    const sourceAge = chartPoint?.age;
-    const fallbackValue =
-      typeof value === "number"
-        ? value
-        : typeof value === "string"
-          ? Number.parseFloat(value)
-          : Number.NaN;
-    const fallbackAge = Number.isFinite(fallbackValue) ? fallbackValue : null;
-    const fallbackLabel = typeof value === "string" ? value : "";
-    const formattedAge =
-      typeof sourceAge === "number"
-        ? formatNumber(
-            sourceAge,
-            { maximumFractionDigits: 0 },
-            { fallback: fallbackLabel },
-          )
-        : fallbackAge !== null
-          ? formatNumber(
-              fallbackAge,
-              { maximumFractionDigits: 0 },
-              { fallback: fallbackLabel },
-            )
-          : fallbackLabel;
-
-    return `Mosha: ${formattedAge}`;
-  };
-
   const renderDot = (props: {
     cx?: number;
     cy?: number;
@@ -129,8 +88,8 @@ export function AgeDistributionPlot({
           cx={cx}
           cy={cy}
           r={size}
-          className={cn("fill-[var(--color-count)]", "dark:fill-white")}
-          fillOpacity={0.2}
+          className={cn("fill-(--color-count)", "dark:fill-white")}
+          fillOpacity={0.1}
         />
         <circle
           cx={cx}
@@ -159,12 +118,12 @@ export function AgeDistributionPlot({
           axisLine={false}
           ticks={xTicks}
           tickMargin={12}
-          stroke="hsl(var(--muted-foreground))"
+          stroke="var(--muted-foreground)"
           label={{
             value: "Mosha (vite)",
             position: "insideBottom",
             dy: 24,
-            fill: "hsl(var(--muted-foreground))",
+            fill: "var(--muted-foreground)",
             className: "text-xs",
           }}
         />
@@ -174,39 +133,28 @@ export function AgeDistributionPlot({
           allowDecimals={false}
           tickLine={false}
           axisLine={false}
-          stroke="hsl(var(--muted-foreground))"
+          stroke="var(--muted-foreground)"
           label={{
             value: "Numri",
             angle: -90,
             position: "insideLeft",
-            fill: "hsl(var(--muted-foreground))",
+            fill: "var(--muted-foreground)",
             className: "text-xs",
           }}
         />
         <ChartTooltip
           cursor={{ strokeDasharray: "4 4", stroke: "hsl(var(--border))" }}
-          content={
-            <ChartTooltipContent
-              indicator="dot"
-              valueFormatter={(value) => [
-                formatNumber(
-                  typeof value === "number" ? value : Number(value),
-                  { maximumFractionDigits: 0 },
-                ),
-                " Regjistrime",
-              ]}
-              labelFormatter={formatAgeLabel}
-            />
-          }
+          labelFormatter={(value: string) => `Mosha: ${value}`}
+          showIndicator={false}
         />
-        <Line
+        <Scatter
           type="monotone"
           dataKey="count"
-          stroke="var(--color-count)"
+          fill="var(--muted-foreground)"
           isAnimationActive={false}
           strokeWidth={1}
-          dot={renderDot as LineProps["dot"]}
-          activeDot={{ r: MAX_POINT_RADIUS + 4 }}
+          shape={renderDot as ScatterProps["shape"]}
+          activeShape={{ r: MAX_POINT_RADIUS + 4 }}
         />
       </LineChart>
     </ChartContainer>

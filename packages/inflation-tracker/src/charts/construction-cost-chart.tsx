@@ -16,7 +16,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
   type ChartConfig,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
@@ -115,7 +114,7 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
 
   const hasData = chartData.length > 0 && Object.keys(chartConfig).length > 0;
 
-  const formatAxisValue = (value: number) =>
+  const formatAxisValue = (value: number | null | undefined) =>
     formatNumber(
       value,
       {
@@ -170,7 +169,9 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
                   axisLine={false}
                   domain={["auto", "auto"]}
                   tickMargin={10}
-                  tickFormatter={(value) => formatAxisValue(value as number)}
+                  tickFormatter={(value) =>
+                    formatAxisValue(value as number | null)
+                  }
                 />
                 <TimelineEventMarkers
                   data={chartData}
@@ -179,13 +180,8 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
                   includeCategories={timelineEvents?.includeCategories}
                 />
                 <ChartTooltip
-                  cursor={false}
-                  content={
-                    <ChartTooltipContent
-                      valueFormatter={(value) =>
-                        formatAxisValue(value as number)
-                      }
-                    />
+                  valueFormatter={(value) =>
+                    formatAxisValue(value as number | null)
                   }
                 />
                 <ChartLegend content={<ChartLegendContent />} />

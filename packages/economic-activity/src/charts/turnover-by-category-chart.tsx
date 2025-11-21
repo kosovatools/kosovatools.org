@@ -6,66 +6,44 @@ import { Treemap } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
   type ChartConfig,
 } from "@workspace/ui/components/chart";
-import {
-  TreemapCellContent,
-  defaultTreemapColorKey,
-} from "@workspace/ui/custom-components/treemap-cell-content";
-import {
-  OptionSelector,
-  type SelectorOptionDefinition,
-} from "@workspace/ui/custom-components/option-selector";
+import { TreemapCellContent } from "@workspace/ui/custom-components/treemap-cell-content";
+import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 
-import type {
-  TurnoverCategoriesDatasetView,
-  TurnoverCategoryRecord,
-  TurnoverMetric,
-} from "@workspace/dataset-api";
+import type { TurnoverCategoriesDatasetView } from "@workspace/dataset-api";
 import { formatCount, formatCurrencyCompact } from "@workspace/utils";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 import { createLabelMap } from "@workspace/kas-data";
 const CHART_CLASS = "w-full aspect-[1/1.5] sm:aspect-video";
-const METRIC_OPTIONS: ReadonlyArray<SelectorOptionDefinition<TurnoverMetric>> =
-  [
-    { key: "turnover", label: "Qarkullimi" },
-    { key: "taxpayers", label: "Tatimpaguesit" },
-  ];
 
-const METRIC_FORMATTERS: Record<TurnoverMetric, (value: number) => string> = {
-  turnover: (value) => formatCurrencyCompact(value),
-  taxpayers: (value) => formatCount(value),
-};
-
-type CategoryTreemapDatum = TurnoverCategoryRecord & {
-  label: string;
-  colorKey: string;
-};
+const METRIC_FORMATTERS = {
+  turnover: (value: number | null) => formatCurrencyCompact(value),
+  taxpayers: (value: number | null) => formatCount(value),
+} as const;
 
 export function TurnoverByCategoryChart({
   dataset,
 }: {
   dataset: TurnoverCategoriesDatasetView;
 }) {
-  const [metricKey, setMetricKey] = React.useState<TurnoverMetric>("turnover");
+  const [metricKey, setMetricKey] =
+    React.useState<TurnoverCategoriesDatasetView["meta"]["metrics"][number]>(
+      "turnover",
+    );
   const labelMap = React.useMemo(
     () => createLabelMap(dataset.meta.dimensions.category),
     [dataset.meta.dimensions.category],
   );
-  const records = React.useMemo<CategoryTreemapDatum[]>(() => {
+  const records = React.useMemo(() => {
     const sorted = [...dataset.records];
-
     sorted.sort((b, a) => a[metricKey] - b[metricKey]);
-    return sorted.map((record) => {
-      const label = labelMap[record.category] ?? record.category;
-      return {
-        ...record,
-        label,
-        colorKey: defaultTreemapColorKey(label),
-      };
-    });
+    return sorted.map((record) => ({
+      ...record,
+      label: labelMap[record.category] ?? record.category,
+    }));
   }, [dataset.records, labelMap, metricKey]);
+
   const valueFormatter = React.useMemo(
     () => METRIC_FORMATTERS[metricKey],
     [metricKey],
@@ -73,22 +51,21 @@ export function TurnoverByCategoryChart({
 
   const chartConfig = React.useMemo(() => {
     const chartConfig: ChartConfig = {};
-    records.forEach((slice) => {
-      chartConfig[slice.colorKey] = {
-        label: slice.label,
+    records.forEach((record) => {
+      chartConfig[record.category] = {
+        label: record.label,
       };
     });
-
     return addThemeToChartConfig(chartConfig);
   }, [records]);
 
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <OptionSelector<TurnoverMetric>
+        <OptionSelector
           value={metricKey}
           onChange={setMetricKey}
-          options={METRIC_OPTIONS}
+          options={dataset.meta.fields}
           label="Metrika"
         />
       </div>
@@ -98,20 +75,19 @@ export function TurnoverByCategoryChart({
           dataKey={metricKey}
           nameKey="label"
           content={(props) => (
-            <TreemapCellContent valueFormatter={valueFormatter} {...props} />
+            <TreemapCellContent
+              colorKey="category"
+              valueFormatter={valueFormatter}
+              {...props}
+            />
           )}
           isAnimationActive={false}
         >
           <ChartTooltip
-            cursor={false}
-            content={
-              <ChartTooltipContent
-                nameKey="colorKey"
-                labelTruncate={100}
-                hideIndicator
-                valueFormatter={(v) => valueFormatter(v as number)}
-              />
-            }
+            nameKey="name"
+            truncateLabel={100}
+            showIndicator={false}
+            valueFormatter={(value) => valueFormatter(value as number | null)}
           />
         </Treemap>
       </ChartContainer>

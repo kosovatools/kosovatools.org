@@ -17,7 +17,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { HierarchicalMultiSelect } from "@workspace/ui/custom-components/hierarchical-multi-select";
@@ -202,7 +201,7 @@ export function GovernmentRevenueStackedChart({
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="period"
-              tickFormatter={(value) => periodFormatter(String(value))}
+              tickFormatter={(value) => periodFormatter(value as string)}
               tickMargin={8}
               minTickGap={24}
               axisLine={false}
@@ -213,12 +212,9 @@ export function GovernmentRevenueStackedChart({
               axisLine={false}
             />
             <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  valueFormatter={(value) =>
-                    formatCurrencyCompact(value as number, { currency: "EUR" })
-                  }
-                />
+              labelFormatter={periodFormatter}
+              valueFormatter={(value) =>
+                formatCurrencyCompact(value as number | null)
               }
             />
             <ChartLegend content={<ChartLegendContent />} />

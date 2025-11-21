@@ -25,7 +25,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
@@ -130,13 +129,9 @@ export function FuelBalanceChart({
           />
           <ReferenceLine y={0} stroke="var(--border)" />
           <ChartTooltip
-            content={
-              <ChartTooltipContent
-                labelFormatter={(value) => periodFormatter(value as string)}
-                valueFormatter={(value) =>
-                  `${formatCount(value as number)} tonë`
-                }
-              />
+            labelFormatter={periodFormatter}
+            valueFormatter={(value) =>
+              `${formatCount(value as number | null)} tonë`
             }
           />
           <ChartLegend content={<ChartLegendContent />} />

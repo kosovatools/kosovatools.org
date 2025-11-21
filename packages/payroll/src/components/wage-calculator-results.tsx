@@ -10,8 +10,8 @@ import {
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
   type ChartConfig,
+  type ChartTooltipItem,
 } from "@workspace/ui/components/chart";
 import {
   createChromaPalette,
@@ -31,10 +31,6 @@ type SankeyTooltipPayload = {
   target?: { name?: string };
   name?: string;
 };
-
-type SankeyTooltipFormatter = NonNullable<
-  React.ComponentProps<typeof ChartTooltipContent>["formatter"]
->;
 
 type SankeyNodePayload = NodeProps["payload"] & {
   fill?: string;
@@ -292,40 +288,23 @@ function WageCalculatorResults({
 
   const hasFlow = sankeyLinks.length > 0;
 
-  const sankeyTooltipFormatter = React.useCallback<SankeyTooltipFormatter>(
-    (value, _name, entry) => {
-      const numericValue = coerceNumericValue(value) ?? 0;
-      const payload = entry?.payload as
-        | (SankeyTooltipPayload & { color?: string })
-        | undefined;
-      const sourceName = payload?.source?.name;
-      const targetName = payload?.target?.name;
-      const label =
-        sourceName && targetName
-          ? `${sourceName} → ${targetName}`
-          : (payload?.name ?? "Rrjedha");
-      const indicatorColor =
-        (typeof entry?.color === "string" ? entry.color : undefined) ??
-        (typeof payload?.color === "string" ? payload.color : undefined) ??
-        "var(--border)";
+  const formatSankeyItemLabel = React.useCallback((item: ChartTooltipItem) => {
+    const payload = item.original?.payload as
+      | (SankeyTooltipPayload & { color?: string })
+      | undefined;
+    const sourceName = payload?.source?.name;
+    const targetName = payload?.target?.name;
 
-      return (
-        <div className="flex w-full items-center gap-2">
-          <span
-            className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
-            style={{ backgroundColor: indicatorColor }}
-          />
-          <div className="flex flex-1 flex-col gap-1">
-            <span className="text-foreground font-mono font-semibold tabular-nums">
-              {formatCurrency(Math.max(numericValue, 0))}
-            </span>
-            <span className="text-[0.65rem] uppercase tracking-wide text-muted-foreground">
-              {label}
-            </span>
-          </div>
-        </div>
-      );
-    },
+    if (sourceName && targetName) {
+      return `${sourceName} → ${targetName}`;
+    }
+
+    return payload?.name ?? item.name ?? "Rrjedha";
+  }, []);
+
+  const formatSankeyItemValue = React.useCallback(
+    (value: unknown) =>
+      formatCurrency(Math.max(coerceNumericValue(value) ?? 0, 0)),
     [formatCurrency],
   );
 
@@ -396,13 +375,9 @@ function WageCalculatorResults({
                   node={(nodeProps) => <SankeyNodeWithLabel {...nodeProps} />}
                 >
                   <ChartTooltip
-                    content={
-                      <ChartTooltipContent
-                        indicator="dot"
-                        labelFormatter={() => "Rrjedha e pagës"}
-                        formatter={sankeyTooltipFormatter}
-                      />
-                    }
+                    labelFormatter={() => "Rrjedha e pagës"}
+                    itemLabelFormatter={formatSankeyItemLabel}
+                    valueFormatter={(value) => formatSankeyItemValue(value)}
                   />
                 </Sankey>
               </ChartContainer>

@@ -30,7 +30,7 @@ This document captures the pattern used in `apps/web/app/(tools)/aviation-stats/
 - Wrap visualization code in `ChartContainer` with a const `chartConfig` passed through `addThemeToChartConfig` so colors come from the shared palette.
 - Use `AreaChart` for stacked quantities and overlay extra metrics with `Line` when they belong on a separate axis.
 - Always set `YAxis width="auto"` and reuse a standard margin (`{ top: 32, right: 32, bottom: 16, left: 16 }`).
-- Add `ChartTooltipContent` and `ChartLegendContent` from `@workspace/ui/components/chart` to keep behavior consistent.
+- Use `ChartTooltip` (with `labelFormatter`/`valueFormatter`) and `ChartLegendContent` from `@workspace/ui/components/chart` to keep behavior consistent.
 
 ## 5. Controls & Empty States
 

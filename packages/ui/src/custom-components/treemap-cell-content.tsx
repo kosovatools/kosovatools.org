@@ -2,32 +2,23 @@
 
 import * as React from "react";
 import type { TreemapNode } from "recharts/types/chart/Treemap";
-import { slugify } from "@workspace/utils";
-
-export const defaultTreemapColorKey = (label: string) => {
-  return slugify(label, { fallback: "slice" });
-};
 
 const DEFAULT_CHAR_WIDTH = 8;
 const MIN_TEXT_THICKNESS = 20;
 const CELL_PADDING = 10;
 
-const defaultValueFormatter = (value: number) =>
-  Number.isFinite(value) ? String(value) : "";
-
 export type TreemapCellContentProps = TreemapNode & {
-  valueFormatter?: (value: number) => string;
-  colorKeyAccessor?: (label: string) => string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  valueFormatter?: (value: any) => string;
+  colorKey: string;
 };
 
 export function TreemapCellContent({
-  valueFormatter = defaultValueFormatter,
-  colorKeyAccessor = defaultTreemapColorKey,
+  valueFormatter = (v) => v as string,
   ...props
 }: TreemapCellContentProps) {
-  const { x, y, width, height, name: rawName, value } = props;
+  const { x, y, width, colorKey, height, name: rawName, value } = props;
   const name = String(rawName ?? "");
-  const colorKey = colorKeyAccessor(name) || defaultTreemapColorKey(name);
   const numericValue =
     typeof value === "number" && Number.isFinite(value)
       ? value
@@ -40,7 +31,7 @@ export function TreemapCellContent({
       width={width}
       height={height}
       style={{
-        fill: `var(--color-${colorKey})`,
+        fill: `var(--color-${props[colorKey]})`,
         stroke: "#fff",
         fillOpacity: 0.3,
         strokeWidth: 1,

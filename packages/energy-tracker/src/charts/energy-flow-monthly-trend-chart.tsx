@@ -16,7 +16,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
@@ -157,13 +156,11 @@ export function MonthlyFlowTrendChart({
             includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
-            content={
-              <ChartTooltipContent
-                labelFormatter={(value) => periodFormatter(value as string)}
-                valueFormatter={(value) =>
-                  formatAuto(value as number, { includeUnit: true })
-                }
-              />
+            labelFormatter={periodFormatter}
+            valueFormatter={(value) =>
+              formatAuto(value as number | string | null | undefined, {
+                includeUnit: true,
+              })
             }
           />
           <ChartLegend content={<ChartLegendContent />} />

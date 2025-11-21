@@ -17,7 +17,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
@@ -184,13 +183,9 @@ export function GdpActivityStackedChart({
             axisLine={false}
           />
           <ChartTooltip
-            content={
-              <ChartTooltipContent
-                labelFormatter={(value) => periodFormatter(value as string)}
-                valueFormatter={(value) =>
-                  formatCurrencyCompact(value as number, { currency: "EUR" })
-                }
-              />
+            labelFormatter={periodFormatter}
+            valueFormatter={(value) =>
+              formatCurrencyCompact(value as number | null)
             }
           />
           <ChartLegend content={<ChartLegendContent />} />

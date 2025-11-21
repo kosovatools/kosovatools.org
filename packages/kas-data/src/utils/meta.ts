@@ -24,6 +24,7 @@ export function formatGeneratedAt(
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+      hourCycle: "h23", // Avoid locale-dependent day periods that can misalign server/client output
     },
     { fallback, preserveInputOnInvalid: false },
   );

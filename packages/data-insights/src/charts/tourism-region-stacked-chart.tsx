@@ -17,7 +17,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
@@ -188,11 +187,7 @@ export function TourismRegionCharts({
             includeCategories={timelineEvents?.includeCategories}
           />
           <ChartTooltip
-            content={
-              <ChartTooltipContent
-                valueFormatter={(value) => formatCount(value as number)}
-              />
-            }
+            valueFormatter={(value) => formatCount(value as number | null)}
           />
           <ChartLegend content={<ChartLegendContent />} />
           {chartKeys.map((key) => {

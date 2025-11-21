@@ -18,7 +18,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
   type ChartConfig,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
@@ -37,13 +36,13 @@ import {
 const DEFAULT_TIME_RANGE = 36;
 
 const METRIC_FORMATTER = {
-  index: (value: number) =>
+  index: (value: number | null) =>
     formatNumber(
       value,
       { minimumFractionDigits: 1, maximumFractionDigits: 1 },
       { fallback: "—" },
     ),
-  change: (value: number) => formatSignedPercent(value),
+  change: (value: number | null) => formatSignedPercent(value),
 } as const;
 
 type ChartRow = { period: string } & Record<string, number | string | null>;
@@ -215,7 +214,7 @@ export function CpiChart({
                 axisLine={false}
                 domain={["auto", "auto"]}
                 tickMargin={10}
-                tickFormatter={(value) => axisFormatter(value as number)}
+                tickFormatter={(value) => axisFormatter(value as number | null)}
               />
               <TimelineEventMarkers
                 data={chartData}
@@ -224,12 +223,9 @@ export function CpiChart({
                 includeCategories={timelineEvents?.includeCategories}
               />
               <ChartTooltip
-                cursor={false}
-                content={
-                  <ChartTooltipContent
-                    labelFormatter={(value) => periodFormatter(value as string)}
-                    valueFormatter={(value) => axisFormatter(value as number)}
-                  />
+                labelFormatter={periodFormatter}
+                valueFormatter={(value) =>
+                  axisFormatter(value as number | null)
                 }
               />
               <ChartLegend content={<ChartLegendContent />} />

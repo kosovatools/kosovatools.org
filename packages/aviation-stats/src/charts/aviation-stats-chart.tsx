@@ -17,7 +17,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
@@ -161,14 +160,8 @@ export function AviationStatsChart({
             width="auto"
           />
           <ChartTooltip
-            cursor={false}
-            content={
-              <ChartTooltipContent
-                indicator="dot"
-                labelFormatter={(value) => periodFormatter(value as string)}
-                valueFormatter={(value) => formatCount(value as number)}
-              />
-            }
+            labelFormatter={periodFormatter}
+            valueFormatter={(value) => formatCount(value as number | null)}
           />
           <ChartLegend content={<ChartLegendContent />} />
           <Area

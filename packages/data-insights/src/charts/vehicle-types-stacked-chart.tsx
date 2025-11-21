@@ -9,7 +9,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@workspace/ui/components/chart";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { formatCount } from "@workspace/utils";
@@ -56,11 +55,7 @@ export function VehicleTypesStackedChart({
           width="auto"
         />
         <ChartTooltip
-          content={
-            <ChartTooltipContent
-              valueFormatter={(value) => formatCount(value as number)}
-            />
-          }
+          valueFormatter={(value) => formatCount(value as number | null)}
         />
         <ChartLegend content={<ChartLegendContent />} />
         {chartKeys.map((key) => (
