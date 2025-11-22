@@ -19,7 +19,6 @@ type ChartDatum = {
 export type ChartEventMarker = {
   id: string;
   x: string;
-  offset: number;
   label: string;
   description?: string;
   details?: string;
@@ -84,11 +83,42 @@ export function useTimelineEventMarkers(
       });
     }
 
-    return Array.from(markers.values()).map((entry, i) => ({
+    const periodIndexMap = new Map(data.map((d, i) => [d.period, i]));
+    const sortedMarkers = Array.from(markers.values()).sort((a, b) => {
+      const indexA = periodIndexMap.get(a.period) ?? -1;
+      const indexB = periodIndexMap.get(b.period) ?? -1;
+      return indexA - indexB;
+    });
+
+    const mergedMarkers: typeof sortedMarkers = [];
+
+    for (const marker of sortedMarkers) {
+      const lastMarker = mergedMarkers[mergedMarkers.length - 1];
+      const currentIndex = periodIndexMap.get(marker.period) ?? -1;
+      const lastIndex = lastMarker
+        ? (periodIndexMap.get(lastMarker.period) ?? -1)
+        : -1;
+
+      if (
+        grouping == "monthly" &&
+        lastMarker &&
+        currentIndex !== -1 &&
+        lastIndex !== -1 &&
+        currentIndex - lastIndex <= 6 // Merge close months
+
+      ) {
+        // Merge with previous marker
+        lastMarker.titles.push(...marker.titles);
+        lastMarker.descriptions.push(...marker.descriptions);
+      } else {
+        mergedMarkers.push({ ...marker });
+      }
+    }
+
+    return mergedMarkers.map((entry) => ({
       id: entry.id,
       x: entry.period,
-      offset: -(i % 6) * 15 - 20,
-      label: entry.titles[0] ?? entry.id,
+      label: entry.titles.join(", "),
       description:
         entry.descriptions.length === 1
           ? entry.descriptions[0]

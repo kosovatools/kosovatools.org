@@ -3,119 +3,145 @@
     "id": "unmik-administration",
     "title": "Administrata UNMIK",
     "period": "1999-06",
-    "category": ["government_change"],
+    "category": [
+      "government_change"
+    ],
     "summary": "Vendoset administrata e UNMIK në Kosovë pas luftës."
   },
   {
     "id": "bajram-rexhepi-government",
-    "title": "Qeveria Bajram Rexhepi",
+    "title": "Q. Bajram Rexhepi",
     "period": "2002-03",
-    "category": ["government_change"],
+    "category": [
+      "government_change"
+    ],
     "summary": "Formohet qeveria e parë e zgjedhur pas luftës nën udhëheqjen e Bajram Rexhepit."
   },
   {
     "id": "ramush-haradinaj-government-2004",
-    "title": "Qeveria Ramush Haradinaj",
+    "title": "Q. Ramush Haradinaj",
     "period": "2004-12",
-    "category": ["government_change"],
+    "category": [
+      "government_change"
+    ],
     "summary": "Ramush Haradinaj merr mandatin e kryeministrit."
   },
   {
     "id": "bajram-kosumi-government",
-    "title": "Qeveria Bajram Kosumi",
+    "title": "Q. Bajram Kosumi",
     "period": "2005-04",
-    "category": ["government_change"],
+    "category": [
+      "government_change"
+    ],
     "summary": "Bajram Kosumi zëvendëson Ramush Haradinajn si kryeministër."
   },
   {
     "id": "agim-ceku-government",
-    "title": "Qeveria Agim Çeku",
+    "title": "Q. Agim Çeku",
     "period": "2006-03",
-    "category": ["government_change"],
+    "category": [
+      "government_change"
+    ],
     "summary": "Agim Çeku emërohet kryeministër i Kosovës."
   },
   {
     "id": "hashim-thaci-government-2008",
-    "title": "Qeveria Hashim Thaçi I",
+    "title": "Q. Hashim Thaçi I",
     "period": "2008-01",
-    "category": ["government_change"],
+    "category": [
+      "government_change"
+    ],
     "summary": "Hashim Thaçi formon qeverinë e parë pas shpalljes së pavarësisë."
   },
   {
     "id": "hashim-thaci-government-2011",
-    "title": "Qeveria Hashim Thaçi II",
+    "title": "Q. Hashim Thaçi II",
     "period": "2011-01",
-    "category": ["government_change"],
+    "category": [
+      "government_change"
+    ],
     "summary": "Mandati i dytë i Hashim Thaçit si kryeministër."
   },
   {
     "id": "isa-mustafa-government",
-    "title": "Qeveria Isa Mustafa",
+    "title": "Q. Isa Mustafa",
     "period": "2015-01",
-    "category": ["government_change"],
+    "category": [
+      "government_change"
+    ],
     "summary": "Isa Mustafa bëhet kryeministër pas zgjedhjeve të vitit 2014."
   },
   {
     "id": "ramush-haradinaj-government-2017",
-    "title": "Qeveria Ramush Haradinaj II",
+    "title": "Q. Ramush Haradinaj II",
     "period": "2017-09",
-    "category": ["government_change"],
+    "category": [
+      "government_change"
+    ],
     "summary": "Ramush Haradinaj kthehet në pozitën e kryeministrit."
   },
   {
     "id": "albin-kurti-government-2020",
-    "title": "Qeveria Albin Kurti I",
+    "title": "Q. Kurti I",
     "period": "2020-02",
-    "category": ["government_change"],
+    "category": [
+      "government_change"
+    ],
     "summary": "Albin Kurti formon qeverinë e tij të parë."
   },
   {
-    "id": "covid-19-emergency",
-    "title": "Fillimi i masave COVID-19",
-    "period": "2020-03",
-    "category": ["public_health", "travel"],
-    "summary": "Kosova vendos masa të jashtëzakonshme për përballjen me pandeminë COVID-19."
-  },
-  {
     "id": "covid-pandemic-impact",
-    "title": "Pandemia COVID-19",
+    "title": "COVID-19",
     "period": "2020-04",
-    "category": ["public_health", "travel"],
+    "category": [
+      "public_health",
+      "travel"
+    ],
     "summary": "Izolimet e gjera dhe kufizimet e lëvizjes ndërpresin aktivitetin ekonomik dhe ndikojnë në tregjet e punës."
   },
   {
     "id": "avdullah-hoti-government",
-    "title": "Qeveria Avdullah Hoti",
+    "title": "Q. Hoti",
     "period": "2020-06",
-    "category": ["government_change"],
+    "category": [
+      "government_change"
+    ],
     "summary": "Avdullah Hoti merr detyrën e kryeministrit pas mocionit të mosbesimit ndaj qeverisë Kurti."
   },
   {
     "id": "albin-kurti-government-2021",
-    "title": "Qeveria Albin Kurti II",
+    "title": "Q. Kurti II",
     "period": "2021-03",
-    "category": ["government_change"],
+    "category": [
+      "government_change"
+    ],
     "summary": "Qeveria Kurti II formohet pas zgjedhjeve të parakohshme."
   },
   {
     "id": "ukraine-war-2022",
     "title": "Lufta në Ukrainë",
     "period": "2022-02",
-    "category": ["security"],
+    "category": [
+      "security"
+    ],
     "summary": "Pushtimi i shkallës së plotë i Ukrainës nga Rusia rrit pasigurinë gjeopolitike dhe çmimet e energjisë që ndikojnë edhe ekonomitë e Ballkanit."
   },
   {
     "id": "banjska-attack",
     "title": "Sulmi në Banjskë",
     "period": "2023-09",
-    "category": ["security"],
+    "category": [
+      "security"
+    ],
     "summary": "Ngjarja e armatosur në fshatin Banjskë, Zveçan me ndikim të madh në tensionet rajonale."
   },
   {
     "id": "visa-liberalization",
     "title": "Liberalizimi i Vizave",
     "period": "2024-01",
-    "category": ["travel"],
+    "category": [
+      "travel"
+    ],
     "summary": "Qytetarët e Kosovës fitojnë të drejtën e lëvizjes së lirë në zonën Schengen."
   }
 ]
