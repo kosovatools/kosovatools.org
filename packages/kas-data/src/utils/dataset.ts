@@ -16,11 +16,10 @@ import type {
   DatasetMeta,
   DimensionOption,
   DatasetMetaField,
+  GenericDatasetMeta,
 } from "../types/dataset";
 import { createLabelMap } from "./meta";
 import { TimeGranularity } from "@workspace/utils/utils/time-range";
-
-type GenericDatasetMeta = DatasetMeta<string, string, TimeGranularity, object>;
 
 export type DatasetCoverageLabelOptions = Readonly<{
   formatPeriod?: (period: string) => string;
@@ -57,39 +56,45 @@ export type DatasetViewOptions = {
 
 type DatasetRecordBase = { period: string };
 
-export type DatasetView<
-  TRecord extends DatasetRecordBase,
-  TMeta extends DatasetMeta<string, string, TimeGranularity, object>,
-> = Dataset<TRecord, TMeta> & {
-  limit: (periods?: number | null) => DatasetView<TRecord, TMeta>;
-  slice: (range: {
-    start?: string;
-    end?: string;
-  }) => DatasetView<TRecord, TMeta>;
+export type GenericDataset = Dataset<DatasetRecordBase, GenericDatasetMeta>;
+
+type DatasetViewRecord<TDataset extends GenericDataset> =
+  TDataset extends Dataset<
+    infer TRecord extends DatasetRecordBase,
+    infer _TMeta
+  >
+    ? TRecord
+    : DatasetRecordBase;
+
+type DatasetViewMeta<TDataset extends GenericDataset> =
+  TDataset extends Dataset<
+    infer _TRecord extends DatasetRecordBase,
+    infer TMeta extends GenericDatasetMeta
+  >
+    ? TMeta
+    : GenericDatasetMeta;
+
+export type DatasetView<TDataset extends GenericDataset> = Dataset<
+  DatasetViewRecord<TDataset>,
+  DatasetViewMeta<TDataset>
+> & {
+  limit: (periods?: number | null) => DatasetView<TDataset>;
+  slice: (range: { start?: string; end?: string }) => DatasetView<TDataset>;
   periods: (options?: { grouping?: PeriodGrouping }) => ReadonlyArray<string>;
   viewAsStack<TKey extends string>(
-    config: DatasetStackConfig<TRecord, TKey>,
+    config: DatasetStackConfig<DatasetViewRecord<TDataset>, TKey>,
   ): DatasetStackResult<TKey>;
   summarizeStack<TKey extends string>(
-    config: DatasetStackConfig<TRecord, TKey>,
+    config: DatasetStackConfig<DatasetViewRecord<TDataset>, TKey>,
   ): StackTotal<TKey>[];
   aggregate<TKey extends string>(
-    options: DatasetAggregateOptions<TRecord, TKey>,
+    options: DatasetAggregateOptions<DatasetViewRecord<TDataset>, TKey>,
   ): DatasetAggregateRow<TKey>[];
 };
 
-export type GenericDataset = Dataset<
-  DatasetRecordBase,
-  DatasetMeta<string, string, TimeGranularity, object>
->;
-
-export type ToDatasetView<T> =
-  T extends Dataset<
-    infer TRecord extends DatasetRecordBase,
-    infer TMeta extends DatasetMeta<string, string, TimeGranularity, object>
-  >
-    ? DatasetView<TRecord, TMeta>
-    : never;
+export type GenericDatasetView<
+  TDataset extends GenericDataset = GenericDataset,
+> = DatasetView<TDataset>;
 
 export type DatasetAggregateField<
   TRecord extends DatasetRecordBase,
@@ -135,7 +140,7 @@ export function createDataset<
 >(
   data: Dataset<TRecord, TMeta>,
   options: DatasetViewOptions = {},
-): DatasetView<TRecord, TMeta> {
+): DatasetView<Dataset<TRecord, TMeta>> {
   ensureSlugSafeDimensionKeys(data.meta, data.records);
   const initialRecords = applyViewOptions(data.records, options);
   return buildDatasetView(data.meta, initialRecords);
@@ -151,7 +156,10 @@ export function limitDataset<
 function buildDatasetView<
   TRecord extends DatasetRecordBase,
   TMeta extends DatasetMeta<string, string, TimeGranularity, object>,
->(meta: TMeta, records: ReadonlyArray<TRecord>): DatasetView<TRecord, TMeta> {
+>(
+  meta: TMeta,
+  records: ReadonlyArray<TRecord>,
+): DatasetView<Dataset<TRecord, TMeta>> {
   const getRecords = () => [...records];
 
   return {

@@ -1,6 +1,6 @@
 import cpiMonthlyJson from "../../data/kas_cpi_monthly.json" with { type: "json" };
 import cpiAveragePricesJson from "../../data/kas_cpi_average_prices_yearly.json" with { type: "json" };
-import { createDataset, ToDatasetView } from "../utils/dataset";
+import { createDataset, DatasetView } from "../utils/dataset";
 import type {
   CpiAveragePriceRecord,
   CpiMetaExtras,
@@ -17,7 +17,7 @@ type CpiMeta = DatasetMetaMonthly<CpiMetric, "group", CpiMetaExtras>;
 
 type CpiDataset = Dataset<CpiRecord, CpiMeta>;
 const cpiDatasetData = cpiMonthlyJson as CpiDataset;
-export type CpiDatasetView = ToDatasetView<CpiDataset>;
+export type CpiDatasetView = DatasetView<CpiDataset>;
 export const cpiDataset = createDataset(cpiDatasetData);
 
 export type CpiAveragePriceDataset = Dataset<
@@ -25,5 +25,5 @@ export type CpiAveragePriceDataset = Dataset<
   DatasetMetaYearly<"price", "article">
 >;
 const cpiAveragePricesData = cpiAveragePricesJson as CpiAveragePriceDataset;
-export type CpiAveragePriceDatasetView = ToDatasetView<CpiAveragePriceDataset>;
+export type CpiAveragePriceDatasetView = DatasetView<CpiAveragePriceDataset>;
 export const cpiAveragePricesYearly = createDataset(cpiAveragePricesData);

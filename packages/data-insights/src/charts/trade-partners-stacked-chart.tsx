@@ -11,15 +11,7 @@ import {
 } from "recharts";
 
 import { TradePartnersDatasetView } from "@workspace/kas-data";
-import {
-  formatCurrencyCompact,
-  getPeriodFormatter,
-  getPeriodGroupingOptions,
-  limitTimeRangeOptions,
-  type PeriodGrouping,
-  type PeriodGroupingOption,
-  type TimeRangeOption,
-} from "@workspace/utils";
+import { formatCurrencyCompact } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -38,6 +30,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
+import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 const DEFAULT_TOP_PARTNERS = 6;
 const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
@@ -51,22 +44,20 @@ export function TradePartnersStackedChart({
   top?: number;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
-    getPeriodGroupingOptions(dataset.meta.time.granularity);
-  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
-
-  const [periodGrouping, setPeriodGrouping] =
-    React.useState<PeriodGrouping>("yearly");
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
+  const {
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions: PERIOD_GROUPING_OPTIONS,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions: TIME_RANGE_OPTIONS,
+    datasetView,
+    periodFormatter,
+  } = useDatasetTimeControls(dataset);
   const [metric, setMetric] =
     React.useState<TradePartnersDatasetView["meta"]["metrics"][number]>(
       "imports",
     );
-
-  const datasetView = React.useMemo(
-    () => dataset.limit(timeRange),
-    [dataset, timeRange],
-  );
 
   const totals = React.useMemo(
     () =>
@@ -102,11 +93,6 @@ export function TradePartnersStackedChart({
   const { chartKeys, chartData, chartConfig } = React.useMemo(
     () => buildStackedChartData(stackResult),
     [stackResult],
-  );
-
-  const periodFormatter = React.useMemo(
-    () => getPeriodFormatter(periodGrouping),
-    [periodGrouping],
   );
 
   return (

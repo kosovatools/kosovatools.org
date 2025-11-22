@@ -47,6 +47,13 @@ export type DatasetMeta<
 }> &
   Readonly<TExtras>;
 
+export type GenericDatasetMeta = DatasetMeta<
+  string,
+  string,
+  TimeGranularity,
+  object
+>;
+
 // Convenience helpers for common cases
 export type DatasetMetaMonthly<
   TFieldKey extends string,

@@ -7,7 +7,7 @@ import type {
   GovernmentRevenueMeta,
   GovernmentRevenueRecord,
 } from "../types/government";
-import { createDataset, ToDatasetView } from "../utils/dataset";
+import { createDataset, DatasetView } from "../utils/dataset";
 
 type GovernmentRevenueDataset = Dataset<
   GovernmentRevenueRecord,
@@ -25,9 +25,9 @@ const governmentExpenditureData =
   governmentExpenditureJson as GovernmentExpenditureDataset;
 
 export type GovernmentRevenueDatasetView =
-  ToDatasetView<GovernmentRevenueDataset>;
+  DatasetView<GovernmentRevenueDataset>;
 export type GovernmentExpenditureDatasetView =
-  ToDatasetView<GovernmentExpenditureDataset>;
+  DatasetView<GovernmentExpenditureDataset>;
 
 export const governmentRevenueQuarterly = createDataset(governmentRevenueData);
 export const governmentExpenditureQuarterly = createDataset(

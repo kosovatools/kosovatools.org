@@ -5,7 +5,7 @@ import type {
   DatasetMetaMonthly,
   DatasetMetaYearly,
 } from "../types/dataset";
-import { createDataset, ToDatasetView } from "../utils/dataset";
+import { createDataset, DatasetView } from "../utils/dataset";
 
 import type {
   TransportMetric as AirTransportMetric,
@@ -17,11 +17,11 @@ import type {
 type AirTransportMeta = DatasetMetaMonthly<AirTransportMetric>;
 type AirTransportDataset = Dataset<AirTransportRecord, AirTransportMeta>;
 const airTransportData = transportJson as AirTransportDataset;
-export type AirTransportDatasetView = ToDatasetView<AirTransportDataset>;
+export type AirTransportDatasetView = DatasetView<AirTransportDataset>;
 export const airTransportMonthly = createDataset(airTransportData);
 
 type VehicleTypesMeta = DatasetMetaYearly<VehicleTypesMetric, "vehicle_type">;
 type VehicleTypesDataset = Dataset<VehicleTypesRecord, VehicleTypesMeta>;
 const vehicleTypesData = vehicleTypesJson as VehicleTypesDataset;
-export type VehicleTypesDatasetView = ToDatasetView<VehicleTypesDataset>;
+export type VehicleTypesDatasetView = DatasetView<VehicleTypesDataset>;
 export const vehicleTypesYearly = createDataset(vehicleTypesData);

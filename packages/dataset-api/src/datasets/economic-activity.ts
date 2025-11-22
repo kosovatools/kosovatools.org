@@ -2,7 +2,7 @@ import { createDatasetFetcher } from "../client";
 import {
   createDataset,
   type Dataset,
-  type ToDatasetView,
+  type DatasetView,
 } from "@workspace/kas-data";
 import type {
   CategoriesDatasetMeta,
@@ -38,12 +38,12 @@ type MonthlyCategoryCityDataset = Dataset<
   MonthlyCategoryCityMeta
 >;
 export type TurnoverCategoriesDatasetView =
-  ToDatasetView<TurnoverCategoriesDataset>;
-export type TurnoverCitiesDatasetView = ToDatasetView<TurnoverCitiesDataset>;
+  DatasetView<TurnoverCategoriesDataset>;
+export type TurnoverCitiesDatasetView = DatasetView<TurnoverCitiesDataset>;
 export type CityCategoryYearlyDatasetView =
-  ToDatasetView<CityCategoryYearlyDataset>;
+  DatasetView<CityCategoryYearlyDataset>;
 export type MonthlyCategoryCityDatasetView =
-  ToDatasetView<MonthlyCategoryCityDataset>;
+  DatasetView<MonthlyCategoryCityDataset>;
 
 export async function fetchCategoriesDataset(): Promise<TurnoverCategoriesDatasetView> {
   const data = await fetchDataset<TurnoverCategoriesDataset>(

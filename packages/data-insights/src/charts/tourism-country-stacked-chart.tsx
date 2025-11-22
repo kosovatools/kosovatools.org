@@ -3,15 +3,7 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import {
-  formatCount,
-  getPeriodFormatter,
-  getPeriodGroupingOptions,
-  limitTimeRangeOptions,
-  type PeriodGrouping,
-  type PeriodGroupingOption,
-  type TimeRangeOption,
-} from "@workspace/utils";
+import { formatCount } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -29,6 +21,7 @@ import {
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
+import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { TourismCountryDatasetView } from "@workspace/kas-data";
 
 const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
@@ -43,22 +36,20 @@ export function TourismCountryStackedChart({
   top?: number;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
-    getPeriodGroupingOptions(dataset.meta.time.granularity);
-  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
-
   const [metricKey, setMetricKey] =
     React.useState<TourismCountryDatasetView["meta"]["metrics"][number]>(
       "visitors",
     );
-  const [periodGrouping, setPeriodGrouping] =
-    React.useState<PeriodGrouping>("yearly");
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
-
-  const datasetView = React.useMemo(
-    () => dataset.limit(timeRange),
-    [dataset, timeRange],
-  );
+  const {
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    datasetView,
+    periodFormatter,
+  } = useDatasetTimeControls(dataset);
 
   const totals = React.useMemo(
     () =>
@@ -96,11 +87,6 @@ export function TourismCountryStackedChart({
     [stackResult],
   );
 
-  const periodFormatter = React.useMemo(
-    () => getPeriodFormatter(periodGrouping),
-    [periodGrouping],
-  );
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-3">
@@ -113,13 +99,13 @@ export function TourismCountryStackedChart({
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={PERIOD_GROUPING_OPTIONS}
+          options={periodGroupingOptions}
           label="Perioda"
         />
         <OptionSelector
           value={timeRange}
           onChange={setTimeRange}
-          options={TIME_RANGE_OPTIONS}
+          options={timeRangeOptions}
           label="Intervali"
         />
         <StackedKeySelector

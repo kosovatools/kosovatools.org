@@ -11,14 +11,14 @@ import type {
   WageMetric,
   WageRecord,
 } from "../types/labour";
-import { createDataset, ToDatasetView } from "../utils/dataset";
+import { createDataset, DatasetView } from "../utils/dataset";
 
 type WageLevelsMeta = DatasetMetaYearly<WageMetric, "group">;
 type WageLevelsDataset = Dataset<WageRecord, WageLevelsMeta>;
 
 const labourWagesData = labourWagesJson as WageLevelsDataset;
 
-export type WageLevelsDatasetView = ToDatasetView<WageLevelsDataset>;
+export type WageLevelsDatasetView = DatasetView<WageLevelsDataset>;
 export const wageLevels = createDataset(labourWagesData);
 
 type EmploymentActivityGenderMeta = DatasetMetaQuarterly<
@@ -34,7 +34,7 @@ const labourEmploymentActivityGenderData =
   labourEmploymentActivityGenderJson as EmploymentActivityGenderDataset;
 
 export type EmploymentActivityGenderDatasetView =
-  ToDatasetView<EmploymentActivityGenderDataset>;
+  DatasetView<EmploymentActivityGenderDataset>;
 export const employmentActivityGender = createDataset(
   labourEmploymentActivityGenderData,
 );

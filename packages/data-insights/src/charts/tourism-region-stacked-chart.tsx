@@ -3,15 +3,7 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import {
-  formatCount,
-  getPeriodFormatter,
-  getPeriodGroupingOptions,
-  limitTimeRangeOptions,
-  type PeriodGrouping,
-  type PeriodGroupingOption,
-  type TimeRangeOption,
-} from "@workspace/utils";
+import { formatCount } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -25,6 +17,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
+import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { TourismRegionDatasetView } from "@workspace/kas-data";
 
 const DEFAULT_GROUP_LABEL = "Total";
@@ -50,17 +43,20 @@ export function TourismRegionCharts({
   dataset: TourismRegionDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
-    getPeriodGroupingOptions(dataset.meta.time.granularity);
-  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
-
   const [group, setGroup] =
     React.useState<
       TourismRegionDatasetView["meta"]["dimensions"]["visitor_group"][number]["key"]
     >("total");
-  const [periodGrouping, setPeriodGrouping] =
-    React.useState<PeriodGrouping>("yearly");
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
+  const {
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    datasetView,
+    periodFormatter,
+  } = useDatasetTimeControls(dataset);
 
   React.useEffect(() => {
     if (
@@ -71,11 +67,6 @@ export function TourismRegionCharts({
       setGroup("total");
     }
   }, [group, dataset.meta.dimensions.visitor_group]);
-
-  const datasetView = React.useMemo(
-    () => dataset.limit(timeRange),
-    [dataset, timeRange],
-  );
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({
@@ -90,11 +81,6 @@ export function TourismRegionCharts({
   const { chartKeys, chartData, chartConfig } = React.useMemo(
     () => buildStackedChartData(stackResult),
     [stackResult],
-  );
-
-  const periodFormatter = React.useMemo(
-    () => getPeriodFormatter(periodGrouping),
-    [periodGrouping],
   );
 
   const latestSummary = React.useMemo(() => {
@@ -137,13 +123,13 @@ export function TourismRegionCharts({
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={PERIOD_GROUPING_OPTIONS}
+          options={periodGroupingOptions}
           label="Perioda"
         />
         <OptionSelector
           value={timeRange}
           onChange={setTimeRange}
-          options={TIME_RANGE_OPTIONS}
+          options={timeRangeOptions}
           label="Intervali"
         />
       </div>

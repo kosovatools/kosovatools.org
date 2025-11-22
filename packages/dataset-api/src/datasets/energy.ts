@@ -2,7 +2,7 @@ import { createDatasetFetcher } from "../client";
 import {
   createDataset,
   type Dataset,
-  type ToDatasetView,
+  type DatasetView,
 } from "@workspace/kas-data";
 import type {
   EnergyDailyDatasetMeta,
@@ -24,8 +24,8 @@ type EnergyMonthlyDataset = Dataset<
   EnergyMonthlyDatasetMeta
 >;
 type EnergyDailyDataset = Dataset<EnergyDailyRecord, EnergyDailyDatasetMeta>;
-export type EnergyMonthlyDatasetView = ToDatasetView<EnergyMonthlyDataset>;
-export type EnergyDailyDatasetView = ToDatasetView<EnergyDailyDataset>;
+export type EnergyMonthlyDatasetView = DatasetView<EnergyMonthlyDataset>;
+export type EnergyDailyDatasetView = DatasetView<EnergyDailyDataset>;
 
 async function fetchDataset<TDataset>(file: string): Promise<TDataset> {
   return fetchEnergyDataset<TDataset>(file);

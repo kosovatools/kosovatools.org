@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   Area,
   AreaChart,
@@ -11,14 +11,7 @@ import {
 } from "recharts";
 
 import { electricityDataset, createLabelMap } from "@workspace/kas-data";
-import {
-  getPeriodFormatter,
-  getPeriodGroupingOptions,
-  limitTimeRangeOptions,
-  sanitizeValue,
-  type PeriodGrouping,
-  type TimeRangeOption,
-} from "@workspace/utils";
+import { sanitizeValue } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -31,6 +24,7 @@ import {
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
+import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 import { formatAuto } from "../utils/number-format";
 
@@ -44,10 +38,6 @@ export function ElectricityProductionStackedAreaChart({
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const labelMap = createLabelMap(dataset.meta.fields);
-  const PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(
-    dataset.meta.time.granularity,
-  );
-  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
 
   const chartConfig = addThemeToChartConfig({
     production_thermal_gwh: { label: labelMap.production_thermal_gwh },
@@ -57,18 +47,16 @@ export function ElectricityProductionStackedAreaChart({
 
   const chartClassName = "w-full aspect-[1/1.5] sm:aspect-video";
   const chartMargin = { top: 24, right: 0, left: 0, bottom: 0 };
-  const [periodGrouping, setPeriodGrouping] =
-    useState<PeriodGrouping>("yearly");
-  const [timeRange, setTimeRange] = useState<TimeRangeOption>(null);
-
-  const datasetView = useMemo(
-    () => dataset.limit(timeRange),
-    [dataset, timeRange],
-  );
-  const periodFormatter = useMemo(
-    () => getPeriodFormatter(periodGrouping),
-    [periodGrouping],
-  );
+  const {
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    datasetView,
+    periodFormatter,
+  } = useDatasetTimeControls(dataset);
 
   const chartData = useMemo(() => {
     const aggregated = datasetView.aggregate<
@@ -116,13 +104,13 @@ export function ElectricityProductionStackedAreaChart({
           label="Perioda"
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={PERIOD_GROUPING_OPTIONS}
+          options={periodGroupingOptions}
         />
         <OptionSelector
           label="Intervali"
           value={timeRange}
           onChange={setTimeRange}
-          options={TIME_RANGE_OPTIONS}
+          options={timeRangeOptions}
         />
       </div>
       <ChartContainer config={chartConfig} className={chartClassName}>

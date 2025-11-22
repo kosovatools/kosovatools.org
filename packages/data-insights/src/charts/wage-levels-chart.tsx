@@ -4,15 +4,7 @@ import * as React from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import { type WageLevelsDatasetView } from "@workspace/kas-data";
-import {
-  formatCurrencyCompact,
-  getPeriodFormatter,
-  getPeriodGroupingOptions,
-  limitTimeRangeOptions,
-  type PeriodGrouping,
-  type PeriodGroupingOption,
-  type TimeRangeOption,
-} from "@workspace/utils";
+import { formatCurrencyCompact } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -26,6 +18,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
+import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 const CHART_MARGIN = { top: 24, right: 16, bottom: 16, left: 16 };
 
@@ -36,22 +29,20 @@ export function WageLevelsChart({
   dataset: WageLevelsDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const periodOptions: ReadonlyArray<PeriodGroupingOption> =
-    getPeriodGroupingOptions(dataset.meta.time.granularity);
-  const timeRangeOptions = limitTimeRangeOptions(dataset.meta.time);
-
   const [metric, setMetric] =
     React.useState<WageLevelsDatasetView["meta"]["metrics"][number]>(
       "gross_eur",
     );
-  const [periodGrouping, setPeriodGrouping] =
-    React.useState<PeriodGrouping>("yearly");
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
-
-  const datasetView = React.useMemo(
-    () => dataset.limit(timeRange),
-    [dataset, timeRange],
-  );
+  const {
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    datasetView,
+    periodFormatter,
+  } = useDatasetTimeControls(dataset);
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({
@@ -68,11 +59,6 @@ export function WageLevelsChart({
     [stackResult],
   );
 
-  const periodFormatter = React.useMemo(
-    () => getPeriodFormatter(periodGrouping),
-    [periodGrouping],
-  );
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap  justify-between items-center gap-3">
@@ -85,7 +71,7 @@ export function WageLevelsChart({
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={periodOptions}
+          options={periodGroupingOptions}
           label="Perioda"
         />
         <OptionSelector

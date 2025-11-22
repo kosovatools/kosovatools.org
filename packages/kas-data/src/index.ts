@@ -25,6 +25,7 @@ export type {
   DatasetMetaMonthly,
   DatasetMetaQuarterly,
   DatasetMetaYearly,
+  GenericDatasetMeta,
 } from "./types/dataset";
 
 export * from "./utils/meta";

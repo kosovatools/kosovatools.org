@@ -4,13 +4,7 @@ import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import { ConstructionCostIndexDatasetView } from "@workspace/kas-data";
-import {
-  formatNumber,
-  getPeriodFormatter,
-  limitTimeRangeOptions,
-  TimeRangeOption,
-  type PeriodFormatter,
-} from "@workspace/utils";
+import { formatNumber } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -19,6 +13,7 @@ import {
   type ChartConfig,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
+import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { HierarchicalMultiSelect } from "@workspace/ui/custom-components/hierarchical-multi-select";
 import {
@@ -39,11 +34,6 @@ type Props = {
   timelineEvents?: TimelineEventMarkerControls;
 };
 export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
-  const TIME_RANGE_OPTIONS = useMemo(
-    () => limitTimeRangeOptions(dataset.meta.time),
-    [dataset],
-  );
-
   const labelMap = useMemo(
     () => new Map(Object.entries(constructionCostLabelMap)),
     [],
@@ -64,17 +54,15 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     () => defaultSelection,
   );
-  const [timeRange, setTimeRange] = useState<TimeRangeOption>(null);
-
-  const datasetView = useMemo(
-    () => dataset.limit(timeRange),
-    [dataset, timeRange],
-  );
-
-  const periodFormatter = useMemo<PeriodFormatter>(
-    () => getPeriodFormatter(dataset.meta.time.granularity),
-    [dataset.meta.time.granularity],
-  );
+  const {
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    datasetView,
+    periodFormatter,
+  } = useDatasetTimeControls(dataset, {
+    initialGrouping: dataset.meta.time.granularity,
+  });
 
   const { chartData, chartConfig } = useMemo(() => {
     const selectedSet = new Set(selectedCategories);
@@ -137,7 +125,7 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
             label="Periudha"
             value={timeRange}
             onChange={setTimeRange}
-            options={TIME_RANGE_OPTIONS}
+            options={timeRangeOptions}
           />
           <ChartContainer
             config={chartConfig}

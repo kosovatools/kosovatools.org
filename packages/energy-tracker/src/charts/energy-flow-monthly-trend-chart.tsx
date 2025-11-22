@@ -22,14 +22,7 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import {
-  getPeriodFormatter,
-  getPeriodGroupingOptions,
-  limitTimeRangeOptions,
-  type PeriodGrouping,
-  type PeriodGroupingOption,
-  type TimeRangeOption,
-} from "@workspace/utils";
+import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 import { energyFlowChartConfig } from "../utils/chart-config";
 import { formatAuto } from "../utils/number-format";
@@ -49,32 +42,19 @@ export function MonthlyFlowTrendChart({
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const chartConfig = energyFlowChartConfig;
-  const periodGroupingOptions = React.useMemo<
-    ReadonlyArray<PeriodGroupingOption>
-  >(
-    () => getPeriodGroupingOptions(dataset.meta.time.granularity),
-    [dataset.meta.time.granularity],
-  );
-  const [periodGrouping, setPeriodGrouping] =
-    React.useState<PeriodGrouping>("yearly");
-  const timeRangeOptions = React.useMemo(
-    () => limitTimeRangeOptions(dataset.meta.time),
-    [dataset.meta.time],
-  );
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
-
-  const limitedDataset = React.useMemo(
-    () => dataset.limit(timeRange ?? null),
-    [dataset, timeRange],
-  );
-
-  const periodFormatter = React.useMemo(
-    () => getPeriodFormatter(periodGrouping),
-    [periodGrouping],
-  );
+  const {
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    datasetView,
+    periodFormatter,
+  } = useDatasetTimeControls(dataset);
 
   const chartData = React.useMemo<TrendChartRow[]>(() => {
-    const aggregated = limitedDataset.aggregate({
+    const aggregated = datasetView.aggregate({
       grouping: periodGrouping,
       fields: [
         {
@@ -98,7 +78,7 @@ export function MonthlyFlowTrendChart({
       exports: row.exports ?? 0,
       net: row.net ?? 0,
     }));
-  }, [limitedDataset, periodGrouping]);
+  }, [datasetView, periodGrouping]);
 
   return (
     <div className="space-y-3">

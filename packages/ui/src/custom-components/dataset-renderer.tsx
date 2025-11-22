@@ -96,14 +96,16 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
     dataset = query.data as TDataset;
   }
 
-  const resolvedDataset = dataset as TDataset | undefined;
+  const resolvedDataset = dataset;
 
   const isDatasetEmpty = resolvedDataset ? isEmpty(resolvedDataset) : false;
 
   // Check for empty state
   if (isDatasetEmpty) {
     return (
-      <ChartEmptyState content={emptyStateContent ?? DEFAULT_EMPTY_MESSAGE} />
+      <ChartEmptyState
+        messageContent={emptyStateContent ?? DEFAULT_EMPTY_MESSAGE}
+      />
     );
   }
 

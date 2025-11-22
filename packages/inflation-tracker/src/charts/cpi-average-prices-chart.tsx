@@ -4,12 +4,7 @@ import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import { CpiAveragePriceDatasetView } from "@workspace/kas-data";
-import {
-  formatCurrency,
-  getPeriodFormatter,
-  limitTimeRangeOptions,
-  type TimeRangeOption,
-} from "@workspace/utils";
+import { formatCurrency } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -18,6 +13,7 @@ import {
   type ChartConfig,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
+import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
   TimelineEventMarkers,
@@ -42,22 +38,15 @@ export function CpiAveragePricesChart({ dataset, timelineEvents }: Props) {
       .map((option) => option.key),
   );
 
-  const timeRangeOptions = useMemo(
-    () => limitTimeRangeOptions(dataset.meta.time),
-    [dataset.meta.time],
-  );
-
-  const [timeRange, setTimeRange] = useState<TimeRangeOption>(null);
-
-  const datasetView = useMemo(
-    () => dataset.limit(timeRange),
-    [dataset, timeRange],
-  );
-
-  const periodFormatter = useMemo(
-    () => getPeriodFormatter(dataset.meta.time.granularity),
-    [dataset.meta.time.granularity],
-  );
+  const {
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    datasetView,
+    periodFormatter,
+  } = useDatasetTimeControls(dataset, {
+    initialGrouping: dataset.meta.time.granularity,
+  });
 
   const comboboxOptions = useMemo(
     () =>

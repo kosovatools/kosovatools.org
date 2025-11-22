@@ -111,7 +111,7 @@ export function TopCategoryByCityStackedChart({
     [stackResult],
   );
   const periodFormatter = React.useMemo(
-    () => getPeriodFormatter(dataset.meta.time.granularity ?? "yearly"),
+    () => getPeriodFormatter(dataset.meta.time.granularity),
     [dataset.meta.time.granularity],
   );
 

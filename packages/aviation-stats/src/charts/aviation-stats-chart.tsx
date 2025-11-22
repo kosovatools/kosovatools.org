@@ -1,24 +1,10 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Line,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { useCallback, useMemo } from "react";
+import { Area, AreaChart, CartesianGrid, Line, XAxis, YAxis } from "recharts";
 
 import { AirTransportDatasetView } from "@workspace/kas-data";
-import {
-  formatCount,
-  getPeriodFormatter,
-  getPeriodGroupingOptions,
-  limitTimeRangeOptions,
-  type PeriodGrouping,
-  type TimeRangeOption,
-} from "@workspace/utils";
+import { formatCount } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -26,6 +12,7 @@ import {
   ChartTooltip,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
+import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
   TimelineEventMarkers,
@@ -53,25 +40,16 @@ export function AviationStatsChart({
   dataset: AirTransportDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const PERIOD_GROUPING_OPTIONS = getPeriodGroupingOptions(
-    dataset.meta.time.granularity,
-  );
-  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
-  const [periodGrouping, setPeriodGrouping] =
-    useState<PeriodGrouping>("yearly");
-  const [timeRange, setTimeRange] = useState<TimeRangeOption>(null);
-
-  const datasetView = useMemo(() => {
-    if (timeRange == null || Number.isNaN(timeRange)) {
-      return dataset;
-    }
-    return dataset.limit(timeRange);
-  }, [dataset, timeRange]);
-
-  const periodFormatter = useMemo(
-    () => getPeriodFormatter(periodGrouping),
-    [periodGrouping],
-  );
+  const {
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    datasetView,
+    periodFormatter,
+  } = useDatasetTimeControls(dataset);
 
   const formatPeriodTick = useCallback(
     (value: string | number) =>
@@ -111,13 +89,13 @@ export function AviationStatsChart({
           label="Grupimi"
           value={periodGrouping}
           onChange={setPeriodGrouping}
-          options={PERIOD_GROUPING_OPTIONS}
+          options={periodGroupingOptions}
         />
         <OptionSelector
           label="Periudha"
           value={timeRange}
           onChange={setTimeRange}
-          options={TIME_RANGE_OPTIONS}
+          options={timeRangeOptions}
         />
       </div>
       <ChartContainer

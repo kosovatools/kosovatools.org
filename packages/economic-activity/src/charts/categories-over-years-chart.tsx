@@ -20,14 +20,8 @@ import {
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
-import {
-  formatCurrencyCompact,
-  getPeriodFormatter,
-  getPeriodGroupingOptions,
-  limitTimeRangeOptions,
-  type PeriodGrouping,
-  type TimeRangeOption,
-} from "@workspace/utils";
+import { formatCurrencyCompact } from "@workspace/utils";
+import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 import type {
   TurnoverCategoriesDatasetView,
@@ -43,24 +37,16 @@ export function CategoriesOverYearsChart({
   dataset: TurnoverCategoriesDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const periodGroupingOptions = React.useMemo(
-    () => getPeriodGroupingOptions(dataset.meta.time.granularity),
-    [dataset.meta.time.granularity],
-  );
-  const timeRangeOptions = React.useMemo(
-    () => limitTimeRangeOptions(dataset.meta.time),
-    [dataset.meta.time],
-  );
-  const [periodGrouping, setPeriodGrouping] =
-    React.useState<PeriodGrouping>("yearly");
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
-
-  const datasetView = React.useMemo(() => {
-    if (timeRange == null || Number.isNaN(timeRange)) {
-      return dataset;
-    }
-    return dataset.limit(timeRange);
-  }, [dataset, timeRange]);
+  const {
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    datasetView,
+    periodFormatter,
+  } = useDatasetTimeControls(dataset);
 
   const stackConfig = React.useMemo(
     () => ({
@@ -102,10 +88,6 @@ export function CategoriesOverYearsChart({
   const { chartKeys, chartData, chartConfig } = React.useMemo(
     () => buildStackedChartData(stackResult),
     [stackResult],
-  );
-  const periodFormatter = React.useMemo(
-    () => getPeriodFormatter(periodGrouping),
-    [periodGrouping],
   );
 
   return (

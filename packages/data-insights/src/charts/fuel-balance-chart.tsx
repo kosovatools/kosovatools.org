@@ -11,15 +11,7 @@ import {
 } from "recharts";
 
 import { FuelDatasetView } from "@workspace/kas-data";
-import {
-  formatCount,
-  getPeriodFormatter,
-  getPeriodGroupingOptions,
-  limitTimeRangeOptions,
-  type PeriodGrouping,
-  type PeriodGroupingOption,
-  type TimeRangeOption,
-} from "@workspace/utils";
+import { formatCount } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -33,6 +25,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
+import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 const CHART_CLASS = "w-full aspect-[1/1.5] sm:aspect-video";
 const CHART_MARGIN = { top: 32, right: 16, bottom: 16, left: 16 };
 
@@ -43,20 +36,18 @@ export function FuelBalanceChart({
   dataset: FuelDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const PERIOD_GROUPING_OPTIONS: ReadonlyArray<PeriodGroupingOption> =
-    getPeriodGroupingOptions(dataset.meta.time.granularity);
-  const TIME_RANGE_OPTIONS = limitTimeRangeOptions(dataset.meta.time);
-
   const [metricKey, setMetricKey] =
     React.useState<FuelDatasetView["meta"]["metrics"][number]>("import");
-  const [periodGrouping, setPeriodGrouping] =
-    React.useState<PeriodGrouping>("yearly");
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
-
-  const datasetView = React.useMemo(
-    () => dataset.limit(timeRange),
-    [dataset, timeRange],
-  );
+  const {
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    datasetView,
+    periodFormatter,
+  } = useDatasetTimeControls(dataset);
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({
@@ -72,11 +63,6 @@ export function FuelBalanceChart({
     [stackResult],
   );
 
-  const periodFormatter = React.useMemo(
-    () => getPeriodFormatter(periodGrouping),
-    [periodGrouping],
-  );
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -89,13 +75,13 @@ export function FuelBalanceChart({
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={PERIOD_GROUPING_OPTIONS}
+          options={periodGroupingOptions}
           label="Perioda"
         />
         <OptionSelector
           value={timeRange}
           onChange={setTimeRange}
-          options={TIME_RANGE_OPTIONS}
+          options={timeRangeOptions}
           label="Intervali"
         />
       </div>

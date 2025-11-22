@@ -20,9 +20,9 @@ type ChartConfigEntry = {
   label?: React.ReactNode;
   icon?: React.ComponentType;
 } & (
-  | { color?: string; theme?: never }
-  | { color?: never; theme: Record<keyof typeof THEMES, string> }
-);
+    | { color?: string; theme?: never }
+    | { color?: never; theme: Record<keyof typeof THEMES, string> }
+  );
 
 export type ChartConfig<TKey extends string = string> = Record<
   TKey,
@@ -92,13 +92,13 @@ export type ChartEmptyStateProps<TKey extends string = string> = Omit<
   ChartContainerProps<TKey>,
   "children" | "config"
 > & {
-  content?: React.ReactNode;
+  messageContent?: React.ReactNode;
   children?: React.ReactNode;
   config?: ChartConfig<TKey>;
 };
 
 function ChartEmptyState<TKey extends string = string>({
-  content,
+  messageContent,
   children,
   config,
   ...containerProps
@@ -109,7 +109,7 @@ function ChartEmptyState<TKey extends string = string>({
       {...containerProps}
     >
       <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-        {children ?? content ?? DEFAULT_CHART_EMPTY_MESSAGE}
+        {children ?? messageContent ?? DEFAULT_CHART_EMPTY_MESSAGE}
       </div>
     </ChartContainer>
   );
@@ -132,13 +132,13 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
             ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
-  .map(([key, entry]) => {
-    const color =
-      entry.theme?.[theme as keyof typeof entry.theme] ?? entry.color;
-    return color ? `  --color-${key}: ${color};` : null;
-  })
-  .filter(Boolean)
-  .join("\n")}
+                .map(([key, entry]) => {
+                  const color =
+                    entry.theme?.[theme as keyof typeof entry.theme] ?? entry.color;
+                  return color ? `  --color-${key}: ${color};` : null;
+                })
+                .filter(Boolean)
+                .join("\n")}
 }
 `,
           )
@@ -341,7 +341,7 @@ function ChartTooltipContent<
           >
             {showIndicator ? (
               <span
-                className="mt-[1px] h-2.5 w-2.5 shrink-0 rounded-[3px]"
+                className="mt-px h-2.5 w-2.5 shrink-0 rounded-[3px]"
                 style={{ backgroundColor: item.color }}
               />
             ) : null}

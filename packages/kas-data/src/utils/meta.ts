@@ -1,5 +1,4 @@
-import { TimeGranularity } from "@workspace/utils/utils/time-range";
-import type { DatasetMeta } from "../types/dataset";
+import type { GenericDatasetMeta } from "../types/dataset";
 import { formatDate } from "@workspace/utils";
 
 type KeyLabelOption<TKey extends string = string> = Readonly<{
@@ -8,8 +7,6 @@ type KeyLabelOption<TKey extends string = string> = Readonly<{
 }>;
 
 export type LabelMap<TKey extends string = string> = ReadonlyMap<TKey, string>;
-
-type GenericDatasetMeta = DatasetMeta<string, string, TimeGranularity, object>;
 
 export function formatGeneratedAt(
   generatedAt?: string | null,

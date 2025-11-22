@@ -11,15 +11,7 @@ import {
 } from "recharts";
 
 import { type EmploymentActivityGenderDatasetView } from "@workspace/kas-data";
-import {
-  formatCount,
-  getPeriodFormatter,
-  getPeriodGroupingOptions,
-  limitTimeRangeOptions,
-  type PeriodGrouping,
-  type PeriodGroupingOption,
-  type TimeRangeOption,
-} from "@workspace/utils";
+import { formatCount } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -33,6 +25,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
+import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 const CHART_MARGIN = { top: 24, right: 16, bottom: 16, left: 16 };
 
@@ -45,22 +38,20 @@ export function EmploymentActivityChart({
   top?: number;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const periodOptions: ReadonlyArray<PeriodGroupingOption> =
-    getPeriodGroupingOptions(dataset.meta.time.granularity);
-  const timeRangeOptions = limitTimeRangeOptions(dataset.meta.time);
-
   const [gender, setGender] =
     React.useState<
       EmploymentActivityGenderDatasetView["meta"]["dimensions"]["gender"][number]["key"]
     >("total");
-  const [periodGrouping, setPeriodGrouping] =
-    React.useState<PeriodGrouping>("yearly");
-  const [timeRange, setTimeRange] = React.useState<TimeRangeOption>(null);
-
-  const datasetView = React.useMemo(
-    () => dataset.limit(timeRange),
-    [dataset, timeRange],
-  );
+  const {
+    periodGrouping,
+    setPeriodGrouping,
+    periodGroupingOptions,
+    timeRange,
+    setTimeRange,
+    timeRangeOptions,
+    datasetView,
+    periodFormatter,
+  } = useDatasetTimeControls(dataset);
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({
@@ -85,11 +76,6 @@ export function EmploymentActivityChart({
     [stackResult],
   );
 
-  const periodFormatter = React.useMemo(
-    () => getPeriodFormatter(periodGrouping),
-    [periodGrouping],
-  );
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap justify-between items-center gap-3">
@@ -102,7 +88,7 @@ export function EmploymentActivityChart({
         <OptionSelector
           value={periodGrouping}
           onChange={(value) => setPeriodGrouping(value)}
-          options={periodOptions}
+          options={periodGroupingOptions}
           label="Perioda"
         />
         <OptionSelector
