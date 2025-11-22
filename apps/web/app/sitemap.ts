@@ -19,6 +19,7 @@ const staticRoutes = [
   "economic-activity",
   "war-records",
   "atk-faq",
+  "loan-interest-rates",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
