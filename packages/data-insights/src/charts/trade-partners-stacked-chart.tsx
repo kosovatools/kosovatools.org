@@ -31,7 +31,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 const DEFAULT_TOP_PARTNERS = 6;
 
@@ -54,16 +54,14 @@ export function TradePartnersStackedChart({
     timeRangeOptions: TIME_RANGE_OPTIONS,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset);
-  const [metric, setMetric] =
-    React.useState<TradePartnersDatasetView["meta"]["metrics"][number]>(
-      "imports",
-    );
+  } = useDeriveChartControls(dataset);
+  const { metric, setMetric, metricOptions } = useDeriveChartControls(dataset, {
+    initialMetric: "imports",
+  });
 
   const totals = React.useMemo(
     () =>
       datasetView.summarizeStack({
-        keyAccessor: (record) => record.partner,
         valueAccessor: (record) => record[metric],
         dimension: "partner",
       }),
@@ -81,7 +79,6 @@ export function TradePartnersStackedChart({
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({
-      keyAccessor: (record) => record.partner,
       valueAccessor: (record) => record[metric],
       dimension: "partner",
       selectedKeys: selection.selectedKeys,
@@ -102,7 +99,7 @@ export function TradePartnersStackedChart({
         <OptionSelector
           value={metric}
           onChange={(value) => setMetric(value)}
-          options={dataset.meta.fields}
+          options={metricOptions}
           label="Metrika"
         />
         <OptionSelector

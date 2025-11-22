@@ -101,15 +101,20 @@ export type DatasetAggregateField<
   TKey extends string,
 > = {
   key: TKey;
-  valueAccessor: (record: TRecord) => number | null | undefined;
+  valueAccessor?: (record: TRecord) => number | null | undefined;
   mode?: SeriesAggregationField<TRecord, TKey>["mode"];
 };
+
+export type DatasetAggregateFieldInput<
+  TRecord extends DatasetRecordBase,
+  TKey extends string,
+> = DatasetAggregateField<TRecord, TKey> | TKey;
 
 export type DatasetAggregateOptions<
   TRecord extends DatasetRecordBase,
   TKey extends string,
 > = {
-  fields: ReadonlyArray<DatasetAggregateField<TRecord, TKey>>;
+  fields: ReadonlyArray<DatasetAggregateFieldInput<TRecord, TKey>>;
   grouping?: PeriodGrouping;
   filter?: (record: TRecord) => boolean;
 };
@@ -122,7 +127,7 @@ export type DatasetStackConfig<
   TRecord extends DatasetRecordBase,
   TKey extends string,
 > = {
-  keyAccessor: (record: TRecord) => TKey;
+  keyAccessor?: (record: TRecord) => TKey;
   valueAccessor: (record: TRecord) => number | null | undefined;
   dimension?: string;
   dimensionOptions?: ReadonlyArray<DimensionOption<string>>;
@@ -328,6 +333,53 @@ function buildDimensionContext<
   return { labelMap, allowedKeys };
 }
 
+type NormalizedDatasetAggregateField<
+  TRecord extends DatasetRecordBase,
+  TKey extends string,
+> = {
+  key: TKey;
+  valueAccessor: (record: TRecord) => number | null | undefined;
+  mode?: SeriesAggregationField<TRecord, TKey>["mode"];
+};
+
+function createDefaultValueAccessor<
+  TRecord extends DatasetRecordBase,
+  TKey extends string,
+>(key: TKey): (record: TRecord) => number | null | undefined {
+  return (record: TRecord) => {
+    const value = (record as Record<string, unknown>)[key];
+    return typeof value === "number" ? value : null;
+  };
+}
+
+function createAggregateField<
+  TRecord extends DatasetRecordBase,
+  TKey extends string,
+>(
+  key: TKey,
+  field?: DatasetAggregateField<TRecord, TKey>,
+): NormalizedDatasetAggregateField<TRecord, TKey> {
+  return {
+    key,
+    valueAccessor:
+      field?.valueAccessor ?? createDefaultValueAccessor<TRecord, TKey>(key),
+    mode: field?.mode,
+  };
+}
+
+function normalizeAggregateFields<
+  TRecord extends DatasetRecordBase,
+  TKey extends string,
+>(
+  fields: ReadonlyArray<DatasetAggregateFieldInput<TRecord, TKey>>,
+): NormalizedDatasetAggregateField<TRecord, TKey>[] {
+  return fields.map((field) =>
+    typeof field === "string"
+      ? createAggregateField<TRecord, TKey>(field)
+      : createAggregateField<TRecord, TKey>(field.key, field),
+  );
+}
+
 function aggregateRecords<
   TRecord extends DatasetRecordBase,
   TMeta extends DatasetMeta<string, string, TimeGranularity, object>,
@@ -337,12 +389,13 @@ function aggregateRecords<
   records: ReadonlyArray<TRecord>,
   options: DatasetAggregateOptions<TRecord, TKey>,
 ): DatasetAggregateRow<TKey>[] {
+  const fields = normalizeAggregateFields(options.fields);
   const relevantRecords = options.filter
     ? records.filter(options.filter)
     : records;
   const metaFieldLookup = buildMetaFieldLookup(meta.fields);
 
-  if (!relevantRecords.length || !options.fields.length) {
+  if (!relevantRecords.length || !fields.length) {
     return [];
   }
 
@@ -357,7 +410,7 @@ function aggregateRecords<
         number | null
       >;
 
-      for (const field of options.fields) {
+      for (const field of fields) {
         values[field.key] = field.valueAccessor(record) ?? null;
       }
 
@@ -369,18 +422,19 @@ function aggregateRecords<
     });
   }
 
-  const fields: SeriesAggregationField<TRecord, TKey>[] = options.fields.map(
+  const seriesFields: SeriesAggregationField<TRecord, TKey>[] = fields.map(
     (field) => ({
       key: field.key,
       getValue: (record) => field.valueAccessor(record) ?? null,
-      mode: field.mode ?? inferFieldAggregationMode(metaFieldLookup, field.key),
+      mode:
+        field.mode ?? inferFieldAggregationMode(metaFieldLookup, field.key),
     }),
   );
 
   return aggregateSeriesByPeriod(relevantRecords, {
     getPeriod: (record) => record.period,
     grouping,
-    fields,
+    fields: seriesFields,
   });
 }
 
@@ -427,9 +481,22 @@ function prepareStackContext<
     labelForKey: labelForKey ?? ((key: TKey) => labelMap[key] ?? key),
   };
 
+  const resolvedKeyAccessor =
+    keyAccessor ??
+    (dimension
+      ? ((record: TRecord) =>
+          (record as Record<string, unknown>)[dimension] as TKey)
+      : undefined);
+
+  if (!resolvedKeyAccessor) {
+    throw new Error(
+      "Dataset stack config requires a keyAccessor or dimension to derive keys.",
+    );
+  }
+
   const accessors = {
     period: (record: TRecord) => record.period,
-    key: (record: TRecord) => keyAccessor(record),
+    key: (record: TRecord) => resolvedKeyAccessor(record),
     value: (record: TRecord) => valueAccessor(record) ?? 0,
   };
 

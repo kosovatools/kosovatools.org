@@ -38,7 +38,6 @@ export function MonthlyCategoryStackedChart({
 }) {
   const stackConfig = React.useMemo(
     () => ({
-      keyAccessor: (record: MonthlyCategoryCityRecord) => record.category,
       valueAccessor: (record: MonthlyCategoryCityRecord) => record.turnover,
       dimension: "category",
       otherLabel: OTHER_LABEL,

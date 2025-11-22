@@ -24,7 +24,6 @@ export function VehicleTypesStackedChart({
   const stackResult = useMemo(() => {
     if (!dataset.records.length) return null;
     return dataset.viewAsStack({
-      keyAccessor: (record) => record.vehicle_type,
       valueAccessor: (record) => record.vehicles,
       dimension: "vehicle_type",
       includeOther: false,

@@ -47,8 +47,8 @@ export function useTimelineEventMarkers(
         : null;
     const visibleEvents = includeCategorySet
       ? timelineEvents.filter((event) =>
-          event.category.some((cat) => includeCategorySet.has(cat)),
-        )
+        event.category.some((cat) => includeCategorySet.has(cat)),
+      )
       : timelineEvents;
 
     const periodSet = new Set(data.map((row) => row.period));
@@ -87,7 +87,7 @@ export function useTimelineEventMarkers(
     return Array.from(markers.values()).map((entry, i) => ({
       id: entry.id,
       x: entry.period,
-      offset: -(i % 6) * 12 - 20,
+      offset: -(i % 6) * 15 - 20,
       label: entry.titles[0] ?? entry.id,
       description:
         entry.descriptions.length === 1

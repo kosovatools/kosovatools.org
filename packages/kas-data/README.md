@@ -50,7 +50,6 @@ import { getPeriodFormatter } from "@workspace/utils";
 
 const lastYearImports = tradePartners.limit(12);
 const partnerStackView = lastYearImports.viewAsStack({
-  keyAccessor: (row) => row.partner,
   valueAccessor: (row) => row.imports ?? 0,
   dimension: "partner",
   includeOther: true,
@@ -58,6 +57,29 @@ const partnerStackView = lastYearImports.viewAsStack({
 });
 
 const availablePeriods = tradePartners.periods({ grouping: "yearly" });
+```
+
+When you pass a `dimension`, stack helpers default the key to that property’s
+value—override `keyAccessor` only when you need custom mapping.
+
+Examples:
+
+```ts
+// Dimension only (preferred when available)
+dataset.viewAsStack({ dimension: "fuel", valueAccessor: (row) => row.import });
+
+// Key accessor only (computed grouping)
+dataset.viewAsStack({
+  keyAccessor: (row) => (row.net > 0 ? "surplus" : "deficit"),
+  valueAccessor: (row) => row.net,
+});
+
+// Both: keep dimension labels/allowlist, override key shape
+dataset.viewAsStack({
+  dimension: "activity",
+  keyAccessor: (row) => normalizeCode(row.activity),
+  valueAccessor: (row) => row.employment,
+});
 ```
 
 Dataset views expose `.limit()`, `.slice()`, and `.viewAsStack()` helpers that call

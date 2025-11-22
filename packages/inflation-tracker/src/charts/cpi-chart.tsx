@@ -14,7 +14,7 @@ import {
   type ChartConfig,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { HierarchicalMultiSelect } from "@workspace/ui/custom-components/hierarchical-multi-select";
 import {
@@ -56,9 +56,10 @@ export function CpiChart({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset);
-  const [metric, setMetric] =
-    useState<CpiDatasetView["meta"]["metrics"][number]>("index");
+    metric,
+    setMetric,
+    metricOptions,
+  } = useDeriveChartControls(dataset, { initialMetric: "index" });
   const [selectedGroups, setSelectedGroups] = useState<string[]>([
     CPI_DEFAULT_GROUP_CODE,
   ]);
@@ -79,16 +80,8 @@ export function CpiChart({
           grouping: periodGrouping,
           filter: (record) => record.group === code,
           fields: [
-            {
-              key: "index",
-              valueAccessor: (record) => record.index,
-              mode: "average",
-            },
-            {
-              key: "change",
-              valueAccessor: (record) => record.change,
-              mode: "rate",
-            },
+            { key: "index", mode: "average" },
+            { key: "change", mode: "rate" },
           ],
         }),
       }))
@@ -151,7 +144,7 @@ export function CpiChart({
               label="Metrika"
               value={metric}
               onChange={setMetric}
-              options={dataset.meta.fields}
+              options={metricOptions}
             />
             <OptionSelector
               label="Grupimi"

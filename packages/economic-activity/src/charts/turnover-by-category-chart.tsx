@@ -14,6 +14,7 @@ import { OptionSelector } from "@workspace/ui/custom-components/option-selector"
 import type { TurnoverCategoriesDatasetView } from "@workspace/dataset-api";
 import { formatCount, formatCurrencyCompact } from "@workspace/utils";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { createLabelMap } from "@workspace/kas-data";
 const CHART_CLASS = "w-full aspect-[1/1.5] sm:aspect-video";
 
@@ -27,26 +28,24 @@ export function TurnoverByCategoryChart({
 }: {
   dataset: TurnoverCategoriesDatasetView;
 }) {
-  const [metricKey, setMetricKey] =
-    React.useState<TurnoverCategoriesDatasetView["meta"]["metrics"][number]>(
-      "turnover",
-    );
+  const { metric, setMetric, metricOptions } =
+    useDeriveChartControls(dataset, { initialMetric: "turnover" });
   const labelMap = React.useMemo(
     () => createLabelMap(dataset.meta.dimensions.category),
     [dataset.meta.dimensions.category],
   );
   const records = React.useMemo(() => {
     const sorted = [...dataset.records];
-    sorted.sort((b, a) => a[metricKey] - b[metricKey]);
+    sorted.sort((b, a) => a[metric] - b[metric]);
     return sorted.map((record) => ({
       ...record,
       label: labelMap[record.category] ?? record.category,
     }));
-  }, [dataset.records, labelMap, metricKey]);
+  }, [dataset.records, labelMap, metric]);
 
   const valueFormatter = React.useMemo(
-    () => METRIC_FORMATTERS[metricKey],
-    [metricKey],
+    () => METRIC_FORMATTERS[metric],
+    [metric],
   );
 
   const chartConfig = React.useMemo(() => {
@@ -63,16 +62,16 @@ export function TurnoverByCategoryChart({
     <div className="space-y-4">
       <div className="flex justify-end">
         <OptionSelector
-          value={metricKey}
-          onChange={setMetricKey}
-          options={dataset.meta.fields}
+          value={metric}
+          onChange={setMetric}
+          options={metricOptions}
           label="Metrika"
         />
       </div>
       <ChartContainer config={chartConfig} className={CHART_CLASS}>
         <Treemap
           data={records}
-          dataKey={metricKey}
+          dataKey={metric}
           nameKey="label"
           content={(props) => (
             <TreemapCellContent

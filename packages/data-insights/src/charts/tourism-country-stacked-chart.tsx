@@ -22,7 +22,7 @@ import {
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { TourismCountryDatasetView } from "@workspace/kas-data";
 
 
@@ -37,10 +37,6 @@ export function TourismCountryStackedChart({
   top?: number;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const [metricKey, setMetricKey] =
-    React.useState<TourismCountryDatasetView["meta"]["metrics"][number]>(
-      "visitors",
-    );
   const {
     periodGrouping,
     setPeriodGrouping,
@@ -50,16 +46,18 @@ export function TourismCountryStackedChart({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset);
+    metric,
+    setMetric,
+    metricOptions,
+  } = useDeriveChartControls(dataset, { initialMetric: "visitors" });
 
   const totals = React.useMemo(
     () =>
       datasetView.summarizeStack({
-        keyAccessor: (record) => record.country,
-        valueAccessor: (record) => record[metricKey],
+        valueAccessor: (record) => record[metric],
         dimension: "country",
       }),
-    [datasetView, metricKey],
+    [datasetView, metric],
   );
 
   const [selection, setSelection] = React.useState<StackedKeySelectionState>(
@@ -73,15 +71,14 @@ export function TourismCountryStackedChart({
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({
-      keyAccessor: (record) => record.country,
-      valueAccessor: (record) => record[metricKey],
+      valueAccessor: (record) => record[metric],
       dimension: "country",
       selectedKeys: selection.selectedKeys,
       excludedKeys: selection.excludedKeys,
       includeOther: selection.includeOther,
       periodGrouping,
     });
-  }, [datasetView, metricKey, selection, periodGrouping]);
+  }, [datasetView, metric, selection, periodGrouping]);
 
   const { chartKeys, chartData, chartConfig } = React.useMemo(
     () => buildStackedChartData(stackResult),
@@ -92,9 +89,9 @@ export function TourismCountryStackedChart({
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap justify-between items-center gap-3">
         <OptionSelector
-          value={metricKey}
-          onChange={(value) => setMetricKey(value)}
-          options={dataset.meta.fields}
+          value={metric}
+          onChange={(value) => setMetric(value)}
+          options={metricOptions}
           label="Metrika"
         />
         <OptionSelector

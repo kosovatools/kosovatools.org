@@ -19,7 +19,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 
 
@@ -30,10 +30,6 @@ export function WageLevelsChart({
   dataset: WageLevelsDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const [metric, setMetric] =
-    React.useState<WageLevelsDatasetView["meta"]["metrics"][number]>(
-      "gross_eur",
-    );
   const {
     periodGrouping,
     setPeriodGrouping,
@@ -43,11 +39,13 @@ export function WageLevelsChart({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset);
+    metric,
+    setMetric,
+    metricOptions,
+  } = useDeriveChartControls(dataset, { initialMetric: "gross_eur" });
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({
-      keyAccessor: (record) => record.group,
       valueAccessor: (record) => record[metric],
       dimension: "group",
       periodGrouping,
@@ -66,7 +64,7 @@ export function WageLevelsChart({
         <OptionSelector
           value={metric}
           onChange={(value) => setMetric(value)}
-          options={dataset.meta.fields}
+          options={metricOptions}
           label="Metrika"
         />
         <OptionSelector

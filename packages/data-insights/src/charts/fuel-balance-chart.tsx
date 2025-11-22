@@ -26,7 +26,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 const CHART_CLASS = "w-full aspect-[1/1.5] sm:aspect-video";
 
 
@@ -37,8 +37,6 @@ export function FuelBalanceChart({
   dataset: FuelDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const [metricKey, setMetricKey] =
-    React.useState<FuelDatasetView["meta"]["metrics"][number]>("import");
   const {
     periodGrouping,
     setPeriodGrouping,
@@ -48,16 +46,18 @@ export function FuelBalanceChart({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset);
+    metric,
+    setMetric,
+    metricOptions,
+  } = useDeriveChartControls(dataset);
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({
-      keyAccessor: (record) => record.fuel,
-      valueAccessor: (record) => record[metricKey],
+      valueAccessor: (record) => record[metric],
       dimension: "fuel",
       periodGrouping,
     });
-  }, [datasetView, metricKey, periodGrouping]);
+  }, [datasetView, metric, periodGrouping]);
 
   const { chartKeys, chartData, chartConfig } = React.useMemo(
     () => buildStackedChartData(stackResult),
@@ -68,9 +68,9 @@ export function FuelBalanceChart({
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <OptionSelector
-          value={metricKey}
-          onChange={(value) => setMetricKey(value)}
-          options={dataset.meta.fields}
+          value={metric}
+          onChange={(value) => setMetric(value)}
+          options={metricOptions}
           label="Metrika"
         />
         <OptionSelector

@@ -24,7 +24,7 @@ import {
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { type TradeChaptersMonthlyDatasetView } from "@workspace/kas-data";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 type TradeChapterMetric =
   TradeChaptersMonthlyDatasetView["meta"]["metrics"][number];
@@ -41,8 +41,6 @@ export function TradeChapterStackedChart({
   top?: number;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const [metricKey, setMetricKey] =
-    React.useState<TradeChapterMetric>("imports");
   const {
     periodGrouping,
     setPeriodGrouping,
@@ -52,16 +50,18 @@ export function TradeChapterStackedChart({
     timeRangeOptions: TIME_RANGE_OPTIONS,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset);
+    metric,
+    setMetric,
+    metricOptions,
+  } = useDeriveChartControls(dataset, { initialMetric: "imports" });
 
   const totals = React.useMemo(
     () =>
       datasetView.summarizeStack({
-        keyAccessor: (record) => record.chapter,
-        valueAccessor: (record) => record[metricKey],
+        valueAccessor: (record) => record[metric],
         dimension: "chapter",
       }),
-    [datasetView, metricKey],
+    [datasetView, metric],
   );
 
   const [selection, setSelection] = React.useState<StackedKeySelectionState>(
@@ -75,15 +75,14 @@ export function TradeChapterStackedChart({
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({
-      keyAccessor: (record) => record.chapter,
-      valueAccessor: (record) => record[metricKey],
+      valueAccessor: (record) => record[metric],
       dimension: "chapter",
       selectedKeys: selection.selectedKeys,
       excludedKeys: selection.excludedKeys,
       includeOther: selection.includeOther,
       periodGrouping,
     });
-  }, [datasetView, metricKey, selection, periodGrouping]);
+  }, [datasetView, metric, selection, periodGrouping]);
 
   const { chartKeys, chartData, chartConfig } = React.useMemo(
     () => buildStackedChartData(stackResult),
@@ -94,9 +93,9 @@ export function TradeChapterStackedChart({
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap justify-between items-center gap-4">
         <OptionSelector
-          value={metricKey}
-          onChange={(nextKey) => setMetricKey(nextKey)}
-          options={dataset.meta.fields}
+          value={metric}
+          onChange={(nextKey) => setMetric(nextKey)}
+          options={metricOptions}
           label="Fluksi"
         />
         <OptionSelector

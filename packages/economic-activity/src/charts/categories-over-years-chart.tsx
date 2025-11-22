@@ -22,7 +22,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { formatCurrencyCompact } from "@workspace/utils";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 import type {
   TurnoverCategoriesDatasetView,
@@ -47,11 +47,10 @@ export function CategoriesOverYearsChart({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset);
+  } = useDeriveChartControls(dataset);
 
   const stackConfig = React.useMemo(
     () => ({
-      keyAccessor: (record: TurnoverCategoryRecord) => record.category,
       valueAccessor: (record: TurnoverCategoryRecord) => record.turnover,
       dimension: "category",
       otherLabel: OTHER_LABEL,

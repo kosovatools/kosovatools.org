@@ -64,7 +64,6 @@ export function TopCategoryByCityStackedChart({
 
   const stackConfig = React.useMemo(
     () => ({
-      keyAccessor: (record: CityCategoryYearlyRecord) => record.category,
       valueAccessor: (record: CityCategoryYearlyRecord) => record.turnover,
       dimension: "category",
       otherLabel: OTHER_LABEL,

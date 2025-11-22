@@ -18,7 +18,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { TourismRegionDatasetView } from "@workspace/kas-data";
 
 const DEFAULT_GROUP_LABEL = "Total";
@@ -57,7 +57,7 @@ export function TourismRegionCharts({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset);
+  } = useDeriveChartControls(dataset);
 
   React.useEffect(() => {
     if (
@@ -71,7 +71,6 @@ export function TourismRegionCharts({
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({
-      keyAccessor: (record) => record.region,
       valueAccessor: (record) =>
         record.visitor_group === group ? record.visitors : null,
       dimension: "region",

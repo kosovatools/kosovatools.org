@@ -13,7 +13,7 @@ import {
   COMMON_CHART_MARGINS,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
   TimelineEventMarkers,
@@ -50,13 +50,7 @@ export function AviationStatsChart({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset);
-
-  const formatPeriodTick = useCallback(
-    (value: string | number) =>
-      periodFormatter(typeof value === "string" ? value : String(value)),
-    [periodFormatter],
-  );
+  } = useDeriveChartControls(dataset);
 
   const chartData = useMemo(() => {
     const baseRecords = datasetView.records;
@@ -64,20 +58,7 @@ export function AviationStatsChart({
 
     const aggregated = datasetView.aggregate({
       grouping: periodGrouping,
-      fields: [
-        {
-          key: "passengers_inbound",
-          valueAccessor: (record) => record.passengers_inbound,
-        },
-        {
-          key: "passengers_outbound",
-          valueAccessor: (record) => record.passengers_outbound,
-        },
-        {
-          key: "flights",
-          valueAccessor: (record) => record.flights,
-        },
-      ],
+      fields: ["passengers_inbound", "passengers_outbound", "flights"],
     });
 
     return aggregated;
@@ -110,7 +91,7 @@ export function AviationStatsChart({
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="period"
-            tickFormatter={formatPeriodTick}
+            tickFormatter={periodFormatter}
             tickMargin={8}
             minTickGap={24}
             axisLine={false}

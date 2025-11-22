@@ -25,7 +25,7 @@ import {
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 import { formatAuto } from "../utils/number-format";
 
@@ -57,7 +57,7 @@ export function ElectricityProductionStackedAreaChart({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset);
+  } = useDeriveChartControls(dataset);
 
   const chartData = useMemo(() => {
     const aggregated = datasetView.aggregate<

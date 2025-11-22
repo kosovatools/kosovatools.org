@@ -9,6 +9,7 @@ import {
   type UseTimelineEventMarkersOptions,
 } from "@workspace/timeline-events";
 import type { PeriodGrouping } from "@workspace/utils";
+import { LabelPosition } from "recharts/types/component/Label";
 
 type ChartDatum = { period: string };
 
@@ -45,21 +46,21 @@ export function TimelineEventMarkers({
     return null;
   }
 
-  return markers.map((event) => (
+  return markers.map((event, i) => (
     <ReferenceLine
       key={event.id}
       yAxisId={yAxisId}
       x={event.x}
-      stroke="var(--muted-foreground)"
       strokeDasharray="3 3"
       ifOverflow="extendDomain"
     >
       <Label
         value={event.label}
-        position="top"
+        position={"center"}
         fill="var(--muted-foreground)"
-        fontSize={12}
-        offset={event.offset}
+        className="text-sm"
+        transform="translate(0px, 10px)"
+        angle={-90}
       />
     </ReferenceLine>
   ));

@@ -23,7 +23,7 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 import { energyFlowChartConfig } from "../utils/chart-config";
 import { formatAuto } from "../utils/number-format";
@@ -52,7 +52,7 @@ export function MonthlyFlowTrendChart({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset);
+  } = useDeriveChartControls(dataset);
 
   const chartData = React.useMemo<TrendChartRow[]>(() => {
     const aggregated = datasetView.aggregate({

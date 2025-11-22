@@ -14,7 +14,7 @@ import {
   type ChartConfig,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { HierarchicalMultiSelect } from "@workspace/ui/custom-components/hierarchical-multi-select";
 import {
@@ -61,7 +61,7 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset, {
+  } = useDeriveChartControls(dataset, {
     initialGrouping: dataset.meta.time.granularity,
   });
 

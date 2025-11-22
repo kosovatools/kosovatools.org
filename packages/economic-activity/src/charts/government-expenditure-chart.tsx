@@ -23,7 +23,7 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 const DEFAULT_TOP_CATEGORIES = 5;
 
@@ -50,12 +50,11 @@ export function GovernmentExpenditureStackedChart({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(dataset);
+  } = useDeriveChartControls(dataset);
 
   const totals = React.useMemo(
     () =>
       datasetView.summarizeStack({
-        keyAccessor: (record) => record.category,
         valueAccessor: (record) => record.amount_eur,
         dimension: "category",
         dimensionOptions: dataset.meta.dimensions.category,
@@ -84,7 +83,6 @@ export function GovernmentExpenditureStackedChart({
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({
-      keyAccessor: (record) => record.category,
       valueAccessor: (record) => record.amount_eur,
       dimension: "category",
       dimensionOptions: dataset.meta.dimensions.category,

@@ -13,17 +13,19 @@ import {
 } from "@workspace/utils";
 import type { GenericDataset, DatasetView } from "@workspace/kas-data";
 
-type UseDatasetTimeControlsOptions = {
+type useDeriveChartControlsOptions<TDataset extends GenericDataset> = {
   initialGrouping?: PeriodGrouping;
   initialTimeRange?: TimeRangeOption;
+  initialMetric?: DatasetView<TDataset>["meta"]["metrics"][number];
 };
 
-export function useDatasetTimeControls<TDataset extends GenericDataset>(
+export function useDeriveChartControls<TDataset extends GenericDataset>(
   dataset: DatasetView<TDataset>,
   {
     initialGrouping = "yearly",
     initialTimeRange = null,
-  }: UseDatasetTimeControlsOptions = {},
+    initialMetric,
+  }: useDeriveChartControlsOptions<TDataset> = {},
 ) {
   const periodGroupingOptions = React.useMemo<
     ReadonlyArray<PeriodGroupingOption>
@@ -52,6 +54,15 @@ export function useDatasetTimeControls<TDataset extends GenericDataset>(
     [periodGrouping],
   );
 
+  const metricOptions = React.useMemo<DatasetView<TDataset>["meta"]["fields"]>(
+    () => dataset.meta.fields,
+    [dataset.meta.fields],
+  );
+
+  const [metric, setMetric] = React.useState<
+    DatasetView<TDataset>["meta"]["metrics"][number]
+  >(initialMetric ?? metricOptions[0]?.key as DatasetView<TDataset>["meta"]["metrics"][number]);
+
   return {
     periodGrouping,
     setPeriodGrouping,
@@ -61,5 +72,8 @@ export function useDatasetTimeControls<TDataset extends GenericDataset>(
     timeRangeOptions,
     datasetView,
     periodFormatter,
+    metric,
+    setMetric,
+    metricOptions,
   };
 }

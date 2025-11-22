@@ -30,7 +30,7 @@ import {
   TimelineEventMarkerControls,
   TimelineEventMarkers,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 const DEFAULT_TOP_ACTIVITIES = 5;
 
@@ -54,8 +54,6 @@ export function GdpActivityStackedChart({
     [dataset.meta, dataset.records],
   );
 
-  const [metricKey, setMetricKey] =
-    React.useState<GdpByActivityMetric>("nominal_eur");
   const {
     periodGrouping,
     setPeriodGrouping,
@@ -65,17 +63,19 @@ export function GdpActivityStackedChart({
     timeRangeOptions: TIME_RANGE_OPTIONS,
     datasetView,
     periodFormatter,
-  } = useDatasetTimeControls(baseDataset);
+    metric,
+    setMetric,
+    metricOptions,
+  } = useDeriveChartControls(baseDataset, { initialMetric: "nominal_eur" });
 
   const totals = React.useMemo(
     () =>
       datasetView.summarizeStack({
-        keyAccessor: (record) => record.activity,
-        valueAccessor: (record) => record[metricKey],
+        valueAccessor: (record) => record[metric],
         dimension: "activity",
         dimensionOptions: dataset.meta.dimensions.activity,
       }),
-    [dataset.meta.dimensions.activity, datasetView, metricKey],
+    [dataset.meta.dimensions.activity, datasetView, metric],
   );
 
   const [selection, setSelection] = React.useState<StackedKeySelectionState>(
@@ -99,8 +99,7 @@ export function GdpActivityStackedChart({
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({
-      keyAccessor: (record) => record.activity,
-      valueAccessor: (record) => record[metricKey],
+      valueAccessor: (record) => record[metric],
       dimension: "activity",
       dimensionOptions: dataset.meta.dimensions.activity,
       selectedKeys: selection.selectedKeys,
@@ -111,7 +110,7 @@ export function GdpActivityStackedChart({
   }, [
     dataset.meta.dimensions.activity,
     datasetView,
-    metricKey,
+    metric,
     periodGrouping,
     selection.excludedKeys,
     selection.includeOther,
@@ -127,9 +126,9 @@ export function GdpActivityStackedChart({
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap justify-between items-center gap-4">
         <OptionSelector
-          value={metricKey}
-          onChange={(nextKey) => setMetricKey(nextKey)}
-          options={dataset.meta.fields}
+          value={metric}
+          onChange={(nextKey) => setMetric(nextKey)}
+          options={metricOptions}
           label="Krahasimi"
         />
         <OptionSelector
