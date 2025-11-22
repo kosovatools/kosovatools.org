@@ -23,6 +23,7 @@
     "@workspace/drug-prices": "workspace:*",
     "@workspace/economic-activity": "workspace:*",
     "@workspace/energy-tracker": "workspace:*",
+    "@workspace/atk-faq": "workspace:*",
     "@workspace/inflation-tracker": "workspace:*",
     "@workspace/kas-data": "workspace:*",
     "@workspace/payroll": "workspace:*",

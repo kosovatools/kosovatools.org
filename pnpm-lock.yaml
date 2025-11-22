@@ -42,6 +42,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.90.10
         version: 5.90.10(react@19.2.0)
+      '@workspace/atk-faq':
+        specifier: workspace:*
+        version: link:../../packages/atk-faq
       '@workspace/aviation-stats':
         specifier: workspace:*
         version: link:../../packages/aviation-stats
@@ -142,6 +145,52 @@ importers:
       eslint:
         specifier: ^9.39.1
         version: 9.39.1(jiti@2.6.1)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/atk-faq:
+    dependencies:
+      '@workspace/dataset-api':
+        specifier: workspace:*
+        version: link:../dataset-api
+      '@workspace/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@workspace/utils':
+        specifier: workspace:*
+        version: link:../utils
+      lucide-react:
+        specifier: ^0.475.0
+        version: 0.475.0(react@19.2.0)
+      minisearch:
+        specifier: ^7.1.0
+        version: 7.2.0
+    devDependencies:
+      '@tanstack/react-query':
+        specifier: ^5.90.10
+        version: 5.90.10(react@19.2.0)
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      '@workspace/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^9.39.1
+        version: 9.39.1(jiti@2.6.1)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

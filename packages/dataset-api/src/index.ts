@@ -6,3 +6,4 @@ export * from "./datasets/economic-activity";
 export * from "./datasets/energy";
 export * from "./datasets/prishtina-building-permits";
 export * from "./datasets/war-records";
+export * from "./datasets/atk-faq";

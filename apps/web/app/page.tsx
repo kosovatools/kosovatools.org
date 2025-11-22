@@ -6,6 +6,7 @@ import {
   BarChart3,
   Building2,
   Car,
+  HelpCircle,
   Hammer,
   HandCoins,
   LineChart,
@@ -111,7 +112,7 @@ const tools: ToolCard[] = [
       "Parashiko pagën neto pas trustit, tatimit në të ardhura dhe kontributeve sipas rregullave në Kosovë.",
     cta: "Planifiko pagën",
     icon: HandCoins,
-    category: "Financa",
+    category: "Dogana dhe Taksat",
   },
   {
     name: "Pagat e shërbyesve civilë",
@@ -129,7 +130,7 @@ const tools: ToolCard[] = [
       "Kërko listën e tarifave të Kosovës, krahaso normat doganore dhe llogarit detyrimet e importit në çast.",
     cta: "Shfleto kodet doganore",
     icon: PackageSearch,
-    category: "Tregtia & dogana",
+    category: "Dogana dhe Taksat",
   },
   {
     name: "Taksat e importit të veturave",
@@ -166,6 +167,15 @@ const tools: ToolCard[] = [
     cta: "Shiko lejet",
     icon: Hammer,
     category: "Administrata publike",
+  },
+  {
+    name: "Pyetje të shpeshta të ATK",
+    href: "/atk-faq",
+    description:
+      "Kërko bazën e pyetjeve të Administratës Tatimore të Kosovës për TVSH, EDI dhe kuponët fiskalë.",
+    cta: "Gjej përgjigje",
+    icon: HelpCircle,
+    category: "Dogana dhe Taksat",
   },
   {
     name: "Çmimet e barnave",

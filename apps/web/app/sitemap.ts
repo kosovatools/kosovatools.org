@@ -18,6 +18,7 @@ const staticRoutes = [
   "inflation-tracker",
   "economic-activity",
   "war-records",
+  "atk-faq",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
