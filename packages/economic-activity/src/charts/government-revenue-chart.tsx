@@ -26,7 +26,6 @@ import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-contr
 
 const DEFAULT_TOP_CATEGORIES = 8;
 
-
 function collectLeaves(
   nodes: ReturnType<typeof buildUiHierarchy>["nodes"],
 ): string[] {

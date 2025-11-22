@@ -21,8 +21,6 @@ import {
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
-
-
 export function WageLevelsChart({
   dataset,
   timelineEvents,

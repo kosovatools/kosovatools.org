@@ -14,8 +14,6 @@ import {
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { formatCount } from "@workspace/utils";
 
-
-
 export function VehicleTypesStackedChart({
   dataset,
 }: {

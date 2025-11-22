@@ -29,7 +29,6 @@ import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 const CHART_CLASS = "w-full aspect-[1/1.5] sm:aspect-video";
 
-
 export function FuelBalanceChart({
   dataset,
   timelineEvents,

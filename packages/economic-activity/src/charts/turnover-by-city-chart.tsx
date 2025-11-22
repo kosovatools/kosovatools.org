@@ -28,8 +28,9 @@ export function TurnoverByCityChart({
 }: {
   dataset: TurnoverCitiesDatasetView;
 }) {
-  const { metric, setMetric, metricOptions } =
-    useDeriveChartControls(dataset, { initialMetric: "turnover" });
+  const { metric, setMetric, metricOptions } = useDeriveChartControls(dataset, {
+    initialMetric: "turnover",
+  });
   const labelMap = React.useMemo(
     () => createLabelMap(dataset.meta.dimensions.city),
     [dataset.meta.dimensions.city],

@@ -61,7 +61,11 @@ export function useDeriveChartControls<TDataset extends GenericDataset>(
 
   const [metric, setMetric] = React.useState<
     DatasetView<TDataset>["meta"]["metrics"][number]
-  >(initialMetric ?? metricOptions[0]?.key as DatasetView<TDataset>["meta"]["metrics"][number]);
+  >(
+    initialMetric ??
+      (metricOptions[0]
+        ?.key as DatasetView<TDataset>["meta"]["metrics"][number]),
+  );
 
   return {
     periodGrouping,

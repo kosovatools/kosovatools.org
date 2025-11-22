@@ -35,7 +35,6 @@ import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-contr
 
 const DEFAULT_TOP_PARTNERS = 6;
 
-
 export function TradePartnersStackedChart({
   dataset,
   top = DEFAULT_TOP_PARTNERS,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, Line, XAxis, YAxis } from "recharts";
 
 import { AirTransportDatasetView } from "@workspace/kas-data";
@@ -84,10 +84,7 @@ export function AviationStatsChart({
         config={chartConfig}
         className="w-full aspect-[1/1.5] sm:aspect-video"
       >
-        <AreaChart
-          data={chartData}
-          margin={COMMON_CHART_MARGINS}
-        >
+        <AreaChart data={chartData} margin={COMMON_CHART_MARGINS}>
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey="period"

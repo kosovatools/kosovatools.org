@@ -46,8 +46,8 @@ export function useTimelineEventMarkers(
         : null;
     const visibleEvents = includeCategorySet
       ? timelineEvents.filter((event) =>
-        event.category.some((cat) => includeCategorySet.has(cat)),
-      )
+          event.category.some((cat) => includeCategorySet.has(cat)),
+        )
       : timelineEvents;
 
     const periodSet = new Set(data.map((row) => row.period));
@@ -105,7 +105,6 @@ export function useTimelineEventMarkers(
         currentIndex !== -1 &&
         lastIndex !== -1 &&
         currentIndex - lastIndex <= 6 // Merge close months
-
       ) {
         // Merge with previous marker
         lastMarker.titles.push(...marker.titles);

@@ -120,10 +120,7 @@ export function CategoriesOverYearsChart({
         config={chartConfig}
         className="aspect-[1/1.5] sm:aspect-video"
       >
-        <AreaChart
-          data={chartData}
-          margin={COMMON_CHART_MARGINS}
-        >
+        <AreaChart data={chartData} margin={COMMON_CHART_MARGINS}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="period"

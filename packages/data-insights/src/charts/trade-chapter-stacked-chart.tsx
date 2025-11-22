@@ -26,11 +26,7 @@ import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { type TradeChaptersMonthlyDatasetView } from "@workspace/kas-data";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
-type TradeChapterMetric =
-  TradeChaptersMonthlyDatasetView["meta"]["metrics"][number];
-
 const DEFAULT_TOP_CHAPTERS = 6;
-
 
 export function TradeChapterStackedChart({
   dataset,

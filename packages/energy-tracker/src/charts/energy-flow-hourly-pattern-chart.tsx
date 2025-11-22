@@ -58,10 +58,7 @@ export function HourlyFlowPatternChart({
       config={chartConfig}
       className="aspect-[1/1.5] sm:aspect-video"
     >
-      <ComposedChart
-        data={chartData}
-        margin={COMMON_CHART_MARGINS}
-      >
+      <ComposedChart data={chartData} margin={COMMON_CHART_MARGINS}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="label" tickMargin={8} />
         <YAxis

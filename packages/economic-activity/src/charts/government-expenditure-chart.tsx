@@ -27,7 +27,6 @@ import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-contr
 
 const DEFAULT_TOP_CATEGORIES = 5;
 
-
 export function GovernmentExpenditureStackedChart({
   dataset,
   title,

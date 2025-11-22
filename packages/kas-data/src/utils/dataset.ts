@@ -426,8 +426,7 @@ function aggregateRecords<
     (field) => ({
       key: field.key,
       getValue: (record) => field.valueAccessor(record) ?? null,
-      mode:
-        field.mode ?? inferFieldAggregationMode(metaFieldLookup, field.key),
+      mode: field.mode ?? inferFieldAggregationMode(metaFieldLookup, field.key),
     }),
   );
 
@@ -484,8 +483,8 @@ function prepareStackContext<
   const resolvedKeyAccessor =
     keyAccessor ??
     (dimension
-      ? ((record: TRecord) =>
-          (record as Record<string, unknown>)[dimension] as TKey)
+      ? (record: TRecord) =>
+          (record as Record<string, unknown>)[dimension] as TKey
       : undefined);
 
   if (!resolvedKeyAccessor) {

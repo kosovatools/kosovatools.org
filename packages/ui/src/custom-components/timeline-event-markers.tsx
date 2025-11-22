@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Label, ReferenceLine } from "recharts";
 
 import {
@@ -45,7 +44,7 @@ export function TimelineEventMarkers({
     return null;
   }
 
-  return markers.map((event, i) => (
+  return markers.map((event) => (
     <ReferenceLine
       key={event.id}
       yAxisId={yAxisId}

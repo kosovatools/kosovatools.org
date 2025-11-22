@@ -111,10 +111,7 @@ export function AgeDistributionPlot({
       config={chartConfig}
       className={cn("h-[260px] w-full", className)}
     >
-      <LineChart
-        data={points}
-        margin={COMMON_CHART_MARGINS}
-      >
+      <LineChart data={points} margin={COMMON_CHART_MARGINS}>
         <CartesianGrid strokeDasharray="3 3" className="text-border/40" />
         <XAxis
           dataKey="age"

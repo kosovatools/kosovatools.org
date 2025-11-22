@@ -25,7 +25,6 @@ import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { TourismCountryDatasetView } from "@workspace/kas-data";
 
-
 const DEFAULT_TOP_COUNTRIES = 5;
 
 export function TourismCountryStackedChart({

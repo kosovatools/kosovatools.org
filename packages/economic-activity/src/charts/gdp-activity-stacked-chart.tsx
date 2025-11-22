@@ -23,7 +23,6 @@ import {
   type Dataset,
   type GdpByActivityDatasetView,
   type GdpByActivityMeta,
-  type GdpByActivityMetric,
   type GdpByActivityRecord,
 } from "@workspace/kas-data";
 import {
@@ -33,7 +32,6 @@ import {
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 const DEFAULT_TOP_ACTIVITIES = 5;
-
 
 export function GdpActivityStackedChart({
   dataset,
@@ -50,7 +48,7 @@ export function GdpActivityStackedChart({
           (record) =>
             !(dataset.meta.aggregates ?? []).includes(record.activity),
         ),
-      } satisfies Dataset<GdpByActivityRecord, GdpByActivityMeta>),
+      }),
     [dataset.meta, dataset.records],
   );
 

@@ -23,7 +23,6 @@ import { TourismRegionDatasetView } from "@workspace/kas-data";
 
 const DEFAULT_GROUP_LABEL = "Total";
 
-
 const getVisitorGroupLabelText = (
   label: React.ReactNode | null | undefined,
   fallback = DEFAULT_GROUP_LABEL,

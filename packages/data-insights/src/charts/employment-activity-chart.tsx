@@ -28,8 +28,6 @@ import {
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
-
-
 export function EmploymentActivityChart({
   dataset,
   top = 8,
