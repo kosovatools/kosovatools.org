@@ -56,7 +56,9 @@ export function ElectricityBalanceStackedAreaChart({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDeriveChartControls(dataset);
+  } = useDeriveChartControls(dataset, {
+    includeSeasonal: true,
+  });
 
   const chartData = useMemo(() => {
     const aggregated = datasetView.aggregate<"production" | "import">({
@@ -123,8 +125,7 @@ export function ElectricityBalanceStackedAreaChart({
           <TimelineEventMarkers
             data={chartData}
             grouping={periodGrouping}
-            enabled={timelineEvents?.enabled}
-            includeCategories={timelineEvents?.includeCategories}
+            {...timelineEvents}
           />
           <ReferenceLine y={0} stroke="var(--border)" />
           <ChartTooltip

@@ -166,8 +166,7 @@ export function TopCategoryByCityStackedChart({
           <TimelineEventMarkers
             data={chartData}
             grouping={dataset.meta.time.granularity ?? "yearly"}
-            enabled={timelineEvents?.enabled}
-            includeCategories={timelineEvents?.includeCategories}
+            {...timelineEvents}
           />
           <ChartTooltip
             labelFormatter={periodFormatter}

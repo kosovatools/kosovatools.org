@@ -194,7 +194,7 @@ export const formatEnergyGWh = createValueFormatter({
 
 export const formatPercent = createValueFormatter({
   style: "percent",
-  maximumFractionDigits: 1,
+  maximumFractionDigits: 2,
 });
 
 export const formatSignedPercent = createValueFormatter({

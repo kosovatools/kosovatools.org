@@ -11,6 +11,7 @@ import {
   HandCoins,
   LineChart,
   Icon,
+  Percent,
   PackageSearch,
   Pill,
   Plane,
@@ -105,6 +106,15 @@ const tools: ToolCard[] = [
     cta: "Shiko grafet",
     icon: BarChart3,
     category: "Statistika",
+  },
+  {
+    name: "Normat e interesit për kredi",
+    href: "/loan-interest-rates",
+    description:
+      "Normat mujore të interesit për kreditë e reja sipas Bankës Qendrore të Kosovës, me ndarje për ekonomitë familjare dhe korporatat.",
+    cta: "Shiko normat",
+    icon: Percent,
+    category: "Financa",
   },
   {
     name: "Statistikat e aviacionit",

@@ -75,6 +75,9 @@ importers:
       '@workspace/kas-data':
         specifier: workspace:*
         version: link:../../packages/kas-data
+      '@workspace/loan-interest-tracker':
+        specifier: workspace:*
+        version: link:../../packages/loan-interest-tracker
       '@workspace/payroll':
         specifier: workspace:*
         version: link:../../packages/payroll
@@ -640,6 +643,55 @@ importers:
       tsx:
         specifier: ^4.20.6
         version: 4.20.6
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/loan-interest-tracker:
+    dependencies:
+      '@workspace/dataset-api':
+        specifier: workspace:*
+        version: link:../dataset-api
+      '@workspace/kas-data':
+        specifier: workspace:*
+        version: link:../kas-data
+      '@workspace/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@workspace/utils':
+        specifier: workspace:*
+        version: link:../utils
+      lucide-react:
+        specifier: ^0.475.0
+        version: 0.475.0(react@19.2.0)
+      recharts:
+        specifier: 3.4.1
+        version: 3.4.1(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react-is@18.3.1)(react@19.2.0)(redux@5.0.1)
+    devDependencies:
+      '@tanstack/react-query':
+        specifier: ^5.90.10
+        version: 5.90.10(react@19.2.0)
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      '@workspace/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^9.39.1
+        version: 9.39.1(jiti@2.6.1)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.0(react@19.2.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

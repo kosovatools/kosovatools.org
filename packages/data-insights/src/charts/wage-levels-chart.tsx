@@ -99,8 +99,7 @@ export function WageLevelsChart({
           <TimelineEventMarkers
             data={chartData}
             grouping={periodGrouping}
-            enabled={timelineEvents?.enabled}
-            includeCategories={timelineEvents?.includeCategories}
+            {...timelineEvents}
           />
           <ChartTooltip
             valueFormatter={(value) =>

@@ -97,13 +97,14 @@ const GROUPING_TO_MONTHS: Record<PeriodGrouping, number> = {
 
 export function getPeriodGroupingOptions(
   granularity?: PeriodGrouping,
+  includeSeasonal?: boolean,
 ): ReadonlyArray<PeriodGroupingOption> {
   const allowed =
     granularity && PERIOD_GROUPING_OPTIONS_BY_GRANULARITY[granularity];
   if (!allowed) return PERIOD_GROUPING_OPTION_DEFINITIONS;
   return PERIOD_GROUPING_OPTION_DEFINITIONS.filter((option) =>
     allowed.includes(option.key),
-  );
+  ).filter((option) => includeSeasonal || option.key !== "seasonal");
 }
 
 // ==== Small utils ====

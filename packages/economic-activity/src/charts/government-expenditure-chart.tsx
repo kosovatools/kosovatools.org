@@ -150,8 +150,7 @@ export function GovernmentExpenditureStackedChart({
           <TimelineEventMarkers
             data={chartData}
             grouping={periodGrouping}
-            enabled={timelineEvents?.enabled}
-            includeCategories={timelineEvents?.includeCategories}
+            {...timelineEvents}
           />
           <ChartTooltip
             labelFormatter={periodFormatter}

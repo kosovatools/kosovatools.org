@@ -52,7 +52,9 @@ export function MonthlyFlowTrendChart({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDeriveChartControls(dataset);
+  } = useDeriveChartControls(dataset, {
+    includeSeasonal: true,
+  });
 
   const chartData = React.useMemo<TrendChartRow[]>(() => {
     const aggregated = datasetView.aggregate({
@@ -117,8 +119,7 @@ export function MonthlyFlowTrendChart({
           <TimelineEventMarkers
             data={chartData}
             grouping={periodGrouping}
-            enabled={timelineEvents?.enabled}
-            includeCategories={timelineEvents?.includeCategories}
+            {...timelineEvents}
           />
           <ChartTooltip
             labelFormatter={periodFormatter}

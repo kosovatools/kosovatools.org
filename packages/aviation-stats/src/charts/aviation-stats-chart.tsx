@@ -113,8 +113,7 @@ export function AviationStatsChart({
           <TimelineEventMarkers
             data={chartData}
             grouping={periodGrouping}
-            enabled={timelineEvents?.enabled}
-            includeCategories={timelineEvents?.includeCategories}
+            {...timelineEvents}
             yAxisId="passengers"
           />
           <ChartTooltip

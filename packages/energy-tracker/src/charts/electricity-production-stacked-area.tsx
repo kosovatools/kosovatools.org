@@ -57,7 +57,9 @@ export function ElectricityProductionStackedAreaChart({
     timeRangeOptions,
     datasetView,
     periodFormatter,
-  } = useDeriveChartControls(dataset);
+  } = useDeriveChartControls(dataset, {
+    includeSeasonal: true,
+  });
 
   const chartData = useMemo(() => {
     const aggregated = datasetView.aggregate<
@@ -136,8 +138,7 @@ export function ElectricityProductionStackedAreaChart({
           <TimelineEventMarkers
             data={chartData}
             grouping={periodGrouping}
-            enabled={timelineEvents?.enabled}
-            includeCategories={timelineEvents?.includeCategories}
+            {...timelineEvents}
           />
           <ReferenceLine y={0} stroke="var(--border)" />
           <ChartTooltip

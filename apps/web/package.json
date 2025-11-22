@@ -25,6 +25,7 @@
     "@workspace/energy-tracker": "workspace:*",
     "@workspace/atk-faq": "workspace:*",
     "@workspace/inflation-tracker": "workspace:*",
+    "@workspace/loan-interest-tracker": "workspace:*",
     "@workspace/kas-data": "workspace:*",
     "@workspace/payroll": "workspace:*",
     "@workspace/prishtina-building-permits": "workspace:*",

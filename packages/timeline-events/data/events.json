@@ -49,6 +49,20 @@
     "summary": "Mandati i dytë i Hashim Thaçit si kryeministër."
   },
   {
+    "id": "deposit-insurance-fund-2011",
+    "title": "Fondi i Sigurimit të Depozitave",
+    "period": "2011-12",
+    "category": ["banking"],
+    "summary": "Krijohet fondi shtetëror që siguron depozitat e vogla, duke rritur besimin e qytetarëve në bankat komerciale."
+  },
+  {
+    "id": "eurozone-debt-crisis-2012",
+    "title": "Kriza e borxhit të Eurozonës",
+    "period": "2012-06",
+    "category": ["banking"],
+    "summary": "Presioni mbi ekonomitë e Greqisë, Italisë dhe Spanjës ngadalëson remitancat dhe ngushton financimet me origjinë nga bankat e BE-së."
+  },
+  {
     "id": "isa-mustafa-government",
     "title": "Q. Isa Mustafa",
     "period": "2015-01",
@@ -96,6 +110,13 @@
     "period": "2022-02",
     "category": ["security"],
     "summary": "Pushtimi i shkallës së plotë i Ukrainës nga Rusia rrit pasigurinë gjeopolitike dhe çmimet e energjisë që ndikojnë edhe ekonomitë e Ballkanit."
+  },
+  {
+    "id": "ecb-rate-hikes-2022",
+    "title": "Rritja e normave të ECB",
+    "period": "2022-07",
+    "category": ["banking"],
+    "summary": "Banka Qendrore Evropiane nis rritjen e normave të interesit, duke rritur kostot e kredive në euro për bizneset dhe familjet në Kosovë."
   },
   {
     "id": "banjska-attack",

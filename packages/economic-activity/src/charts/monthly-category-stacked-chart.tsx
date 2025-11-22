@@ -108,8 +108,7 @@ export function MonthlyCategoryStackedChart({
           <TimelineEventMarkers
             data={chartData}
             grouping={dataset.meta.time.granularity}
-            enabled={timelineEvents?.enabled}
-            includeCategories={timelineEvents?.includeCategories}
+            {...timelineEvents}
           />
           <ChartTooltip
             labelFormatter={periodFormatter}

@@ -25,7 +25,8 @@ export type ChartEventMarker = {
 };
 
 export type UseTimelineEventMarkersOptions = {
-  includeCategories?: ReadonlyArray<TimelineEventCategory>;
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+  includeCategories?: ReadonlyArray<TimelineEventCategory | string>;
 };
 
 export function useTimelineEventMarkers(

@@ -17,6 +17,7 @@ type useDeriveChartControlsOptions<TDataset extends GenericDataset> = {
   initialGrouping?: PeriodGrouping;
   initialTimeRange?: TimeRangeOption;
   initialMetric?: DatasetView<TDataset>["meta"]["metrics"][number];
+  includeSeasonal?: boolean;
 };
 
 export function useDeriveChartControls<TDataset extends GenericDataset>(
@@ -25,13 +26,15 @@ export function useDeriveChartControls<TDataset extends GenericDataset>(
     initialGrouping = "yearly",
     initialTimeRange = null,
     initialMetric,
+    includeSeasonal = false,
   }: useDeriveChartControlsOptions<TDataset> = {},
 ) {
   const periodGroupingOptions = React.useMemo<
     ReadonlyArray<PeriodGroupingOption>
   >(
-    () => getPeriodGroupingOptions(dataset.meta.time.granularity),
-    [dataset.meta.time.granularity],
+    () =>
+      getPeriodGroupingOptions(dataset.meta.time.granularity, includeSeasonal),
+    [dataset.meta.time.granularity, includeSeasonal],
   );
 
   const timeRangeOptions = React.useMemo(
