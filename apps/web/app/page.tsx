@@ -29,6 +29,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { GITHUB_NEW_ISSUE_URL, GITHUB_REPO_URL } from "@/constants/links";
+import { Hero } from "@/components/hero";
 
 const CandleIcon: LucideIcon = forwardRef<SVGSVGElement, LucideProps>(
   (props, ref) => <Icon ref={ref} iconNode={candlestick} {...props} />,
@@ -214,59 +215,38 @@ const groupedTools = tools.reduce<
 export default function Page() {
   return (
     <main className="flex flex-col gap-24 px-3 sm:px-6 pb-16 sm:pb-24">
-      <section className="relative isolate -mx-3 sm:-mx-6 overflow-hidden pt-16 pb-12 md:pt-20 md:pb-16 lg:pt-32 lg:pb-20">
-        {/* Background Elements */}
-        <div className="absolute inset-0 -z-10 h-full w-full bg-white dark:bg-black bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)]"></div>
-        <div className="absolute -left-[10%] -top-[10%] -z-10 h-[500px] w-[500px] rounded-full bg-primary/20 blur-[100px] opacity-50 dark:opacity-20 pointer-events-none"></div>
-        <div className="absolute -right-[10%] top-[20%] -z-10 h-[500px] w-[500px] rounded-full bg-secondary/40 blur-[100px] opacity-50 dark:opacity-20 pointer-events-none"></div>
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,119,198,0.3),rgba(0,0,0,0))]"></div>
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center text-center space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 max-w-4xl mx-auto">
-            <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary backdrop-blur-sm">
-              <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
-              Të dhëna të hapura për të gjithë
-            </div>
-
-            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl text-balance">
-              Kthe të dhënat publike në{" "}
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-600">
-                vendime
-              </span>
-            </h1>
-
-            <p className="text-lg text-muted-foreground max-w-2xl text-balance leading-relaxed">
-              Eksploro kalkulatorë, grafe dhe analiza nga burime zyrtare të
-              Kosovës. Një platformë e hapur për qytetarë, biznese dhe
-              politikëbërës.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
-              <Button
-                asChild
-                size="lg"
-                className="h-12 px-8 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
-              >
-                <Link href="/#tools">
-                  Eksploro veglat
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="h-12 px-8 text-base backdrop-blur-sm bg-background/50"
-              >
-                <a href={GITHUB_REPO_URL} rel="noreferrer" target="_blank">
-                  <Github className="mr-2 h-4 w-4" />
-                  Kontribo në GitHub
-                </a>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Hero
+        withFlagBackground
+        eyebrow="Të dhëna të hapura për të gjithë"
+        title="Kthe të dhënat publike në"
+        highlight="vendime"
+        description="Eksploro kalkulatorë, grafe dhe analiza nga burime zyrtare të Kosovës. Një platformë e hapur për qytetarë, biznese dhe politikëbërës."
+        actions={
+          <>
+            <Button
+              asChild
+              size="lg"
+              className="h-12 px-8 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all w-full sm:w-auto"
+            >
+              <Link href="/#tools">
+                Eksploro veglat
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="h-12 px-8 text-base backdrop-blur-sm bg-background/50 w-full sm:w-auto"
+            >
+              <a href={GITHUB_REPO_URL} rel="noreferrer" target="_blank">
+                <Github className="mr-2 h-4 w-4" />
+                Kontribo në GitHub
+              </a>
+            </Button>
+          </>
+        }
+      />
 
       <section
         className="mx-auto flex w-full max-w-[1500px] flex-col gap-10"

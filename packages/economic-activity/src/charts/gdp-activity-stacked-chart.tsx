@@ -20,10 +20,7 @@ import {
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import {
   createDataset,
-  type Dataset,
   type GdpByActivityDatasetView,
-  type GdpByActivityMeta,
-  type GdpByActivityRecord,
 } from "@workspace/kas-data";
 import {
   TimelineEventMarkerControls,

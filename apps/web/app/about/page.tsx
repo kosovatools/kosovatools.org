@@ -16,6 +16,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { GITHUB_NEW_ISSUE_URL, GITHUB_REPO_URL } from "@/constants/links";
+import { Hero } from "@/components/hero";
 
 export const metadata: Metadata = {
   title: "Rreth projektit",
@@ -55,60 +56,49 @@ const responsibilityNotes = [
 
 export default function AboutPage() {
   return (
-    <main className="flex flex-col gap-24 px-3 sm:px-6 py-16 sm:py-24">
-      <section className="mx-auto flex w-full max-w-[1500px] flex-col items-center text-center gap-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-        <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary backdrop-blur-sm">
-          <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
-          Transparencë për publikun
-        </div>
-
-        <div className="space-y-6 max-w-3xl">
-          <h1 className="text-4xl font-bold tracking-tight sm:text-6xl text-balance">
-            Rreth{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
-              Kosova Tools
-            </span>
-          </h1>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            Ky projekt ekziston që qytetarët dhe institucionet të kenë qasje
-            praktike në të dhëna publike pa pasur nevojë të besojnë në një burim
-            të vetëm. Të dhënat, përpunimi dhe kodi burimor janë të hapura që
-            secili të mund t&apos;i inspektojë dhe verifikojë.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap justify-center gap-4">
-          <Button
-            asChild
-            size="lg"
-            className="h-12 px-8 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all"
-          >
-            <a href={GITHUB_REPO_URL} rel="noreferrer" target="_blank">
-              Shiko kodin në GitHub
+    <main className="flex flex-col gap-24 px-3 sm:px-6">
+      <Hero
+        withFlagBackground
+        eyebrow="Transparencë për publikun"
+        title="Rreth"
+        highlight="Kosova Tools"
+        description="Ky projekt ekziston që qytetarët dhe institucionet të kenë qasje praktike në të dhëna publike pa pasur nevojë të besojnë në një burim të vetëm. Të dhënat, përpunimi dhe kodi burimor janë të hapura që secili të mund t'i inspektojë dhe verifikojë."
+        contentClassName="max-w-3xl"
+        actions={
+          <>
+            <Button
+              asChild
+              size="lg"
+              className="h-12 px-8 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all w-full sm:w-auto"
+            >
+              <a href={GITHUB_REPO_URL} rel="noreferrer" target="_blank">
+                Shiko kodin në GitHub
+              </a>
+            </Button>
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="h-12 px-8 text-base backdrop-blur-sm bg-background/50 w-full sm:w-auto"
+            >
+              <a href={GITHUB_NEW_ISSUE_URL} rel="noreferrer" target="_blank">
+                Raporto ose sugjero
+              </a>
+            </Button>
+          </>
+        }
+        meta={
+          <>
+            <Mail aria-hidden className="h-4 w-4" />
+            <a
+              className="font-medium underline transition hover:text-primary"
+              href="mailto:contact@kosovatools.org"
+            >
+              contact@kosovatools.org
             </a>
-          </Button>
-          <Button
-            asChild
-            size="lg"
-            variant="outline"
-            className="h-12 px-8 text-base backdrop-blur-sm bg-background/50"
-          >
-            <a href={GITHUB_NEW_ISSUE_URL} rel="noreferrer" target="_blank">
-              Raporto ose sugjero
-            </a>
-          </Button>
-        </div>
-
-        <div className="flex items-center gap-2 text-sm text-muted-foreground pt-4">
-          <Mail aria-hidden className="h-4 w-4" />
-          <a
-            className="font-medium underline transition hover:text-primary"
-            href="mailto:contact@kosovatools.org"
-          >
-            contact@kosovatools.org
-          </a>
-        </div>
-      </section>
+          </>
+        }
+      />
 
       <section className="mx-auto flex w-full max-w-[1500px] flex-col gap-12 items-center text-center">
         <div className="space-y-4 max-w-2xl">
@@ -161,7 +151,7 @@ export default function AboutPage() {
         </div>
 
         <Card className="w-full max-w-3xl border border-amber-500/20 bg-amber-50/50 dark:bg-amber-950/10 backdrop-blur-sm shadow-xl">
-          <CardHeader className="space-y-3 text-left p-8">
+          <CardHeader className="space-y-3 text-left">
             <CardTitle className="text-2xl font-bold text-amber-900 dark:text-amber-100 flex items-center gap-3">
               <AlertTriangle className="h-6 w-6 text-amber-600 dark:text-amber-400" />
               Çfarë duhet të dini
@@ -171,8 +161,8 @@ export default function AboutPage() {
               kur merrni vendime.
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-8 pt-0">
-            <ul className="space-y-4 text-left">
+          <CardContent>
+            <ul className="space-y-3 text-left">
               {responsibilityNotes.map((note) => (
                 <li
                   key={note}
