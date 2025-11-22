@@ -71,7 +71,6 @@ export function ElectricityProductionStackedAreaChart({
   );
 
   const chartData = useMemo(() => {
-    if (!datasetView.records.length) return [];
     const aggregated = datasetView.aggregate<
       | "production_thermal_gwh"
       | "production_hydro_gwh"
@@ -110,7 +109,7 @@ export function ElectricityProductionStackedAreaChart({
     }));
   }, [datasetView, periodGrouping, periodFormatter]);
 
-  return chartData.length ? (
+  return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <OptionSelector
@@ -190,11 +189,5 @@ export function ElectricityProductionStackedAreaChart({
         </AreaChart>
       </ChartContainer>
     </div>
-  ) : (
-    <ChartContainer config={chartConfig} className={chartClassName}>
-      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-        Nuk ka të dhëna për prodhimin.
-      </div>
-    </ChartContainer>
   );
 }

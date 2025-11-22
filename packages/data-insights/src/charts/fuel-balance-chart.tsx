@@ -59,10 +59,6 @@ export function FuelBalanceChart({
   );
 
   const stackResult = React.useMemo(() => {
-    if (!datasetView.records.length) {
-      return null;
-    }
-
     return datasetView.viewAsStack({
       keyAccessor: (record) => record.fuel,
       valueAccessor: (record) => record[metricKey],

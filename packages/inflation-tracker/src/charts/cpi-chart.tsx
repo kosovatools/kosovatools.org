@@ -76,10 +76,6 @@ export function CpiChart({
   );
 
   const { chartData, chartConfig } = useMemo(() => {
-    if (!datasetView.records.length) {
-      return { chartData: [], chartConfig: {} as ChartConfig };
-    }
-
     const uniqueGroups = Array.from(
       new Set(selectedGroups.filter((code) => cpiGroupLabelsByCode[code])),
     );

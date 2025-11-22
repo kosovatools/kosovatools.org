@@ -80,10 +80,6 @@ export function TourismCountryStackedChart({
   );
 
   const stackResult = React.useMemo(() => {
-    if (!datasetView.records.length) {
-      return null;
-    }
-
     return datasetView.viewAsStack({
       keyAccessor: (record) => record.country,
       valueAccessor: (record) => record[metricKey],
@@ -105,7 +101,7 @@ export function TourismCountryStackedChart({
     [periodGrouping],
   );
 
-  return chartData.length && chartKeys.length ? (
+  return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-3">
         <OptionSelector
@@ -181,11 +177,5 @@ export function TourismCountryStackedChart({
         </AreaChart>
       </ChartContainer>
     </div>
-  ) : (
-    <ChartContainer config={{}}>
-      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-        Nuk ka të dhëna për vendet e turizmit.
-      </div>
-    </ChartContainer>
   );
 }

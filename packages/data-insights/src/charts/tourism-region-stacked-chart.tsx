@@ -78,10 +78,6 @@ export function TourismRegionCharts({
   );
 
   const stackResult = React.useMemo(() => {
-    if (!datasetView.records.length) {
-      return null;
-    }
-
     return datasetView.viewAsStack({
       keyAccessor: (record) => record.region,
       valueAccessor: (record) =>

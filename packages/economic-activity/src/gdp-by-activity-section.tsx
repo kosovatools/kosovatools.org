@@ -12,7 +12,6 @@ export function GdpByActivitySection() {
   return (
     <DatasetRenderer<GdpByActivityDatasetView>
       dataset={gdpByActivityQuarterly}
-      isEmpty={(data) => data.records.length === 0}
       title="BPV sipas aktiviteteve ekonomike"
       id="gdp-by-activity"
       description="Kontributi tremujor i degëve ekonomike në bruto produktin vendor, si në çmime aktuale (nominale) ashtu edhe në çmime të vitit paraprak (reale)."

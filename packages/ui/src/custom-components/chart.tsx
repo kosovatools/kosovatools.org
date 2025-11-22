@@ -86,6 +86,35 @@ function ChartContainer<TKey extends string = string>({
   );
 }
 
+const DEFAULT_CHART_EMPTY_MESSAGE = "Nuk ka të dhëna për t'u shfaqur.";
+
+export type ChartEmptyStateProps<TKey extends string = string> = Omit<
+  ChartContainerProps<TKey>,
+  "children" | "config"
+> & {
+  content?: React.ReactNode;
+  children?: React.ReactNode;
+  config?: ChartConfig<TKey>;
+};
+
+function ChartEmptyState<TKey extends string = string>({
+  content,
+  children,
+  config,
+  ...containerProps
+}: ChartEmptyStateProps<TKey>) {
+  return (
+    <ChartContainer
+      config={(config ?? {}) as ChartConfig<TKey>}
+      {...containerProps}
+    >
+      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+        {children ?? content ?? DEFAULT_CHART_EMPTY_MESSAGE}
+      </div>
+    </ChartContainer>
+  );
+}
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
     ([, entry]) => entry.theme ?? entry.color,
@@ -435,6 +464,7 @@ function ChartLegendContent({
 
 export {
   ChartContainer,
+  ChartEmptyState,
   ChartLegend,
   ChartLegendContent,
   ChartStyle,

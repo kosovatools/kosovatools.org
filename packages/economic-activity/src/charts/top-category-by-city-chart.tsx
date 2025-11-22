@@ -115,26 +115,6 @@ export function TopCategoryByCityStackedChart({
     [dataset.meta.time.granularity],
   );
 
-  if (!selectedCity) {
-    return (
-      <ChartContainer config={{}}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka komuna për t&apos;u shfaqur.
-        </div>
-      </ChartContainer>
-    );
-  }
-
-  if (!chartKeys.length || !chartData.length) {
-    return (
-      <ChartContainer config={{}}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna për këtë komunë.
-        </div>
-      </ChartContainer>
-    );
-  }
-
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap justify-between items-center gap-3">

@@ -76,16 +76,6 @@ export function MonthlyCategoryStackedChart({
     [dataset.meta.time.granularity],
   );
 
-  if (!chartData.length || !chartKeys.length) {
-    return (
-      <ChartContainer config={{}}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna mujore për vitin e fundit.
-        </div>
-      </ChartContainer>
-    );
-  }
-
   return (
     <div className="space-y-4">
       {totals.length > 0 ? (

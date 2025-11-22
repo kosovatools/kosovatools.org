@@ -2,6 +2,7 @@
 
 export {
   ChartContainer,
+  ChartEmptyState,
   ChartLegend,
   ChartLegendContent,
   ChartStyle,
@@ -11,6 +12,7 @@ export {
 } from "../custom-components/chart";
 export type {
   ChartConfig,
+  ChartEmptyStateProps,
   ChartTooltipContentProps,
   ChartTooltipItem,
   ChartTooltipProps,

@@ -91,7 +91,6 @@ export function GovernmentExpenditureStackedChart({
   }, [totals]);
 
   const stackResult = React.useMemo(() => {
-    if (!datasetView.records.length) return null;
     return datasetView.viewAsStack({
       keyAccessor: (record) => record.category,
       valueAccessor: (record) => record.amount_eur,

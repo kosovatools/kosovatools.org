@@ -63,7 +63,6 @@ export function EmploymentActivityChart({
   );
 
   const stackResult = React.useMemo(() => {
-    if (!datasetView.records.length) return null;
     return datasetView.viewAsStack({
       keyAccessor: (record) => record.activity,
       valueAccessor: (record) =>

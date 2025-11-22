@@ -88,10 +88,6 @@ export function TradePartnersStackedChart({
   );
 
   const stackResult = React.useMemo(() => {
-    if (!datasetView.records.length) {
-      return null;
-    }
-
     return datasetView.viewAsStack({
       keyAccessor: (record) => record.partner,
       valueAccessor: (record) => record[metric],

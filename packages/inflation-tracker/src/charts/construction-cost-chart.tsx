@@ -77,10 +77,6 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
   );
 
   const { chartData, chartConfig } = useMemo(() => {
-    if (!datasetView.records.length || !selectedCategories.length) {
-      return { chartData: [], chartConfig: {} as ChartConfig };
-    }
-
     const selectedSet = new Set(selectedCategories);
     const rowsByPeriod = new Map<string, ChartRow>();
 
@@ -111,8 +107,6 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
       chartConfig: addThemeToChartConfig(config),
     };
   }, [datasetView, labelMap, selectedCategories]);
-
-  const hasData = chartData.length > 0 && Object.keys(chartConfig).length > 0;
 
   const formatAxisValue = (value: number | null | undefined) =>
     formatNumber(
@@ -149,59 +143,53 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
             config={chartConfig}
             className="w-full aspect-[1/1.5] sm:aspect-video"
           >
-            {hasData ? (
-              <LineChart
-                accessibilityLayer
+            <LineChart
+              accessibilityLayer
+              data={chartData}
+              margin={{ top: 10, bottom: 0, left: 0, right: 0 }}
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="period"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={10}
+                minTickGap={24}
+                tickFormatter={(value) => periodFormatter(String(value))}
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                domain={["auto", "auto"]}
+                tickMargin={10}
+                tickFormatter={(value) =>
+                  formatAxisValue(value as number | null)
+                }
+              />
+              <TimelineEventMarkers
                 data={chartData}
-                margin={{ top: 10, bottom: 0, left: 0, right: 0 }}
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="period"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={10}
-                  minTickGap={24}
-                  tickFormatter={(value) => periodFormatter(String(value))}
+                grouping={dataset.meta.time.granularity}
+                enabled={timelineEvents?.enabled}
+                includeCategories={timelineEvents?.includeCategories}
+              />
+              <ChartTooltip
+                valueFormatter={(value) =>
+                  formatAxisValue(value as number | null)
+                }
+              />
+              <ChartLegend content={<ChartLegendContent />} />
+              {Object.keys(chartConfig).map((key) => (
+                <Line
+                  key={key}
+                  dataKey={key}
+                  type="monotone"
+                  stroke={`var(--color-${key})`}
+                  strokeWidth={2}
+                  dot={false}
+                  connectNulls
                 />
-                <YAxis
-                  tickLine={false}
-                  axisLine={false}
-                  domain={["auto", "auto"]}
-                  tickMargin={10}
-                  tickFormatter={(value) =>
-                    formatAxisValue(value as number | null)
-                  }
-                />
-                <TimelineEventMarkers
-                  data={chartData}
-                  grouping={dataset.meta.time.granularity}
-                  enabled={timelineEvents?.enabled}
-                  includeCategories={timelineEvents?.includeCategories}
-                />
-                <ChartTooltip
-                  valueFormatter={(value) =>
-                    formatAxisValue(value as number | null)
-                  }
-                />
-                <ChartLegend content={<ChartLegendContent />} />
-                {Object.keys(chartConfig).map((key) => (
-                  <Line
-                    key={key}
-                    dataKey={key}
-                    type="monotone"
-                    stroke={`var(--color-${key})`}
-                    strokeWidth={2}
-                    dot={false}
-                    connectNulls
-                  />
-                ))}
-              </LineChart>
-            ) : (
-              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                Nuk ka të dhëna për përzgjedhjet aktuale.
-              </div>
-            )}
+              ))}
+            </LineChart>
           </ChartContainer>
         </div>
       </div>

@@ -28,32 +28,38 @@ export function EnergyFlowExplorer() {
     <div className="space-y-8">
       <DatasetRenderer
         query={monthlyQuery}
-        isEmpty={(dataset) => dataset.records.length === 0}
-        emptyState={
-          <div className="flex min-h-[200px] items-center justify-center text-sm text-muted-foreground">
-            Nuk ka të dhëna mujore për flukset e energjisë.
-          </div>
-        }
+        emptyStateContent="Nuk ka të dhëna mujore për flukset e energjisë."
         title="Trendi i flukseve mujore"
         id="monthly-flow-trend"
         description="Analizo importet, eksportet dhe bilancin neto të energjisë elektrike të Kosovës përgjatë periudhave të disponueshme nga ENTSO-E."
       >
-        {(dataset) => <MonthlyFlowTrendChart dataset={dataset} />}
+        {(dataset) => (
+          <MonthlyFlowTrendChart
+            dataset={dataset}
+            timelineEvents={{
+              enabled: true,
+              includeCategories: ["government_change"],
+            }}
+          />
+        )}
       </DatasetRenderer>
 
       <DatasetRenderer
         query={dailyQuery}
-        isEmpty={(dataset) => !dataset || !dataset.records.length}
-        emptyState={
-          <p className="text-sm text-muted-foreground">
-            Nuk ka ende të dhëna ditore për periudhën e fundit.
-          </p>
-        }
+        emptyStateContent="Nuk ka ende të dhëna ditore për periudhën e fundit."
         title="Modeli ditor i flukseve"
         id="daily-flow-pattern"
         description="Shiko importet dhe eksportet ditore për muajin më të fundit të përpunuar nga ENTSO-E Transparency Platform."
       >
-        {(dataset) => <DailyFlowChart dataset={dataset} />}
+        {(dataset) => (
+          <DailyFlowChart
+            dataset={dataset}
+            timelineEvents={{
+              enabled: true,
+              includeCategories: ["government_change"],
+            }}
+          />
+        )}
       </DatasetRenderer>
     </div>
   );

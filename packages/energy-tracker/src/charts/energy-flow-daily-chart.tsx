@@ -54,16 +54,6 @@ export function DailyFlowChart({
     }));
   }, [dataset.records]);
 
-  if (!chartData.length) {
-    return (
-      <ChartContainer config={chartConfig}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna ditore për të shfaqur.
-        </div>
-      </ChartContainer>
-    );
-  }
-
   return (
     <ChartContainer
       config={chartConfig}

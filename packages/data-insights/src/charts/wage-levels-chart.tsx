@@ -54,7 +54,6 @@ export function WageLevelsChart({
   );
 
   const stackResult = React.useMemo(() => {
-    if (!datasetView.records.length) return null;
     return datasetView.viewAsStack({
       keyAccessor: (record) => record.group,
       valueAccessor: (record) => record[metric],

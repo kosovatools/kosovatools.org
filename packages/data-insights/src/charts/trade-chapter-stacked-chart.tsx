@@ -82,10 +82,6 @@ export function TradeChapterStackedChart({
   );
 
   const stackResult = React.useMemo(() => {
-    if (!datasetView.records.length) {
-      return null;
-    }
-
     return datasetView.viewAsStack({
       keyAccessor: (record) => record.chapter,
       valueAccessor: (record) => record[metricKey],

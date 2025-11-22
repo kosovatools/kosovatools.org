@@ -35,12 +35,7 @@ function CategorySection({
         "Shuma totale vjetore e qarkullimit sipas degëve të biznesit për vitin e fundit të përditësuar."
       }
       query={query}
-      isEmpty={(data) => data.limit(1).records.length === 0}
-      emptyState={
-        <p className="text-sm text-muted-foreground">
-          Nuk ka të dhëna për kategoritë kryesore të qarkullimit.
-        </p>
-      }
+      emptyStateContent="Nuk ka të dhëna për kategoritë kryesore të qarkullimit."
     >
       {(data) => {
         const latestDataset = data.limit(1);
@@ -59,11 +54,7 @@ function CitySection({
     <DatasetRenderer
       query={query}
       isEmpty={(data) => data.limit(1).records.length === 0}
-      emptyState={
-        <p className="text-sm text-muted-foreground">
-          Nuk ka të dhëna për komunat me qarkullimin më të lartë.
-        </p>
-      }
+      emptyStateContent="Nuk ka të dhëna për komunat me qarkullimin më të lartë."
       title="Qarkullimi sipas komunave të Kosovës"
       id="turnover-by-city"
       description={
@@ -87,11 +78,7 @@ function CategoryTrendSection({
     <DatasetRenderer
       query={query}
       isEmpty={(data) => data.limit(1).records.length === 0}
-      emptyState={
-        <p className="text-sm text-muted-foreground">
-          Nuk ka të dhëna shumëvjeçare për t&apos;u paraqitur.
-        </p>
-      }
+      emptyStateContent="Nuk ka të dhëna shumëvjeçare për t'u paraqitur."
       title="Trendi shumëvjeçar i kategorive kryesore"
       id="category-trend"
       description="Krahaso qarkullimin vjetor të degëve më të mëdha të biznesit. Shifrat paraqiten në kolonë të grumbulluar për të parë kontributin e çdo kategorie përgjatë viteve."
@@ -109,12 +96,7 @@ function MonthlyCategorySection({
   return (
     <DatasetRenderer
       query={query}
-      isEmpty={(data) => data.records.length === 0}
-      emptyState={
-        <p className="text-sm text-muted-foreground">
-          Nuk ka të dhëna mujore për këtë periudhë.
-        </p>
-      }
+      emptyStateContent="Nuk ka të dhëna mujore për këtë periudhë."
       title="Dinamika mujore e kategorive"
       id="monthly-category-dynamics"
       description={
@@ -142,12 +124,7 @@ function TopCategoryByCitySection({
   return (
     <DatasetRenderer
       query={query}
-      isEmpty={(data) => data.records.length === 0}
-      emptyState={
-        <p className="text-sm text-muted-foreground">
-          Nuk ka të dhëna për kategoritë kryesuese sipas komunave.
-        </p>
-      }
+      emptyStateContent="Nuk ka të dhëna për kategoritë kryesuese sipas komunave."
       title="Kategoritë dominuese sipas komunave"
       id="top-category-by-city"
       description="Zgjedh një komunë për të parë cilat kategori biznesi kanë dominuar qarkullimin në vite. Grafiku i grumbulluar tregon shpërndarjen e kategorive kryesore sipas qarkullimit të raportuar."

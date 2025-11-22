@@ -16,7 +16,6 @@ export function GovernmentFinanceSection() {
     <div className="space-y-10">
       <DatasetRenderer<GovernmentRevenueDatasetView>
         dataset={governmentRevenueQuarterly}
-        isEmpty={(data) => data.records.length === 0}
         title="Të hyrat e Qeverisë së Përgjithshme (ESA 2010)"
         id="government-revenue"
         description="Struktura tremujore e të hyrave sipas ESA: tatime, transferta dhe hyrje nga prona."
@@ -38,7 +37,6 @@ export function GovernmentFinanceSection() {
 
       <DatasetRenderer<GovernmentExpenditureDatasetView>
         dataset={governmentExpenditureQuarterly}
-        isEmpty={(data) => data.records.length === 0}
         title="Shpenzimet e Qeverisë së Përgjithshme (ESA 2010)"
         id="government-expenditure"
         description="Shpenzimet tremujore sipas funksioneve ESA, përfshirë kompensimet, subvencionet dhe investimet kapitale."

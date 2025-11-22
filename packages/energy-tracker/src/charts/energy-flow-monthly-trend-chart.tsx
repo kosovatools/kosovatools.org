@@ -100,16 +100,6 @@ export function MonthlyFlowTrendChart({
     }));
   }, [limitedDataset, periodGrouping]);
 
-  if (!chartData.length) {
-    return (
-      <ChartContainer config={chartConfig}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka ende të dhëna mujore.
-        </div>
-      </ChartContainer>
-    );
-  }
-
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap justify-between items-center gap-3">

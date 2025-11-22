@@ -11,6 +11,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@workspace/ui/components/alert";
+import { ChartEmptyState } from "@workspace/ui/components/chart";
 
 type SuspenseQueryLike<TData> = {
   data: TData | undefined;
@@ -27,7 +28,7 @@ type DatasetRendererPropsWithDataset<TDataset> = {
   query?: never;
   children: React.ReactNode | ((dataset: TDataset) => React.ReactNode);
   isEmpty?: (dataset: TDataset) => boolean;
-  emptyState?: React.ReactNode;
+  emptyStateContent?: React.ReactNode;
   className?: string;
   id?: string;
 };
@@ -40,7 +41,7 @@ type DatasetRendererPropsWithQuery<TDataset> = {
   query: SuspenseQueryLike<TDataset>;
   children: React.ReactNode | ((dataset: TDataset) => React.ReactNode);
   isEmpty?: (dataset: TDataset) => boolean;
-  emptyState?: React.ReactNode;
+  emptyStateContent?: React.ReactNode;
   className?: string;
   id?: string;
 };
@@ -60,8 +61,8 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
   dataset,
   query,
   children,
-  isEmpty,
-  emptyState,
+  isEmpty = (ds) => ds.records.length === 0,
+  emptyStateContent,
   className,
   id,
 }: DatasetRendererProps<TDataset>) {
@@ -95,19 +96,21 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
     dataset = query.data as TDataset;
   }
 
+  const resolvedDataset = dataset as TDataset | undefined;
+
+  const isDatasetEmpty = resolvedDataset ? isEmpty(resolvedDataset) : false;
+
   // Check for empty state
-  if (isEmpty?.(dataset!)) {
+  if (isDatasetEmpty) {
     return (
-      emptyState ?? (
-        <div className="flex min-h-[200px] items-center justify-center text-sm text-muted-foreground">
-          {DEFAULT_EMPTY_MESSAGE}
-        </div>
-      )
+      <ChartEmptyState content={emptyStateContent ?? DEFAULT_EMPTY_MESSAGE} />
     );
   }
 
   // At this point, dataset is guaranteed to be defined
-  const resolvedDataset = dataset!;
+  if (!resolvedDataset) {
+    return null;
+  }
 
   const hasHeader = Boolean(title || description);
 

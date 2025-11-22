@@ -108,16 +108,6 @@ export function CategoriesOverYearsChart({
     [periodGrouping],
   );
 
-  if (!chartData.length || !chartKeys.length) {
-    return (
-      <ChartContainer config={{}}>
-        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-          Nuk ka të dhëna të mjaftueshme për këtë periudhë.
-        </div>
-      </ChartContainer>
-    );
-  }
-
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap  justify-between items-center gap-3">

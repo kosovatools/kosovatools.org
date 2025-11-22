@@ -106,7 +106,6 @@ export function GdpActivityStackedChart({
   }, [totals]);
 
   const stackResult = React.useMemo(() => {
-    if (!datasetView.records.length) return null;
     return datasetView.viewAsStack({
       keyAccessor: (record) => record.activity,
       valueAccessor: (record) => record[metricKey],
