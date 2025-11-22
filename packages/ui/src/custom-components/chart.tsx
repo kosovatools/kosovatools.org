@@ -256,7 +256,7 @@ function ChartTooltipContent<
   labelFormatter,
   valueFormatter,
   itemLabelFormatter,
-  truncateLabel = 40,
+  truncateLabel = 30,
   nameKey,
   showIndicator = true,
 }: ChartTooltipContentProps<TKey, V, N>) {
