@@ -17,6 +17,7 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
+  COMMON_CHART_MARGINS,
 } from "@workspace/ui/components/chart";
 import {
   TimelineEventMarkers,
@@ -61,7 +62,7 @@ export function DailyFlowChart({
     >
       <ComposedChart
         data={chartData}
-        margin={{ top: 16, right: 0, bottom: 12, left: 0 }}
+        margin={COMMON_CHART_MARGINS}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis

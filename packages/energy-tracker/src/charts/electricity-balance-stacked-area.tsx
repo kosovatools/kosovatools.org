@@ -17,6 +17,7 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
+  COMMON_CHART_MARGINS,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
@@ -45,7 +46,7 @@ export function ElectricityBalanceStackedAreaChart({
   });
 
   const chartClassName = "w-full aspect-[1/1.5] sm:aspect-video";
-  const chartMargin = { top: 56, right: 0, left: 0, bottom: 0 };
+
   const {
     periodGrouping,
     setPeriodGrouping,
@@ -101,7 +102,7 @@ export function ElectricityBalanceStackedAreaChart({
         />
       </div>
       <ChartContainer config={chartConfig} className={chartClassName}>
-        <AreaChart data={chartData} margin={chartMargin}>
+        <AreaChart data={chartData} margin={COMMON_CHART_MARGINS}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="period"

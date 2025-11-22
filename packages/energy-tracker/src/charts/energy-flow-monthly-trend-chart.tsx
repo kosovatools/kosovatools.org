@@ -16,6 +16,7 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
+  COMMON_CHART_MARGINS,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
@@ -102,7 +103,7 @@ export function MonthlyFlowTrendChart({
       >
         <ComposedChart
           data={chartData}
-          margin={{ top: 16, right: 24, bottom: 12, left: 12 }}
+          margin={COMMON_CHART_MARGINS}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis

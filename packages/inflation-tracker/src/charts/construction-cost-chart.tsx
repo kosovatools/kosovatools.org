@@ -10,6 +10,7 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
+  COMMON_CHART_MARGINS,
   type ChartConfig,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
@@ -134,7 +135,7 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
             <LineChart
               accessibilityLayer
               data={chartData}
-              margin={{ top: 10, bottom: 0, left: 0, right: 0 }}
+              margin={COMMON_CHART_MARGINS}
             >
               <CartesianGrid vertical={false} />
               <XAxis

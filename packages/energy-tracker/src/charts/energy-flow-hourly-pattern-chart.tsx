@@ -16,6 +16,7 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
+  COMMON_CHART_MARGINS,
 } from "@workspace/ui/components/chart";
 
 import { energyFlowChartConfig } from "../utils/chart-config";
@@ -59,7 +60,7 @@ export function HourlyFlowPatternChart({
     >
       <ComposedChart
         data={chartData}
-        margin={{ top: 16, right: 24, bottom: 12, left: 12 }}
+        margin={COMMON_CHART_MARGINS}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="label" tickMargin={8} />

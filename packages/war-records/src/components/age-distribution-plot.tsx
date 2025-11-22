@@ -3,7 +3,11 @@
 import { useMemo } from "react";
 import { cn } from "@workspace/ui/lib/utils";
 
-import { ChartContainer, ChartTooltip } from "@workspace/ui/components/chart";
+import {
+  ChartContainer,
+  ChartTooltip,
+  COMMON_CHART_MARGINS,
+} from "@workspace/ui/components/chart";
 import { CartesianGrid, LineChart, Scatter, XAxis, YAxis } from "recharts";
 import type { ScatterProps } from "recharts";
 
@@ -109,7 +113,7 @@ export function AgeDistributionPlot({
     >
       <LineChart
         data={points}
-        margin={{ top: 16, right: 0, bottom: 32, left: 0 }}
+        margin={COMMON_CHART_MARGINS}
       >
         <CartesianGrid strokeDasharray="3 3" className="text-border/40" />
         <XAxis

@@ -10,6 +10,7 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
+  COMMON_CHART_MARGINS,
   type ChartConfig,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
@@ -172,12 +173,7 @@ export function CpiChart({
             <LineChart
               accessibilityLayer
               data={chartData}
-              margin={{
-                left: 0,
-                right: 0,
-                top: 10,
-                bottom: 0,
-              }}
+              margin={COMMON_CHART_MARGINS}
             >
               <CartesianGrid vertical={false} />
               <XAxis

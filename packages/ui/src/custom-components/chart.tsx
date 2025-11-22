@@ -20,9 +20,9 @@ type ChartConfigEntry = {
   label?: React.ReactNode;
   icon?: React.ComponentType;
 } & (
-  | { color?: string; theme?: never }
-  | { color?: never; theme: Record<keyof typeof THEMES, string> }
-);
+    | { color?: string; theme?: never }
+    | { color?: never; theme: Record<keyof typeof THEMES, string> }
+  );
 
 export type ChartConfig<TKey extends string = string> = Record<
   TKey,
@@ -132,13 +132,13 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
             ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
-  .map(([key, entry]) => {
-    const color =
-      entry.theme?.[theme as keyof typeof entry.theme] ?? entry.color;
-    return color ? `  --color-${key}: ${color};` : null;
-  })
-  .filter(Boolean)
-  .join("\n")}
+                .map(([key, entry]) => {
+                  const color =
+                    entry.theme?.[theme as keyof typeof entry.theme] ?? entry.color;
+                  return color ? `  --color-${key}: ${color};` : null;
+                })
+                .filter(Boolean)
+                .join("\n")}
 }
 `,
           )
@@ -462,6 +462,13 @@ function ChartLegendContent({
   );
 }
 
+const COMMON_CHART_MARGINS = {
+  left: 12,
+  right: 12,
+  top: 10,
+  bottom: 0,
+} as const;
+
 export {
   ChartContainer,
   ChartEmptyState,
@@ -471,4 +478,5 @@ export {
   ChartTooltip,
   ChartTooltipContent,
   useChart,
+  COMMON_CHART_MARGINS,
 };

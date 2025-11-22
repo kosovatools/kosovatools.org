@@ -9,6 +9,7 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
+  COMMON_CHART_MARGINS,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
@@ -21,7 +22,7 @@ import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-contr
 import { TourismRegionDatasetView } from "@workspace/kas-data";
 
 const DEFAULT_GROUP_LABEL = "Total";
-const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
+
 
 const getVisitorGroupLabelText = (
   label: React.ReactNode | null | undefined,
@@ -145,7 +146,7 @@ export function TourismRegionCharts({
       ) : null}
 
       <ChartContainer config={chartConfig}>
-        <AreaChart data={chartData} margin={CHART_MARGIN}>
+        <AreaChart data={chartData} margin={COMMON_CHART_MARGINS}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="period"

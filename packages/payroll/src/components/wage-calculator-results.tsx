@@ -10,6 +10,7 @@ import {
 import {
   ChartContainer,
   ChartTooltip,
+  COMMON_CHART_MARGINS,
   type ChartConfig,
   type ChartTooltipItem,
 } from "@workspace/ui/components/chart";
@@ -369,7 +370,7 @@ function WageCalculatorResults({
                   nodePadding={24}
                   nodeWidth={18}
                   iterations={32}
-                  margin={{ top: 12, bottom: 12, left: 8, right: 8 }}
+                  margin={COMMON_CHART_MARGINS}
                   linkCurvature={0.45}
                   link={(linkProps) => <SankeyLinkWithLabel {...linkProps} />}
                   node={(nodeProps) => <SankeyNodeWithLabel {...nodeProps} />}

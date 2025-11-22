@@ -9,6 +9,7 @@ export {
   ChartTooltip,
   ChartTooltipContent,
   useChart,
+  COMMON_CHART_MARGINS,
 } from "../custom-components/chart";
 export type {
   ChartConfig,

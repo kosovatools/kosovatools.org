@@ -10,6 +10,7 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
+  COMMON_CHART_MARGINS,
 } from "@workspace/ui/components/chart";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
@@ -104,12 +105,7 @@ export function AviationStatsChart({
       >
         <AreaChart
           data={chartData}
-          margin={{
-            left: 16,
-            right: 32,
-            top: 10,
-            bottom: 0,
-          }}
+          margin={COMMON_CHART_MARGINS}
         >
           <CartesianGrid vertical={false} />
           <XAxis

@@ -9,6 +9,7 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
+  COMMON_CHART_MARGINS,
 } from "@workspace/ui/components/chart";
 import {
   StackedKeySelector,
@@ -24,7 +25,7 @@ import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { TourismCountryDatasetView } from "@workspace/kas-data";
 
-const CHART_MARGIN = { top: 32, right: 32, bottom: 16, left: 16 };
+
 const DEFAULT_TOP_COUNTRIES = 5;
 
 export function TourismCountryStackedChart({
@@ -118,7 +119,7 @@ export function TourismCountryStackedChart({
         />
       </div>
       <ChartContainer config={chartConfig}>
-        <AreaChart data={chartData} margin={CHART_MARGIN}>
+        <AreaChart data={chartData} margin={COMMON_CHART_MARGINS}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="period"

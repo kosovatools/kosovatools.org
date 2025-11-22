@@ -9,6 +9,7 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
+  COMMON_CHART_MARGINS,
 } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
@@ -25,7 +26,7 @@ import {
 import { useDatasetTimeControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 const DEFAULT_TOP_CATEGORIES = 5;
-const CHART_MARGIN = { top: 24, right: 32, bottom: 16, left: 16 };
+
 
 export function GovernmentExpenditureStackedChart({
   dataset,
@@ -135,7 +136,7 @@ export function GovernmentExpenditureStackedChart({
         className="aspect-[1/1.4] sm:aspect-video"
         title={title}
       >
-        <AreaChart data={chartData} margin={CHART_MARGIN}>
+        <AreaChart data={chartData} margin={COMMON_CHART_MARGINS}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="period"
