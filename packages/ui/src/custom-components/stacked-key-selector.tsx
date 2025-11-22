@@ -389,7 +389,7 @@ export function StackedKeySelector({
         <Button
           variant="outline"
           role="combobox"
-          className="h-9 w-full justify-between bg-background/50 px-3 font-normal hover:bg-accent hover:text-accent-foreground sm:w-[280px]"
+          className="h-9 w-full justify-between bg-background/50 px-3 font-normal hover:bg-accent hover:text-accent-foreground sm:w-auto"
         >
           <div className="flex items-center gap-2 truncate">
             <span className="truncate text-sm font-medium">
@@ -403,7 +403,7 @@ export function StackedKeySelector({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[90vw] sm:w-[340px] p-0" align="center">
-        <div className="flex items-center border-b p-1">
+        <div className="flex items-center border-b gap-1 p-1">
           <Button
             variant={activeTab === "main" ? "secondary" : "ghost"}
             size="sm"
@@ -436,96 +436,92 @@ export function StackedKeySelector({
           </Button>
         </div>
 
-        <div className="p-2">
-          {activeTab === "main" ? (
-            <SearchableListSection
-              searchValue={searchTerm}
-              onSearchValueChange={setSearchTerm}
-              searchPlaceholder={searchPlaceholder}
-              className="border-0 shadow-none"
-              listProps={{ className: "h-[240px] p-0" }}
-              action={
+        {activeTab === "main" ? (
+          <SearchableListSection
+            searchValue={searchTerm}
+            onSearchValueChange={setSearchTerm}
+            searchPlaceholder={searchPlaceholder}
+            className="border-0 shadow-none"
+            action={
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSelectTop}
+                className="h-7 gap-1.5 px-2.5 text-[11px] font-medium text-muted-foreground hover:text-foreground"
+              >
+                <ListFilter className="size-3.5" />
+                <span className="hidden sm:inline">Top {topCount}</span>
+              </Button>
+            }
+            emptyState={
+              <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-sm text-muted-foreground">
+                <Search className="size-8 opacity-20" />
+                <p>Nuk u gjet asnjë rezultat.</p>
+              </div>
+            }
+            items={filteredTotals}
+            getItemConfig={(item) => {
+              const checked = selectionValue.selectedKeys.includes(item.key);
+              const checkboxId = `${selectedListIdPrefix}-${item.key}`;
+              return {
+                key: item.key,
+                checkboxId,
+                label: item.label,
+                checked,
+                onCheckedChange: () => handleToggleKey(item.key),
+              };
+            }}
+          />
+        ) : (
+          <SearchableListSection
+            searchValue={otherSearchTerm}
+            onSearchValueChange={setOtherSearchTerm}
+            searchPlaceholder={excludedSearchLabel}
+            className="border-0 shadow-none"
+            action={
+              <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleSelectTop}
+                  onClick={handleClearOthers}
                   className="h-7 gap-1.5 px-2.5 text-[11px] font-medium text-muted-foreground hover:text-foreground"
                 >
-                  <ListFilter className="size-3.5" />
-                  Top {topCount}
+                  <X className="size-3.5" />
+                  <span className="hidden sm:inline">Pastro</span>
                 </Button>
-              }
-              emptyState={
-                <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-sm text-muted-foreground">
-                  <Search className="size-8 opacity-20" />
-                  <p>Nuk u gjet asnjë rezultat.</p>
-                </div>
-              }
-              items={filteredTotals}
-              getItemConfig={(item) => {
-                const checked = selectionValue.selectedKeys.includes(item.key);
-                const checkboxId = `${selectedListIdPrefix}-${item.key}`;
-                return {
-                  key: item.key,
-                  checkboxId,
-                  label: item.label,
-                  checked,
-                  onCheckedChange: () => handleToggleKey(item.key),
-                };
-              }}
-            />
-          ) : (
-            <SearchableListSection
-              searchValue={otherSearchTerm}
-              onSearchValueChange={setOtherSearchTerm}
-              searchPlaceholder={excludedSearchLabel}
-              className="border-0 shadow-none"
-              listProps={{ className: "h-[240px] p-0" }}
-              action={
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleClearOthers}
-                    className="h-7 gap-1.5 px-2.5 text-[11px] font-medium text-muted-foreground hover:text-foreground"
-                  >
-                    <X className="size-3.5" />
-                    Pastro
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={handleIncludeAllOthers}
-                    className="h-7 gap-1.5 px-2.5 text-[11px] font-medium bg-primary/10 text-primary hover:bg-primary/20 border-primary/20"
-                  >
-                    <Check className="size-3.5" />
-                    Të gjitha
-                  </Button>
-                </div>
-              }
-              emptyState={
-                <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-sm text-muted-foreground">
-                  <Search className="size-8 opacity-20" />
-                  <p>Nuk u gjet asnjë rezultat.</p>
-                </div>
-              }
-              items={visibleOthers}
-              getItemConfig={(item) => {
-                const isExcluded = excludedKeys.includes(item.key);
-                const isIncluded = !isExcluded;
-                const checkboxId = `${excludedListIdPrefix}-${item.key}`;
-                return {
-                  key: item.key,
-                  checkboxId,
-                  label: item.label,
-                  checked: isIncluded,
-                  onCheckedChange: (checked) =>
-                    handleExcludedStateChange(item.key, checked === true),
-                };
-              }}
-            />
-          )}
-        </div>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleIncludeAllOthers}
+                  className="h-7 gap-1.5 px-2.5 text-[11px] font-medium bg-primary/10 text-primary hover:bg-primary/20 border-primary/20"
+                >
+                  <Check className="size-3.5" />
+                  <span className="hidden sm:inline">Të gjitha</span>
+                </Button>
+              </div>
+            }
+            emptyState={
+              <div className="flex flex-col items-center justify-center gap-2 py-8 text-center text-sm text-muted-foreground">
+                <Search className="size-8 opacity-20" />
+                <p>Nuk u gjet asnjë rezultat.</p>
+              </div>
+            }
+            items={visibleOthers}
+            getItemConfig={(item) => {
+              const isExcluded = excludedKeys.includes(item.key);
+              const isIncluded = !isExcluded;
+              const checkboxId = `${excludedListIdPrefix}-${item.key}`;
+              return {
+                key: item.key,
+                checkboxId,
+                label: item.label,
+                checked: isIncluded,
+                onCheckedChange: (checked) =>
+                  handleExcludedStateChange(item.key, checked === true),
+              };
+            }}
+          />
+        )}
 
         {hasZeroTotals && (
           <div className="border-t bg-muted/30 px-3 py-2">

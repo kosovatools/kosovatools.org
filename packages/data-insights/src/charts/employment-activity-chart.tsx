@@ -69,10 +69,7 @@ export function EmploymentActivityChart({
   }, [datasetView, gender, periodGrouping, top]);
 
   const { chartKeys, chartData, chartConfig } = React.useMemo(
-    () =>
-      buildStackedChartData(stackResult, {
-        otherKey: "Të tjerët",
-      }),
+    () => buildStackedChartData(stackResult),
     [stackResult],
   );
 
@@ -140,12 +137,6 @@ export function EmploymentActivityChart({
               isAnimationActive={false}
             />
           ))}
-          <ReferenceLine
-            x="2020"
-            label={{ value: "position: start", fill: "black" }}
-            stroke="black"
-            position="start"
-          />
         </AreaChart>
       </ChartContainer>
     </div>

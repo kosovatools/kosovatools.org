@@ -46,12 +46,7 @@ export function SearchableListSection<Item>({
 }: SearchableListSectionProps<Item>) {
   const { className: listClassName, ...restListProps } = listProps ?? {};
   return (
-    <section
-      className={cn(
-        "group flex flex-col overflow-hidden rounded-xl border border-border/60 bg-card shadow-sm transition-all hover:shadow-md hover:border-border/80",
-        className,
-      )}
-    >
+    <section className={cn("group flex flex-col", className)}>
       {/* Search & Action */}
       <div className="flex items-center gap-2 px-2 py-2">
         <div className="relative flex-1">

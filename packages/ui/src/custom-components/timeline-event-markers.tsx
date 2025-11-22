@@ -58,7 +58,7 @@ export function TimelineEventMarkers({
         value={event.label}
         position="top"
         fill="var(--muted-foreground)"
-        fontSize={10}
+        fontSize={12}
         offset={event.offset}
       />
     </ReferenceLine>

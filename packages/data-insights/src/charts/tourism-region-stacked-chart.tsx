@@ -113,7 +113,7 @@ export function TourismRegionCharts({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap justifty-between items-center gap-4">
+      <div className="flex flex-wrap justify-between items-center gap-3">
         <OptionSelector
           value={group}
           onChange={(value) => setGroup(value)}

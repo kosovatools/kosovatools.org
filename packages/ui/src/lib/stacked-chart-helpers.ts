@@ -46,7 +46,7 @@ export function buildStackedChartData<TKey extends string>(
   const entries: StackEntry[] = stack.keys.map((stackKey) => {
     const rawLabel =
       stackKey === "Other"
-        ? (otherKey ?? "Other")
+        ? otherKey
         : (stack.labelMap[stackKey] ?? (stackKey as string));
     const chartKey = String(stackKey);
     return { stackKey, chartKey, label: rawLabel };

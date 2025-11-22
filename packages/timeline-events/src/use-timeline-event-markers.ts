@@ -87,7 +87,7 @@ export function useTimelineEventMarkers(
     return Array.from(markers.values()).map((entry, i) => ({
       id: entry.id,
       x: entry.period,
-      offset: -(i % 6) * 12 - 5,
+      offset: -(i % 6) * 12 - 20,
       label: entry.titles[0] ?? entry.id,
       description:
         entry.descriptions.length === 1

@@ -12,9 +12,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@workspace/ui/components/collapsible";
-import { Field, FieldContent } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
-import { Separator } from "@workspace/ui/components/separator";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { cn } from "@workspace/ui/lib/utils";
 
@@ -128,57 +126,57 @@ function FaqItem({
     }
   }, [forceOpen]);
 
+  const contentId = `${searchable.anchorId}-content`;
+
   return (
     <Collapsible
       id={searchable.anchorId}
       open={open}
       onOpenChange={setOpen}
       style={{ scrollMarginTop: "96px" }}
+      className="group border-b last:border-0"
     >
-      <div className="relative rounded-xl border bg-card/60 shadow-sm">
-        <a
-          href={shareHref}
-          className="text-muted-foreground hover:text-primary absolute right-3 top-3 inline-flex rounded-full p-1 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-          aria-label="Kopjo lidhjen e kësaj pyetjeje"
+      <CollapsibleTrigger asChild>
+        <button
+          type="button"
+          aria-controls={contentId}
+          aria-expanded={open}
+          className="flex w-full items-start justify-between gap-4 py-5 text-left transition-colors hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
         >
-          <Link className="h-4 w-4" aria-hidden />
-        </a>
-        <CollapsibleTrigger asChild>
-          <button
-            type="button"
-            className="flex w-full items-start justify-between gap-3 px-4 py-4 pr-11 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-          >
-            <div className="flex flex-col gap-1 pr-6">
-              <span className="flex items-start gap-2 text-base font-semibold leading-snug">
-                <span>
-                  {highlightedQuestion ? (
-                    <span
-                      dangerouslySetInnerHTML={{ __html: highlightedQuestion }}
-                    />
-                  ) : (
-                    searchable.entry.question
-                  )}
-                </span>
-              </span>
-            </div>
-            <ChevronDown
-              className={cn(
-                "h-4 w-4 shrink-0 transition-transform duration-200",
-                open ? "-rotate-180" : "",
-              )}
-              aria-hidden
-            />
-          </button>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <Separator />
-          <div className="px-4 pb-4 pt-3 text-sm leading-relaxed [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-4 [&_li]:ml-5 [&_ol]:list-decimal [&_p]:mb-3 [&_p]:mt-0 [&_ul]:list-disc [&_mark]:bg-amber-200 [&_mark]:px-0.5 [&_mark]:py-0.5 [&_mark]:rounded">
-            <p className="whitespace-pre-line break-words">
-              {searchable.entry.answer_html}
-            </p>
+          <div className="flex-1 text-base font-semibold leading-snug text-foreground/90 group-hover:text-foreground">
+            {highlightedQuestion ? (
+              <span dangerouslySetInnerHTML={{ __html: highlightedQuestion }} />
+            ) : (
+              searchable.entry.question
+            )}
           </div>
-        </CollapsibleContent>
-      </div>
+          <ChevronDown
+            className={cn(
+              "mt-0.5 h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200",
+              open ? "-rotate-180" : "",
+            )}
+            aria-hidden
+          />
+        </button>
+      </CollapsibleTrigger>
+
+      <CollapsibleContent id={contentId}>
+        <div className="pb-6 pt-1 text-base leading-relaxed text-muted-foreground [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-4 [&_li]:ml-5 [&_ol]:list-decimal [&_p]:mb-4 [&_p]:mt-0 [&_ul]:list-disc [&_mark]:bg-amber-200 [&_mark]:px-0.5 [&_mark]:py-0.5 [&_mark]:rounded">
+          <p className="whitespace-pre-line break-words">
+            {searchable.entry.answer_html}
+          </p>
+          <div className="mt-4 flex items-center gap-2">
+            <a
+              href={shareHref}
+              className="inline-flex items-center gap-1.5 rounded-md bg-muted px-2.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Kopjo lidhjen e kësaj pyetjeje"
+            >
+              <Link className="h-3.5 w-3.5" aria-hidden />
+              <span>Kopjo lidhjen</span>
+            </a>
+          </div>
+        </div>
+      </CollapsibleContent>
     </Collapsible>
   );
 }
@@ -207,9 +205,9 @@ export function AtkFaqExplorer() {
       q: normalizedSearch || null,
     });
     const next = params.toString();
-    const newUrl = `${window.location.pathname}${next ? `?${next}` : ""}`;
+    const hash = window.location.hash;
+    const newUrl = `${window.location.pathname}${next ? `?${next}` : ""}${hash}`;
     window.history.replaceState(null, "", newUrl);
-    setTargetId(null);
   }, [normalizedSearch]);
 
   useEffect(() => {
@@ -229,27 +227,10 @@ export function AtkFaqExplorer() {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [data, targetId]);
 
-  if (status === "error") {
-    return (
-      <div className="rounded-xl border border-destructive/50 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-        {error instanceof Error
-          ? error.message
-          : "Ndodhi një gabim gjatë ngarkimit të pyetjeve."}
-      </div>
-    );
-  }
-
-  if (status === "pending" || !data) {
-    return (
-      <div className="space-y-3 rounded-xl border bg-muted/40 p-4">
-        <Skeleton className="h-5 w-56" />
-        <Skeleton className="h-4 w-72" />
-        <Skeleton className="h-4 w-64" />
-      </div>
-    );
-  }
-
-  const searchableEntries = useMemo(() => buildSearchable(data), [data]);
+  const searchableEntries = useMemo(
+    () => (data ? buildSearchable(data) : []),
+    [data],
+  );
 
   const anchorMap = useMemo(
     () => new Map(searchableEntries.map((entry) => [entry.anchorId, entry])),
@@ -315,7 +296,6 @@ export function AtkFaqExplorer() {
   }, [anchorMap, deferredSearch, searchIndex, searchableEntries]);
 
   const resultCount = results.length;
-  const totalEntries = searchableEntries.length;
 
   const buildShareHref = useMemo(() => {
     return (anchorId: string) => {
@@ -330,39 +310,55 @@ export function AtkFaqExplorer() {
     };
   }, [normalizedSearch]);
 
+  if (status === "error") {
+    return (
+      <div className="rounded-xl border border-destructive/50 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+        {error instanceof Error
+          ? error.message
+          : "Ndodhi një gabim gjatë ngarkimit të pyetjeve."}
+      </div>
+    );
+  }
+
+  if (status === "pending" || !data) {
+    return (
+      <div className="space-y-3 rounded-xl border bg-muted/40 p-4">
+        <Skeleton className="h-5 w-56" />
+        <Skeleton className="h-4 w-72" />
+        <Skeleton className="h-4 w-64" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <Field className="flex-1">
-          <FieldContent>
-            <div className="relative">
-              <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
-              <Input
-                type="search"
-                value={searchInput}
-                onChange={(event) => setSearchInput(event.target.value)}
-                placeholder="Kërko sipas temës (p.sh. TVSH, deklarimi, PEF)…"
-                className="pl-9 pr-10"
-              />
-              {searchInput ? (
-                <button
-                  type="button"
-                  onClick={() => setSearchInput("")}
-                  className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                  aria-label="Pastro kërkimin"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              ) : null}
-            </div>
-          </FieldContent>
-        </Field>
-        <div className="text-sm text-muted-foreground">
-          {resultCount} nga {totalEntries} përgjigje
+      <div className="flex flex-col gap-4">
+        <div className="relative">
+          <Search className="text-muted-foreground absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2" />
+          <Input
+            type="search"
+            value={searchInput}
+            onChange={(event) => setSearchInput(event.target.value)}
+            placeholder="Kërko pyetje (p.sh. TVSH, deklarimi, PEF)…"
+            className="h-12 rounded-xl pl-11 pr-12 text-base shadow-sm transition-shadow focus-visible:ring-2"
+          />
+          {searchInput ? (
+            <button
+              type="button"
+              onClick={() => setSearchInput("")}
+              className="text-muted-foreground hover:text-foreground absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Pastro kërkimin"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          ) : null}
+        </div>
+        <div className="flex items-center justify-between px-1 text-sm text-muted-foreground">
+          <span>
+            {resultCount} {resultCount === 1 ? "rezultat" : "rezultate"}
+          </span>
         </div>
       </div>
-
-      <Separator />
 
       {resultCount === 0 ? (
         <div className="rounded-lg border border-dashed bg-muted/40 p-4 text-sm text-muted-foreground">

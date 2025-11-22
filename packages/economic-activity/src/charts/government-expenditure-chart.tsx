@@ -102,7 +102,7 @@ export function GovernmentExpenditureStackedChart({
   ]);
 
   const { chartKeys, chartData, chartConfig } = React.useMemo(
-    () => buildStackedChartData(stackResult, { otherKey: "Të tjera" }),
+    () => buildStackedChartData(stackResult),
     [stackResult],
   );
 

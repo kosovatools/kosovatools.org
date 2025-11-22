@@ -106,6 +106,15 @@ const tools: ToolCard[] = [
     category: "Statistika",
   },
   {
+    name: "Statistikat e aviacionit",
+    href: "/aviation-stats",
+    description:
+      "Shiko hyrjet/daljet e pasagjerëve dhe numrin e fluturimeve mujore nga aeroporti i Kosovës.",
+    cta: "Analizo trafikun ajror",
+    icon: Plane,
+    category: "Statistika",
+  },
+  {
     name: "Kalkulatori i pagave",
     href: "/wage-calculator",
     description:
@@ -139,15 +148,6 @@ const tools: ToolCard[] = [
       "Vlerëso TVSH-në, akcizën dhe detyrimet doganore për veturat e importuara në Republikën e Kosovës.",
     cta: "Llogarit kostot",
     icon: Car,
-    category: "Transport",
-  },
-  {
-    name: "Statistikat e aviacionit",
-    href: "/aviation-stats",
-    description:
-      "Shiko hyrjet/daljet e pasagjerëve dhe numrin e fluturimeve mujore nga aeroporti i Kosovës.",
-    cta: "Analizo trafikun ajror",
-    icon: Plane,
     category: "Transport",
   },
   {
