@@ -22,6 +22,7 @@ import {
 import { energyFlowChartConfig } from "../utils/chart-config";
 import { formatAuto } from "../utils/number-format";
 import { getPeriodFormatter } from "@workspace/utils";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 export function HourlyFlowPatternChart({
   data,
@@ -54,69 +55,71 @@ export function HourlyFlowPatternChart({
     }));
 
   return (
-    <ChartContainer
-      config={chartConfig}
-      className="aspect-[1/1.5] sm:aspect-video"
-    >
-      <ComposedChart data={chartData} margin={COMMON_CHART_MARGINS}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="label" tickMargin={8} />
-        <YAxis
-          width="auto"
-          tickFormatter={(value: number | string) =>
-            formatAuto(value, {
-              includeUnit: true,
-              smallUnitDigits: {
-                minimumFractionDigits: 1,
-                maximumFractionDigits: 1,
-              },
-              largeUnitDigits: {
-                minimumFractionDigits: 1,
-                maximumFractionDigits: 1,
-              },
-            })
-          }
-        />
-        <ChartTooltip
-          labelFormatter={periodFormatter}
-          valueFormatter={(value) =>
-            formatAuto(value as number | string | null | undefined, {
-              includeUnit: true,
-              smallUnitDigits: {
-                minimumFractionDigits: 1,
-                maximumFractionDigits: 1,
-              },
-              largeUnitDigits: {
-                minimumFractionDigits: 1,
-                maximumFractionDigits: 1,
-              },
-            })
-          }
-        />
-        <ChartLegend content={<ChartLegendContent />} />
-        <Area
-          type="monotone"
-          dataKey="netMWh"
-          fill="var(--color-net)"
-          fillOpacity={0.15}
-          stroke="var(--color-net)"
-          strokeWidth={2}
-        />
-        <Line
-          type="monotone"
-          dataKey="importMWh"
-          stroke="var(--color-imports)"
-          strokeWidth={2}
-          dot={{ r: 2 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="exportMWh"
-          stroke="var(--color-exports)"
-          strokeWidth={2}
-          dot={{ r: 2 }}
-        />
-      </ComposedChart>
-    </ChartContainer>
+    <ChartScaffolding>
+      <ChartContainer
+        config={chartConfig}
+        className="aspect-[1/1.5] sm:aspect-video"
+      >
+        <ComposedChart data={chartData} margin={COMMON_CHART_MARGINS}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="label" tickMargin={8} />
+          <YAxis
+            width="auto"
+            tickFormatter={(value: number | string) =>
+              formatAuto(value, {
+                includeUnit: true,
+                smallUnitDigits: {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                },
+                largeUnitDigits: {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                },
+              })
+            }
+          />
+          <ChartTooltip
+            labelFormatter={periodFormatter}
+            valueFormatter={(value) =>
+              formatAuto(value as number | string | null | undefined, {
+                includeUnit: true,
+                smallUnitDigits: {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                },
+                largeUnitDigits: {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                },
+              })
+            }
+          />
+          <ChartLegend content={<ChartLegendContent />} />
+          <Area
+            type="monotone"
+            dataKey="netMWh"
+            fill="var(--color-net)"
+            fillOpacity={0.15}
+            stroke="var(--color-net)"
+            strokeWidth={2}
+          />
+          <Line
+            type="monotone"
+            dataKey="importMWh"
+            stroke="var(--color-imports)"
+            strokeWidth={2}
+            dot={{ r: 2 }}
+          />
+          <Line
+            type="monotone"
+            dataKey="exportMWh"
+            stroke="var(--color-exports)"
+            strokeWidth={2}
+            dot={{ r: 2 }}
+          />
+        </ComposedChart>
+      </ChartContainer>
+    </ChartScaffolding>
   );
 }

@@ -21,6 +21,8 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
+
 import {
   buildConstructionCostNodes,
   CONSTRUCTION_DEFAULT_CATEGORY_CODES,
@@ -108,8 +110,18 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
     );
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid gap-3 lg:grid-cols-[320px_1fr]">
+    <ChartScaffolding
+      actions={
+        <div className="flex justify-end w-full">
+          <OptionSelector
+            label="Periudha"
+            value={timeRange}
+            onChange={setTimeRange}
+            options={timeRangeOptions}
+          />
+        </div>
+      }
+      selectors={
         <HierarchicalMultiSelect
           title="Kategoritë e kostove"
           nodes={hierarchicalNodes}
@@ -121,67 +133,56 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
           minSelected={1}
           scrollContainerClassName="max-h-[420px] border rounded-md"
         />
-        <div className="space-y-2">
-          <OptionSelector
-            label="Periudha"
-            value={timeRange}
-            onChange={setTimeRange}
-            options={timeRangeOptions}
+      }
+    >
+      <ChartContainer
+        config={chartConfig}
+        className="w-full aspect-[1/1.5] sm:aspect-video"
+      >
+        <LineChart
+          accessibilityLayer
+          data={chartData}
+          margin={COMMON_CHART_MARGINS}
+        >
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="period"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={10}
+            minTickGap={24}
+            tickFormatter={(value) => periodFormatter(String(value))}
           />
-          <ChartContainer
-            config={chartConfig}
-            className="w-full aspect-[1/1.5] sm:aspect-video"
-          >
-            <LineChart
-              accessibilityLayer
-              data={chartData}
-              margin={COMMON_CHART_MARGINS}
-            >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="period"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={10}
-                minTickGap={24}
-                tickFormatter={(value) => periodFormatter(String(value))}
-              />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                domain={["auto", "auto"]}
-                tickMargin={10}
-                tickFormatter={(value) =>
-                  formatAxisValue(value as number | null)
-                }
-              />
-              <TimelineEventMarkers
-                data={chartData}
-                grouping={dataset.meta.time.granularity}
-                enabled={timelineEvents?.enabled}
-                includeCategories={timelineEvents?.includeCategories}
-              />
-              <ChartTooltip
-                valueFormatter={(value) =>
-                  formatAxisValue(value as number | null)
-                }
-              />
-              <ChartLegend content={<ChartLegendContent />} />
-              {Object.keys(chartConfig).map((key) => (
-                <Line
-                  key={key}
-                  dataKey={key}
-                  type="monotone"
-                  stroke={`var(--color-${key})`}
-                  strokeWidth={2}
-                  dot={false}
-                  connectNulls
-                />
-              ))}
-            </LineChart>
-          </ChartContainer>
-        </div>
-      </div>
-    </div>
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            domain={["auto", "auto"]}
+            tickMargin={10}
+            tickFormatter={(value) => formatAxisValue(value as number | null)}
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={dataset.meta.time.granularity}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
+          />
+          <ChartTooltip
+            valueFormatter={(value) => formatAxisValue(value as number | null)}
+          />
+          <ChartLegend content={<ChartLegendContent />} />
+          {Object.keys(chartConfig).map((key) => (
+            <Line
+              key={key}
+              dataKey={key}
+              type="monotone"
+              stroke={`var(--color-${key})`}
+              strokeWidth={2}
+              dot={false}
+              connectNulls
+            />
+          ))}
+        </LineChart>
+      </ChartContainer>
+    </ChartScaffolding>
   );
 }

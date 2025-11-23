@@ -24,6 +24,7 @@ import {
   TimelineEventMarkers,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { formatPercent } from "@workspace/utils";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 type ChartRow = { period: string } & Record<string, number | string | null>;
 
@@ -118,22 +119,24 @@ export function LoanInterestExplorerChart({
   }, [activeCodes, datasetView, labelMap, periodGrouping]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap justify-between items-center gap-3">
-        <OptionSelector
-          label="Grupimi"
-          value={periodGrouping}
-          onChange={setPeriodGrouping}
-          options={periodGroupingOptions}
-        />
-        <OptionSelector
-          label="Periudha"
-          value={timeRange}
-          onChange={setTimeRange}
-          options={timeRangeOptions}
-        />
-      </div>
-      <div className="grid gap-3 lg:grid-cols-[320px_1fr]">
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            label="Grupimi"
+            value={periodGrouping}
+            onChange={setPeriodGrouping}
+            options={periodGroupingOptions}
+          />
+          <OptionSelector
+            label="Periudha"
+            value={timeRange}
+            onChange={setTimeRange}
+            options={timeRangeOptions}
+          />
+        </>
+      }
+      selectors={
         <HierarchicalMultiSelect
           title="Segmentet e kredive"
           nodes={hierarchyNodes}
@@ -144,55 +147,56 @@ export function LoanInterestExplorerChart({
           minSelected={1}
           scrollContainerClassName="max-h-[420px] border rounded-md bg-background"
         />
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-[1/1.4] sm:aspect-video"
+      }
+    >
+      <ChartContainer
+        config={chartConfig}
+        className="aspect-[1/1.4] sm:aspect-video"
+      >
+        <LineChart
+          accessibilityLayer
+          data={chartData}
+          margin={COMMON_CHART_MARGINS}
         >
-          <LineChart
-            accessibilityLayer
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="period"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={10}
+            tickFormatter={(value) => periodFormatter(String(value))}
+            minTickGap={24}
+          />
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            domain={["auto", "auto"]}
+            tickMargin={10}
+            tickFormatter={(value) => formatPercent(value as number | null)}
+            width="auto"
+          />
+          <TimelineEventMarkers
             data={chartData}
-            margin={COMMON_CHART_MARGINS}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="period"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={10}
-              tickFormatter={(value) => periodFormatter(String(value))}
-              minTickGap={24}
+            grouping={periodGrouping}
+            {...timelineEvents}
+          />
+          <ChartTooltip
+            labelFormatter={periodFormatter}
+            valueFormatter={(value) => formatPercent(value as number | null)}
+          />
+          <ChartLegend content={<ChartLegendContent />} />
+          {Object.keys(chartConfig).map((key) => (
+            <Line
+              key={key}
+              dataKey={key}
+              type="monotone"
+              stroke={`var(--color-${key})`}
+              strokeWidth={2}
+              dot={false}
             />
-            <YAxis
-              tickLine={false}
-              axisLine={false}
-              domain={["auto", "auto"]}
-              tickMargin={10}
-              tickFormatter={(value) => formatPercent(value as number | null)}
-              width="auto"
-            />
-            <TimelineEventMarkers
-              data={chartData}
-              grouping={periodGrouping}
-              {...timelineEvents}
-            />
-            <ChartTooltip
-              labelFormatter={periodFormatter}
-              valueFormatter={(value) => formatPercent(value as number | null)}
-            />
-            <ChartLegend content={<ChartLegendContent />} />
-            {Object.keys(chartConfig).map((key) => (
-              <Line
-                key={key}
-                dataKey={key}
-                type="monotone"
-                stroke={`var(--color-${key})`}
-                strokeWidth={2}
-                dot={false}
-              />
-            ))}
-          </LineChart>
-        </ChartContainer>
-      </div>
-    </div>
+          ))}
+        </LineChart>
+      </ChartContainer>
+    </ChartScaffolding>
   );
 }

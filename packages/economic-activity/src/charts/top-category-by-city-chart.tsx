@@ -26,6 +26,7 @@ import {
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { formatCurrencyCompact, getPeriodFormatter } from "@workspace/utils";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import type {
   CityCategoryYearlyDatasetView,
@@ -116,8 +117,8 @@ export function TopCategoryByCityStackedChart({
   );
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap justify-between items-center gap-3">
+    <ChartScaffolding
+      actions={
         <NativeSelect
           id="economic-activity-city"
           value={selectedCity ?? ""}
@@ -135,17 +136,18 @@ export function TopCategoryByCityStackedChart({
             </NativeSelectOption>
           ))}
         </NativeSelect>
-        {totals.length > 0 ? (
-          <StackedKeySelector
-            totals={totals}
-            selection={selection}
-            onSelectionChange={setSelection}
-            topCount={CITY_STACK_TOP}
-            selectionLabel="Zgjedh kategoritë kryesore"
-            searchPlaceholder="Kërko kategoritë..."
-          />
-        ) : null}
-      </div>
+      }
+      selectors={
+        <StackedKeySelector
+          totals={totals}
+          selection={selection}
+          onSelectionChange={setSelection}
+          topCount={CITY_STACK_TOP}
+          selectionLabel="Zgjedh kategoritë kryesore"
+          searchPlaceholder="Kërko kategoritë..."
+        />
+      }
+    >
       <ChartContainer
         config={chartConfig}
         className="aspect-[1/1.5] sm:aspect-video"
@@ -190,6 +192,6 @@ export function TopCategoryByCityStackedChart({
           ))}
         </AreaChart>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

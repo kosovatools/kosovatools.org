@@ -24,6 +24,7 @@ import {
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import { energyFlowChartConfig } from "../utils/chart-config";
 import { formatAuto } from "../utils/number-format";
@@ -84,21 +85,24 @@ export function MonthlyFlowTrendChart({
   }, [datasetView, periodGrouping]);
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap justify-between items-center gap-3">
-        <OptionSelector
-          label="Grupimi"
-          value={periodGrouping}
-          onChange={(value) => setPeriodGrouping(value)}
-          options={periodGroupingOptions}
-        />
-        <OptionSelector
-          label="Intervali"
-          value={timeRange}
-          onChange={(value) => setTimeRange(value)}
-          options={timeRangeOptions}
-        />
-      </div>
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            label="Grupimi"
+            value={periodGrouping}
+            onChange={(value) => setPeriodGrouping(value)}
+            options={periodGroupingOptions}
+          />
+          <OptionSelector
+            label="Intervali"
+            value={timeRange}
+            onChange={(value) => setTimeRange(value)}
+            options={timeRangeOptions}
+          />
+        </>
+      }
+    >
       <ChartContainer
         config={chartConfig}
         className="aspect-[1/1.5] sm:aspect-video"
@@ -155,6 +159,6 @@ export function MonthlyFlowTrendChart({
           />
         </ComposedChart>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

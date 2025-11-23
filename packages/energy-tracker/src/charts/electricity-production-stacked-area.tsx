@@ -26,6 +26,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import { formatAuto } from "../utils/number-format";
 
@@ -101,21 +102,24 @@ export function ElectricityProductionStackedAreaChart({
   }, [datasetView, periodGrouping, periodFormatter]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <OptionSelector
-          label="Perioda"
-          value={periodGrouping}
-          onChange={(value) => setPeriodGrouping(value)}
-          options={periodGroupingOptions}
-        />
-        <OptionSelector
-          label="Intervali"
-          value={timeRange}
-          onChange={setTimeRange}
-          options={timeRangeOptions}
-        />
-      </div>
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            label="Perioda"
+            value={periodGrouping}
+            onChange={(value) => setPeriodGrouping(value)}
+            options={periodGroupingOptions}
+          />
+          <OptionSelector
+            label="Intervali"
+            value={timeRange}
+            onChange={setTimeRange}
+            options={timeRangeOptions}
+          />
+        </>
+      }
+    >
       <ChartContainer config={chartConfig} className={chartClassName}>
         <AreaChart data={chartData} margin={COMMON_CHART_MARGINS}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -178,6 +182,6 @@ export function ElectricityProductionStackedAreaChart({
           />
         </AreaChart>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

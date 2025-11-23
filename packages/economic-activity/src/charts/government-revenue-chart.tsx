@@ -23,6 +23,7 @@ import {
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 const DEFAULT_TOP_CATEGORIES = 8;
 
@@ -153,22 +154,24 @@ export function GovernmentRevenueStackedChart({
   );
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap justify-between items-center gap-3">
-        <OptionSelector
-          value={periodGrouping}
-          onChange={(value) => setPeriodGrouping(value)}
-          options={periodGroupingOptions}
-          label="Perioda"
-        />
-        <OptionSelector
-          value={timeRange}
-          onChange={setTimeRange}
-          options={timeRangeOptions}
-          label="Intervali"
-        />
-      </div>
-      <div className="grid gap-3 lg:grid-cols-[320px_1fr]">
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            value={periodGrouping}
+            onChange={(value) => setPeriodGrouping(value)}
+            options={periodGroupingOptions}
+            label="Perioda"
+          />
+          <OptionSelector
+            value={timeRange}
+            onChange={setTimeRange}
+            options={timeRangeOptions}
+            label="Intervali"
+          />
+        </>
+      }
+      selectors={
         <HierarchicalMultiSelect
           nodes={hierarchyNodes}
           selectedIds={selectedCategoryNodes}
@@ -179,57 +182,58 @@ export function GovernmentRevenueStackedChart({
           selectionBehavior="toggle-children"
           minSelected={1}
         />
-        <ChartContainer
-          config={chartConfig}
-          className="aspect-[1/1.4] sm:aspect-video"
-          title="Të hyrat tremujore"
-        >
-          <AreaChart data={chartData} margin={COMMON_CHART_MARGINS}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="period"
-              tickFormatter={(value) => periodFormatter(value as string)}
-              tickMargin={8}
-              minTickGap={24}
-              axisLine={false}
-            />
-            <YAxis
-              width="auto"
-              tickFormatter={(value) => formatCurrencyCompact(value as number)}
-              axisLine={false}
-            />
-            <TimelineEventMarkers
-              data={chartData}
-              grouping={periodGrouping}
-              enabled={timelineEvents?.enabled}
-              includeCategories={timelineEvents?.includeCategories}
-            />
-            <ChartTooltip
-              labelFormatter={periodFormatter}
-              valueFormatter={(value) =>
-                formatCurrencyCompact(value as number | null)
-              }
-            />
-            <ChartLegend content={<ChartLegendContent />} />
-            {chartKeys.map((key) => {
-              const label = chartConfig[key]?.label;
-              const seriesName = typeof label === "string" ? label : key;
-              return (
-                <Area
-                  key={key}
-                  type="monotone"
-                  dataKey={key}
-                  stackId="gov-finance-rev"
-                  stroke={`var(--color-${key})`}
-                  fill={`var(--color-${key})`}
-                  fillOpacity={0.25}
-                  name={seriesName}
-                />
-              );
-            })}
-          </AreaChart>
-        </ChartContainer>
-      </div>
-    </div>
+      }
+    >
+      <ChartContainer
+        config={chartConfig}
+        className="aspect-[1/1.4] sm:aspect-video"
+        title="Të hyrat tremujore"
+      >
+        <AreaChart data={chartData} margin={COMMON_CHART_MARGINS}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey="period"
+            tickFormatter={(value) => periodFormatter(value as string)}
+            tickMargin={8}
+            minTickGap={24}
+            axisLine={false}
+          />
+          <YAxis
+            width="auto"
+            tickFormatter={(value) => formatCurrencyCompact(value as number)}
+            axisLine={false}
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
+          />
+          <ChartTooltip
+            labelFormatter={periodFormatter}
+            valueFormatter={(value) =>
+              formatCurrencyCompact(value as number | null)
+            }
+          />
+          <ChartLegend content={<ChartLegendContent />} />
+          {chartKeys.map((key) => {
+            const label = chartConfig[key]?.label;
+            const seriesName = typeof label === "string" ? label : key;
+            return (
+              <Area
+                key={key}
+                type="monotone"
+                dataKey={key}
+                stackId="gov-finance-rev"
+                stroke={`var(--color-${key})`}
+                fill={`var(--color-${key})`}
+                fillOpacity={0.25}
+                name={seriesName}
+              />
+            );
+          })}
+        </AreaChart>
+      </ChartContainer>
+    </ChartScaffolding>
   );
 }

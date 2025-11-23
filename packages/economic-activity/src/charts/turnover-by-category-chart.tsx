@@ -10,6 +10,7 @@ import {
 } from "@workspace/ui/components/chart";
 import { TreemapCellContent } from "@workspace/ui/custom-components/treemap-cell-content";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import type { TurnoverCategoriesDatasetView } from "@workspace/dataset-api";
 import { formatCount, formatCurrencyCompact } from "@workspace/utils";
@@ -60,15 +61,18 @@ export function TurnoverByCategoryChart({
   }, [records]);
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <OptionSelector
-          value={metric}
-          onChange={setMetric}
-          options={metricOptions}
-          label="Metrika"
-        />
-      </div>
+    <ChartScaffolding
+      actions={
+        <div className="flex justify-end w-full">
+          <OptionSelector
+            value={metric}
+            onChange={setMetric}
+            options={metricOptions}
+            label="Metrika"
+          />
+        </div>
+      }
+    >
       <ChartContainer config={chartConfig} className={CHART_CLASS}>
         <Treemap
           data={records}
@@ -91,6 +95,6 @@ export function TurnoverByCategoryChart({
           />
         </Treemap>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

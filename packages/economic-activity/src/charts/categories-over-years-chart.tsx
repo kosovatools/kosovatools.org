@@ -23,6 +23,7 @@ import {
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { formatCurrencyCompact } from "@workspace/utils";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import type {
   TurnoverCategoriesDatasetView,
@@ -91,31 +92,34 @@ export function CategoriesOverYearsChart({
   );
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap  justify-between items-center gap-3">
-        <OptionSelector
-          label="Grupimi"
-          value={periodGrouping}
-          onChange={(value) => setPeriodGrouping(value)}
-          options={periodGroupingOptions}
-        />
-        <OptionSelector
-          label="Intervali"
-          value={timeRange}
-          onChange={(value) => setTimeRange(value)}
-          options={timeRangeOptions}
-        />
-        {totals.length > 0 ? (
-          <StackedKeySelector
-            totals={totals}
-            selection={selection}
-            onSelectionChange={setSelection}
-            topCount={CATEGORY_STACK_TOP}
-            selectionLabel="Zgjedh kategoritë"
-            searchPlaceholder="Kërko kategoritë..."
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            label="Grupimi"
+            value={periodGrouping}
+            onChange={(value) => setPeriodGrouping(value)}
+            options={periodGroupingOptions}
           />
-        ) : null}
-      </div>
+          <OptionSelector
+            label="Intervali"
+            value={timeRange}
+            onChange={(value) => setTimeRange(value)}
+            options={timeRangeOptions}
+          />
+        </>
+      }
+      selectors={
+        <StackedKeySelector
+          totals={totals}
+          selection={selection}
+          onSelectionChange={setSelection}
+          topCount={CATEGORY_STACK_TOP}
+          selectionLabel="Zgjedh kategoritë"
+          searchPlaceholder="Kërko kategoritë..."
+        />
+      }
+    >
       <ChartContainer
         config={chartConfig}
         className="aspect-[1/1.5] sm:aspect-video"
@@ -160,6 +164,6 @@ export function CategoriesOverYearsChart({
           ))}
         </AreaChart>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

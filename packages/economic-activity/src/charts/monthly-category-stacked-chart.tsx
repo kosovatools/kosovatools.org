@@ -21,6 +21,7 @@ import {
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { formatCurrencyCompact, getPeriodFormatter } from "@workspace/utils";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import type {
   MonthlyCategoryCityDatasetView,
@@ -77,8 +78,8 @@ export function MonthlyCategoryStackedChart({
   );
 
   return (
-    <div className="space-y-4">
-      {totals.length > 0 ? (
+    <ChartScaffolding
+      selectors={
         <StackedKeySelector
           totals={totals}
           selection={selection}
@@ -87,7 +88,8 @@ export function MonthlyCategoryStackedChart({
           selectionLabel="Zgjedh kategoritë"
           searchPlaceholder="Kërko kategoritë..."
         />
-      ) : null}
+      }
+    >
       <ChartContainer
         config={chartConfig}
         className="aspect-[1/1.5] sm:aspect-video"
@@ -132,6 +134,6 @@ export function MonthlyCategoryStackedChart({
           ))}
         </AreaChart>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

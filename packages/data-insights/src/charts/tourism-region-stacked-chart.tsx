@@ -16,6 +16,7 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
@@ -111,28 +112,30 @@ export function TourismRegionCharts({
   const groupLabelText = getVisitorGroupLabelText(groupLabel);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap justify-between items-center gap-3">
-        <OptionSelector
-          value={group}
-          onChange={(value) => setGroup(value)}
-          options={dataset.meta.dimensions.visitor_group}
-          label="Grupi i vizitorëve"
-        />
-        <OptionSelector
-          value={periodGrouping}
-          onChange={(value) => setPeriodGrouping(value)}
-          options={periodGroupingOptions}
-          label="Perioda"
-        />
-        <OptionSelector
-          value={timeRange}
-          onChange={setTimeRange}
-          options={timeRangeOptions}
-          label="Intervali"
-        />
-      </div>
-
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            value={group}
+            onChange={(value) => setGroup(value)}
+            options={dataset.meta.dimensions.visitor_group}
+            label="Grupi i vizitorëve"
+          />
+          <OptionSelector
+            value={periodGrouping}
+            onChange={(value) => setPeriodGrouping(value)}
+            options={periodGroupingOptions}
+            label="Perioda"
+          />
+          <OptionSelector
+            value={timeRange}
+            onChange={setTimeRange}
+            options={timeRangeOptions}
+            label="Intervali"
+          />
+        </>
+      }
+    >
       {latestSummary ? (
         <p className="text-xs text-muted-foreground">
           Periudha e fundit ({latestSummary.periodLabel}):{" "}
@@ -186,6 +189,6 @@ export function TourismRegionCharts({
           })}
         </AreaChart>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

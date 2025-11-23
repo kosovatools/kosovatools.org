@@ -19,6 +19,7 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 const baseChartConfig = {
   passengers_inbound: {
@@ -65,21 +66,24 @@ export function AviationStatsChart({
   }, [datasetView, periodGrouping]);
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-3">
-        <OptionSelector
-          label="Grupimi"
-          value={periodGrouping}
-          onChange={setPeriodGrouping}
-          options={periodGroupingOptions}
-        />
-        <OptionSelector
-          label="Periudha"
-          value={timeRange}
-          onChange={setTimeRange}
-          options={timeRangeOptions}
-        />
-      </div>
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            label="Grupimi"
+            value={periodGrouping}
+            onChange={setPeriodGrouping}
+            options={periodGroupingOptions}
+          />
+          <OptionSelector
+            label="Periudha"
+            value={timeRange}
+            onChange={setTimeRange}
+            options={timeRangeOptions}
+          />
+        </>
+      }
+    >
       <ChartContainer
         config={chartConfig}
         className="w-full aspect-[1/1.5] sm:aspect-video"
@@ -153,6 +157,6 @@ export function AviationStatsChart({
           />
         </AreaChart>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

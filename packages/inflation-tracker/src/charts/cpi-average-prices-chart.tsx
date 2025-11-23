@@ -21,6 +21,7 @@ import {
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { MultiSelectCombobox } from "../components/multi-select-combobox";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 const MAX_SELECTED_ARTICLES = 10;
 const DEFAULT_VISIBLE_ARTICLES = 3;
@@ -100,77 +101,82 @@ export function CpiAveragePricesChart({ dataset, timelineEvents }: Props) {
   }, [labelMap, datasetView, selectedArticles]);
 
   return (
-    <div className="space-y-6">
-      <MultiSelectCombobox
-        description={`Krahaso deri në ${MAX_SELECTED_ARTICLES} artikuj ushqimorë dhe shërbime për të parë trendet mesatare të çmimeve vjetore.`}
-        selectedValues={selectedArticles}
-        onChange={setSelectedArticles}
-        options={comboboxOptions}
-        maxSelected={MAX_SELECTED_ARTICLES}
-        addPlaceholder="Shto një artikull..."
-        maxSelectedPlaceholder="Maksimumi i arritur"
-        searchPlaceholder="Kërko artikull..."
-        emptyMessage="Asnjë artikull nuk përputhet."
-        emptySelectionMessage="Zgjedh të paktën një artikull për të shfaqur grafikun."
-      />
-      <div className="space-y-2">
-        <OptionSelector
-          label="Periudha"
-          value={timeRange}
-          onChange={setTimeRange}
-          options={timeRangeOptions}
+    <ChartScaffolding
+      actions={
+        <div className="flex justify-end w-full">
+          <OptionSelector
+            label="Periudha"
+            value={timeRange}
+            onChange={setTimeRange}
+            options={timeRangeOptions}
+          />
+        </div>
+      }
+      selectors={
+        <MultiSelectCombobox
+          description={`Krahaso deri në ${MAX_SELECTED_ARTICLES} artikuj ushqimorë dhe shërbime për të parë trendet mesatare të çmimeve vjetore.`}
+          selectedValues={selectedArticles}
+          onChange={setSelectedArticles}
+          options={comboboxOptions}
+          maxSelected={MAX_SELECTED_ARTICLES}
+          addPlaceholder="Shto një artikull..."
+          maxSelectedPlaceholder="Maksimumi i arritur"
+          searchPlaceholder="Kërko artikull..."
+          emptyMessage="Asnjë artikull nuk përputhet."
+          emptySelectionMessage="Zgjedh të paktën një artikull për të shfaqur grafikun."
         />
-        <ChartContainer
-          config={chartConfig}
-          className="w-full aspect-[1/1.5] sm:aspect-video"
+      }
+    >
+      <ChartContainer
+        config={chartConfig}
+        className="w-full aspect-[1/1.5] sm:aspect-video"
+      >
+        <LineChart
+          accessibilityLayer
+          data={chartData}
+          margin={COMMON_CHART_MARGINS}
         >
-          <LineChart
-            accessibilityLayer
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="period"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={10}
+            minTickGap={24}
+            tickFormatter={(value) => periodFormatter(String(value))}
+          />
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            domain={["auto", "auto"]}
+            tickMargin={10}
+            width={80}
+            tickFormatter={(value) => formatCurrency(value as number)}
+          />
+          <TimelineEventMarkers
             data={chartData}
-            margin={COMMON_CHART_MARGINS}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="period"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={10}
-              minTickGap={24}
-              tickFormatter={(value) => periodFormatter(String(value))}
+            grouping={dataset.meta.time.granularity}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
+          />
+          <ChartTooltip
+            labelFormatter={periodFormatter}
+            valueFormatter={(value) => formatCurrency(value as number | null)}
+          />
+          <ChartLegend content={<ChartLegendContent />} />
+          {Object.keys(chartConfig).map((key) => (
+            <Line
+              key={key}
+              dataKey={key}
+              type="monotone"
+              stroke={`var(--color-${key})`}
+              strokeWidth={2}
+              dot={false}
+              connectNulls
             />
-            <YAxis
-              tickLine={false}
-              axisLine={false}
-              domain={["auto", "auto"]}
-              tickMargin={10}
-              width={80}
-              tickFormatter={(value) => formatCurrency(value as number)}
-            />
-            <TimelineEventMarkers
-              data={chartData}
-              grouping={dataset.meta.time.granularity}
-              enabled={timelineEvents?.enabled}
-              includeCategories={timelineEvents?.includeCategories}
-            />
-            <ChartTooltip
-              labelFormatter={periodFormatter}
-              valueFormatter={(value) => formatCurrency(value as number | null)}
-            />
-            <ChartLegend content={<ChartLegendContent />} />
-            {Object.keys(chartConfig).map((key) => (
-              <Line
-                key={key}
-                dataKey={key}
-                type="monotone"
-                stroke={`var(--color-${key})`}
-                strokeWidth={2}
-                dot={false}
-                connectNulls
-              />
-            ))}
-          </LineChart>
-        </ChartContainer>
-      </div>
-    </div>
+          ))}
+        </LineChart>
+      </ChartContainer>
+    </ChartScaffolding>
   );
 }

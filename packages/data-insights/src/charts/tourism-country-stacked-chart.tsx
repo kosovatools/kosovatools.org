@@ -21,6 +21,8 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
+
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { TourismCountryDatasetView } from "@workspace/kas-data";
@@ -85,26 +87,30 @@ export function TourismCountryStackedChart({
   );
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap justify-between items-center gap-3">
-        <OptionSelector
-          value={metric}
-          onChange={(value) => setMetric(value)}
-          options={metricOptions}
-          label="Metrika"
-        />
-        <OptionSelector
-          value={periodGrouping}
-          onChange={(value) => setPeriodGrouping(value)}
-          options={periodGroupingOptions}
-          label="Perioda"
-        />
-        <OptionSelector
-          value={timeRange}
-          onChange={setTimeRange}
-          options={timeRangeOptions}
-          label="Intervali"
-        />
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            value={metric}
+            onChange={(value) => setMetric(value)}
+            options={metricOptions}
+            label="Metrika"
+          />
+          <OptionSelector
+            value={periodGrouping}
+            onChange={(value) => setPeriodGrouping(value)}
+            options={periodGroupingOptions}
+            label="Perioda"
+          />
+          <OptionSelector
+            value={timeRange}
+            onChange={setTimeRange}
+            options={timeRangeOptions}
+            label="Intervali"
+          />
+        </>
+      }
+      selectors={
         <StackedKeySelector
           totals={totals}
           selection={selection}
@@ -113,7 +119,8 @@ export function TourismCountryStackedChart({
           selectionLabel="Zgjedh vendet"
           searchPlaceholder="Kërko vende..."
         />
-      </div>
+      }
+    >
       <ChartContainer config={chartConfig}>
         <AreaChart data={chartData} margin={COMMON_CHART_MARGINS}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -158,6 +165,6 @@ export function TourismCountryStackedChart({
           })}
         </AreaChart>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

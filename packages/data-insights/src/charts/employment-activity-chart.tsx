@@ -24,6 +24,7 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
@@ -72,27 +73,30 @@ export function EmploymentActivityChart({
   );
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap justify-between items-center gap-3">
-        <OptionSelector
-          value={gender}
-          onChange={(value) => setGender(value)}
-          options={dataset.meta.dimensions.gender}
-          label="Gjinia"
-        />
-        <OptionSelector
-          value={periodGrouping}
-          onChange={(value) => setPeriodGrouping(value)}
-          options={periodGroupingOptions}
-          label="Perioda"
-        />
-        <OptionSelector
-          value={timeRange}
-          onChange={setTimeRange}
-          options={timeRangeOptions}
-          label="Intervali"
-        />
-      </div>
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            value={gender}
+            onChange={(value) => setGender(value)}
+            options={dataset.meta.dimensions.gender}
+            label="Gjinia"
+          />
+          <OptionSelector
+            value={periodGrouping}
+            onChange={(value) => setPeriodGrouping(value)}
+            options={periodGroupingOptions}
+            label="Perioda"
+          />
+          <OptionSelector
+            value={timeRange}
+            onChange={setTimeRange}
+            options={timeRangeOptions}
+            label="Intervali"
+          />
+        </>
+      }
+    >
       <ChartContainer
         config={chartConfig}
         className="aspect-[1/1.5] sm:aspect-video"
@@ -136,6 +140,6 @@ export function EmploymentActivityChart({
           ))}
         </AreaChart>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

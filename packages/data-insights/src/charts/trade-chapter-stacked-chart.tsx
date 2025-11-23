@@ -21,6 +21,7 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { type TradeChaptersMonthlyDatasetView } from "@workspace/kas-data";
@@ -86,26 +87,30 @@ export function TradeChapterStackedChart({
   );
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap justify-between items-center gap-4">
-        <OptionSelector
-          value={metric}
-          onChange={(nextKey) => setMetric(nextKey)}
-          options={metricOptions}
-          label="Fluksi"
-        />
-        <OptionSelector
-          value={periodGrouping}
-          onChange={(value) => setPeriodGrouping(value)}
-          options={PERIOD_GROUPING_OPTIONS}
-          label="Perioda"
-        />
-        <OptionSelector
-          value={timeRange}
-          onChange={setTimeRange}
-          options={TIME_RANGE_OPTIONS}
-          label="Intervali"
-        />
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            value={metric}
+            onChange={(nextKey) => setMetric(nextKey)}
+            options={metricOptions}
+            label="Fluksi"
+          />
+          <OptionSelector
+            value={periodGrouping}
+            onChange={(value) => setPeriodGrouping(value)}
+            options={PERIOD_GROUPING_OPTIONS}
+            label="Perioda"
+          />
+          <OptionSelector
+            value={timeRange}
+            onChange={setTimeRange}
+            options={TIME_RANGE_OPTIONS}
+            label="Intervali"
+          />
+        </>
+      }
+      selectors={
         <StackedKeySelector
           totals={totals}
           selection={selection}
@@ -114,7 +119,8 @@ export function TradeChapterStackedChart({
           selectionLabel="Zgjedh kapitujt"
           searchPlaceholder="Kërko kapitujt..."
         />
-      </div>
+      }
+    >
       <ChartContainer
         config={chartConfig}
         className="aspect-[1/1.5] sm:aspect-video"
@@ -164,6 +170,6 @@ export function TradeChapterStackedChart({
           })}
         </AreaChart>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

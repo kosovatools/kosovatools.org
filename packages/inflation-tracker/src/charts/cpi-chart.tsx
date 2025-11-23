@@ -21,6 +21,8 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
+
 import {
   CPI_DEFAULT_GROUP_CODE,
   buildCpiHierarchicalNodes,
@@ -126,8 +128,30 @@ export function CpiChart({
   // Helper function for XAxis tick formatting
   const formatPeriodTick = (value: string) => periodFormatter(value);
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid gap-3 lg:grid-cols-[320px_1fr]">
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            label="Metrika"
+            value={metric}
+            onChange={setMetric}
+            options={metricOptions}
+          />
+          <OptionSelector
+            label="Grupimi"
+            value={periodGrouping}
+            onChange={setPeriodGrouping}
+            options={periodGroupingOptions}
+          />
+          <OptionSelector
+            label="Periudha"
+            value={timeRange}
+            onChange={setTimeRange}
+            options={timeRangeOptions}
+          />
+        </>
+      }
+      selectors={
         <HierarchicalMultiSelect
           title="Grupet COICOP"
           nodes={hierarchicalNodes}
@@ -138,79 +162,56 @@ export function CpiChart({
           minSelected={1}
           scrollContainerClassName="max-h-[420px] border rounded-md"
         />
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <OptionSelector
-              label="Metrika"
-              value={metric}
-              onChange={setMetric}
-              options={metricOptions}
+      }
+    >
+      <ChartContainer
+        config={chartConfig}
+        className="w-full aspect-[1/1.5] sm:aspect-video"
+      >
+        <LineChart
+          accessibilityLayer
+          data={chartData}
+          margin={COMMON_CHART_MARGINS}
+        >
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="period"
+            tickLine={false}
+            axisLine={false}
+            tickMargin={10}
+            tickFormatter={formatPeriodTick}
+            minTickGap={30}
+          />
+          <YAxis
+            tickLine={false}
+            axisLine={false}
+            domain={["auto", "auto"]}
+            tickMargin={10}
+            tickFormatter={(value) => axisFormatter(value as number | null)}
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={periodGrouping}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
+          />
+          <ChartTooltip
+            labelFormatter={periodFormatter}
+            valueFormatter={(value) => axisFormatter(value as number | null)}
+          />
+          <ChartLegend content={<ChartLegendContent />} />
+          {Object.keys(chartConfig).map((key) => (
+            <Line
+              key={key}
+              dataKey={key}
+              type="monotone"
+              stroke={`var(--color-${key})`}
+              strokeWidth={2}
+              dot={false}
             />
-            <OptionSelector
-              label="Grupimi"
-              value={periodGrouping}
-              onChange={setPeriodGrouping}
-              options={periodGroupingOptions}
-            />
-            <OptionSelector
-              label="Periudha"
-              value={timeRange}
-              onChange={setTimeRange}
-              options={timeRangeOptions}
-            />
-          </div>
-          <ChartContainer
-            config={chartConfig}
-            className="w-full aspect-[1/1.5] sm:aspect-video"
-          >
-            <LineChart
-              accessibilityLayer
-              data={chartData}
-              margin={COMMON_CHART_MARGINS}
-            >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="period"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={10}
-                tickFormatter={formatPeriodTick}
-                minTickGap={30}
-              />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                domain={["auto", "auto"]}
-                tickMargin={10}
-                tickFormatter={(value) => axisFormatter(value as number | null)}
-              />
-              <TimelineEventMarkers
-                data={chartData}
-                grouping={periodGrouping}
-                enabled={timelineEvents?.enabled}
-                includeCategories={timelineEvents?.includeCategories}
-              />
-              <ChartTooltip
-                labelFormatter={periodFormatter}
-                valueFormatter={(value) =>
-                  axisFormatter(value as number | null)
-                }
-              />
-              <ChartLegend content={<ChartLegendContent />} />
-              {Object.keys(chartConfig).map((key) => (
-                <Line
-                  key={key}
-                  dataKey={key}
-                  type="monotone"
-                  stroke={`var(--color-${key})`}
-                  strokeWidth={2}
-                  dot={false}
-                />
-              ))}
-            </LineChart>
-          </ChartContainer>
-        </div>
-      </div>
-    </div>
+          ))}
+        </LineChart>
+      </ChartContainer>
+    </ChartScaffolding>
   );
 }

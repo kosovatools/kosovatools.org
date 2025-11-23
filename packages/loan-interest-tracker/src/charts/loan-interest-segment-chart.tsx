@@ -20,6 +20,7 @@ import {
   TimelineEventMarkers,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { formatPercent } from "@workspace/utils";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 type ChartRow = { period: string } & Record<string, string | number | null>;
 
@@ -105,21 +106,24 @@ export function LoanInterestSegmentChart({
   }, [datasetView, periodGrouping, labelMap]);
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap justify-between items-center gap-3">
-        <OptionSelector
-          label="Grupimi"
-          value={periodGrouping}
-          onChange={setPeriodGrouping}
-          options={periodGroupingOptions}
-        />
-        <OptionSelector
-          label="Periudha"
-          value={timeRange}
-          onChange={setTimeRange}
-          options={timeRangeOptions}
-        />
-      </div>
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            label="Grupimi"
+            value={periodGrouping}
+            onChange={setPeriodGrouping}
+            options={periodGroupingOptions}
+          />
+          <OptionSelector
+            label="Periudha"
+            value={timeRange}
+            onChange={setTimeRange}
+            options={timeRangeOptions}
+          />
+        </>
+      }
+    >
       <ChartContainer
         config={chartConfig}
         className="w-full aspect-[1/1.5] sm:aspect-video"
@@ -168,6 +172,6 @@ export function LoanInterestSegmentChart({
           ))}
         </LineChart>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

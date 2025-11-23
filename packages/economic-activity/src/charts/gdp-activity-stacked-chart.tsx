@@ -27,6 +27,7 @@ import {
   TimelineEventMarkers,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 const DEFAULT_TOP_ACTIVITIES = 5;
 
@@ -118,26 +119,30 @@ export function GdpActivityStackedChart({
   );
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap justify-between items-center gap-4">
-        <OptionSelector
-          value={metric}
-          onChange={(nextKey) => setMetric(nextKey)}
-          options={metricOptions}
-          label="Krahasimi"
-        />
-        <OptionSelector
-          value={periodGrouping}
-          onChange={(value) => setPeriodGrouping(value)}
-          options={PERIOD_GROUPING_OPTIONS}
-          label="Perioda"
-        />
-        <OptionSelector
-          value={timeRange}
-          onChange={setTimeRange}
-          options={TIME_RANGE_OPTIONS}
-          label="Intervali"
-        />
+    <ChartScaffolding
+      actions={
+        <>
+          <OptionSelector
+            value={metric}
+            onChange={(nextKey) => setMetric(nextKey)}
+            options={metricOptions}
+            label="Krahasimi"
+          />
+          <OptionSelector
+            value={periodGrouping}
+            onChange={(value) => setPeriodGrouping(value)}
+            options={PERIOD_GROUPING_OPTIONS}
+            label="Perioda"
+          />
+          <OptionSelector
+            value={timeRange}
+            onChange={setTimeRange}
+            options={TIME_RANGE_OPTIONS}
+            label="Intervali"
+          />
+        </>
+      }
+      selectors={
         <StackedKeySelector
           totals={totals}
           selection={selection}
@@ -146,7 +151,8 @@ export function GdpActivityStackedChart({
           selectionLabel="Zgjedh aktivitetet"
           searchPlaceholder="Kërko sipas aktivitetit..."
         />
-      </div>
+      }
+    >
       <ChartContainer
         config={chartConfig}
         className="aspect-[1/1.4] sm:aspect-video"
@@ -195,6 +201,6 @@ export function GdpActivityStackedChart({
           })}
         </AreaChart>
       </ChartContainer>
-    </div>
+    </ChartScaffolding>
   );
 }

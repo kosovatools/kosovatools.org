@@ -25,6 +25,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { energyFlowChartConfig } from "../utils/chart-config";
 import { formatAuto } from "../utils/number-format";
+import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 type DailyChartRow = {
   period: string;
@@ -56,61 +57,63 @@ export function DailyFlowChart({
   }, [dataset.records]);
 
   return (
-    <ChartContainer
-      config={chartConfig}
-      className="aspect-[1/1.5] sm:aspect-video"
-    >
-      <ComposedChart data={chartData} margin={COMMON_CHART_MARGINS}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="period"
-          tickMargin={8}
-          tickFormatter={(value) => formatDayLabel(String(value))}
-        />
-        <YAxis
-          width="auto"
-          tickFormatter={(value: number | string) =>
-            formatAuto(value, { includeUnit: true })
-          }
-        />
-        <TimelineEventMarkers
-          data={chartData}
-          grouping={dataset.meta.time.granularity}
-          enabled={timelineEvents?.enabled}
-          includeCategories={timelineEvents?.includeCategories}
-        />
-        <ChartTooltip
-          valueFormatter={(value) =>
-            formatAuto(value as number | string | null | undefined, {
-              includeUnit: true,
-            })
-          }
-        />
-        <ChartLegend content={<ChartLegendContent />} />
-        <Area
-          dataKey="imports"
-          type="monotone"
-          fill="var(--color-imports)"
-          fillOpacity={0.15}
-          stroke="var(--color-imports)"
-          strokeWidth={2}
-        />
-        <Area
-          dataKey="exports"
-          type="monotone"
-          fill="var(--color-exports)"
-          fillOpacity={0.12}
-          stroke="var(--color-exports)"
-          strokeWidth={2}
-        />
-        <Line
-          dataKey="net"
-          type="monotone"
-          stroke="var(--color-net)"
-          strokeWidth={3}
-          dot={{ r: 2 }}
-        />
-      </ComposedChart>
-    </ChartContainer>
+    <ChartScaffolding>
+      <ChartContainer
+        config={chartConfig}
+        className="aspect-[1/1.5] sm:aspect-video"
+      >
+        <ComposedChart data={chartData} margin={COMMON_CHART_MARGINS}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey="period"
+            tickMargin={8}
+            tickFormatter={(value) => formatDayLabel(String(value))}
+          />
+          <YAxis
+            width="auto"
+            tickFormatter={(value: number | string) =>
+              formatAuto(value, { includeUnit: true })
+            }
+          />
+          <TimelineEventMarkers
+            data={chartData}
+            grouping={dataset.meta.time.granularity}
+            enabled={timelineEvents?.enabled}
+            includeCategories={timelineEvents?.includeCategories}
+          />
+          <ChartTooltip
+            valueFormatter={(value) =>
+              formatAuto(value as number | string | null | undefined, {
+                includeUnit: true,
+              })
+            }
+          />
+          <ChartLegend content={<ChartLegendContent />} />
+          <Area
+            dataKey="imports"
+            type="monotone"
+            fill="var(--color-imports)"
+            fillOpacity={0.15}
+            stroke="var(--color-imports)"
+            strokeWidth={2}
+          />
+          <Area
+            dataKey="exports"
+            type="monotone"
+            fill="var(--color-exports)"
+            fillOpacity={0.12}
+            stroke="var(--color-exports)"
+            strokeWidth={2}
+          />
+          <Line
+            dataKey="net"
+            type="monotone"
+            stroke="var(--color-net)"
+            strokeWidth={3}
+            dot={{ r: 2 }}
+          />
+        </ComposedChart>
+      </ChartContainer>
+    </ChartScaffolding>
   );
 }
