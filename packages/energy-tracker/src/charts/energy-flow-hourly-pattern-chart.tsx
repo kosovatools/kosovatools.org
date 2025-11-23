@@ -97,6 +97,7 @@ export function HourlyFlowPatternChart({
           />
           <ChartLegend content={<ChartLegendContent />} />
           <Area
+            isAnimationActive={false}
             type="monotone"
             dataKey="netMWh"
             fill="var(--color-net)"
@@ -105,6 +106,7 @@ export function HourlyFlowPatternChart({
             strokeWidth={2}
           />
           <Line
+            isAnimationActive={false}
             type="monotone"
             dataKey="importMWh"
             stroke="var(--color-imports)"
@@ -112,6 +114,7 @@ export function HourlyFlowPatternChart({
             dot={{ r: 2 }}
           />
           <Line
+            isAnimationActive={false}
             type="monotone"
             dataKey="exportMWh"
             stroke="var(--color-exports)"

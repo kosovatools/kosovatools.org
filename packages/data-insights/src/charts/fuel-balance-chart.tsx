@@ -123,6 +123,7 @@ export function FuelBalanceChart({
 
             return (
               <Area
+                isAnimationActive={false}
                 key={key}
                 type="monotone"
                 dataKey={key}

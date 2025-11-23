@@ -466,7 +466,7 @@ export function DrugPriceExplorer() {
           <FieldContent className="flex-1 min-w-[220px]">
             <FilterableCombobox
               value={formFilter}
-              onValueChange={handleFormFilterChange}
+              onChange={handleFormFilterChange}
               options={formOptions}
               placeholder="Të gjitha format"
               searchPlaceholder="Kërko formatin..."

@@ -221,6 +221,7 @@ export function GovernmentRevenueStackedChart({
             const seriesName = typeof label === "string" ? label : key;
             return (
               <Area
+                isAnimationActive={false}
                 key={key}
                 type="monotone"
                 dataKey={key}

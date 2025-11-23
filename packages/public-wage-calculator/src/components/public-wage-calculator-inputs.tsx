@@ -384,7 +384,7 @@ export function PublicWageCalculatorInputs({
             <FieldContent className="min-w-0">
               <FilterableCombobox
                 value={selectedPositionId}
-                onValueChange={onPositionChange}
+                onChange={onPositionChange}
                 options={comboboxOptions}
                 placeholder={
                   selectedSector

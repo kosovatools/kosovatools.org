@@ -20,8 +20,8 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import { MultiSelectCombobox } from "../components/multi-select-combobox";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
+import { FilterableCombobox } from "@workspace/ui/custom-components/filterable-combobox";
 
 const MAX_SELECTED_ARTICLES = 10;
 const DEFAULT_VISIBLE_ARTICLES = 3;
@@ -103,28 +103,25 @@ export function CpiAveragePricesChart({ dataset, timelineEvents }: Props) {
   return (
     <ChartScaffolding
       actions={
-        <div className="flex justify-end w-full">
+        <>
           <OptionSelector
             label="Periudha"
             value={timeRange}
             onChange={setTimeRange}
             options={timeRangeOptions}
           />
-        </div>
-      }
-      selectors={
-        <MultiSelectCombobox
-          description={`Krahaso deri në ${MAX_SELECTED_ARTICLES} artikuj ushqimorë dhe shërbime për të parë trendet mesatare të çmimeve vjetore.`}
-          selectedValues={selectedArticles}
-          onChange={setSelectedArticles}
-          options={comboboxOptions}
-          maxSelected={MAX_SELECTED_ARTICLES}
-          addPlaceholder="Shto një artikull..."
-          maxSelectedPlaceholder="Maksimumi i arritur"
-          searchPlaceholder="Kërko artikull..."
-          emptyMessage="Asnjë artikull nuk përputhet."
-          emptySelectionMessage="Zgjedh të paktën një artikull për të shfaqur grafikun."
-        />
+          <FilterableCombobox
+            multiple
+            value={selectedArticles}
+            onChange={setSelectedArticles}
+            options={comboboxOptions}
+            maxSelected={MAX_SELECTED_ARTICLES}
+            minSelected={1}
+            placeholder="Shto një artikull..."
+            searchPlaceholder="Kërko artikull..."
+            emptyMessage="Asnjë artikull nuk përputhet."
+          />
+        </>
       }
     >
       <ChartContainer
@@ -150,7 +147,7 @@ export function CpiAveragePricesChart({ dataset, timelineEvents }: Props) {
             axisLine={false}
             domain={["auto", "auto"]}
             tickMargin={10}
-            width={80}
+            width="auto"
             tickFormatter={(value) => formatCurrency(value as number)}
           />
           <TimelineEventMarkers
@@ -166,6 +163,7 @@ export function CpiAveragePricesChart({ dataset, timelineEvents }: Props) {
           <ChartLegend content={<ChartLegendContent />} />
           {Object.keys(chartConfig).map((key) => (
             <Line
+              isAnimationActive={false}
               key={key}
               dataKey={key}
               type="monotone"

@@ -119,33 +119,33 @@ export function TopCategoryByCityStackedChart({
   return (
     <ChartScaffolding
       actions={
-        <NativeSelect
-          id="economic-activity-city"
-          value={selectedCity ?? ""}
-          onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
-            setSelectedCity(
-              event.target.value ? String(event.target.value) : null,
-            )
-          }
-          className="w-full"
-        >
-          <NativeSelectOption disabled>Zgjedh Qytetin</NativeSelectOption>
-          {cities.map((entry) => (
-            <NativeSelectOption key={entry.key} value={entry.key}>
-              {entry.label}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
-      }
-      selectors={
-        <StackedKeySelector
-          totals={totals}
-          selection={selection}
-          onSelectionChange={setSelection}
-          topCount={CITY_STACK_TOP}
-          selectionLabel="Zgjedh kategoritë kryesore"
-          searchPlaceholder="Kërko kategoritë..."
-        />
+        <>
+          <NativeSelect
+            id="economic-activity-city"
+            value={selectedCity ?? ""}
+            onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+              setSelectedCity(
+                event.target.value ? String(event.target.value) : null,
+              )
+            }
+            className="w-full"
+          >
+            <NativeSelectOption disabled>Zgjedh Qytetin</NativeSelectOption>
+            {cities.map((entry) => (
+              <NativeSelectOption key={entry.key} value={entry.key}>
+                {entry.label}
+              </NativeSelectOption>
+            ))}
+          </NativeSelect>
+          <StackedKeySelector
+            totals={totals}
+            selection={selection}
+            onSelectionChange={setSelection}
+            topCount={CITY_STACK_TOP}
+            selectionLabel="Zgjedh kategoritë kryesore"
+            searchPlaceholder="Kërko kategoritë..."
+          />
+        </>
       }
     >
       <ChartContainer
@@ -179,6 +179,7 @@ export function TopCategoryByCityStackedChart({
           <ChartLegend content={<ChartLegendContent />} />
           {chartKeys.map((key) => (
             <Area
+              isAnimationActive={false}
               key={key}
               dataKey={key}
               type="monotone"

@@ -26,9 +26,7 @@ export interface FilterableComboboxOption {
   notes?: string;
 }
 
-export interface FilterableComboboxProps {
-  value: string | null;
-  onValueChange: (value: string | null) => void;
+type BaseComboboxProps = {
   options: FilterableComboboxOption[];
   placeholder?: string;
   searchPlaceholder?: string;
@@ -37,59 +35,130 @@ export interface FilterableComboboxProps {
   disabled?: boolean;
   triggerClassName?: string;
   contentClassName?: string;
-}
+};
 
-export function FilterableCombobox({
-  value,
-  onValueChange,
-  options,
-  placeholder = "Select an option...",
-  searchPlaceholder = "Search...",
-  emptyMessage = "No results found.",
-  maxResults = 100,
-  disabled,
-  triggerClassName,
-  contentClassName,
-}: FilterableComboboxProps) {
+type SingleComboboxProps = BaseComboboxProps & {
+  multiple?: false;
+  value: string | null;
+  onChange: (value: string | null) => void;
+};
+
+type MultiComboboxProps = BaseComboboxProps & {
+  multiple: true;
+  value: string[];
+  onChange: (values: string[]) => void;
+  maxSelected?: number;
+  minSelected?: number;
+  selectionDisplayLimit?: number;
+  emptySelectionPlaceholder?: string;
+};
+
+export type FilterableComboboxProps = SingleComboboxProps | MultiComboboxProps;
+
+export function FilterableCombobox(props: FilterableComboboxProps) {
+  const {
+    options,
+    emptyMessage = "No results found.",
+    maxResults = 100,
+    searchPlaceholder = "Search...",
+    disabled,
+    triggerClassName,
+    contentClassName,
+  } = props;
+
+  const value = props.value;
+  const isMultiple = props.multiple === true;
+  const placeholder = props.placeholder
+    ? props.placeholder
+    : isMultiple
+      ? "Select options..."
+      : "Select an option...";
+  const emptySelectionPlaceholder = isMultiple
+    ? (props.emptySelectionPlaceholder ?? placeholder)
+    : placeholder;
+  const selectionDisplayLimit = isMultiple
+    ? (props.selectionDisplayLimit ?? 3)
+    : 0;
+  const minSelected = isMultiple ? (props.minSelected ?? 0) : 0;
+  const maxSelected = isMultiple ? props.maxSelected : undefined;
+  const safeMaxResults = Math.max(1, maxResults);
+
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
+  const optionLookup = React.useMemo(
+    () => new Map(options.map((option) => [option.value, option])),
+    [options],
+  );
+
+  const selectedValues = React.useMemo(() => {
+    if (isMultiple) {
+      return Array.isArray(value) ? value : [];
+    }
+    if (Array.isArray(value)) {
+      return [];
+    }
+    return value ? [value] : [];
+  }, [isMultiple, value]);
+
+  const selectedSet = React.useMemo(
+    () => new Set(selectedValues),
+    [selectedValues],
+  );
+
+  const selectedOptions = React.useMemo(
+    () =>
+      selectedValues.map(
+        (value) => optionLookup.get(value) ?? { value, label: value },
+      ),
+    [optionLookup, selectedValues],
+  );
+
   const selectedOption = React.useMemo(() => {
-    if (value == null || value === "") {
-      return null;
+    if (isMultiple || Array.isArray(value) || !value) return null;
+    return optionLookup.get(value) ?? null;
+  }, [isMultiple, optionLookup, value]);
+
+  const reachedMaxSelected =
+    isMultiple &&
+    typeof maxSelected === "number" &&
+    selectedValues.length >= maxSelected;
+
+  const selectionTitle = React.useMemo(() => {
+    if (!selectedOptions.length) {
+      return undefined;
     }
+    return selectedOptions.map((option) => option.label).join(", ");
+  }, [selectedOptions]);
 
-    return options.find((item) => item.value === value) ?? null;
-  }, [options, value]);
+  const extraSelectionCount = isMultiple
+    ? Math.max(0, selectedOptions.length - selectionDisplayLimit)
+    : 0;
 
-  const filteredOptions = React.useMemo(() => {
-    const trimmed = search.trim().toLowerCase();
-    if (!trimmed) {
-      return options.slice(0, maxResults);
-    }
+  const filteredOptions = React.useMemo(
+    () =>
+      filterOptions({
+        options,
+        search,
+        maxResults: safeMaxResults,
+        selectedSet,
+      }),
+    [options, search, safeMaxResults, selectedSet],
+  );
 
-    return options
-      .filter((option) => {
-        const haystack = [
-          option.label,
-          option.notes ?? "",
-          ...(option.keywords ?? []),
-        ].join(" ");
-        return haystack.toLowerCase().includes(trimmed);
-      })
-      .slice(0, maxResults);
-  }, [maxResults, options, search]);
+  const handleToggle = React.useCallback(
+    (nextOpen: boolean) => {
+      if (disabled) {
+        return;
+      }
 
-  const handleToggle = (nextOpen: boolean) => {
-    if (disabled) {
-      return;
-    }
-
-    setOpen(nextOpen);
-    if (!nextOpen) {
-      setSearch("");
-    }
-  };
+      setOpen(nextOpen);
+      if (!nextOpen) {
+        setSearch("");
+      }
+    },
+    [disabled],
+  );
 
   React.useEffect(() => {
     if (disabled && open) {
@@ -97,6 +166,45 @@ export function FilterableCombobox({
       setSearch("");
     }
   }, [disabled, open]);
+
+  const handleSelect = React.useCallback(
+    (optionValue: string) => {
+      if (props.multiple) {
+        const isSelected = selectedSet.has(optionValue);
+        if (isSelected) {
+          if (selectedValues.length <= minSelected) {
+            return;
+          }
+          const nextValues = selectedValues.filter(
+            (value) => value !== optionValue,
+          );
+          props.onChange(nextValues);
+          return;
+        }
+
+        if (reachedMaxSelected) {
+          return;
+        }
+
+        props.onChange([...selectedValues, optionValue]);
+        return;
+      }
+
+      const isSelected = selectedOption?.value === optionValue;
+      const nextValue = isSelected ? null : optionValue;
+      props.onChange(nextValue);
+      handleToggle(false);
+    },
+    [
+      minSelected,
+      handleToggle,
+      props,
+      reachedMaxSelected,
+      selectedOption?.value,
+      selectedSet,
+      selectedValues,
+    ],
+  );
 
   return (
     <Popover open={disabled ? false : open} onOpenChange={handleToggle}>
@@ -107,18 +215,50 @@ export function FilterableCombobox({
           role="combobox"
           aria-expanded={open}
           className={cn(
-            "min-w-0 w-full max-w-full shrink justify-between gap-2 overflow-hidden text-left",
+            "min-w-0 w-full md:w-auto shrink justify-between gap-1 text-left",
             "data-[placeholder=true]:text-muted-foreground",
+            isMultiple ? "h-auto py-2" : "overflow-hidden",
             triggerClassName,
           )}
           disabled={disabled}
-          data-placeholder={selectedOption ? undefined : true}
-          title={selectedOption ? selectedOption.label : undefined}
+          data-placeholder={selectedValues.length ? undefined : true}
+          title={selectionTitle ?? selectedOption?.label}
         >
-          <span className="min-w-0 flex-1 truncate">
-            {selectedOption ? selectedOption.label : placeholder}
-          </span>
-          <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+          {isMultiple ? (
+            <>
+              <div className="flex min-w-0 flex-1 items-center gap-1 overflow-hidden">
+                {selectedOptions.length ? (
+                  <>
+                    {extraSelectionCount > 0 ? (
+                      <span className="inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground">
+                        +{extraSelectionCount}
+                      </span>
+                    ) : null}
+                    {selectedOptions
+                      .slice(0, selectionDisplayLimit)
+                      .map((option) => (
+                        <span
+                          key={option.value}
+                          className="inline-flex max-w-full items-center gap-1 rounded-full bg-muted px-2 py-1 text-xs leading-tight"
+                        >
+                          <span className="truncate">{option.label}</span>
+                        </span>
+                      ))}
+                  </>
+                ) : (
+                  <span className="truncate">{emptySelectionPlaceholder}</span>
+                )}
+              </div>
+              <ChevronsUpDown className="ml-px size-4 shrink-0 opacity-50" />
+            </>
+          ) : (
+            <>
+              <span className="min-w-0 flex-1 truncate">
+                {selectedOption ? selectedOption.label : placeholder}
+              </span>
+              <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+            </>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -140,16 +280,22 @@ export function FilterableCombobox({
             <CommandEmpty>{emptyMessage}</CommandEmpty>
             <CommandGroup>
               {filteredOptions.map((option) => {
-                const isSelected = option.value === value;
+                const isSelected = selectedSet.has(option.value);
+                const isMaxedOut =
+                  isMultiple && reachedMaxSelected && !isSelected;
                 return (
                   <CommandItem
                     key={option.value}
                     value={option.value}
-                    className="flex items-start gap-2"
+                    className={cn(
+                      "flex items-start gap-2",
+                      isMaxedOut && "cursor-not-allowed opacity-60",
+                    )}
                     onSelect={() => {
-                      onValueChange(isSelected ? null : option.value);
-                      handleToggle(false);
+                      if (isMaxedOut) return;
+                      handleSelect(option.value);
                     }}
+                    aria-disabled={isMaxedOut}
                   >
                     <Check
                       className={cn(
@@ -176,4 +322,49 @@ export function FilterableCombobox({
       </PopoverContent>
     </Popover>
   );
+}
+
+function filterOptions({
+  options,
+  search,
+  maxResults,
+  selectedSet,
+}: {
+  options: FilterableComboboxOption[];
+  search: string;
+  maxResults: number;
+  selectedSet: Set<string>;
+}) {
+  const trimmed = search.trim().toLowerCase();
+  const baseList = trimmed
+    ? options.filter((option) => {
+        const haystack = [
+          option.label,
+          option.notes ?? "",
+          ...(option.keywords ?? []),
+        ]
+          .join(" ")
+          .toLowerCase();
+        return haystack.includes(trimmed);
+      })
+    : options;
+
+  const seen = new Set<string>();
+  const selected: FilterableComboboxOption[] = [];
+  const unselected: FilterableComboboxOption[] = [];
+
+  for (const option of baseList) {
+    if (seen.has(option.value)) {
+      continue;
+    }
+    seen.add(option.value);
+
+    if (selectedSet.has(option.value)) {
+      selected.push(option);
+    } else {
+      unselected.push(option);
+    }
+  }
+
+  return [...selected, ...unselected].slice(0, maxResults);
 }

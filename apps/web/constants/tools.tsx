@@ -14,7 +14,6 @@ import {
   Zap,
   type LucideIcon,
   type LucideProps,
-  IconNode,
   Icon,
 } from "lucide-react";
 import { candlestick } from "@lucide/lab";

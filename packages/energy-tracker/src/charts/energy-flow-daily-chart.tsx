@@ -90,6 +90,7 @@ export function DailyFlowChart({
           />
           <ChartLegend content={<ChartLegendContent />} />
           <Area
+            isAnimationActive={false}
             dataKey="imports"
             type="monotone"
             fill="var(--color-imports)"
@@ -98,6 +99,7 @@ export function DailyFlowChart({
             strokeWidth={2}
           />
           <Area
+            isAnimationActive={false}
             dataKey="exports"
             type="monotone"
             fill="var(--color-exports)"
@@ -106,6 +108,7 @@ export function DailyFlowChart({
             strokeWidth={2}
           />
           <Line
+            isAnimationActive={false}
             dataKey="net"
             type="monotone"
             stroke="var(--color-net)"

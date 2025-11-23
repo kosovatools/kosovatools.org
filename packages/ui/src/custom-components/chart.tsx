@@ -463,7 +463,7 @@ function ChartLegendContent({
 }
 
 const COMMON_CHART_MARGINS = {
-  left: 12,
+  left: 0,
   right: 12,
   top: 10,
   bottom: 0,

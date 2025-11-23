@@ -141,6 +141,7 @@ export function ElectricityBalanceStackedAreaChart({
           />
           <ChartLegend content={<ChartLegendContent />} />
           <Area
+            isAnimationActive={false}
             type="monotone"
             dataKey="production"
             stackId="balance"
@@ -150,6 +151,7 @@ export function ElectricityBalanceStackedAreaChart({
             name={chartConfig.production.label}
           />
           <Area
+            isAnimationActive={false}
             type="monotone"
             dataKey="import"
             stackId="balance"

@@ -108,17 +108,15 @@ export function TradeChapterStackedChart({
             options={TIME_RANGE_OPTIONS}
             label="Intervali"
           />
+          <StackedKeySelector
+            totals={totals}
+            selection={selection}
+            onSelectionChange={setSelection}
+            topCount={top}
+            selectionLabel="Zgjedh kapitujt"
+            searchPlaceholder="Kërko kapitujt..."
+          />
         </>
-      }
-      selectors={
-        <StackedKeySelector
-          totals={totals}
-          selection={selection}
-          onSelectionChange={setSelection}
-          topCount={top}
-          selectionLabel="Zgjedh kapitujt"
-          searchPlaceholder="Kërko kapitujt..."
-        />
       }
     >
       <ChartContainer
@@ -157,6 +155,7 @@ export function TradeChapterStackedChart({
 
             return (
               <Area
+                isAnimationActive={false}
                 key={key}
                 type="monotone"
                 dataKey={key}

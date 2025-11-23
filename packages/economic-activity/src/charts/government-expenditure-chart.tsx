@@ -121,17 +121,15 @@ export function GovernmentExpenditureStackedChart({
             options={timeRangeOptions}
             label="Intervali"
           />
+          <StackedKeySelector
+            totals={totals}
+            selection={selection}
+            onSelectionChange={setSelection}
+            topCount={DEFAULT_TOP_CATEGORIES}
+            selectionLabel={selectionLabel}
+            searchPlaceholder={searchPlaceholder}
+          />
         </>
-      }
-      selectors={
-        <StackedKeySelector
-          totals={totals}
-          selection={selection}
-          onSelectionChange={setSelection}
-          topCount={DEFAULT_TOP_CATEGORIES}
-          selectionLabel={selectionLabel}
-          searchPlaceholder={searchPlaceholder}
-        />
       }
     >
       <ChartContainer
@@ -170,6 +168,7 @@ export function GovernmentExpenditureStackedChart({
             const seriesName = typeof label === "string" ? label : key;
             return (
               <Area
+                isAnimationActive={false}
                 key={key}
                 type="monotone"
                 dataKey={key}

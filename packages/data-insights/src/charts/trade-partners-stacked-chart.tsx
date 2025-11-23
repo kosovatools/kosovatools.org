@@ -115,17 +115,15 @@ export function TradePartnersStackedChart({
             options={TIME_RANGE_OPTIONS}
             label="Intervali"
           />
+          <StackedKeySelector
+            totals={totals}
+            selection={selection}
+            onSelectionChange={setSelection}
+            topCount={top}
+            selectionLabel="Zgjedh partnerët"
+            searchPlaceholder="Kërko shtetet..."
+          />
         </>
-      }
-      selectors={
-        <StackedKeySelector
-          totals={totals}
-          selection={selection}
-          onSelectionChange={setSelection}
-          topCount={top}
-          selectionLabel="Zgjedh partnerët"
-          searchPlaceholder="Kërko shtetet..."
-        />
       }
     >
       <ChartContainer config={chartConfig}>
@@ -161,6 +159,7 @@ export function TradePartnersStackedChart({
 
             return (
               <Area
+                isAnimationActive={false}
                 key={key}
                 type="monotone"
                 dataKey={key}

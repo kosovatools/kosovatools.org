@@ -126,6 +126,7 @@ export function AviationStatsChart({
           />
           <ChartLegend content={<ChartLegendContent />} />
           <Area
+            isAnimationActive={false}
             type="monotone"
             dataKey="passengers_inbound"
             yAxisId="passengers"
@@ -135,6 +136,7 @@ export function AviationStatsChart({
             fillOpacity={0.2}
           />
           <Area
+            isAnimationActive={false}
             type="monotone"
             dataKey="passengers_outbound"
             yAxisId="passengers"
@@ -142,17 +144,16 @@ export function AviationStatsChart({
             stroke="var(--color-passengers_outbound)"
             fill="var(--color-passengers_outbound)"
             fillOpacity={0.2}
-            isAnimationActive={false}
             name={chartConfig.passengers_outbound.label}
           />
           <Line
+            isAnimationActive={false}
             type="monotone"
             dataKey="flights"
             yAxisId="flights"
             stroke="var(--color-flights)"
             strokeWidth={2}
             dot={false}
-            isAnimationActive={false}
             name={chartConfig.flights.label}
           />
         </AreaChart>

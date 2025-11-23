@@ -107,17 +107,15 @@ export function CategoriesOverYearsChart({
             onChange={(value) => setTimeRange(value)}
             options={timeRangeOptions}
           />
+          <StackedKeySelector
+            totals={totals}
+            selection={selection}
+            onSelectionChange={setSelection}
+            topCount={CATEGORY_STACK_TOP}
+            selectionLabel="Zgjedh kategoritë"
+            searchPlaceholder="Kërko kategoritë..."
+          />
         </>
-      }
-      selectors={
-        <StackedKeySelector
-          totals={totals}
-          selection={selection}
-          onSelectionChange={setSelection}
-          topCount={CATEGORY_STACK_TOP}
-          selectionLabel="Zgjedh kategoritë"
-          searchPlaceholder="Kërko kategoritë..."
-        />
       }
     >
       <ChartContainer
@@ -151,6 +149,7 @@ export function CategoriesOverYearsChart({
           <ChartLegend content={<ChartLegendContent />} />
           {chartKeys.map((key) => (
             <Area
+              isAnimationActive={false}
               key={key}
               dataKey={key}
               type="monotone"

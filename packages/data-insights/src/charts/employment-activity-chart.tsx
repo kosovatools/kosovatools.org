@@ -128,6 +128,7 @@ export function EmploymentActivityChart({
           <ChartLegend content={<ChartLegendContent />} />
           {chartKeys.map((key) => (
             <Area
+              isAnimationActive={false}
               key={key}
               type="monotone"
               dataKey={key}
@@ -135,7 +136,6 @@ export function EmploymentActivityChart({
               stroke={`var(--color-${key})`}
               fill={`var(--color-${key})`}
               fillOpacity={0.2}
-              isAnimationActive={false}
             />
           ))}
         </AreaChart>

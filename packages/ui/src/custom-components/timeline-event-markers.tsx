@@ -54,10 +54,11 @@ export function TimelineEventMarkers({
     >
       <Label
         value={event.label}
-        position={"left"}
-        textAnchor="middle"
+        position={"insideTop"}
+        textAnchor="end"
+        dy={10}
         fill="var(--muted-foreground)"
-        className="text-xs"
+        className="text-xs sm:text-sm"
         angle={-90}
       />
     </ReferenceLine>

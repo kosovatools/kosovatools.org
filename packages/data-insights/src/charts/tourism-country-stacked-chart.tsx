@@ -108,17 +108,15 @@ export function TourismCountryStackedChart({
             options={timeRangeOptions}
             label="Intervali"
           />
+          <StackedKeySelector
+            totals={totals}
+            selection={selection}
+            onSelectionChange={setSelection}
+            topCount={top}
+            selectionLabel="Zgjedh vendet"
+            searchPlaceholder="Kërko vende..."
+          />
         </>
-      }
-      selectors={
-        <StackedKeySelector
-          totals={totals}
-          selection={selection}
-          onSelectionChange={setSelection}
-          topCount={top}
-          selectionLabel="Zgjedh vendet"
-          searchPlaceholder="Kërko vende..."
-        />
       }
     >
       <ChartContainer config={chartConfig}>
@@ -152,6 +150,7 @@ export function TourismCountryStackedChart({
 
             return (
               <Area
+                isAnimationActive={false}
                 key={key}
                 type="monotone"
                 dataKey={key}

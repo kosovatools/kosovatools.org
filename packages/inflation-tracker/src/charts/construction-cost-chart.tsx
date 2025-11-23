@@ -172,6 +172,7 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
           <ChartLegend content={<ChartLegendContent />} />
           {Object.keys(chartConfig).map((key) => (
             <Line
+              isAnimationActive={false}
               key={key}
               dataKey={key}
               type="monotone"

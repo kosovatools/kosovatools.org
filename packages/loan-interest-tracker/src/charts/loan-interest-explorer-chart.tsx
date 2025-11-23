@@ -187,6 +187,7 @@ export function LoanInterestExplorerChart({
           <ChartLegend content={<ChartLegendContent />} />
           {Object.keys(chartConfig).map((key) => (
             <Line
+              isAnimationActive={false}
               key={key}
               dataKey={key}
               type="monotone"

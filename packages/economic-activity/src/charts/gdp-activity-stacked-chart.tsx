@@ -140,17 +140,15 @@ export function GdpActivityStackedChart({
             options={TIME_RANGE_OPTIONS}
             label="Intervali"
           />
+          <StackedKeySelector
+            totals={totals}
+            selection={selection}
+            onSelectionChange={setSelection}
+            topCount={DEFAULT_TOP_ACTIVITIES}
+            selectionLabel="Zgjedh aktivitetet"
+            searchPlaceholder="Kërko sipas aktivitetit..."
+          />
         </>
-      }
-      selectors={
-        <StackedKeySelector
-          totals={totals}
-          selection={selection}
-          onSelectionChange={setSelection}
-          topCount={DEFAULT_TOP_ACTIVITIES}
-          selectionLabel="Zgjedh aktivitetet"
-          searchPlaceholder="Kërko sipas aktivitetit..."
-        />
       }
     >
       <ChartContainer
@@ -188,6 +186,7 @@ export function GdpActivityStackedChart({
             const seriesName = typeof label === "string" ? label : key;
             return (
               <Area
+                isAnimationActive={false}
                 key={key}
                 type="monotone"
                 dataKey={key}

@@ -60,6 +60,7 @@ export function VehicleTypesStackedChart({
           <ChartLegend content={<ChartLegendContent />} />
           {chartKeys.map((key) => (
             <Area
+              isAnimationActive={false}
               key={key}
               type="monotone"
               dataKey={key}
@@ -67,7 +68,6 @@ export function VehicleTypesStackedChart({
               stroke={`var(--color-${key})`}
               fill={`var(--color-${key})`}
               fillOpacity={0.2}
-              isAnimationActive={false}
             />
           ))}
         </AreaChart>

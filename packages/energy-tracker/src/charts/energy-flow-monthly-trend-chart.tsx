@@ -135,6 +135,7 @@ export function MonthlyFlowTrendChart({
           />
           <ChartLegend content={<ChartLegendContent />} />
           <Area
+            isAnimationActive={false}
             dataKey="imports"
             type="monotone"
             fill="var(--color-imports)"
@@ -143,6 +144,7 @@ export function MonthlyFlowTrendChart({
             strokeWidth={2}
           />
           <Area
+            isAnimationActive={false}
             dataKey="exports"
             type="monotone"
             fill="var(--color-exports)"
@@ -151,6 +153,7 @@ export function MonthlyFlowTrendChart({
             strokeWidth={2}
           />
           <Line
+            isAnimationActive={false}
             type="monotone"
             dataKey="net"
             stroke="var(--color-net)"

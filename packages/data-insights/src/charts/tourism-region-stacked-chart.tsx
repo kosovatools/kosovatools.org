@@ -176,6 +176,7 @@ export function TourismRegionCharts({
 
             return (
               <Area
+                isAnimationActive={false}
                 key={key}
                 type="monotone"
                 dataKey={key}

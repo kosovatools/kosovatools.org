@@ -79,7 +79,7 @@ export function MonthlyCategoryStackedChart({
 
   return (
     <ChartScaffolding
-      selectors={
+      actions={
         <StackedKeySelector
           totals={totals}
           selection={selection}
@@ -121,6 +121,7 @@ export function MonthlyCategoryStackedChart({
           <ChartLegend content={<ChartLegendContent />} />
           {chartKeys.map((key) => (
             <Area
+              isAnimationActive={false}
               key={key}
               dataKey={key}
               type="monotone"

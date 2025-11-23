@@ -154,6 +154,7 @@ export function ElectricityProductionStackedAreaChart({
           />
           <ChartLegend content={<ChartLegendContent />} />
           <Area
+            isAnimationActive={false}
             type="monotone"
             dataKey="production_thermal_gwh"
             stackId="production"
@@ -163,6 +164,7 @@ export function ElectricityProductionStackedAreaChart({
             name={chartConfig.production_thermal_gwh.label}
           />
           <Area
+            isAnimationActive={false}
             type="monotone"
             dataKey="production_hydro_gwh"
             stackId="production"
@@ -172,6 +174,7 @@ export function ElectricityProductionStackedAreaChart({
             name={chartConfig.production_hydro_gwh.label}
           />
           <Area
+            isAnimationActive={false}
             type="monotone"
             dataKey="production_wind_solar_gwh"
             stackId="production"
