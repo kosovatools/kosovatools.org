@@ -119,90 +119,79 @@ export function LoanInterestExplorerChart({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid gap-4 lg:grid-cols-[360px_1fr]">
-        <div className="space-y-2 rounded-lg border bg-muted/30 p-3">
-          <p className="text-sm text-muted-foreground">
-            Zgjidh segmente nga hierarkia e CBK (ekonomitë familjare,
-            korporatat, maturitetet e hipotekave) për t&apos;i krahasuar në
-            kohë. Zgjedhjet e shumta shtohen si seri të veçanta.
-          </p>
-          <HierarchicalMultiSelect
-            title="Segmentet e kredive"
-            nodes={hierarchyNodes}
-            selectedIds={selectedCodes}
-            onSelectionChange={setSelectedCodes}
-            defaultExpandedIds={["T", "H", "N"]}
-            selectionBehavior="independent"
-            minSelected={1}
-            scrollContainerClassName="max-h-[520px] border rounded-md bg-background"
-          />
-        </div>
-        <div className="space-y-2">
-          <div className="flex flex-wrap justify-between items-center gap-3">
-            <OptionSelector
-              label="Grupimi"
-              value={periodGrouping}
-              onChange={setPeriodGrouping}
-              options={periodGroupingOptions}
-            />
-            <OptionSelector
-              label="Periudha"
-              value={timeRange}
-              onChange={setTimeRange}
-              options={timeRangeOptions}
-            />
-          </div>
-          <ChartContainer
-            config={chartConfig}
-            className="w-full aspect-[1/1.5] sm:aspect-video"
+      <div className="flex flex-wrap justify-between items-center gap-3">
+        <OptionSelector
+          label="Grupimi"
+          value={periodGrouping}
+          onChange={setPeriodGrouping}
+          options={periodGroupingOptions}
+        />
+        <OptionSelector
+          label="Periudha"
+          value={timeRange}
+          onChange={setTimeRange}
+          options={timeRangeOptions}
+        />
+      </div>
+      <div className="grid gap-3 lg:grid-cols-[320px_1fr]">
+        <HierarchicalMultiSelect
+          title="Segmentet e kredive"
+          nodes={hierarchyNodes}
+          selectedIds={selectedCodes}
+          onSelectionChange={setSelectedCodes}
+          defaultExpandedIds={["T", "H", "N"]}
+          selectionBehavior="independent"
+          minSelected={1}
+          scrollContainerClassName="max-h-[420px] border rounded-md bg-background"
+        />
+        <ChartContainer
+          config={chartConfig}
+          className="aspect-[1/1.4] sm:aspect-video"
+        >
+          <LineChart
+            accessibilityLayer
+            data={chartData}
+            margin={COMMON_CHART_MARGINS}
           >
-            <LineChart
-              accessibilityLayer
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="period"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={10}
+              tickFormatter={(value) => periodFormatter(String(value))}
+              minTickGap={24}
+            />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              domain={["auto", "auto"]}
+              tickMargin={10}
+              tickFormatter={(value) => formatPercent(value as number | null)}
+              width="auto"
+            />
+            <TimelineEventMarkers
               data={chartData}
-              margin={COMMON_CHART_MARGINS}
-            >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="period"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={10}
-                tickFormatter={(value) => periodFormatter(String(value))}
-                minTickGap={24}
+              grouping={periodGrouping}
+              {...timelineEvents}
+            />
+            <ChartTooltip
+              labelFormatter={periodFormatter}
+              valueFormatter={(value) => formatPercent(value as number | null)}
+            />
+            <ChartLegend content={<ChartLegendContent />} />
+            {Object.keys(chartConfig).map((key) => (
+              <Line
+                key={key}
+                dataKey={key}
+                type="monotone"
+                stroke={`var(--color-${key})`}
+                strokeWidth={2}
+                dot={false}
               />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                domain={["auto", "auto"]}
-                tickMargin={10}
-                tickFormatter={(value) => formatPercent(value as number | null)}
-                width="auto"
-              />
-              <TimelineEventMarkers
-                data={chartData}
-                grouping={periodGrouping}
-                {...timelineEvents}
-              />
-              <ChartTooltip
-                labelFormatter={periodFormatter}
-                valueFormatter={(value) =>
-                  formatPercent(value as number | null)
-                }
-              />
-              <ChartLegend content={<ChartLegendContent />} />
-              {Object.keys(chartConfig).map((key) => (
-                <Line
-                  key={key}
-                  dataKey={key}
-                  type="monotone"
-                  stroke={`var(--color-${key})`}
-                  strokeWidth={2}
-                  dot={false}
-                />
-              ))}
-            </LineChart>
-          </ChartContainer>
-        </div>
+            ))}
+          </LineChart>
+        </ChartContainer>
       </div>
     </div>
   );

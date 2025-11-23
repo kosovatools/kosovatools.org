@@ -55,8 +55,7 @@ export default function LoanInterestRatesPage() {
           <AlertDescription className="text-sm">
             Seritë fillojnë në janar 2010 (pas ndryshimit të metodologjisë) dhe
             përfshijnë vlera bosh kur CBK lë qeliza të paplotësuara në
-            publikimin origjinal. Vlerat janë tashmë të normalizuara (p.sh. 0.12
-            shfaqet si 12%) dhe shfaqen direkt si përqindje.
+            publikimin origjinal.
           </AlertDescription>
         </Alert>
         <LoanInterestDashboard />
