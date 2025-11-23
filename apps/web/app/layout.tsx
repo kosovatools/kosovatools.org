@@ -59,6 +59,30 @@ const themeInitScript = `
 })();
 `;
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  metadata.metadataBase?.toString() ??
+  "https://kosovatools.org";
+
+const structuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Kosova Tools",
+    url: siteUrl,
+    logo: `${siteUrl}/favicon.ico`,
+    sameAs: [GITHUB_REPO_URL],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Kosova Tools",
+    url: siteUrl,
+    inLanguage: "sq",
+    image: `${siteUrl}/og.png`,
+  },
+];
+
 const currentYear = new Date().getFullYear();
 
 export default function RootLayout({
@@ -72,6 +96,10 @@ export default function RootLayout({
         <Script id="theme-init" strategy="beforeInteractive">
           {themeInitScript}
         </Script>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
       </head>
       <body className="font-sans antialiased">
         <Script

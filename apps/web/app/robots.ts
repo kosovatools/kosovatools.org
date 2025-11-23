@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
+
 import { metadata } from "./layout";
-import { toolRoutes } from "@/constants/tools";
 
 export const dynamic = "force-static";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default function robots(): MetadataRoute.Robots {
   const baseUrl =
     process.env.NEXT_PUBLIC_SITE_URL ?? metadata.metadataBase?.toString();
 
@@ -16,14 +16,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ? baseUrl.slice(0, -1)
     : baseUrl;
 
-  const routes = ["", "about", ...toolRoutes];
-
-  return routes.map((route) => {
-    const path = route ? `/${route}` : "";
-
-    return {
-      url: `${normalizedBaseUrl}${path}`,
-      lastModified: new Date(),
-    };
-  });
+  return {
+    rules: [{ userAgent: "*", allow: "/" }],
+    sitemap: `${normalizedBaseUrl}/sitemap.xml`,
+  };
 }

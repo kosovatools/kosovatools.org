@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     "Kosovë",
     "kalkulator",
   ],
+  alternates: {
+    canonical: "/public-wage-calculator",
+  },
   openGraph: {
     type: "article",
     url: "/public-wage-calculator",

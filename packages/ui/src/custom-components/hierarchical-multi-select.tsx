@@ -317,7 +317,10 @@ export function HierarchicalMultiSelect({
                   aria-label={`Zgjedh ${node.label}`}
                   disabled={preventsDeselection && displayChecked}
                 />
-                <span className="truncate font-medium whitespace-nowrap" title={node.label}>
+                <span
+                  className="truncate font-medium whitespace-nowrap"
+                  title={node.label}
+                >
                   {node.label}
                 </span>
               </div>

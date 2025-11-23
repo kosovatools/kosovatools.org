@@ -28,6 +28,9 @@ export const metadata: Metadata = {
     siteName: "Kosova Tools",
     locale: "sq_AL",
   },
+  alternates: {
+    canonical: "/war-records",
+  },
   twitter: {
     card: "summary_large_image",
     title: warRecordsTitle,
