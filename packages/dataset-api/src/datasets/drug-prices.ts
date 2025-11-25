@@ -16,3 +16,9 @@ export function loadDrugPriceRecords(): Promise<DrugPriceRecordsDataset> {
 export function loadDrugPriceVersions(): Promise<DrugPriceVersionsDataset> {
   return fetchDrugPrices<DrugPriceVersionsDataset>("versions.json");
 }
+
+export function checkDrugPriceVersions(): Promise<DrugPriceVersionsDataset> {
+  return fetchDrugPrices<DrugPriceVersionsDataset>("versions.json", {
+    cache: "no-store",
+  });
+}
