@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { TradePartnersDatasetView } from "@workspace/kas-data";
+import { TradePartnersDatasetView } from "@workspace/data";
 import { formatCurrencyCompact } from "@workspace/utils";
 import {
   ChartContainer,

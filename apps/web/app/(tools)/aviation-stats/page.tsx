@@ -33,14 +33,17 @@ export const metadata: Metadata = {
 
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 import { AviationStats } from "@workspace/aviation-stats";
+import { loadAirTransportDataset } from "@workspace/data";
 
-export default function AviationStatsPage() {
+export default async function AviationStatsPage() {
+  const airTransport = await loadAirTransportDataset();
+
   return (
     <ToolPage
       title="Statistikat e aviacionit të Kosovës"
       description="Pasqyro pasagjerët hyrës dhe dalës që qarkullojnë çdo muaj në Aeroportin Ndërkombëtar të Prishtinës duke përdorur të dhënat zyrtare të ASK-së për trafikun ajror."
     >
-      <AviationStats />
+      <AviationStats dataset={airTransport} />
     </ToolPage>
   );
 }

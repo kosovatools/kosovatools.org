@@ -3,4 +3,4 @@ export {
   fetchCitiesDataset,
   fetchCityCategoryYearlyDataset,
   fetchMonthlyCityCategoryDataset,
-} from "@workspace/dataset-api";
+} from "@workspace/data";

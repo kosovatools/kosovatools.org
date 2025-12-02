@@ -18,7 +18,7 @@
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-tooltip": "^1.2.8",
-    "@workspace/kas-data": "workspace:*",
+    "@workspace/data": "workspace:*",
     "@workspace/timeline-events": "workspace:*",
     "@workspace/utils": "workspace:*",
     "chroma-js": "^3.1.2",

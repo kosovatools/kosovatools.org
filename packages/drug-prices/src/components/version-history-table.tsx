@@ -1,7 +1,7 @@
-import type { DrugPriceSnapshot } from "@workspace/dataset-api";
+import type { DrugPriceRecord } from "@workspace/data";
 import { formatCurrency, formatDate } from "@workspace/utils";
 type VersionHistoryTableProps = {
-  entries: DrugPriceSnapshot[];
+  entries: DrugPriceRecord["version_history"];
 };
 
 export function VersionHistoryTable({ entries }: VersionHistoryTableProps) {

@@ -1,5 +1,8 @@
-import { buildUiHierarchy } from "@workspace/kas-data";
-import type { LoanInterestDatasetView } from "@workspace/dataset-api";
+import {
+  buildUiHierarchy,
+  DatasetView,
+  LoanInterestDataset,
+} from "@workspace/data";
 import type { HierarchicalNode } from "@workspace/ui/custom-components/hierarchical-multi-select";
 
 export const SEGMENT_CODES = ["T", "H", "N"] as const;
@@ -11,7 +14,7 @@ type LoanInterestHierarchy = {
 };
 
 export function getLoanInterestHierarchy(
-  dataset: LoanInterestDatasetView,
+  dataset: DatasetView<LoanInterestDataset>,
 ): LoanInterestHierarchy {
   const dimensionOptions = dataset.meta.dimensions?.code ?? [];
   const optionLabelMap = Object.fromEntries(

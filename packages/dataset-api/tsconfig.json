@@ -4,7 +4,10 @@
     "outDir": "dist",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "paths": {
+      "@kosovatools/data-types": ["../../data/src/kas/types/index.ts"]
+    }
   },
   "include": ["src"]
 }

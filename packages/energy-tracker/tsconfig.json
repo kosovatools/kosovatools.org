@@ -3,8 +3,8 @@
   "compilerOptions": {
     "outDir": "dist",
     "paths": {
-      "@workspace/kas-data": ["../kas-data/src/index.ts"],
-      "@workspace/kas-data/*": ["../kas-data/src/*"]
+      "@workspace/data": ["../dataset-api/src/index.ts"],
+      "@workspace/data/*": ["../dataset-api/src/*"]
     }
   },
   "include": ["src", "data"]

@@ -46,8 +46,8 @@ Run `pnpm --filter web dev` for app-only development, `pnpm --filter web lint` t
 
 ### Data Workflow
 
-- Refresh Kosovo Agency of Statistics sources with `pnpm --filter @workspace/kas-data fetch-data` (or `pnpm fetch-data` from the root). Snapshots stay in `packages/kas-data/data/` and always include `{ meta, records }` so tools can show attribution without extra wiring.
-- Hosted datasets ship from https://data.kosovatools.org. Use `createDatasetFetcher` (from `@workspace/dataset-api`) plus `createDataset` (from `@workspace/kas-data`) to turn those JSON files into typed `DatasetView`s you can `limit`, `slice`, or `aggregate`.
+- Refresh Kosovo Agency of Statistics sources from the data repo (or consume them via `@workspace/data`). Snapshots live in `data/kas/*.json` and always include `{ meta, records }` so tools can show attribution without extra wiring.
+- Hosted datasets ship from https://data.kosovatools.org. Use `createDatasetFetcher` and `createDataset` from `@workspace/data` to turn those JSON files into typed `DatasetView`s you can `limit`, `slice`, or `aggregate`.
 - Render data sections through `DatasetRenderer` (`@workspace/ui/custom-components`). Hand it either a static dataset or a TanStack Query plus an optional empty state and it will handle loading/error visuals and print the standard footer copy.
 
 ## Contributing

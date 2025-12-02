@@ -1,14 +1,14 @@
 "use client";
-import {
-  tradePartners,
-  fuelDataset,
-  tradeChaptersMonthly,
-  vehicleTypesYearly,
-  employmentActivityGender,
-  wageLevels,
-  tourismCountry,
-  tourismRegion,
-} from "@workspace/kas-data";
+import type {
+  TradePartnersDataset,
+  FuelDataset,
+  TradeChaptersDataset,
+  VehicleTypesDataset,
+  EmploymentActivityGenderDataset,
+  WageLevelsDataset,
+  TourismCountryDataset,
+  TourismRegionDataset,
+} from "@workspace/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
 import { FuelBalanceChart } from "./charts/fuel-balance-chart";
@@ -20,7 +20,27 @@ import { TourismCountryStackedChart } from "./charts/tourism-country-stacked-cha
 import { TourismRegionCharts } from "./charts/tourism-region-stacked-chart";
 import { VehicleTypesStackedChart } from "./charts/vehicle-types-stacked-chart";
 
-export function DataInsightsDashboard() {
+type DataInsightsProps = {
+  tradeChapters: TradeChaptersDataset;
+  tradePartners: TradePartnersDataset;
+  employmentActivityGender: EmploymentActivityGenderDataset;
+  wageLevels: WageLevelsDataset;
+  fuelDataset: FuelDataset;
+  vehicleTypesYearly: VehicleTypesDataset;
+  tourismCountry: TourismCountryDataset;
+  tourismRegion: TourismRegionDataset;
+};
+
+export function DataInsightsDashboard({
+  tradeChapters,
+  tradePartners,
+  employmentActivityGender,
+  wageLevels,
+  fuelDataset,
+  vehicleTypesYearly,
+  tourismCountry,
+  tourismRegion,
+}: DataInsightsProps) {
   return (
     <div className="space-y-8">
       <section className="space-y-6">
@@ -28,7 +48,7 @@ export function DataInsightsDashboard() {
           Tregtia & Dogana
         </h2>
         <DatasetRenderer
-          dataset={tradeChaptersMonthly}
+          dataset={tradeChapters}
           title="Kapitujt kryesorë të tregtisë (shtresuar)"
           id="trade-chapters"
           description="Të dhëna mujore për eksportet (FOB) dhe importet (CIF) sipas kapitujve të nomenklaturës doganore. Ndrysho fluksin, përzgjedh periudhën ose filtro kapitujt kryesorë për të parë kontributet në kohë."

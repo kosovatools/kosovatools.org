@@ -6,15 +6,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@workspace/ui/components/tooltip";
-
-import type {
-  BuildingPermitRecord,
-  BuildingPermitsYearSummary,
-} from "@workspace/dataset-api";
+import {
+  BuildingPermitsIndex,
+  BuildingPermitsYearDataset,
+} from "@workspace/data";
 type PermitRecordsTableProps = {
-  records: BuildingPermitRecord[];
+  records: BuildingPermitsYearDataset["records"];
   hasFilters: boolean;
-  selectedSummary: BuildingPermitsYearSummary;
+  selectedSummary: BuildingPermitsIndex["years"][number];
 };
 
 export function PermitRecordsTable({

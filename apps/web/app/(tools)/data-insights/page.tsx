@@ -2,6 +2,16 @@ import type { Metadata } from "next";
 
 import { DataInsightsDashboard } from "@workspace/data-insights";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
+import {
+  loadTradeChaptersDataset,
+  loadTradePartnersDataset,
+  loadEmploymentActivityGenderDataset,
+  loadWageLevelsDataset,
+  loadKasFuelDataset,
+  loadVehicleTypesDataset,
+  loadTourismCountryDataset,
+  loadTourismRegionDataset,
+} from "@workspace/data";
 
 export const metadata: Metadata = {
   title:
@@ -37,13 +47,42 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DataInsightsPage() {
+export default async function DataInsightsPage() {
+  const [
+    tradeChapters,
+    tradePartners,
+    employmentActivityGender,
+    wageLevels,
+    fuelDataset,
+    vehicleTypesYearly,
+    tourismCountry,
+    tourismRegion,
+  ] = await Promise.all([
+    loadTradeChaptersDataset(),
+    loadTradePartnersDataset(),
+    loadEmploymentActivityGenderDataset(),
+    loadWageLevelsDataset(),
+    loadKasFuelDataset(),
+    loadVehicleTypesDataset(),
+    loadTourismCountryDataset(),
+    loadTourismRegionDataset(),
+  ]);
+
   return (
     <ToolPage
       title="Statistika të përgjithshme të Kosovës – Dashboard nga ASK"
       description="Vizualizoni trendet e tregtisë, energjisë, transportit dhe turizmit me grafika interaktive të bazuara në të dhënat e Agjencisë së Statistikave të Kosovës."
     >
-      <DataInsightsDashboard />
+      <DataInsightsDashboard
+        tradeChapters={tradeChapters}
+        tradePartners={tradePartners}
+        employmentActivityGender={employmentActivityGender}
+        wageLevels={wageLevels}
+        fuelDataset={fuelDataset}
+        vehicleTypesYearly={vehicleTypesYearly}
+        tourismCountry={tourismCountry}
+        tourismRegion={tourismRegion}
+      />
     </ToolPage>
   );
 }

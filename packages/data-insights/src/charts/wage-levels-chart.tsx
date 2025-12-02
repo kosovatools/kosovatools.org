@@ -3,7 +3,7 @@
 import * as React from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import { type WageLevelsDatasetView } from "@workspace/kas-data";
+import { type WageLevelsDatasetView } from "@workspace/data";
 import { formatCurrencyCompact } from "@workspace/utils";
 import {
   ChartContainer,

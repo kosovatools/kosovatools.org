@@ -23,10 +23,7 @@ import {
 import { formatCurrencyCompact, getPeriodFormatter } from "@workspace/utils";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
-import type {
-  MonthlyCategoryCityDatasetView,
-  MonthlyCategoryCityRecord,
-} from "@workspace/dataset-api";
+import type { MonthlyCategoryCityDatasetView } from "@workspace/data";
 import { MONTHLY_STACK_TOP, OTHER_LABEL } from "./constants";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
@@ -39,7 +36,9 @@ export function MonthlyCategoryStackedChart({
 }) {
   const stackConfig = React.useMemo(
     () => ({
-      valueAccessor: (record: MonthlyCategoryCityRecord) => record.turnover,
+      valueAccessor: (
+        record: MonthlyCategoryCityDatasetView["records"][number],
+      ) => record.turnover,
       dimension: "category",
       otherLabel: OTHER_LABEL,
     }),

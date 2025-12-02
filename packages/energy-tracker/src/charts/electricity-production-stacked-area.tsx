@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { electricityDataset, createLabelMap } from "@workspace/kas-data";
+import { createLabelMap, type ElectricityDatasetView } from "@workspace/data";
 import { sanitizeValue } from "@workspace/utils";
 import {
   ChartContainer,
@@ -29,8 +29,6 @@ import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-contr
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import { formatAuto } from "../utils/number-format";
-
-type ElectricityDatasetView = typeof electricityDataset;
 
 export function ElectricityProductionStackedAreaChart({
   dataset,

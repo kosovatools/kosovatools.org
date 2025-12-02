@@ -5,20 +5,17 @@ import { useQuery } from "@tanstack/react-query";
 import { DailyFlowChart } from "./charts/energy-flow-daily-chart";
 import { MonthlyFlowTrendChart } from "./charts/energy-flow-monthly-trend-chart";
 import { loadDailyDataset, loadMonthlyDataset } from "./flow-service";
-import type {
-  EnergyDailyDatasetView,
-  EnergyMonthlyDatasetView,
-} from "@workspace/dataset-api";
+import type { EnergyDailyDataset, EnergyMonthlyDataset } from "@workspace/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
 export function EnergyFlowExplorer() {
-  const monthlyQuery = useQuery<EnergyMonthlyDatasetView, Error>({
+  const monthlyQuery = useQuery<EnergyMonthlyDataset, Error>({
     queryKey: ["energy-flow", "monthly-dataset"],
     queryFn: loadMonthlyDataset,
     staleTime: Infinity,
   });
 
-  const dailyQuery = useQuery<EnergyDailyDatasetView, Error>({
+  const dailyQuery = useQuery<EnergyDailyDataset, Error>({
     queryKey: ["energy-flow", "daily-dataset"],
     queryFn: loadDailyDataset,
     staleTime: Infinity,

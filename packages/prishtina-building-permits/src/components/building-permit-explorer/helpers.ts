@@ -1,10 +1,12 @@
-import type { BuildingPermitRecord } from "@workspace/dataset-api";
+import type { BuildingPermitsYearDataset } from "@workspace/data";
 
 export const collator = new Intl.Collator("sq");
 
 export function sumRecords(
-  records: BuildingPermitRecord[],
-  selector: (record: BuildingPermitRecord) => number | null | undefined,
+  records: BuildingPermitsYearDataset["records"],
+  selector: (
+    record: BuildingPermitsYearDataset["records"][number],
+  ) => number | null | undefined,
 ): number {
   return records.reduce((total, record) => {
     const value = selector(record);

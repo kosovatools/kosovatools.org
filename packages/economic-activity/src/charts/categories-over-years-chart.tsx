@@ -25,10 +25,7 @@ import { formatCurrencyCompact } from "@workspace/utils";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
-import type {
-  TurnoverCategoriesDatasetView,
-  TurnoverCategoryRecord,
-} from "@workspace/dataset-api";
+import type { TurnoverCategoriesDatasetView } from "@workspace/data";
 import { CATEGORY_STACK_TOP, OTHER_LABEL } from "./constants";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
@@ -52,7 +49,9 @@ export function CategoriesOverYearsChart({
 
   const stackConfig = React.useMemo(
     () => ({
-      valueAccessor: (record: TurnoverCategoryRecord) => record.turnover,
+      valueAccessor: (
+        record: TurnoverCategoriesDatasetView["records"][number],
+      ) => record.turnover,
       dimension: "category",
       otherLabel: OTHER_LABEL,
     }),

@@ -4,6 +4,7 @@ import {
   summarizeStackTotals,
   groupPeriod,
   getPeriodFormatter,
+  formatDate,
   type PeriodGrouping,
   type PeriodFormatterOptions,
   type SeriesAggregationField,
@@ -14,12 +15,71 @@ import {
 import type {
   Dataset,
   DatasetMeta,
-  DimensionOption,
   DatasetMetaField,
+  DimensionHierarchyNode,
+  DimensionOption,
   GenericDatasetMeta,
-} from "../types/dataset";
-import { createLabelMap } from "./meta";
-import { TimeGranularity } from "@workspace/utils/utils/time-range";
+  TimeGranularity,
+} from "@kosovatools/data-types";
+
+// ---------- Meta helpers ----------
+type KeyLabelOption<TKey extends string = string> = Readonly<{
+  key: TKey;
+  label?: string | null;
+}>;
+
+export type LabelMap<TKey extends string = string> = ReadonlyMap<TKey, string>;
+
+export function formatGeneratedAt(
+  generatedAt?: string | null,
+  locale = "sq-AL",
+  fallback = "E panjohur",
+): string {
+  return formatDate(
+    generatedAt ?? null,
+    {
+      locale,
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    },
+    { fallback, preserveInputOnInvalid: false },
+  );
+}
+
+export function latestUpdatedAt(
+  metas: Array<GenericDatasetMeta | undefined>,
+): string | null {
+  let latest: string | null = null;
+  for (const meta of metas) {
+    const updatedAt = meta?.updated_at;
+    if (!updatedAt) continue;
+    if (!latest || updatedAt > latest) latest = updatedAt;
+  }
+  return latest;
+}
+
+function getSafeLabel<TKey extends string>(
+  option: KeyLabelOption<TKey>,
+): string {
+  const { key, label } = option;
+  if (typeof label === "string" && label.trim().length > 0) return label;
+  return key;
+}
+
+export function createLabelMap<TKey extends string>(
+  options?: ReadonlyArray<KeyLabelOption<TKey> | null | undefined>,
+): Readonly<Record<TKey, string>> {
+  if (!options?.length) return {} as Readonly<Record<TKey, string>>;
+  const filtered = options.filter((option): option is KeyLabelOption<TKey> =>
+    Boolean(option?.key && typeof option.key === "string"),
+  );
+  const entries = filtered.map((option) => [option.key, getSafeLabel(option)]);
+  return Object.fromEntries(entries) as Readonly<Record<TKey, string>>;
+}
 
 export type DatasetCoverageLabelOptions = Readonly<{
   formatPeriod?: (period: string) => string;
@@ -49,6 +109,7 @@ export function getDatasetCoverageLabel(
   return `${formattedFirst}${separator}${formattedLast}`;
 }
 
+// ---------- Dataset helpers ----------
 export type DatasetViewOptions = {
   limit?: number | null;
   slice?: { start?: string; end?: string };
@@ -95,6 +156,17 @@ export type DatasetView<TDataset extends GenericDataset> = Dataset<
 export type GenericDatasetView<
   TDataset extends GenericDataset = GenericDataset,
 > = DatasetView<TDataset>;
+
+export type HydratableDataset<
+  TDataset extends GenericDataset = GenericDataset,
+> =
+  TDataset extends DatasetView<infer InnerDataset extends GenericDataset>
+    ? InnerDataset
+    : TDataset;
+
+export type SerializableDataset<
+  TDataset extends GenericDataset = GenericDataset,
+> = Pick<HydratableDataset<TDataset>, "meta" | "records">;
 
 export type DatasetAggregateField<
   TRecord extends DatasetRecordBase,
@@ -404,7 +476,6 @@ function aggregateRecords<
 
   if (grouping === datasetGranularity) {
     return relevantRecords.map((record) => {
-      // Build just the metric values first
       const values: Record<TKey, number | null> = {} as Record<
         TKey,
         number | null
@@ -414,7 +485,6 @@ function aggregateRecords<
         values[field.key] = field.valueAccessor(record) ?? null;
       }
 
-      // Then combine with period and assert the final shape
       return {
         period: record.period,
         ...values,
@@ -521,4 +591,95 @@ function inferFieldAggregationMode(
     default:
       return undefined;
   }
+}
+
+// Convenience type re-exports
+export type {
+  Dataset,
+  DatasetMeta,
+  DatasetMetaBaseExtras,
+  DatasetMetaField,
+  DatasetMetaMonthly,
+  DatasetMetaQuarterly,
+  DatasetMetaYearly,
+  DimensionHierarchyNode,
+  DimensionOption,
+  GenericDatasetMeta,
+  TimeGranularity,
+} from "@kosovatools/data-types";
+
+// ---------- Dimension hierarchy UI helper ----------
+export type DimensionHierarchyUiNode = {
+  id: string;
+  label: string;
+  children?: DimensionHierarchyUiNode[];
+};
+
+export type UiHierarchyResult = {
+  nodes: DimensionHierarchyUiNode[];
+  labelMap: Record<string, string>;
+  defaultId: string | null;
+};
+
+export function buildUiHierarchy(
+  hierarchy: ReadonlyArray<DimensionHierarchyNode> | undefined,
+  options: ReadonlyArray<DimensionOption<string>> | undefined,
+): UiHierarchyResult {
+  if (!hierarchy?.length) {
+    const fallbackOptions = options?.filter(Boolean) ?? [];
+    const fallbackNodes = fallbackOptions.map<DimensionHierarchyUiNode>(
+      (option) => ({
+        id: option.key,
+        label: option.label,
+        children: [],
+      }),
+    );
+    const fallbackLabelMap = Object.fromEntries(
+      fallbackOptions.map((option) => [option.key, option.label]),
+    );
+    return {
+      nodes: fallbackNodes,
+      labelMap: fallbackLabelMap,
+      defaultId: fallbackOptions[0]?.key ?? null,
+    };
+  }
+
+  const nodeMap = new Map<string, DimensionHierarchyNode>();
+  hierarchy.forEach((node) => nodeMap.set(node.key, node));
+
+  const uiNodeCache = new Map<string, DimensionHierarchyUiNode>();
+
+  const toUiNode = (key: string): DimensionHierarchyUiNode | null => {
+    if (uiNodeCache.has(key)) return uiNodeCache.get(key)!;
+    const node = nodeMap.get(key);
+    if (!node) return null;
+    const uiChildren = node.children
+      .map((childKey) => toUiNode(childKey))
+      .filter((child): child is DimensionHierarchyUiNode => Boolean(child));
+    const uiNode: DimensionHierarchyUiNode = {
+      id: node.key,
+      label: node.label,
+      children: uiChildren,
+    };
+    uiNodeCache.set(key, uiNode);
+    return uiNode;
+  };
+
+  const rootKeys = hierarchy
+    .filter((node) => !node.parent)
+    .map((node) => node.key);
+  const nodes = rootKeys
+    .map((key) => toUiNode(key))
+    .filter((node): node is DimensionHierarchyUiNode => Boolean(node));
+
+  const labelMap: Record<string, string> = {};
+  hierarchy.forEach((node) => {
+    labelMap[node.key] = node.label;
+  });
+
+  return {
+    nodes,
+    labelMap,
+    defaultId: rootKeys[0] ?? hierarchy[0]?.key ?? null,
+  };
 }

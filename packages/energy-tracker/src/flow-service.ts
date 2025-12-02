@@ -1,4 +1,4 @@
-import { loadDailyDataset, loadMonthlyDataset } from "@workspace/dataset-api";
+import { loadDailyDataset, loadMonthlyDataset } from "@workspace/data";
 
 export function getMonthlyPeriodRange(period: string): {
   start: string;

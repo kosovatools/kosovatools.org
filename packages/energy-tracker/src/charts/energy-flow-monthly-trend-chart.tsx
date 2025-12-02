@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import type { EnergyMonthlyDatasetView } from "@workspace/dataset-api";
+import type { EnergyMonthlyDatasetView } from "@workspace/data";
 import {
   ChartContainer,
   ChartLegend,

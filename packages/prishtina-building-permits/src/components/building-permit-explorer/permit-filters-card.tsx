@@ -22,15 +22,15 @@ import {
 } from "@workspace/ui/components/native-select";
 
 import type {
+  BuildingPermitsIndex,
   BuildingPermitsYearDataset,
-  BuildingPermitsYearSummary,
-} from "@workspace/dataset-api";
+} from "@workspace/data";
 import { collator, sumRecords, toOptionLabel } from "./helpers";
 import { PermitRecordsTable } from "./permit-records-table";
 
 type PermitFiltersCardProps = {
   dataset: BuildingPermitsYearDataset;
-  selectedSummary: BuildingPermitsYearSummary;
+  selectedSummary: BuildingPermitsIndex["years"][number];
 };
 
 export function PermitFiltersCard({

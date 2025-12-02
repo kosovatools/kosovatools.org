@@ -36,14 +36,30 @@ export const metadata: Metadata = {
 };
 
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
+import {
+  loadCpiDataset,
+  loadCpiAveragePricesDataset,
+  loadConstructionCostIndexDataset,
+} from "@workspace/data";
 
-export default function InflationTrackerPage() {
+export default async function InflationTrackerPage() {
+  const [cpiDataset, cpiAveragePricesYearly, constructionCostIndexDataset] =
+    await Promise.all([
+      loadCpiDataset(),
+      loadCpiAveragePricesDataset(),
+      loadConstructionCostIndexDataset(),
+    ]);
+
   return (
     <ToolPage
       title="Gjurmuesi i inflacionit dhe kostove në Kosovë"
       description="Vëzhgo IHÇK-në (2015 = 100) me ndryshimet mujore sipas COICOP, krahaso çmimet mesatare vjetore të produkteve dhe analizo indeksin e kostos së ndërtimit."
     >
-      <InflationTracker />
+      <InflationTracker
+        cpiDataset={cpiDataset}
+        cpiAveragePricesYearly={cpiAveragePricesYearly}
+        constructionCostIndexDataset={constructionCostIndexDataset}
+      />
     </ToolPage>
   );
 }

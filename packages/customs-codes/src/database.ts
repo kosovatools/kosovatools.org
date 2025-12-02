@@ -1,13 +1,9 @@
 import Dexie, { type Table } from "dexie";
 import MiniSearch from "minisearch";
-import { loadCustomsTariffs } from "@workspace/dataset-api";
+import { loadCustomsTariffs } from "@workspace/data";
 
-import type {
-  CustomsFlatRow,
-  CustomsRecord,
-  CustomsTreeNode,
-  InitializationProgress,
-} from "@workspace/dataset-api";
+import type { CustomsTreeNode, CustomsRecord } from "@workspace/data";
+import { InitializationProgress } from "./types";
 
 const MINISEARCH_HIGHLIGHT_TEMPLATE =
   '<span class="bg-amber-200 text-gray-900 rounded px-0.5">$&</span>';
@@ -189,7 +185,7 @@ export class CustomsDataService {
     return index;
   }
 
-  static async getAllData(): Promise<CustomsFlatRow[]> {
+  static async getAllData(): Promise<CustomsRecord[]> {
     try {
       const db = getDb();
       const rows = await db.customs.orderBy("code").toArray();
@@ -201,7 +197,7 @@ export class CustomsDataService {
   }
 
   static async getLatestValidFromDate(
-    records?: CustomsFlatRow[],
+    records?: CustomsRecord[],
   ): Promise<Date | null> {
     try {
       const source = records ?? (await this.getAllData());
@@ -222,7 +218,7 @@ export class CustomsDataService {
     }
   }
 
-  static buildTreeFromList(list: CustomsFlatRow[]) {
+  static buildTreeFromList(list: CustomsRecord[]) {
     const byCode = new Map<string, CustomsTreeNode>();
     const presentCodes = new Set(list.map((record) => record.code));
     const roots: CustomsTreeNode[] = [];
@@ -309,7 +305,7 @@ export class CustomsDataService {
 
   private static async getSubtreeWithAncestors(
     target: string,
-  ): Promise<CustomsFlatRow[]> {
+  ): Promise<CustomsRecord[]> {
     const db = getDb();
     const subtree = await db.customs.where("code").startsWith(target).toArray();
     if (subtree.length === 0) return [];
@@ -351,7 +347,7 @@ export class CustomsDataService {
   private static async getSubtreesForHits(
     codes: string[],
     hits: MiniSearchHit[],
-  ): Promise<CustomsFlatRow[]> {
+  ): Promise<CustomsRecord[]> {
     const highlightMap = new Map(
       hits.map((hit) => [hit.id, hit.highlight || null]),
     );
@@ -410,7 +406,7 @@ export class CustomsDataService {
   static async searchByFields(
     idPrefix = "",
     descQuery = "",
-  ): Promise<CustomsFlatRow[]> {
+  ): Promise<CustomsRecord[]> {
     if (typeof window === "undefined") return [];
     const codePrefix = (idPrefix ?? "").trim();
     const descQueryTrimmed = (descQuery ?? "").trim();

@@ -25,7 +25,7 @@ import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffold
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
-import { TourismCountryDatasetView } from "@workspace/kas-data";
+import { TourismCountryDatasetView } from "@workspace/data";
 
 const DEFAULT_TOP_COUNTRIES = 5;
 

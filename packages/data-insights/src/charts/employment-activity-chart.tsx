@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { type EmploymentActivityGenderDatasetView } from "@workspace/kas-data";
+import { type EmploymentActivityGenderDatasetView } from "@workspace/data";
 import { formatCount } from "@workspace/utils";
 import {
   ChartContainer,

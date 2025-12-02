@@ -7,6 +7,11 @@ import {
 } from "@workspace/economic-activity";
 import ReactQueryProvider from "@/components/react-query-provider";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
+import {
+  loadGovernmentExpenditureDataset,
+  loadGovernmentRevenueDataset,
+  loadGdpByActivityDataset,
+} from "@workspace/data";
 
 export const metadata: Metadata = {
   title: "Aktiviteti ekonomik dhe financat publike të Kosovës",
@@ -40,7 +45,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function EconomicActivityPage() {
+export default async function EconomicActivityPage() {
+  const [revenue, expenditure, gdpByActivity] = await Promise.all([
+    loadGovernmentRevenueDataset(),
+    loadGovernmentExpenditureDataset(),
+    loadGdpByActivityDataset(),
+  ]);
+
   return (
     <ReactQueryProvider>
       <ToolPage
@@ -48,8 +59,11 @@ export default function EconomicActivityPage() {
         description="BPV tremujor sipas aktiviteteve ekonomike, qarkullimi i bizneseve sipas kategorive/komunave dhe të hyrat/shpenzimet e Qeverisë së Përgjithshme në një dashboard të vetëm."
       >
         <div className="space-y-12">
-          <GovernmentFinanceSection />
-          <GdpByActivitySection />
+          <GovernmentFinanceSection
+            revenue={revenue}
+            expenditure={expenditure}
+          />
+          <GdpByActivitySection dataset={gdpByActivity} />
           <TurnoverDashboard />
         </div>
       </ToolPage>

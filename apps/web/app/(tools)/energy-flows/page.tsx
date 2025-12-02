@@ -4,6 +4,7 @@ import {
   EnergyImportAndProduction,
 } from "@workspace/energy-tracker";
 import ReactQueryProvider from "@/components/react-query-provider";
+import { loadKasElectricityDataset } from "@workspace/data";
 
 export const metadata: Metadata = {
   title: "Gjurmuesi i rrjedhës së energjisë – Flukset kufitare të Kosovës",
@@ -37,13 +38,15 @@ export const metadata: Metadata = {
 };
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
-export default function EnergyFlowsPage() {
+export default async function EnergyFlowsPage() {
+  const electricityDataset = await loadKasElectricityDataset();
+
   return (
     <ToolPage
       title="Gjurmuesi i rrjedhës së energjisë"
       description="Vëzhgo importet, eksportet dhe bilancin neto të energjisë elektrike të Kosovës me vendet fqinje duke përdorur të dhëna mujore nga ENTSO-E dhe ASK."
     >
-      <EnergyImportAndProduction />
+      <EnergyImportAndProduction dataset={electricityDataset} />
       <section className="space-y-4">
         <div className="space-y-2">
           <h2 className="text-2xl font-semibold tracking-tight">

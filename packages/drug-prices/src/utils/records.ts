@@ -1,7 +1,4 @@
-import type {
-  DrugPriceRecord,
-  DrugReferencePrices,
-} from "@workspace/dataset-api";
+import type { DrugPriceRecord } from "@workspace/data";
 import { REFERENCE_PRICE_LABELS } from "../constants";
 
 export type ReferenceSection = {
@@ -36,7 +33,7 @@ export function buildSearchText(record: DrugPriceRecord): string {
     .join(" ");
 }
 
-function referenceEntries(map?: DrugReferencePrices | null) {
+function referenceEntries(map?: DrugPriceRecord["reference_prices"] | null) {
   if (!map) return [] as Array<{ label: string; value: number }>;
   return (
     Object.keys(REFERENCE_PRICE_LABELS) as Array<

@@ -7,14 +7,13 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{json,mjs,js,ts,tsx,md}\"",
-    "fetch-data": "turbo run fetch-data",
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
-    "prettier": "^3.6.2",
+    "prettier": "^3.7.3",
     "turbo": "^2.6.1",
     "typescript": "5.7.3"
   },

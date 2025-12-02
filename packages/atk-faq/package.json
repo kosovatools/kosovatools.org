@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@workspace/dataset-api": "workspace:*",
+    "@workspace/data": "workspace:*",
     "@workspace/utils": "workspace:*",
     "@workspace/ui": "workspace:*",
     "minisearch": "^7.1.0",

@@ -1,15 +1,23 @@
 "use client";
-import {
-  cpiAveragePricesYearly,
-  cpiDataset,
-  constructionCostIndexDataset,
-} from "@workspace/kas-data";
+import type {
+  ConstructionCostIndexDataset,
+  CpiAveragePriceDataset,
+  CpiDataset,
+} from "@workspace/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 import { CpiChart } from "./charts/cpi-chart";
 import { ConstructionCostIndexChart } from "./charts/construction-cost-chart";
 import { CpiAveragePricesChart } from "./charts/cpi-average-prices-chart";
 
-export function InflationTracker() {
+export function InflationTracker({
+  cpiDataset,
+  cpiAveragePricesYearly,
+  constructionCostIndexDataset,
+}: {
+  cpiDataset: CpiDataset;
+  cpiAveragePricesYearly: CpiAveragePriceDataset;
+  constructionCostIndexDataset: ConstructionCostIndexDataset;
+}) {
   return (
     <div className="space-y-12">
       <DatasetRenderer

@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import type { LoanInterestDatasetView } from "@workspace/dataset-api";
+import type { DatasetView, LoanInterestDataset } from "@workspace/data";
 import {
   ChartContainer,
   ChartLegend,
@@ -28,7 +28,7 @@ export function LoanInterestSegmentChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: LoanInterestDatasetView;
+  dataset: DatasetView<LoanInterestDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const { labelMap } = useMemo(

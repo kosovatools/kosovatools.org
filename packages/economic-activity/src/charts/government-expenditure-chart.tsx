@@ -18,7 +18,7 @@ import {
   type StackedKeySelectionState,
 } from "@workspace/ui/custom-components/stacked-key-selector";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { type GovernmentExpenditureDatasetView } from "@workspace/kas-data";
+import { type GovernmentExpenditureDatasetView } from "@workspace/data";
 import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,

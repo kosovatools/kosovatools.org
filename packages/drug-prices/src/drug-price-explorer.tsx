@@ -1,7 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { Filter, History, RefreshCcw, Search, CheckCircle2 } from "lucide-react";
+import {
+  Filter,
+  History,
+  RefreshCcw,
+  Search,
+  CheckCircle2,
+} from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   formatCount,
@@ -395,7 +401,9 @@ export function DrugPriceExplorer() {
           <p className="text-sm text-destructive">
             {error?.message || "Ndodhi një gabim i papritur."}
           </p>
-          <Button onClick={() => window.location.reload()}>Rifresko faqen</Button>
+          <Button onClick={() => window.location.reload()}>
+            Rifresko faqen
+          </Button>
         </CardContent>
       </Card>
     );
@@ -448,8 +456,8 @@ export function DrugPriceExplorer() {
           <RefreshCcw
             className={cn("size-4", isRefreshing && "animate-spin")}
             aria-hidden="true"
-          />1
-          {isRefreshing ? "Duke përditësuar..." : "Kontrollo për përditësime"}
+          />
+          1{isRefreshing ? "Duke përditësuar..." : "Kontrollo për përditësime"}
         </Button>
       </div>
 
@@ -499,7 +507,9 @@ export function DrugPriceExplorer() {
                 onChange={handleSearchFieldChange}
                 className="w-full"
               >
-                <NativeSelectOption value="">Të gjitha fushat</NativeSelectOption>
+                <NativeSelectOption value="">
+                  Të gjitha fushat
+                </NativeSelectOption>
                 {SEARCH_FIELD_OPTIONS.map((option) => (
                   <NativeSelectOption key={option.value} value={option.value}>
                     {option.label}
@@ -564,43 +574,69 @@ export function DrugPriceExplorer() {
                             </div>
                             <dl className="mt-3 grid gap-x-4 gap-y-1.5 text-xs sm:grid-cols-2">
                               <div>
-                                <dt className="font-medium text-muted-foreground">ATC</dt>
-                                <dd className="text-foreground">{record.atc_code ?? "—"}</dd>
+                                <dt className="font-medium text-muted-foreground">
+                                  ATC
+                                </dt>
+                                <dd className="text-foreground">
+                                  {record.atc_code ?? "—"}
+                                </dd>
                               </div>
                               <div>
-                                <dt className="font-medium text-muted-foreground">Doza</dt>
-                                <dd className="text-foreground">{record.dose ?? "—"}</dd>
+                                <dt className="font-medium text-muted-foreground">
+                                  Doza
+                                </dt>
+                                <dd className="text-foreground">
+                                  {record.dose ?? "—"}
+                                </dd>
                               </div>
                               <div>
-                                <dt className="font-medium text-muted-foreground">Forma</dt>
-                                <dd className="text-foreground">{record.pharmaceutical_form ?? "—"}</dd>
+                                <dt className="font-medium text-muted-foreground">
+                                  Forma
+                                </dt>
+                                <dd className="text-foreground">
+                                  {record.pharmaceutical_form ?? "—"}
+                                </dd>
                               </div>
                               <div>
-                                <dt className="font-medium text-muted-foreground">Paketimi</dt>
-                                <dd className="text-foreground">{record.packaging ?? "—"}</dd>
+                                <dt className="font-medium text-muted-foreground">
+                                  Paketimi
+                                </dt>
+                                <dd className="text-foreground">
+                                  {record.packaging ?? "—"}
+                                </dd>
                               </div>
                               <div className="sm:col-span-2 pt-0.5">
-                                <dt className="font-medium text-muted-foreground">Autoriteti</dt>
-                                <dd className="text-foreground">{record.marketing_authorisation_holder ?? "—"}</dd>
+                                <dt className="font-medium text-muted-foreground">
+                                  Autoriteti
+                                </dt>
+                                <dd className="text-foreground">
+                                  {record.marketing_authorisation_holder ?? "—"}
+                                </dd>
                               </div>
                             </dl>
                           </td>
                           <td className="w-[25%] px-4 py-3 align-top">
                             <div className="space-y-2 rounded-lg bg-muted/30 p-2.5">
                               <div className="flex items-center justify-between text-sm">
-                                <span className="text-muted-foreground">Shumicë</span>
+                                <span className="text-muted-foreground">
+                                  Shumicë
+                                </span>
                                 <span className="font-medium tabular-nums">
                                   {formatCurrency(record.price_wholesale)}
                                 </span>
                               </div>
                               <div className="flex items-center justify-between text-sm">
-                                <span className="text-muted-foreground">Me marzhë</span>
+                                <span className="text-muted-foreground">
+                                  Me marzhë
+                                </span>
                                 <span className="font-medium tabular-nums">
                                   {formatCurrency(record.price_with_margin)}
                                 </span>
                               </div>
                               <div className="border-t border-border/50 pt-1.5 flex items-center justify-between text-sm">
-                                <span className="font-medium text-foreground">Pakicë</span>
+                                <span className="font-medium text-foreground">
+                                  Pakicë
+                                </span>
                                 <span className="font-bold text-primary tabular-nums text-base">
                                   {formatCurrency(record.price_retail)}
                                 </span>
@@ -623,7 +659,8 @@ export function DrugPriceExplorer() {
                                   Vlen deri: {formatDate(record.valid_until)}
                                 </p>
                                 <p className="text-xs text-muted-foreground mt-0.5">
-                                  Nr: {record.authorization_number ?? "Pa numër"}
+                                  Nr:{" "}
+                                  {record.authorization_number ?? "Pa numër"}
                                 </p>
                               </div>
                             </div>
@@ -714,20 +751,34 @@ export function DrugPriceExplorer() {
 
                     <div className="grid grid-cols-2 gap-3 text-sm rounded-lg bg-muted/30 p-3">
                       <div className="space-y-0.5">
-                        <dt className="text-xs font-medium text-muted-foreground uppercase">ATC</dt>
-                        <dd className="font-medium">{record.atc_code ?? "—"}</dd>
+                        <dt className="text-xs font-medium text-muted-foreground uppercase">
+                          ATC
+                        </dt>
+                        <dd className="font-medium">
+                          {record.atc_code ?? "—"}
+                        </dd>
                       </div>
                       <div className="space-y-0.5">
-                        <dt className="text-xs font-medium text-muted-foreground uppercase">Doza</dt>
+                        <dt className="text-xs font-medium text-muted-foreground uppercase">
+                          Doza
+                        </dt>
                         <dd className="font-medium">{record.dose ?? "—"}</dd>
                       </div>
                       <div className="space-y-0.5">
-                        <dt className="text-xs font-medium text-muted-foreground uppercase">Forma</dt>
-                        <dd className="font-medium">{record.pharmaceutical_form ?? "—"}</dd>
+                        <dt className="text-xs font-medium text-muted-foreground uppercase">
+                          Forma
+                        </dt>
+                        <dd className="font-medium">
+                          {record.pharmaceutical_form ?? "—"}
+                        </dd>
                       </div>
                       <div className="space-y-0.5">
-                        <dt className="text-xs font-medium text-muted-foreground uppercase">Paketimi</dt>
-                        <dd className="font-medium">{record.packaging ?? "—"}</dd>
+                        <dt className="text-xs font-medium text-muted-foreground uppercase">
+                          Paketimi
+                        </dt>
+                        <dd className="font-medium">
+                          {record.packaging ?? "—"}
+                        </dd>
                       </div>
                     </div>
 
@@ -781,8 +832,15 @@ export function DrugPriceExplorer() {
 
             <div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:justify-between border-t border-border/50">
               <span className="text-sm text-muted-foreground text-center sm:text-left">
-                Duke shfaqur <span className="font-medium text-foreground">{startIndex || 0}-{endIndex}</span> nga{" "}
-                <span className="font-medium text-foreground">{formatCount(filteredRecords.length)}</span> produkte.
+                Duke shfaqur{" "}
+                <span className="font-medium text-foreground">
+                  {startIndex || 0}-{endIndex}
+                </span>{" "}
+                nga{" "}
+                <span className="font-medium text-foreground">
+                  {formatCount(filteredRecords.length)}
+                </span>{" "}
+                produkte.
               </span>
               <div className="flex items-center justify-center gap-2">
                 <Button

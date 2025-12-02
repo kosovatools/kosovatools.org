@@ -2,8 +2,8 @@ import { createDatasetApi } from "../client";
 import type {
   BuildingPermitsIndex,
   BuildingPermitsYearDataset,
-} from "../types/prishtina-building-permits";
-
+} from "@kosovatools/data-types";
+export type { BuildingPermitsYearDataset, BuildingPermitsIndex };
 const datasetApi = createDatasetApi({
   prefix: ["prishtina", "building_permits"],
 });

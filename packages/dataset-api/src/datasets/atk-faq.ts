@@ -1,5 +1,6 @@
 import { createDatasetFetcher } from "../client";
-import type { AtkFaqDataset } from "../types";
+import type { AtkFaqDataset } from "@kosovatools/data-types";
+export type { AtkFaqEntry } from "@kosovatools/data-types";
 
 const DATASET_PREFIX = ["atk"] as const;
 

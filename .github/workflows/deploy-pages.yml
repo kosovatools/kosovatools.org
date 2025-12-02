@@ -30,6 +30,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -48,7 +50,7 @@ jobs:
         id: turbo-key
         run: |
           BASE="turbo-data-$(date -u +%G-W%V)"
-          HASH="${{ hashFiles('turbo.json', 'pnpm-lock.yaml', 'packages/kas-data/scripts/**') }}"
+          HASH="${{ hashFiles('turbo.json', 'pnpm-lock.yaml') }}"
           BUST="${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true' }}"
           if [ "$BUST" = "true" ]; then
             SUFFIX="$HASH-bust-$GITHUB_RUN_ID"
@@ -70,17 +72,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Fetch KAS datasets (Turbo)
-        uses: nick-fields/retry@v3
-        with:
-          max_attempts: 3
-          retry_wait_seconds: 30
-          command: |
-            if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true' }}" = "true" ]; then
-              pnpm turbo run fetch-data --filter=@workspace/kas-data --force
-            else
-              pnpm turbo run fetch-data --filter=@workspace/kas-data
-            fi
       - name: Build Turborepo packages
         run: pnpm turbo run build --filter=web...
         env:

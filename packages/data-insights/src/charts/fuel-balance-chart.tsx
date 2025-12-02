@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { FuelDatasetView } from "@workspace/kas-data";
+import { FuelDatasetView } from "@workspace/data";
 import { formatCount } from "@workspace/utils";
 import {
   ChartContainer,

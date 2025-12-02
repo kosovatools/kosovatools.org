@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import type { LoanInterestDatasetView } from "@workspace/dataset-api";
 import {
   ChartContainer,
   ChartLegend,
@@ -25,6 +24,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { formatPercent } from "@workspace/utils";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
+import { DatasetView, LoanInterestDataset } from "@workspace/data";
 
 type ChartRow = { period: string } & Record<string, number | string | null>;
 
@@ -32,7 +32,7 @@ export function LoanInterestExplorerChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: LoanInterestDatasetView;
+  dataset: DatasetView<LoanInterestDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const { labelMap, nodes: hierarchyNodes } = useMemo(

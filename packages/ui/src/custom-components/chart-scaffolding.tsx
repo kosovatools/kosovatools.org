@@ -1,8 +1,7 @@
 import * as React from "react";
 import { cn } from "@workspace/ui/lib/utils";
 
-export interface ChartScaffoldingProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface ChartScaffoldingProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The main chart component.
    */

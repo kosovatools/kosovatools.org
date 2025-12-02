@@ -20,7 +20,7 @@ import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffold
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
-import { TourismRegionDatasetView } from "@workspace/kas-data";
+import { TourismRegionDatasetView } from "@workspace/data";
 
 const DEFAULT_GROUP_LABEL = "Total";
 

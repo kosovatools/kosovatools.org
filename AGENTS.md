@@ -8,9 +8,9 @@
 
 ## Data & Dataset Workflow
 
-- Refresh Kosovo Agency of Statistics sources with `pnpm --filter @workspace/kas-data fetch-data` (or `pnpm fetch-data` to run every package target). JSON snapshots live in `packages/kas-data/data/` under `{ meta, records }` envelopes.
-- Load hosted datasets through `createDatasetFetcher` from `@workspace/dataset-api`, passing a stable prefix plus an optional `label`, then cache the resulting promise inside the loader module to avoid duplicate requests.
-- Wrap every dataset in `createDataset` from `@workspace/kas-data`. The returned `DatasetView` exposes `limit`, `slice`, `aggregate`, `viewAsStack`, and `summarizeStack`, so all derived series respect the metadata’s granularity and coverage info.
+- Refresh Kosovo Agency of Statistics sources from the data repo (or consume them via `@workspace/data`). JSON snapshots live in `data/kas/*.json` under `{ meta, records }` envelopes.
+- Load hosted datasets through `createDatasetFetcher` from `@workspace/data`, passing a stable prefix plus an optional `label`, then cache the resulting promise inside the loader module to avoid duplicate requests.
+- Wrap every dataset in `createDataset` from `@workspace/data`. The returned `DatasetView` exposes `limit`, `slice`, `aggregate`, `viewAsStack`, and `summarizeStack`, so all derived series respect the metadata’s granularity and coverage info.
 - Surface dataset sections with `DatasetRenderer` (`@workspace/ui/custom-components`). Pass either a static `dataset` or a TanStack Query `query`, optional `isEmpty` logic, and let the component render loading/error states plus the standard footer (`Burimi`, `Gjeneruar më`, `Periudha` when `getDatasetCoverageLabel` returns a string).
 
 ## UI, Charts & Layout

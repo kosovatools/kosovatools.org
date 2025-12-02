@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { type VehicleTypesDatasetView } from "@workspace/kas-data";
+import { type VehicleTypesDatasetView } from "@workspace/data";
 import {
   ChartContainer,
   ChartLegend,

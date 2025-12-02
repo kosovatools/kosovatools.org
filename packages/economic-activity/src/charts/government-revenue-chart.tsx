@@ -17,7 +17,7 @@ import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import {
   buildUiHierarchy,
   type GovernmentRevenueDatasetView,
-} from "@workspace/kas-data";
+} from "@workspace/data";
 import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,

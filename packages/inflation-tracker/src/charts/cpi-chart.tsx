@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import { CpiDatasetView } from "@workspace/kas-data";
+import { CpiDatasetView } from "@workspace/data";
 import { formatNumber, formatSignedPercent } from "@workspace/utils";
 import {
   ChartContainer,
@@ -23,11 +23,7 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
-import {
-  CPI_DEFAULT_GROUP_CODE,
-  buildCpiHierarchicalNodes,
-  cpiGroupLabelsByCode,
-} from "../cpi-groups";
+import { buildCpiHierarchy } from "../cpi-groups";
 
 const METRIC_FORMATTER = {
   index: (value: number | null) =>
@@ -40,7 +36,6 @@ const METRIC_FORMATTER = {
 } as const;
 
 type ChartRow = { period: string } & Record<string, number | string | null>;
-const hierarchicalNodes = buildCpiHierarchicalNodes();
 
 export function CpiChart({
   dataset,
@@ -49,6 +44,10 @@ export function CpiChart({
   dataset: CpiDatasetView;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
+  const { nodes, labelMap, defaultId } = useMemo(
+    () => buildCpiHierarchy(dataset),
+    [dataset],
+  );
   const {
     periodGrouping,
     setPeriodGrouping,
@@ -62,13 +61,11 @@ export function CpiChart({
     setMetric,
     metricOptions,
   } = useDeriveChartControls(dataset, { initialMetric: "index" });
-  const [selectedGroups, setSelectedGroups] = useState<string[]>([
-    CPI_DEFAULT_GROUP_CODE,
-  ]);
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([defaultId]);
 
   const { chartData, chartConfig } = useMemo(() => {
     const uniqueGroups = Array.from(
-      new Set(selectedGroups.filter((code) => cpiGroupLabelsByCode[code])),
+      new Set(selectedGroups.filter((code) => labelMap[code])),
     );
     if (!uniqueGroups.length) {
       return { chartData: [], chartConfig: {} as ChartConfig };
@@ -77,7 +74,7 @@ export function CpiChart({
     const aggregatedSeries = uniqueGroups
       .map((code) => ({
         code,
-        label: cpiGroupLabelsByCode[code] ?? code,
+        label: labelMap[code] ?? code,
         rows: datasetView.aggregate({
           grouping: periodGrouping,
           filter: (record) => record.group === code,
@@ -121,7 +118,7 @@ export function CpiChart({
       chartData: chartRows,
       chartConfig: addThemeToChartConfig(dynamicConfig),
     };
-  }, [datasetView, periodGrouping, metric, selectedGroups]);
+  }, [datasetView, periodGrouping, metric, selectedGroups, labelMap]);
 
   const axisFormatter = METRIC_FORMATTER[metric];
 
@@ -154,9 +151,9 @@ export function CpiChart({
       selectors={
         <HierarchicalMultiSelect
           title="Grupet COICOP"
-          nodes={hierarchicalNodes}
+          nodes={nodes}
           selectedIds={selectedGroups}
-          defaultExpandedIds={[CPI_DEFAULT_GROUP_CODE]}
+          defaultExpandedIds={[defaultId]}
           onSelectionChange={(ids) => setSelectedGroups(ids)}
           selectionBehavior="toggle-children"
           minSelected={1}

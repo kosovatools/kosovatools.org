@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import type { EnergyDailyDatasetView } from "@workspace/dataset-api";
+import type { EnergyDailyDatasetView } from "@workspace/data";
 import { formatDayLabel } from "../date-formatters";
 import {
   ChartContainer,

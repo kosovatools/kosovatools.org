@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import { ConstructionCostIndexDatasetView } from "@workspace/kas-data";
 import { formatNumber } from "@workspace/utils";
 import {
   ChartContainer,
@@ -24,35 +23,45 @@ import {
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import {
-  buildConstructionCostNodes,
   CONSTRUCTION_DEFAULT_CATEGORY_CODES,
   CONSTRUCTION_DEFAULT_EXPANDED_CODES,
-  constructionCostLabelMap,
 } from "../construction-cost-groups";
+import {
+  buildUiHierarchy,
+  ConstructionCostIndexDataset,
+  DatasetView,
+} from "@workspace/data";
 
 type ChartRow = { period: string } & Record<string, number | string | null>;
 
 type Props = {
-  dataset: ConstructionCostIndexDatasetView;
+  dataset: DatasetView<ConstructionCostIndexDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 };
 export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
-  const labelMap = useMemo(
-    () => new Map(Object.entries(constructionCostLabelMap)),
-    [],
+  const { labelMap, nodes: hierarchicalNodes } = useMemo(
+    () =>
+      buildUiHierarchy(
+        dataset.meta.dimension_hierarchies?.cost_category,
+        dataset.meta.dimensions.cost_category,
+      ),
+    [dataset],
   );
 
-  const hierarchicalNodes = useMemo(() => buildConstructionCostNodes(), []);
+  const labelMapById = useMemo(
+    () => new Map(Object.entries(labelMap)),
+    [labelMap],
+  );
 
   const defaultSelection = useMemo(() => {
     const defaults = CONSTRUCTION_DEFAULT_CATEGORY_CODES.filter((key) =>
-      labelMap.has(key),
+      labelMapById.has(key),
     );
     if (defaults.length) return defaults;
     if (dataset.meta.dimensions.cost_category.length)
       return [dataset.meta.dimensions.cost_category[0]!.key];
     return [];
-  }, [dataset.meta.dimensions.cost_category, labelMap]);
+  }, [dataset.meta.dimensions.cost_category, labelMapById]);
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     () => defaultSelection,
@@ -89,7 +98,7 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
     );
 
     const config = selectedCategories.reduce<ChartConfig>((acc, key) => {
-      acc[key] = { label: labelMap.get(key) ?? key };
+      acc[key] = { label: labelMapById.get(key) ?? key };
       return acc;
     }, {} as ChartConfig);
 
@@ -97,7 +106,7 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
       chartData: sortedRows,
       chartConfig: addThemeToChartConfig(config),
     };
-  }, [datasetView, labelMap, selectedCategories]);
+  }, [datasetView.records, labelMapById, selectedCategories]);
 
   const formatAxisValue = (value: number | null | undefined) =>
     formatNumber(

@@ -1,4 +1,4 @@
 export {
   loadBuildingPermitsIndex,
   loadBuildingPermitsYear,
-} from "@workspace/dataset-api";
+} from "@workspace/data";

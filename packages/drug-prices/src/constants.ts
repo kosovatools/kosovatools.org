@@ -1,11 +1,11 @@
-import type {
-  DrugPriceRecord,
-  DrugReferenceCountry,
-} from "@workspace/dataset-api";
+import type { DrugPriceRecord } from "@workspace/data";
 
 export const PAGE_SIZE = 25;
 
-export const REFERENCE_PRICE_LABELS: Record<DrugReferenceCountry, string> = {
+export const REFERENCE_PRICE_LABELS: Record<
+  keyof NonNullable<DrugPriceRecord["reference_prices"]>,
+  string
+> = {
   macedonia: "Maqedonia e Veriut",
   montenegro: "Mali i Zi",
   croatia: "Kroacia",

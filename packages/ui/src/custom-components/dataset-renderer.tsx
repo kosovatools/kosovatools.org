@@ -1,11 +1,14 @@
+"use client";
 import * as React from "react";
 
 import { cn } from "@workspace/ui/lib/utils";
 import {
+  createDataset,
+  DatasetView,
   formatGeneratedAt,
   GenericDataset,
   getDatasetCoverageLabel,
-} from "@workspace/kas-data";
+} from "@workspace/data";
 import {
   Alert,
   AlertDescription,
@@ -13,40 +16,44 @@ import {
 } from "@workspace/ui/components/alert";
 import { ChartEmptyState } from "@workspace/ui/components/chart";
 
-type SuspenseQueryLike<TData> = {
-  data: TData | undefined;
+type SuspenseQueryLike<TDataset> = {
+  data: TDataset | undefined;
   error: unknown;
   isError: boolean;
   isLoading?: boolean;
 };
 
+type RendererChildren<TDataset extends GenericDataset> =
+  | React.ReactNode
+  | ((dataset: DatasetView<TDataset>) => React.ReactNode);
+
 // Props when using dataset directly
-type DatasetRendererPropsWithDataset<TDataset> = {
+type DatasetRendererPropsWithDataset<TDataset extends GenericDataset> = {
   title?: React.ReactNode;
   description?: React.ReactNode;
   dataset: TDataset;
   query?: never;
-  children: React.ReactNode | ((dataset: TDataset) => React.ReactNode);
-  isEmpty?: (dataset: TDataset) => boolean;
+  children: RendererChildren<TDataset>;
+  isEmpty?: (dataset: DatasetView<TDataset>) => boolean;
   emptyStateContent?: React.ReactNode;
   className?: string;
   id?: string;
 };
 
 // Props when using query
-type DatasetRendererPropsWithQuery<TDataset> = {
+type DatasetRendererPropsWithQuery<TDataset extends GenericDataset> = {
   title?: React.ReactNode;
   description?: React.ReactNode;
   dataset?: never;
   query: SuspenseQueryLike<TDataset>;
-  children: React.ReactNode | ((dataset: TDataset) => React.ReactNode);
-  isEmpty?: (dataset: TDataset) => boolean;
+  children: RendererChildren<TDataset>;
+  isEmpty?: (dataset: DatasetView<TDataset>) => boolean;
   emptyStateContent?: React.ReactNode;
   className?: string;
   id?: string;
 };
 
-export type DatasetRendererProps<TDataset> =
+export type DatasetRendererProps<TDataset extends GenericDataset> =
   | DatasetRendererPropsWithDataset<TDataset>
   | DatasetRendererPropsWithQuery<TDataset>;
 
@@ -66,6 +73,20 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
   className,
   id,
 }: DatasetRendererProps<TDataset>) {
+  let resolvedDataset = dataset;
+
+  if (query) {
+    resolvedDataset = query.data as TDataset;
+  }
+
+  const hydratedDataset = React.useMemo<DatasetView<TDataset> | undefined>(
+    () =>
+      resolvedDataset
+        ? (createDataset(resolvedDataset) as DatasetView<TDataset>)
+        : undefined,
+    [resolvedDataset],
+  );
+
   // Handle query-based loading
   if (query) {
     const isLoading =
@@ -91,14 +112,9 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
         </div>
       );
     }
-
-    // Use query data as dataset
-    dataset = query.data as TDataset;
   }
 
-  const resolvedDataset = dataset;
-
-  const isDatasetEmpty = resolvedDataset ? isEmpty(resolvedDataset) : false;
+  const isDatasetEmpty = hydratedDataset ? isEmpty(hydratedDataset) : false;
 
   // Check for empty state
   if (isDatasetEmpty) {
@@ -110,16 +126,16 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
   }
 
   // At this point, dataset is guaranteed to be defined
-  if (!resolvedDataset) {
+  if (!hydratedDataset) {
     return null;
   }
 
   const hasHeader = Boolean(title || description);
 
-  const coverageLabel = getDatasetCoverageLabel(resolvedDataset.meta);
+  const coverageLabel = getDatasetCoverageLabel(hydratedDataset.meta);
   const footerSegments = [
-    `Burimi: ${resolvedDataset.meta.source}.`,
-    `Gjeneruar më ${formatGeneratedAt(resolvedDataset.meta.generated_at)}`,
+    `Burimi: ${hydratedDataset.meta.source}.`,
+    `Gjeneruar më ${formatGeneratedAt(hydratedDataset.meta.generated_at)}`,
   ];
 
   if (coverageLabel) {
@@ -130,7 +146,7 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
 
   // Render children - support both render prop and normal children
   const renderedChildren =
-    typeof children === "function" ? children(resolvedDataset) : children;
+    typeof children === "function" ? children(hydratedDataset) : children;
 
   return (
     <section id={id} className={cn("space-y-4", className)}>

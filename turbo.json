@@ -17,10 +17,6 @@
     "dev": {
       "cache": false,
       "persistent": true
-    },
-    "fetch-data": {
-      "outputs": ["data/**/*.json"],
-      "inputs": ["$TURBO_DEFAULT$", "scripts/**", "package.json"]
     }
   }
 }

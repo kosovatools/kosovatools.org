@@ -9,11 +9,11 @@ import {
   fetchMonthlyCityCategoryDataset,
 } from "./api";
 import type {
-  TurnoverCategoriesDatasetView,
-  TurnoverCitiesDatasetView,
-  CityCategoryYearlyDatasetView,
-  MonthlyCategoryCityDatasetView,
-} from "@workspace/dataset-api";
+  TurnoverCategoriesDataset,
+  TurnoverCitiesDataset,
+  CityCategoryYearlyDataset,
+  MonthlyCategoryCityDataset,
+} from "@workspace/data";
 
 import { CategoriesOverYearsChart } from "./charts/categories-over-years-chart";
 import { MonthlyCategoryStackedChart } from "./charts/monthly-category-stacked-chart";
@@ -25,7 +25,7 @@ import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-rendere
 function CategorySection({
   query,
 }: {
-  query: UseQueryResult<TurnoverCategoriesDatasetView, Error>;
+  query: UseQueryResult<TurnoverCategoriesDataset, Error>;
 }) {
   return (
     <DatasetRenderer
@@ -48,7 +48,7 @@ function CategorySection({
 function CitySection({
   query,
 }: {
-  query: UseQueryResult<TurnoverCitiesDatasetView, Error>;
+  query: UseQueryResult<TurnoverCitiesDataset, Error>;
 }) {
   return (
     <DatasetRenderer
@@ -72,7 +72,7 @@ function CitySection({
 function CategoryTrendSection({
   query,
 }: {
-  query: UseQueryResult<TurnoverCategoriesDatasetView, Error>;
+  query: UseQueryResult<TurnoverCategoriesDataset, Error>;
 }) {
   return (
     <DatasetRenderer
@@ -91,7 +91,7 @@ function CategoryTrendSection({
 function MonthlyCategorySection({
   query,
 }: {
-  query: UseQueryResult<MonthlyCategoryCityDatasetView, Error>;
+  query: UseQueryResult<MonthlyCategoryCityDataset, Error>;
 }) {
   return (
     <DatasetRenderer
@@ -119,7 +119,7 @@ function MonthlyCategorySection({
 function TopCategoryByCitySection({
   query,
 }: {
-  query: UseQueryResult<CityCategoryYearlyDatasetView, Error>;
+  query: UseQueryResult<CityCategoryYearlyDataset, Error>;
 }) {
   return (
     <DatasetRenderer
@@ -135,28 +135,25 @@ function TopCategoryByCitySection({
 }
 
 export function TurnoverDashboard() {
-  const categoriesQuery = useQuery<TurnoverCategoriesDatasetView, Error>({
+  const categoriesQuery = useQuery<TurnoverCategoriesDataset, Error>({
     queryKey: ["mfk", "turnover", "categories", "dataset"],
     queryFn: fetchCategoriesDataset,
     staleTime: 6 * 60 * 1000,
   });
 
-  const citiesQuery = useQuery<TurnoverCitiesDatasetView, Error>({
+  const citiesQuery = useQuery<TurnoverCitiesDataset, Error>({
     queryKey: ["mfk", "turnover", "cities", "dataset"],
     queryFn: fetchCitiesDataset,
     staleTime: 6 * 60 * 1000,
   });
 
-  const monthlyCategoryQuery = useQuery<MonthlyCategoryCityDatasetView, Error>({
+  const monthlyCategoryQuery = useQuery<MonthlyCategoryCityDataset, Error>({
     queryKey: ["mfk", "turnover", "monthly", "category-city"],
     queryFn: fetchMonthlyCityCategoryDataset,
     staleTime: 6 * 60 * 1000,
   });
 
-  const cityCategoryYearlyQuery = useQuery<
-    CityCategoryYearlyDatasetView,
-    Error
-  >({
+  const cityCategoryYearlyQuery = useQuery<CityCategoryYearlyDataset, Error>({
     queryKey: ["mfk", "turnover", "city-category", "yearly"],
     queryFn: fetchCityCategoryYearlyDataset,
     staleTime: 6 * 60 * 1000,

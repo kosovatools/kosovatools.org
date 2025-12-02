@@ -1,5 +1,6 @@
 import { createDatasetFetcher } from "../client";
-import type { CustomsRecord } from "../types/customs-codes";
+import type { CustomsRecord } from "@kosovatools/data-types";
+export type { CustomsTreeNode, CustomsRecord } from "@kosovatools/data-types";
 
 const DATASET_PREFIX = ["customs"] as const;
 const CUSTOMS_TARRIFS_PATH = "tarrifs.json";

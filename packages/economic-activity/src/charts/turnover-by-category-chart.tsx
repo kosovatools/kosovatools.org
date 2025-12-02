@@ -12,11 +12,11 @@ import { TreemapCellContent } from "@workspace/ui/custom-components/treemap-cell
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
-import type { TurnoverCategoriesDatasetView } from "@workspace/dataset-api";
+import type { TurnoverCategoriesDatasetView } from "@workspace/data";
 import { formatCount, formatCurrencyCompact } from "@workspace/utils";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
-import { createLabelMap } from "@workspace/kas-data";
+import { createLabelMap } from "@workspace/data";
 const CHART_CLASS = "w-full aspect-[1/1.5] sm:aspect-video";
 
 const METRIC_FORMATTERS = {

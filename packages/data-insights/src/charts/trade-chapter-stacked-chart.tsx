@@ -24,7 +24,7 @@ import {
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { type TradeChaptersMonthlyDatasetView } from "@workspace/kas-data";
+import { type TradeChaptersDatasetView } from "@workspace/data";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 const DEFAULT_TOP_CHAPTERS = 6;
@@ -34,7 +34,7 @@ export function TradeChapterStackedChart({
   top = DEFAULT_TOP_CHAPTERS,
   timelineEvents,
 }: {
-  dataset: TradeChaptersMonthlyDatasetView;
+  dataset: TradeChaptersDatasetView;
   top?: number;
   timelineEvents?: TimelineEventMarkerControls;
 }) {

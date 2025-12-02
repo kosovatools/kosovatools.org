@@ -4,7 +4,7 @@ This document captures the pattern used in `apps/web/app/(tools)/aviation-stats/
 
 ## 1. Derive Everything from the Dataset
 
-- Import the dataset view plus its record type (e.g., `airTransportMonthly`, `AirTransportRecord`).
+- Import the dataset view plus its record type (e.g., `loadAirTransportDataset` → `AirTransportDatasetView`, `AirTransportRecord`).
 - Use metadata to build UI controls and limits:
   - `getPeriodGroupingOptions(meta.time.granularity)` ⇢ grouping selector options.
 - `limitTimeRangeOptions(meta.time)` ⇢ interval selector (daily datasets get day-based options; monthly datasets get month-based options; quarterly datasets get quarter-based options; yearly datasets get year-based options).

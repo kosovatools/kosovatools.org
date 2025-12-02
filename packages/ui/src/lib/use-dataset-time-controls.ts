@@ -9,9 +9,10 @@ import {
   type PeriodFormatter,
   type PeriodGrouping,
   type PeriodGroupingOption,
+  type DatasetTimeMetadata,
   type TimeRangeOption,
 } from "@workspace/utils";
-import type { GenericDataset, DatasetView } from "@workspace/kas-data";
+import type { GenericDataset, DatasetView } from "@workspace/data";
 
 type useDeriveChartControlsOptions<TDataset extends GenericDataset> = {
   initialGrouping?: PeriodGrouping;
@@ -38,7 +39,12 @@ export function useDeriveChartControls<TDataset extends GenericDataset>(
   );
 
   const timeRangeOptions = React.useMemo(
-    () => limitTimeRangeOptions(dataset.meta.time),
+    () =>
+      limitTimeRangeOptions({
+        granularity: dataset.meta.time
+          .granularity as DatasetTimeMetadata["granularity"],
+        count: dataset.meta.time.count,
+      }),
     [dataset.meta.time],
   );
 

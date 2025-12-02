@@ -20,15 +20,14 @@ import {
 import type {
   BuildingPermitsIndex,
   BuildingPermitsYearDataset,
-  BuildingPermitsYearSummary,
-} from "@workspace/dataset-api";
+} from "@workspace/data";
 import { sumRecords } from "./helpers";
 
 type DatasetSummaryCardProps = {
   index: BuildingPermitsIndex;
   dataset: BuildingPermitsYearDataset;
-  selectedSummary: BuildingPermitsYearSummary;
-  sortedYears: BuildingPermitsYearSummary[];
+  selectedSummary: BuildingPermitsIndex["years"][number];
+  sortedYears: BuildingPermitsIndex["years"];
   onYearChange: (year: number) => void;
 };
 
