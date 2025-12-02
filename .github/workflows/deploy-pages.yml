@@ -71,12 +71,16 @@ jobs:
         run: pnpm install
 
       - name: Fetch KAS datasets (Turbo)
-        run: |
-          if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true' }}" = "true" ]; then
-            pnpm turbo run fetch-data --filter=@workspace/kas-data --force
-          else
-            pnpm turbo run fetch-data --filter=@workspace/kas-data
-          fi
+        uses: nick-fields/retry@v3
+        with:
+          max_attempts: 3
+          retry_wait_seconds: 30
+          command: |
+            if [ "${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true' }}" = "true" ]; then
+              pnpm turbo run fetch-data --filter=@workspace/kas-data --force
+            else
+              pnpm turbo run fetch-data --filter=@workspace/kas-data
+            fi
       - name: Build Turborepo packages
         run: pnpm turbo run build --filter=web...
         env:
