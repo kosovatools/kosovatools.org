@@ -1,25 +1,18 @@
 import { createDatasetFetcher } from "../client";
-import {
-  type Dataset,
-  type DatasetMetaMonthly,
-  type DatasetMetaYearly,
-  type DatasetView,
-} from "../dataset-helpers";
+import { type DatasetView } from "../dataset-helpers";
 import type {
-  CpiAveragePriceRecord,
-  CpiMetaExtras,
-  CpiMetric,
-  CpiRecord,
-} from "@kosovatools/data-types/cpi";
+  CpiAveragePriceDataset,
+  CpiDataset,
+} from "@kosovatools/data-types";
 
-const fetchKasDataset = createDatasetFetcher(["kas"], { label: "kas" });
+const fetchDataset = createDatasetFetcher(["kas"], { label: "kas" });
 
-async function fetchDataset<T>(file: string): Promise<T> {
-  return fetchKasDataset<T>(file);
-}
 
-export type CpiMeta = DatasetMetaMonthly<CpiMetric, "group", CpiMetaExtras>;
-export type CpiDataset = Dataset<CpiRecord, CpiMeta>;
+
+export type {
+  CpiDataset,
+  CpiAveragePriceDataset,
+} from "@kosovatools/data-types";
 export type CpiDatasetView = DatasetView<CpiDataset>;
 
 export async function loadCpiDataset(): Promise<CpiDataset> {
@@ -27,10 +20,6 @@ export async function loadCpiDataset(): Promise<CpiDataset> {
   return data;
 }
 
-export type CpiAveragePriceDataset = Dataset<
-  CpiAveragePriceRecord,
-  DatasetMetaYearly<"price", "article">
->;
 export type CpiAveragePriceDatasetView = DatasetView<CpiAveragePriceDataset>;
 
 export async function loadCpiAveragePricesDataset(): Promise<CpiAveragePriceDataset> {

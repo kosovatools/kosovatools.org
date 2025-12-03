@@ -593,21 +593,6 @@ function inferFieldAggregationMode(
   }
 }
 
-// Convenience type re-exports
-export type {
-  Dataset,
-  DatasetMeta,
-  DatasetMetaBaseExtras,
-  DatasetMetaField,
-  DatasetMetaMonthly,
-  DatasetMetaQuarterly,
-  DatasetMetaYearly,
-  DimensionHierarchyNode,
-  DimensionOption,
-  GenericDatasetMeta,
-  TimeGranularity,
-} from "@kosovatools/data-types";
-
 // ---------- Dimension hierarchy UI helper ----------
 export type DimensionHierarchyUiNode = {
   id: string;

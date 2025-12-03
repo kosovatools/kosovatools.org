@@ -1,26 +1,18 @@
 import { createDatasetFetcher } from "../client";
-import {
-  type Dataset,
-  type DatasetMetaMonthly,
-  type DatasetMetaYearly,
-  type DatasetView,
-} from "../dataset-helpers";
 import type {
-  TransportMetric,
-  TransportRecord,
-  VehicleTypesMetric,
-  VehicleTypesRecord,
-} from "@kosovatools/data-types/transport";
+  AirTransportDataset,
+  VehicleTypesDataset,
+} from "@kosovatools/data-types";
+import { DatasetView } from "../dataset-helpers";
 
-const fetchKasDataset = createDatasetFetcher(["kas"], { label: "kas" });
+const fetchDataset = createDatasetFetcher(["kas"], { label: "kas" });
 
-async function fetchDataset<T>(file: string): Promise<T> {
-  return fetchKasDataset<T>(file);
-}
 
-// Air transport (monthly)
-export type AirTransportMeta = DatasetMetaMonthly<TransportMetric>;
-export type AirTransportDataset = Dataset<TransportRecord, AirTransportMeta>;
+
+export type {
+  AirTransportDataset,
+  VehicleTypesDataset,
+} from "@kosovatools/data-types";
 export type AirTransportDatasetView = DatasetView<AirTransportDataset>;
 
 export async function loadAirTransportDataset(): Promise<AirTransportDataset> {
@@ -30,12 +22,6 @@ export async function loadAirTransportDataset(): Promise<AirTransportDataset> {
   return data;
 }
 
-// Vehicle types (yearly)
-export type VehicleTypesMeta = DatasetMetaYearly<
-  VehicleTypesMetric,
-  "vehicle_type"
->;
-export type VehicleTypesDataset = Dataset<VehicleTypesRecord, VehicleTypesMeta>;
 export type VehicleTypesDatasetView = DatasetView<VehicleTypesDataset>;
 
 export async function loadVehicleTypesDataset(): Promise<VehicleTypesDataset> {

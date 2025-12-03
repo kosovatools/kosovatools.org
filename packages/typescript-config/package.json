@@ -7,9 +7,9 @@
     "access": "public"
   },
   "dependencies": {
-    "chroma-js": "^3.1.2",
+    "chroma-js": "^3.2.0",
     "d3-scale": "^4.0.2",
-    "recharts": "3.4.1"
+    "recharts": "3.5.1"
   },
   "devDependencies": {
     "@types/chroma-js": "^3.1.2",

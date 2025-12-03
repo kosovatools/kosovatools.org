@@ -1,26 +1,18 @@
 import { createDatasetFetcher } from "../client";
-import {
-  type Dataset,
-  type DatasetMetaQuarterly,
-  type DatasetMetaYearly,
-  type DatasetView,
-} from "../dataset-helpers";
+import { type DatasetView } from "../dataset-helpers";
 import type {
-  EmploymentActivityGenderRecord,
-  EmploymentMetric,
-  WageMetric,
-  WageRecord,
-} from "@kosovatools/data-types/labour";
+  EmploymentActivityGenderDataset,
+  WageLevelsDataset,
+} from "@kosovatools/data-types";
 
-const fetchKasDataset = createDatasetFetcher(["kas"], { label: "kas" });
+const fetchDataset = createDatasetFetcher(["kas"], { label: "kas" });
 
-async function fetchDataset<T>(file: string): Promise<T> {
-  return fetchKasDataset<T>(file);
-}
 
-// Wage levels (yearly)
-export type WageLevelsMeta = DatasetMetaYearly<WageMetric, "group">;
-export type WageLevelsDataset = Dataset<WageRecord, WageLevelsMeta>;
+
+export type {
+  EmploymentActivityGenderDataset,
+  WageLevelsDataset,
+} from "@kosovatools/data-types";
 export type WageLevelsDatasetView = DatasetView<WageLevelsDataset>;
 
 export async function loadWageLevelsDataset(): Promise<WageLevelsDataset> {
@@ -30,15 +22,6 @@ export async function loadWageLevelsDataset(): Promise<WageLevelsDataset> {
   return data;
 }
 
-// Employment by activity x gender (quarterly)
-export type EmploymentActivityGenderMeta = DatasetMetaQuarterly<
-  EmploymentMetric,
-  "activity" | "gender"
->;
-export type EmploymentActivityGenderDataset = Dataset<
-  EmploymentActivityGenderRecord,
-  EmploymentActivityGenderMeta
->;
 export type EmploymentActivityGenderDatasetView =
   DatasetView<EmploymentActivityGenderDataset>;
 

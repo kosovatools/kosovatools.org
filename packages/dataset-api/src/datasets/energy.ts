@@ -1,10 +1,8 @@
 import { createDatasetFetcher } from "../client";
-import { type Dataset, type DatasetView } from "../dataset-helpers";
+import { type DatasetView } from "../dataset-helpers";
 import type {
-  EnergyDailyDatasetMeta,
-  EnergyDailyRecord,
-  EnergyMonthlyDatasetMeta,
-  EnergyMonthlyRecord,
+  EnergyDailyDataset,
+  EnergyMonthlyDataset,
 } from "@kosovatools/data-types";
 
 const DATASET_PREFIX = ["energy"] as const;
@@ -15,14 +13,10 @@ const fetchEnergyDataset = createDatasetFetcher(DATASET_PREFIX, {
   label: "energy-flow",
 });
 
-export type EnergyMonthlyDataset = Dataset<
-  EnergyMonthlyRecord,
-  EnergyMonthlyDatasetMeta
->;
-export type EnergyDailyDataset = Dataset<
-  EnergyDailyRecord,
-  EnergyDailyDatasetMeta
->;
+export type {
+  EnergyMonthlyDataset,
+  EnergyDailyDataset,
+} from "@kosovatools/data-types";
 export type EnergyMonthlyDatasetView = DatasetView<EnergyMonthlyDataset>;
 export type EnergyDailyDatasetView = DatasetView<EnergyDailyDataset>;
 

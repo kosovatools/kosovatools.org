@@ -1,11 +1,9 @@
 import { createDatasetFetcher } from "../client";
-import type { ConstructionCostIndexDataset } from "@kosovatools/data-types/construction-cost-index";
+import type { ConstructionCostIndexDataset } from "@kosovatools/data-types";
 
-const fetchKasDataset = createDatasetFetcher(["kas"], { label: "kas" });
+const fetchDataset = createDatasetFetcher(["kas"], { label: "kas" });
 
-async function fetchDataset<T>(file: string): Promise<T> {
-  return fetchKasDataset<T>(file);
-}
+
 
 export type { ConstructionCostIndexDataset } from "@kosovatools/data-types";
 export async function loadConstructionCostIndexDataset() {

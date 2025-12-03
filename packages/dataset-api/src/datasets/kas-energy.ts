@@ -1,40 +1,24 @@
 import { createDatasetFetcher } from "../client";
-import {
-  type Dataset,
-  type DatasetMetaMonthly,
-  type DatasetView,
-} from "../dataset-helpers";
-import type {
-  EnergyMetric,
-  EnergyRecord,
-  FuelMetric,
-  FuelRecord,
-} from "@kosovatools/data-types/energy";
+import { type DatasetView } from "../dataset-helpers";
+import type { ElectricityDataset, FuelDataset } from "@kosovatools/data-types";
 
-const fetchKasDataset = createDatasetFetcher(["kas"], { label: "kas" });
+const fetchDataset = createDatasetFetcher(["kas"], { label: "kas" });
 
-async function fetchDataset<T>(file: string): Promise<T> {
-  return fetchKasDataset<T>(file);
-}
-
-// Electricity (monthly)
-export type ElectricityMeta = DatasetMetaMonthly<EnergyMetric>;
-export type ElectricityDataset = Dataset<EnergyRecord, ElectricityMeta>;
+export type { ElectricityDataset, FuelDataset } from "@kosovatools/data-types";
 export type ElectricityDatasetView = DatasetView<ElectricityDataset>;
 
-export async function loadKasElectricityDataset(): Promise<ElectricityDataset> {
+export async function loadKasElectricityDataset() {
   const data = await fetchDataset<ElectricityDataset>(
     "kas_energy_electricity_monthly.json",
   );
   return data;
 }
 
-// Fuel balances (monthly, combined)
-export type FuelMeta = DatasetMetaMonthly<FuelMetric, "fuel">;
-export type FuelDataset = Dataset<FuelRecord, FuelMeta>;
 export type FuelDatasetView = DatasetView<FuelDataset>;
 
-export async function loadKasFuelDataset(): Promise<FuelDataset> {
-  const data = await fetchDataset<FuelDataset>("kas_energy_fuels_monthly.json");
+export async function loadKasFuelDataset() {
+  const data = await fetchDataset<FuelDataset>(
+    "kas_energy_fuels_monthly.json",
+  );
   return data;
 }

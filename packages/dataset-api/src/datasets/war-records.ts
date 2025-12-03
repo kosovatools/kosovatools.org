@@ -1,6 +1,6 @@
 import { createDatasetFetcher } from "../client";
-import type { MemorialVictim, VictimChunk } from "@kosovatools/data-types";
-export type { MemorialVictim, VictimChunk };
+import type { VictimChunk } from "@kosovatools/data-types";
+export type { VictimChunk };
 const DATASET_PREFIX = ["war"] as const;
 const CHUNK_FILE_PREFIX = "deaths-part";
 

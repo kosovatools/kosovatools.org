@@ -1,14 +1,10 @@
 import { createDatasetFetcher } from "../client";
-import { type Dataset, type DatasetView } from "../dataset-helpers";
+import type { DatasetView } from "../dataset-helpers";
 import type {
-  CategoriesDatasetMeta,
-  CitiesDatasetMeta,
-  CityCategoryYearlyMeta,
-  CityCategoryYearlyRecord,
-  MonthlyCategoryCityMeta,
-  MonthlyCategoryCityRecord,
-  TurnoverCategoryRecord,
-  TurnoverCityRecord,
+  CityCategoryYearlyDataset,
+  MonthlyCategoryCityDataset,
+  TurnoverCategoriesDataset,
+  TurnoverCitiesDataset,
 } from "@kosovatools/data-types";
 
 const DATASET_PREFIX = ["mfk", "turnover"] as const;
@@ -20,22 +16,12 @@ async function fetchDataset<TDataset>(file: string): Promise<TDataset> {
   return fetchEconomicActivity<TDataset>(file);
 }
 
-export type TurnoverCategoriesDataset = Dataset<
-  TurnoverCategoryRecord,
-  CategoriesDatasetMeta
->;
-export type TurnoverCitiesDataset = Dataset<
-  TurnoverCityRecord,
-  CitiesDatasetMeta
->;
-export type CityCategoryYearlyDataset = Dataset<
-  CityCategoryYearlyRecord,
-  CityCategoryYearlyMeta
->;
-export type MonthlyCategoryCityDataset = Dataset<
-  MonthlyCategoryCityRecord,
-  MonthlyCategoryCityMeta
->;
+export type {
+  CityCategoryYearlyDataset,
+  MonthlyCategoryCityDataset,
+  TurnoverCategoriesDataset,
+  TurnoverCitiesDataset,
+} from "@kosovatools/data-types";
 export type TurnoverCategoriesDatasetView =
   DatasetView<TurnoverCategoriesDataset>;
 export type TurnoverCitiesDatasetView = DatasetView<TurnoverCitiesDataset>;

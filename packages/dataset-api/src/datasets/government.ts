@@ -1,23 +1,18 @@
 import { createDatasetFetcher } from "../client";
-import { type Dataset, type DatasetView } from "../dataset-helpers";
+import { type DatasetView } from "../dataset-helpers";
 import type {
-  GovernmentExpenditureMeta,
-  GovernmentExpenditureRecord,
-  GovernmentRevenueMeta,
-  GovernmentRevenueRecord,
-} from "@kosovatools/data-types/government";
+  GovernmentExpenditureDataset,
+  GovernmentRevenueDataset,
+} from "@kosovatools/data-types";
 
-const fetchKasDataset = createDatasetFetcher(["kas"], { label: "kas" });
+const fetchDataset = createDatasetFetcher(["kas"], { label: "kas" });
 
-async function fetchDataset<T>(file: string): Promise<T> {
-  return fetchKasDataset<T>(file);
-}
 
-// Government expenditure (quarterly)
-export type GovernmentExpenditureDataset = Dataset<
-  GovernmentExpenditureRecord,
-  GovernmentExpenditureMeta
->;
+
+export type {
+  GovernmentExpenditureDataset,
+  GovernmentRevenueDataset,
+} from "@kosovatools/data-types";
 export type GovernmentExpenditureDatasetView =
   DatasetView<GovernmentExpenditureDataset>;
 
@@ -28,11 +23,6 @@ export async function loadGovernmentExpenditureDataset(): Promise<GovernmentExpe
   return data;
 }
 
-// Government revenue (quarterly)
-export type GovernmentRevenueDataset = Dataset<
-  GovernmentRevenueRecord,
-  GovernmentRevenueMeta
->;
 export type GovernmentRevenueDatasetView =
   DatasetView<GovernmentRevenueDataset>;
 

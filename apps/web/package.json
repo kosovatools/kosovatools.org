@@ -13,14 +13,14 @@
   },
   "dependencies": {
     "@lucide/lab": "^0.1.2",
-    "@next/bundle-analyzer": "16.0.3",
+    "@next/bundle-analyzer": "16.0.6",
     "@tanstack/react-query": "^5.90.11",
     "@workspace/atk-faq": "workspace:*",
     "@workspace/aviation-stats": "workspace:*",
     "@workspace/car-import-taxes": "workspace:*",
     "@workspace/customs-codes": "workspace:*",
-    "@workspace/data-insights": "workspace:*",
     "@workspace/data": "workspace:*",
+    "@workspace/data-insights": "workspace:*",
     "@workspace/drug-prices": "workspace:*",
     "@workspace/economic-activity": "workspace:*",
     "@workspace/energy-tracker": "workspace:*",
@@ -36,11 +36,11 @@
     "chroma-js": "^3.2.0",
     "d3-scale": "^4.0.2",
     "lucide-react": "^0.475.0",
-    "next": "16.0.3",
+    "next": "16.0.6",
     "next-themes": "^0.4.6",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "recharts": "3.4.1"
+    "recharts": "3.5.1"
   },
   "devDependencies": {
     "@types/chroma-js": "^3.1.2",
@@ -50,14 +50,13 @@
     "@types/react-dom": "19.2.2",
     "@workspace/eslint-config": "workspace:^",
     "@workspace/typescript-config": "workspace:*",
-    "baseline-browser-mapping": "^2.8.32",
     "eslint": "^9.39.1",
     "typescript": "^5.9.3"
   },
   "license": "AGPL-3.0-only",
   "pnpm": {
     "overrides": {
-      "@types/react": "19.2.6",
+      "@types/react": "19.2.7",
       "@types/react-dom": "19.2.3"
     }
   }

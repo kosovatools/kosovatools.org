@@ -8,12 +8,12 @@ import { cn } from "@workspace/ui/lib/utils";
 import { formatDate } from "@workspace/utils";
 
 import { formatLabel } from "../lib/format";
-import type { MemorialVictim } from "@workspace/data";
+import { VictimChunk } from "@workspace/data";
 
 const FALLBACK_NAME = "Emër i panjohur";
 
 export type VictimListProps = {
-  victims: MemorialVictim[];
+  victims: VictimChunk["records"];
   totalRecords?: number | null;
   hasMore?: boolean;
   isLoadingMore?: boolean;

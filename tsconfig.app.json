@@ -1,6 +1,3 @@
 {
-  "extends": "@workspace/typescript-config/base.json",
-  "compilerOptions": {
-    "baseUrl": "."
-  }
+  "extends": "@workspace/typescript-config/base.json"
 }

@@ -1,20 +1,12 @@
 import { createDatasetFetcher } from "../client";
-import { type Dataset, type DatasetView } from "../dataset-helpers";
-import type {
-  GdpByActivityMeta,
-  GdpByActivityRecord,
-} from "@kosovatools/data-types/gdp";
+import { type DatasetView } from "../dataset-helpers";
+import type { GdpByActivityDataset } from "@kosovatools/data-types";
 
-const fetchKasDataset = createDatasetFetcher(["kas"], { label: "kas" });
+const fetchDataset = createDatasetFetcher(["kas"], { label: "kas" });
 
-async function fetchDataset<T>(file: string): Promise<T> {
-  return fetchKasDataset<T>(file);
-}
 
-export type GdpByActivityDataset = Dataset<
-  GdpByActivityRecord,
-  GdpByActivityMeta
->;
+
+export type { GdpByActivityDataset } from "@kosovatools/data-types";
 export type GdpByActivityDatasetView = DatasetView<GdpByActivityDataset>;
 
 export async function loadGdpByActivityDataset(): Promise<GdpByActivityDataset> {
