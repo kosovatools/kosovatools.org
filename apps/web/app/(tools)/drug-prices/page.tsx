@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { DrugPriceExplorer } from "@workspace/drug-prices";
-import ReactQueryProvider from "@/components/react-query-provider";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export const metadata: Metadata = {
@@ -37,13 +36,11 @@ export const metadata: Metadata = {
 
 export default function DrugPricesPage() {
   return (
-    <ReactQueryProvider>
-      <ToolPage
-        title="Tabela e çmimeve"
-        description="Çmimet shfaqen në euro dhe përditësohen sipas versionit më të fundit të publikuar. Çdo rresht shfaq çmimet më të fundit për produktin përkatës dhe historikun e versioneve."
-      >
-        <DrugPriceExplorer />
-      </ToolPage>
-    </ReactQueryProvider>
+    <ToolPage
+      title="Tabela e çmimeve"
+      description="Çmimet shfaqen në euro dhe përditësohen sipas versionit më të fundit të publikuar. Çdo rresht shfaq çmimet më të fundit për produktin përkatës dhe historikun e versioneve."
+    >
+      <DrugPriceExplorer />
+    </ToolPage>
   );
 }

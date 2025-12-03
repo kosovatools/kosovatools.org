@@ -9,6 +9,13 @@ import {
   GenericDataset,
   getDatasetCoverageLabel,
 } from "@workspace/data";
+import { Button } from "@workspace/ui/components/button";
+import {
+  type QueryKey,
+  useQuery,
+  type UseQueryOptions,
+} from "@tanstack/react-query";
+import { RotateCw } from "lucide-react";
 import {
   Alert,
   AlertDescription,
@@ -16,46 +23,28 @@ import {
 } from "@workspace/ui/components/alert";
 import { ChartEmptyState } from "@workspace/ui/components/chart";
 
-type SuspenseQueryLike<TDataset> = {
-  data: TDataset | undefined;
-  error: unknown;
-  isError: boolean;
-  isLoading?: boolean;
-};
-
 type RendererChildren<TDataset extends GenericDataset> =
   | React.ReactNode
   | ((dataset: DatasetView<TDataset>) => React.ReactNode);
 
-// Props when using dataset directly
-type DatasetRendererPropsWithDataset<TDataset extends GenericDataset> = {
-  title?: React.ReactNode;
+type DatasetRendererQueryOptions<TDataset extends GenericDataset> = Omit<
+  UseQueryOptions<TDataset, Error, TDataset, QueryKey>,
+  "queryKey" | "queryFn" | "initialData"
+>;
+
+export type DatasetRendererProps<TDataset extends GenericDataset> = {
+  title: React.ReactNode;
   description?: React.ReactNode;
-  dataset: TDataset;
-  query?: never;
+  datasetLoader: () => Promise<TDataset>;
+  queryKey: QueryKey;
+  initialData?: TDataset;
+  queryOptions?: DatasetRendererQueryOptions<TDataset>;
   children: RendererChildren<TDataset>;
   isEmpty?: (dataset: DatasetView<TDataset>) => boolean;
   emptyStateContent?: React.ReactNode;
   className?: string;
   id?: string;
 };
-
-// Props when using query
-type DatasetRendererPropsWithQuery<TDataset extends GenericDataset> = {
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  dataset?: never;
-  query: SuspenseQueryLike<TDataset>;
-  children: RendererChildren<TDataset>;
-  isEmpty?: (dataset: DatasetView<TDataset>) => boolean;
-  emptyStateContent?: React.ReactNode;
-  className?: string;
-  id?: string;
-};
-
-export type DatasetRendererProps<TDataset extends GenericDataset> =
-  | DatasetRendererPropsWithDataset<TDataset>
-  | DatasetRendererPropsWithQuery<TDataset>;
 
 const DEFAULT_ERROR_TITLE = "Shfaqja e të dhëna dështoi";
 const DEFAULT_ERROR_MESSAGE = "Provoni përsëri më vonë.";
@@ -65,93 +54,52 @@ const DEFAULT_EMPTY_MESSAGE = "Nuk ka të dhëna për t'u shfaqur.";
 export function DatasetRenderer<TDataset extends GenericDataset>({
   title,
   description,
-  dataset,
-  query,
+  datasetLoader,
+  queryKey,
+  initialData,
+  queryOptions,
   children,
   isEmpty = (ds) => ds.records.length === 0,
   emptyStateContent,
   className,
   id,
 }: DatasetRendererProps<TDataset>) {
-  let resolvedDataset = dataset;
+  const queryResult = useQuery<TDataset, Error>({
+    queryKey,
+    queryFn: datasetLoader,
+    initialData,
+    staleTime: Infinity,
+    ...queryOptions,
+  });
 
-  if (query) {
-    resolvedDataset = query.data as TDataset;
-  }
+  const isLoading =
+    queryResult.isLoading &&
+    (typeof queryResult.data === "undefined" || queryResult.data === null);
+  const isRefetching = queryResult.isFetching && !isLoading;
 
-  const hydratedDataset = React.useMemo<DatasetView<TDataset> | undefined>(
-    () =>
-      resolvedDataset
-        ? (createDataset(resolvedDataset) as DatasetView<TDataset>)
-        : undefined,
-    [resolvedDataset],
+  const refreshButton = (
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={() => void queryResult.refetch()}
+      disabled={isLoading || isRefetching}
+      className="gap-2"
+      aria-label="Rifresko të dhënat"
+    >
+      <RotateCw
+        aria-hidden
+        className={cn(
+          "h-4 w-4",
+          isRefetching ? "animate-spin text-primary" : "text-muted-foreground",
+        )}
+      />
+    </Button>
   );
 
-  // Handle query-based loading
-  if (query) {
-    const isLoading =
-      query.isLoading ?? (typeof query.data === "undefined" && !query.isError);
-
-    if (query.isError) {
-      const message =
-        query.error instanceof Error && query.error.message
-          ? query.error.message
-          : DEFAULT_ERROR_MESSAGE;
-      return (
-        <Alert variant="destructive">
-          <AlertTitle>{DEFAULT_ERROR_TITLE}</AlertTitle>
-          <AlertDescription>{message}</AlertDescription>
-        </Alert>
-      );
-    }
-
-    if (isLoading) {
-      return (
-        <div className="flex min-h-[200px] items-center justify-center text-sm text-muted-foreground">
-          {DEFAULT_LOADING_MESSAGE}
-        </div>
-      );
-    }
-  }
-
-  const isDatasetEmpty = hydratedDataset ? isEmpty(hydratedDataset) : false;
-
-  // Check for empty state
-  if (isDatasetEmpty) {
-    return (
-      <ChartEmptyState
-        messageContent={emptyStateContent ?? DEFAULT_EMPTY_MESSAGE}
-      />
-    );
-  }
-
-  // At this point, dataset is guaranteed to be defined
-  if (!hydratedDataset) {
-    return null;
-  }
-
-  const hasHeader = Boolean(title || description);
-
-  const coverageLabel = getDatasetCoverageLabel(hydratedDataset.meta);
-  const footerSegments = [
-    `Burimi: ${hydratedDataset.meta.source}.`,
-    `Gjeneruar më ${formatGeneratedAt(hydratedDataset.meta.generated_at)}`,
-  ];
-
-  if (coverageLabel) {
-    footerSegments.push(`Periudha: ${coverageLabel}`);
-  }
-
-  const footerText = footerSegments.join(" · ");
-
-  // Render children - support both render prop and normal children
-  const renderedChildren =
-    typeof children === "function" ? children(hydratedDataset) : children;
-
-  return (
-    <section id={id} className={cn("space-y-4", className)}>
-      {hasHeader ? (
-        <div className="space-y-2">
+  const headerContent = (
+    <div className="space-y-2">
+      <div className="flex items-start gap-3">
+        <div className="flex-1 space-y-2">
           {typeof title === "string" ? (
             <h2 className="text-2xl font-semibold tracking-tight">
               {id ? (
@@ -174,7 +122,84 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
             description
           )}
         </div>
-      ) : null}
+        <div className="flex shrink-0 justify-end">{refreshButton}</div>
+      </div>
+    </div>
+  );
+
+  const hydratedDataset = React.useMemo(
+    () =>
+      queryResult.data
+        ? (createDataset(queryResult.data) as DatasetView<TDataset>)
+        : undefined,
+    [queryResult.data],
+  );
+
+  if (queryResult.isError && !hydratedDataset) {
+    const message =
+      queryResult.error instanceof Error && queryResult.error.message
+        ? queryResult.error.message
+        : DEFAULT_ERROR_MESSAGE;
+    return (
+      <section id={id} className={cn("space-y-4", className)}>
+        {headerContent}
+        <Alert variant="destructive">
+          <AlertTitle>{DEFAULT_ERROR_TITLE}</AlertTitle>
+          <AlertDescription>{message}</AlertDescription>
+        </Alert>
+      </section>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <section id={id} className={cn("space-y-4", className)}>
+        {headerContent}
+        <div className="flex min-h-[200px] items-center justify-center text-sm text-muted-foreground">
+          {DEFAULT_LOADING_MESSAGE}
+        </div>
+      </section>
+    );
+  }
+
+  const isDatasetEmpty = hydratedDataset ? isEmpty(hydratedDataset) : false;
+
+  // Check for empty state
+  if (isDatasetEmpty) {
+    return (
+      <section id={id} className={cn("space-y-4", className)}>
+        {headerContent}
+        <ChartEmptyState
+          messageContent={emptyStateContent ?? DEFAULT_EMPTY_MESSAGE}
+        />
+      </section>
+    );
+  }
+
+  // At this point, dataset is guaranteed to be defined
+  if (!hydratedDataset) {
+    return null;
+  }
+
+  const coverageLabel = getDatasetCoverageLabel(hydratedDataset.meta);
+  const footerSegments = [
+    `Burimi: ${hydratedDataset.meta.source}.`,
+    `Gjeneruar më ${formatGeneratedAt(hydratedDataset.meta.generated_at)}`,
+  ];
+
+  if (coverageLabel) {
+    footerSegments.push(`Periudha: ${coverageLabel}`);
+  }
+
+  const footerText = footerSegments.join(" · ");
+
+  // Render children - support both render prop and normal children
+  const renderedChildren =
+    typeof children === "function" ? children(hydratedDataset) : children;
+
+  return (
+    <section id={id} className={cn("space-y-4", className)}>
+      {headerContent}
 
       {renderedChildren}
 

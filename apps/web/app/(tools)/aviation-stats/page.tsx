@@ -43,7 +43,7 @@ export default async function AviationStatsPage() {
       title="Statistikat e aviacionit të Kosovës"
       description="Pasqyro pasagjerët hyrës dhe dalës që qarkullojnë çdo muaj në Aeroportin Ndërkombëtar të Prishtinës duke përdorur të dhënat zyrtare të ASK-së për trafikun ajror."
     >
-      <AviationStats dataset={airTransport} />
+      <AviationStats initialDataset={airTransport} />
     </ToolPage>
   );
 }

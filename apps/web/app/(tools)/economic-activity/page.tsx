@@ -5,7 +5,6 @@ import {
   GovernmentFinanceSection,
   TurnoverDashboard,
 } from "@workspace/economic-activity";
-import ReactQueryProvider from "@/components/react-query-provider";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 import {
   loadGovernmentExpenditureDataset,
@@ -54,20 +53,18 @@ export default async function EconomicActivityPage() {
   ]);
 
   return (
-    <ReactQueryProvider>
-      <ToolPage
-        title="Aktiviteti ekonomik dhe financat publike"
-        description="BPV tremujor sipas aktiviteteve ekonomike, qarkullimi i bizneseve sipas kategorive/komunave dhe të hyrat/shpenzimet e Qeverisë së Përgjithshme në një dashboard të vetëm."
-      >
-        <div className="space-y-12">
-          <GovernmentFinanceSection
-            revenue={revenue}
-            expenditure={expenditure}
-          />
-          <GdpByActivitySection dataset={gdpByActivity} />
-          <TurnoverDashboard />
-        </div>
-      </ToolPage>
-    </ReactQueryProvider>
+    <ToolPage
+      title="Aktiviteti ekonomik dhe financat publike"
+      description="BPV tremujor sipas aktiviteteve ekonomike, qarkullimi i bizneseve sipas kategorive/komunave dhe të hyrat/shpenzimet e Qeverisë së Përgjithshme në një dashboard të vetëm."
+    >
+      <div className="space-y-12">
+        <GovernmentFinanceSection
+          initialRevenue={revenue}
+          initialExpenditure={expenditure}
+        />
+        <GdpByActivitySection initialDataset={gdpByActivity} />
+        <TurnoverDashboard />
+      </div>
+    </ToolPage>
   );
 }

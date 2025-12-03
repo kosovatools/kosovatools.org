@@ -1,27 +1,34 @@
 "use client";
-import type {
-  ConstructionCostIndexDataset,
-  CpiAveragePriceDataset,
-  CpiDataset,
+import {
+  loadConstructionCostIndexDataset,
+  loadCpiAveragePricesDataset,
+  loadCpiDataset,
+  type ConstructionCostIndexDataset,
+  type CpiAveragePriceDataset,
+  type CpiDataset,
 } from "@workspace/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 import { CpiChart } from "./charts/cpi-chart";
 import { ConstructionCostIndexChart } from "./charts/construction-cost-chart";
 import { CpiAveragePricesChart } from "./charts/cpi-average-prices-chart";
 
+type InflationTrackerProps = {
+  initialCpiDataset?: CpiDataset;
+  initialCpiAveragePricesYearly?: CpiAveragePriceDataset;
+  initialConstructionCostIndexDataset?: ConstructionCostIndexDataset;
+};
+
 export function InflationTracker({
-  cpiDataset,
-  cpiAveragePricesYearly,
-  constructionCostIndexDataset,
-}: {
-  cpiDataset: CpiDataset;
-  cpiAveragePricesYearly: CpiAveragePriceDataset;
-  constructionCostIndexDataset: ConstructionCostIndexDataset;
-}) {
+  initialCpiDataset,
+  initialCpiAveragePricesYearly,
+  initialConstructionCostIndexDataset,
+}: InflationTrackerProps) {
   return (
     <div className="space-y-12">
       <DatasetRenderer
-        dataset={cpiDataset}
+        datasetLoader={loadCpiDataset}
+        queryKey={["kas", "cpi", "monthly"]}
+        initialData={initialCpiDataset}
         id="cpi-index"
         title="Indeksi i Çmimeve të Konsumit"
       >
@@ -41,7 +48,9 @@ export function InflationTracker({
       </DatasetRenderer>
 
       <DatasetRenderer
-        dataset={cpiAveragePricesYearly}
+        datasetLoader={loadCpiAveragePricesDataset}
+        queryKey={["kas", "cpi", "average-prices", "yearly"]}
+        initialData={initialCpiAveragePricesYearly}
         title="Çmimet mesatare vjetore"
         id="cpi-average-prices"
         description="Analizo trendet e çmimeve për artikuj specifikë të shportës së CPI-së dhe krahaso deri në pesë produkte / shërbime në të njëjtin grafik."
@@ -50,7 +59,9 @@ export function InflationTracker({
       </DatasetRenderer>
 
       <DatasetRenderer
-        dataset={constructionCostIndexDataset}
+        datasetLoader={loadConstructionCostIndexDataset}
+        queryKey={["kas", "construction-cost-index", "quarterly"]}
+        initialData={initialConstructionCostIndexDataset}
         title="Indeksi i kostos së ndërtimit"
         id="construction-cost-index"
         description="Krahaso kostot tremujore të materialeve, pagave dhe komponentëve të tjerë për ndërtesat shumëkatëshe (baza 2015 = 100)."

@@ -1,30 +1,16 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-
 import { DailyFlowChart } from "./charts/energy-flow-daily-chart";
 import { MonthlyFlowTrendChart } from "./charts/energy-flow-monthly-trend-chart";
 import { loadDailyDataset, loadMonthlyDataset } from "./flow-service";
-import type { EnergyDailyDataset, EnergyMonthlyDataset } from "@workspace/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
 export function EnergyFlowExplorer() {
-  const monthlyQuery = useQuery<EnergyMonthlyDataset, Error>({
-    queryKey: ["energy-flow", "monthly-dataset"],
-    queryFn: loadMonthlyDataset,
-    staleTime: Infinity,
-  });
-
-  const dailyQuery = useQuery<EnergyDailyDataset, Error>({
-    queryKey: ["energy-flow", "daily-dataset"],
-    queryFn: loadDailyDataset,
-    staleTime: Infinity,
-  });
-
   return (
     <div className="space-y-8">
       <DatasetRenderer
-        query={monthlyQuery}
+        datasetLoader={loadMonthlyDataset}
+        queryKey={["energy-flow", "monthly-dataset"]}
         emptyStateContent="Nuk ka të dhëna mujore për flukset e energjisë."
         title="Trendi i flukseve mujore"
         id="monthly-flow-trend"
@@ -42,7 +28,8 @@ export function EnergyFlowExplorer() {
       </DatasetRenderer>
 
       <DatasetRenderer
-        query={dailyQuery}
+        datasetLoader={loadDailyDataset}
+        queryKey={["energy-flow", "daily-dataset"]}
         emptyStateContent="Nuk ka ende të dhëna ditore për periudhën e fundit."
         title="Modeli ditor i flukseve"
         id="daily-flow-pattern"

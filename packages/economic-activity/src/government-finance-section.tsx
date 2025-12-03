@@ -4,22 +4,28 @@ import type {
   GovernmentExpenditureDataset,
   GovernmentRevenueDataset,
 } from "@workspace/data";
+import {
+  loadGovernmentExpenditureDataset,
+  loadGovernmentRevenueDataset,
+} from "@workspace/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
 import { GovernmentExpenditureStackedChart } from "./charts/government-expenditure-chart";
 import { GovernmentRevenueStackedChart } from "./charts/government-revenue-chart";
 
 export function GovernmentFinanceSection({
-  revenue,
-  expenditure,
+  initialRevenue,
+  initialExpenditure,
 }: {
-  revenue: GovernmentRevenueDataset;
-  expenditure: GovernmentExpenditureDataset;
+  initialRevenue?: GovernmentRevenueDataset;
+  initialExpenditure?: GovernmentExpenditureDataset;
 }) {
   return (
     <div className="space-y-10">
       <DatasetRenderer
-        dataset={revenue}
+        datasetLoader={loadGovernmentRevenueDataset}
+        queryKey={["kas", "government", "revenue", "quarterly"]}
+        initialData={initialRevenue}
         title="Të hyrat e Qeverisë së Përgjithshme (ESA 2010)"
         id="government-revenue"
         description="Struktura tremujore e të hyrave sipas ESA: tatime, transferta dhe hyrje nga prona."
@@ -40,7 +46,9 @@ export function GovernmentFinanceSection({
       </DatasetRenderer>
 
       <DatasetRenderer
-        dataset={expenditure}
+        datasetLoader={loadGovernmentExpenditureDataset}
+        queryKey={["kas", "government", "expenditure", "quarterly"]}
+        initialData={initialExpenditure}
         title="Shpenzimet e Qeverisë së Përgjithshme (ESA 2010)"
         id="government-expenditure"
         description="Shpenzimet tremujore sipas funksioneve ESA, përfshirë kompensimet, subvencionet dhe investimet kapitale."

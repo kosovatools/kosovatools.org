@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Info } from "lucide-react";
 
 import { LoanInterestDashboard } from "@workspace/loan-interest-tracker";
-import ReactQueryProvider from "@/components/react-query-provider";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 import {
   Alert,
@@ -44,22 +43,20 @@ export const metadata: Metadata = {
 
 export default function LoanInterestRatesPage() {
   return (
-    <ReactQueryProvider>
-      <ToolPage
-        title="Normat e interesit për kreditë e reja"
-        description="Grafiqe mujore nga Banka Qendrore e Kosovës për kreditë e reja, me ndarje për ekonomitë familjare, korporatat dhe maturitetet e produkteve."
-      >
-        <Alert className="bg-muted/40">
-          <Info aria-hidden className="text-primary" />
-          <AlertTitle>Shënim metodologjik</AlertTitle>
-          <AlertDescription className="text-sm">
-            Seritë fillojnë në janar 2010 (pas ndryshimit të metodologjisë) dhe
-            përfshijnë vlera bosh kur CBK lë qeliza të paplotësuara në
-            publikimin origjinal.
-          </AlertDescription>
-        </Alert>
-        <LoanInterestDashboard />
-      </ToolPage>
-    </ReactQueryProvider>
+    <ToolPage
+      title="Normat e interesit për kreditë e reja"
+      description="Grafiqe mujore nga Banka Qendrore e Kosovës për kreditë e reja, me ndarje për ekonomitë familjare, korporatat dhe maturitetet e produkteve."
+    >
+      <Alert className="bg-muted/40">
+        <Info aria-hidden className="text-primary" />
+        <AlertTitle>Shënim metodologjik</AlertTitle>
+        <AlertDescription className="text-sm">
+          Seritë fillojnë në janar 2010 (pas ndryshimit të metodologjisë) dhe
+          përfshijnë vlera bosh kur CBK lë qeliza të paplotësuara në publikimin
+          origjinal.
+        </AlertDescription>
+      </Alert>
+      <LoanInterestDashboard />
+    </ToolPage>
   );
 }

@@ -1,16 +1,10 @@
 "use client";
 
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-
 import {
   fetchCategoriesDataset,
   fetchCitiesDataset,
   fetchCityCategoryYearlyDataset,
   fetchMonthlyCityCategoryDataset,
-  TurnoverCategoriesDataset,
-  TurnoverCitiesDataset,
-  CityCategoryYearlyDataset,
-  MonthlyCategoryCityDataset,
 } from "@workspace/data";
 
 import { CategoriesOverYearsChart } from "./charts/categories-over-years-chart";
@@ -20,19 +14,16 @@ import { TurnoverByCategoryChart } from "./charts/turnover-by-category-chart";
 import { TurnoverByCityChart } from "./charts/turnover-by-city-chart";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
-function CategorySection({
-  query,
-}: {
-  query: UseQueryResult<TurnoverCategoriesDataset, Error>;
-}) {
+function CategorySection() {
   return (
     <DatasetRenderer
+      datasetLoader={fetchCategoriesDataset}
+      queryKey={["mfk", "turnover", "categories", "dataset"]}
       title="Qarkullimi sipas kategorive kryesore"
       id="turnover-by-category"
       description={
         "Shuma totale vjetore e qarkullimit sipas degëve të biznesit për vitin e fundit të përditësuar."
       }
-      query={query}
       emptyStateContent="Nuk ka të dhëna për kategoritë kryesore të qarkullimit."
     >
       {(data) => {
@@ -43,14 +34,11 @@ function CategorySection({
   );
 }
 
-function CitySection({
-  query,
-}: {
-  query: UseQueryResult<TurnoverCitiesDataset, Error>;
-}) {
+function CitySection() {
   return (
     <DatasetRenderer
-      query={query}
+      datasetLoader={fetchCitiesDataset}
+      queryKey={["mfk", "turnover", "cities", "dataset"]}
       isEmpty={(data) => data.limit(1).records.length === 0}
       emptyStateContent="Nuk ka të dhëna për komunat me qarkullimin më të lartë."
       title="Qarkullimi sipas komunave të Kosovës"
@@ -67,14 +55,11 @@ function CitySection({
   );
 }
 
-function CategoryTrendSection({
-  query,
-}: {
-  query: UseQueryResult<TurnoverCategoriesDataset, Error>;
-}) {
+function CategoryTrendSection() {
   return (
     <DatasetRenderer
-      query={query}
+      datasetLoader={fetchCategoriesDataset}
+      queryKey={["mfk", "turnover", "categories", "dataset"]}
       isEmpty={(data) => data.limit(1).records.length === 0}
       emptyStateContent="Nuk ka të dhëna shumëvjeçare për t'u paraqitur."
       title="Trendi shumëvjeçar i kategorive kryesore"
@@ -86,14 +71,11 @@ function CategoryTrendSection({
   );
 }
 
-function MonthlyCategorySection({
-  query,
-}: {
-  query: UseQueryResult<MonthlyCategoryCityDataset, Error>;
-}) {
+function MonthlyCategorySection() {
   return (
     <DatasetRenderer
-      query={query}
+      datasetLoader={fetchMonthlyCityCategoryDataset}
+      queryKey={["mfk", "turnover", "monthly", "category-city"]}
       emptyStateContent="Nuk ka të dhëna mujore për këtë periudhë."
       title="Dinamika mujore e kategorive"
       id="monthly-category-dynamics"
@@ -114,14 +96,11 @@ function MonthlyCategorySection({
   );
 }
 
-function TopCategoryByCitySection({
-  query,
-}: {
-  query: UseQueryResult<CityCategoryYearlyDataset, Error>;
-}) {
+function TopCategoryByCitySection() {
   return (
     <DatasetRenderer
-      query={query}
+      datasetLoader={fetchCityCategoryYearlyDataset}
+      queryKey={["mfk", "turnover", "city-category", "yearly"]}
       emptyStateContent="Nuk ka të dhëna për kategoritë kryesuese sipas komunave."
       title="Kategoritë dominuese sipas komunave"
       id="top-category-by-city"
@@ -133,37 +112,13 @@ function TopCategoryByCitySection({
 }
 
 export function TurnoverDashboard() {
-  const categoriesQuery = useQuery<TurnoverCategoriesDataset, Error>({
-    queryKey: ["mfk", "turnover", "categories", "dataset"],
-    queryFn: fetchCategoriesDataset,
-    staleTime: 6 * 60 * 1000,
-  });
-
-  const citiesQuery = useQuery<TurnoverCitiesDataset, Error>({
-    queryKey: ["mfk", "turnover", "cities", "dataset"],
-    queryFn: fetchCitiesDataset,
-    staleTime: 6 * 60 * 1000,
-  });
-
-  const monthlyCategoryQuery = useQuery<MonthlyCategoryCityDataset, Error>({
-    queryKey: ["mfk", "turnover", "monthly", "category-city"],
-    queryFn: fetchMonthlyCityCategoryDataset,
-    staleTime: 6 * 60 * 1000,
-  });
-
-  const cityCategoryYearlyQuery = useQuery<CityCategoryYearlyDataset, Error>({
-    queryKey: ["mfk", "turnover", "city-category", "yearly"],
-    queryFn: fetchCityCategoryYearlyDataset,
-    staleTime: 6 * 60 * 1000,
-  });
-
   return (
     <div className="space-y-10">
-      <CategorySection query={categoriesQuery} />
-      <CitySection query={citiesQuery} />
-      <MonthlyCategorySection query={monthlyCategoryQuery} />
-      <CategoryTrendSection query={categoriesQuery} />
-      <TopCategoryByCitySection query={cityCategoryYearlyQuery} />
+      <CategorySection />
+      <CitySection />
+      <MonthlyCategorySection />
+      <CategoryTrendSection />
+      <TopCategoryByCitySection />
     </div>
   );
 }

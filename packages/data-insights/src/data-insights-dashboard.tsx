@@ -1,13 +1,21 @@
 "use client";
-import type {
-  TradePartnersDataset,
-  FuelDataset,
-  TradeChaptersDataset,
-  VehicleTypesDataset,
-  EmploymentActivityGenderDataset,
-  WageLevelsDataset,
-  TourismCountryDataset,
-  TourismRegionDataset,
+import {
+  loadEmploymentActivityGenderDataset,
+  loadKasFuelDataset,
+  loadTourismCountryDataset,
+  loadTourismRegionDataset,
+  loadTradeChaptersDataset,
+  loadTradePartnersDataset,
+  loadVehicleTypesDataset,
+  loadWageLevelsDataset,
+  type TradePartnersDataset,
+  type FuelDataset,
+  type TradeChaptersDataset,
+  type VehicleTypesDataset,
+  type EmploymentActivityGenderDataset,
+  type WageLevelsDataset,
+  type TourismCountryDataset,
+  type TourismRegionDataset,
 } from "@workspace/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
@@ -21,25 +29,25 @@ import { TourismRegionCharts } from "./charts/tourism-region-stacked-chart";
 import { VehicleTypesStackedChart } from "./charts/vehicle-types-stacked-chart";
 
 type DataInsightsProps = {
-  tradeChapters: TradeChaptersDataset;
-  tradePartners: TradePartnersDataset;
-  employmentActivityGender: EmploymentActivityGenderDataset;
-  wageLevels: WageLevelsDataset;
-  fuelDataset: FuelDataset;
-  vehicleTypesYearly: VehicleTypesDataset;
-  tourismCountry: TourismCountryDataset;
-  tourismRegion: TourismRegionDataset;
+  initialTradeChapters?: TradeChaptersDataset;
+  initialTradePartners?: TradePartnersDataset;
+  initialEmploymentActivityGender?: EmploymentActivityGenderDataset;
+  initialWageLevels?: WageLevelsDataset;
+  initialFuelDataset?: FuelDataset;
+  initialVehicleTypesYearly?: VehicleTypesDataset;
+  initialTourismCountry?: TourismCountryDataset;
+  initialTourismRegion?: TourismRegionDataset;
 };
 
 export function DataInsightsDashboard({
-  tradeChapters,
-  tradePartners,
-  employmentActivityGender,
-  wageLevels,
-  fuelDataset,
-  vehicleTypesYearly,
-  tourismCountry,
-  tourismRegion,
+  initialTradeChapters,
+  initialTradePartners,
+  initialEmploymentActivityGender,
+  initialWageLevels,
+  initialFuelDataset,
+  initialVehicleTypesYearly,
+  initialTourismCountry,
+  initialTourismRegion,
 }: DataInsightsProps) {
   return (
     <div className="space-y-8">
@@ -48,7 +56,9 @@ export function DataInsightsDashboard({
           Tregtia & Dogana
         </h2>
         <DatasetRenderer
-          dataset={tradeChapters}
+          datasetLoader={loadTradeChaptersDataset}
+          queryKey={["trade", "chapters", "monthly"]}
+          initialData={initialTradeChapters}
           title="Kapitujt kryesorë të tregtisë (shtresuar)"
           id="trade-chapters"
           description="Të dhëna mujore për eksportet (FOB) dhe importet (CIF) sipas kapitujve të nomenklaturës doganore. Ndrysho fluksin, përzgjedh periudhën ose filtro kapitujt kryesorë për të parë kontributet në kohë."
@@ -56,7 +66,9 @@ export function DataInsightsDashboard({
           {(dataset) => <TradeChapterStackedChart dataset={dataset} />}
         </DatasetRenderer>
         <DatasetRenderer
-          dataset={tradePartners}
+          datasetLoader={loadTradePartnersDataset}
+          queryKey={["trade", "partners"]}
+          initialData={initialTradePartners}
           title="Kontributet e partnerëve (shtresuar)"
           id="trade-partners"
           description='Partnerët kryesorë tregtarë gjatë vitit të fundit. Rregullo përzgjedhjen ose aktivizo kategorinë "Të tjerët" për të parë partnerët më të vegjël.'
@@ -68,7 +80,9 @@ export function DataInsightsDashboard({
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold tracking-tight">Tregu i punës</h2>
         <DatasetRenderer
-          dataset={wageLevels}
+          datasetLoader={loadWageLevelsDataset}
+          queryKey={["labour", "wage-levels"]}
+          initialData={initialWageLevels}
           title="Pagat mesatare sipas sektorit"
           id="wage-levels"
           description="Pagat bruto/neto vjetore për sektorin publik, ndërmarrjet publike dhe sektorin privat. Ndrysho metrikën ose intervalin kohor për të parë dallimet mes grupeve."
@@ -84,7 +98,9 @@ export function DataInsightsDashboard({
           )}
         </DatasetRenderer>
         <DatasetRenderer
-          dataset={employmentActivityGender}
+          datasetLoader={loadEmploymentActivityGenderDataset}
+          queryKey={["labour", "employment-activity-gender"]}
+          initialData={initialEmploymentActivityGender}
           title="Punësimi sipas aktivitetit dhe gjinisë"
           id="employment-activity"
           description="Punësimi tremujor (persona) sipas aktivitetit ekonomik dhe gjinisë. Filtro gjininë ose ndrysho grupimin për të parë tendencat kryesore."
@@ -104,7 +120,9 @@ export function DataInsightsDashboard({
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold tracking-tight">Karburantet</h2>
         <DatasetRenderer
-          dataset={fuelDataset}
+          datasetLoader={loadKasFuelDataset}
+          queryKey={["energy", "fuel", "monthly"]}
+          initialData={initialFuelDataset}
           title="Bilanci i furnizimit me karburante"
           id="fuel-balance"
           description="Disponueshmëria mujore e karburanteve sipas llojit. Ndrysho metrikat për të krahasuar prodhimin, flukset tregtare, rezervat ose vëllimet gati për treg."
@@ -116,7 +134,9 @@ export function DataInsightsDashboard({
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold tracking-tight">Transporti</h2>
         <DatasetRenderer
-          dataset={vehicleTypesYearly}
+          datasetLoader={loadVehicleTypesDataset}
+          queryKey={["transport", "vehicle-types", "yearly"]}
+          initialData={initialVehicleTypesYearly}
           title="Mjetet motorike sipas llojit"
           id="vehicle-types"
           description="Seri vjetore për mjetet motorike dhe jo motorike të raportuara nga ASK. Grafiku shtresor shfaq të gjitha kategoritë si vetura, autobusë, rimorkio dhe të tjera."
@@ -128,7 +148,9 @@ export function DataInsightsDashboard({
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold tracking-tight">Turizmi</h2>
         <DatasetRenderer
-          dataset={tourismCountry}
+          datasetLoader={loadTourismCountryDataset}
+          queryKey={["tourism", "country", "visitors"]}
+          initialData={initialTourismCountry}
           title="Vendet kryesore të vizitorëve (shtresuar)"
           id="tourism-country"
           description="Vendet e origjinës kryesuese të radhitura sipas vizitorëve ose netëve të qëndrimit gjatë vitit të fundit."
@@ -145,7 +167,9 @@ export function DataInsightsDashboard({
           )}
         </DatasetRenderer>
         <DatasetRenderer
-          dataset={tourismRegion}
+          datasetLoader={loadTourismRegionDataset}
+          queryKey={["tourism", "region"]}
+          initialData={initialTourismRegion}
           title="Turizmi sipas rajonit"
           id="tourism-region"
           description="Vizualizime të shumëfishta për rajonet e Kosovës me filtra sipas grupeve të vizitorëve."

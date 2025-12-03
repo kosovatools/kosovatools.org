@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
 import { BuildingPermitExplorer } from "@workspace/prishtina-building-permits";
-import ReactQueryProvider from "@/components/react-query-provider";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export const metadata: Metadata = {
@@ -36,14 +35,12 @@ export const metadata: Metadata = {
 
 export default function PrishtinaBuildingPermitsPage() {
   return (
-    <ReactQueryProvider>
-      <ToolPage
-        title="Lejet zyrtare të ndërtimit (2012–2025)"
-        description="Analizo regjistrin e plotë të lejeve të ndërtimit të publikuara nga Komuna e Prishtinës për të parë sipërfaqet, tarifat dhe dokumentet shoqëruese për çdo aplikim."
-        footer="Komuna e Prishtinës · Drejtoria e Urbanizmit"
-      >
-        <BuildingPermitExplorer />
-      </ToolPage>
-    </ReactQueryProvider>
+    <ToolPage
+      title="Lejet zyrtare të ndërtimit (2012–2025)"
+      description="Analizo regjistrin e plotë të lejeve të ndërtimit të publikuara nga Komuna e Prishtinës për të parë sipërfaqet, tarifat dhe dokumentet shoqëruese për çdo aplikim."
+      footer="Komuna e Prishtinës · Drejtoria e Urbanizmit"
+    >
+      <BuildingPermitExplorer />
+    </ToolPage>
   );
 }

@@ -1,12 +1,21 @@
 "use client";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
-import type { AirTransportDataset } from "@workspace/data";
+import {
+  loadAirTransportDataset,
+  type AirTransportDataset,
+} from "@workspace/data";
 import { AviationStatsChart } from "./charts/aviation-stats-chart";
 
-export function AviationStats({ dataset }: { dataset: AirTransportDataset }) {
+export function AviationStats({
+  initialDataset,
+}: {
+  initialDataset?: AirTransportDataset;
+}) {
   return (
     <DatasetRenderer
-      dataset={dataset}
+      datasetLoader={loadAirTransportDataset}
+      queryKey={["kas", "aviation", "air-transport"]}
+      initialData={initialDataset}
       id="aviation-stats"
       title="Statistikat e Aviacionit"
     >

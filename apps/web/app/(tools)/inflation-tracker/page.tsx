@@ -56,9 +56,9 @@ export default async function InflationTrackerPage() {
       description="Vëzhgo IHÇK-në (2015 = 100) me ndryshimet mujore sipas COICOP, krahaso çmimet mesatare vjetore të produkteve dhe analizo indeksin e kostos së ndërtimit."
     >
       <InflationTracker
-        cpiDataset={cpiDataset}
-        cpiAveragePricesYearly={cpiAveragePricesYearly}
-        constructionCostIndexDataset={constructionCostIndexDataset}
+        initialCpiDataset={cpiDataset}
+        initialCpiAveragePricesYearly={cpiAveragePricesYearly}
+        initialConstructionCostIndexDataset={constructionCostIndexDataset}
       />
     </ToolPage>
   );

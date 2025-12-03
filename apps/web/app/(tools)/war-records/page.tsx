@@ -8,7 +8,6 @@ import {
 } from "@workspace/war-records";
 
 import { WarRecordsExplorer } from "@workspace/war-records";
-import ReactQueryProvider from "@/components/react-query-provider";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 const warRecordsTitle = `Kosovo War Records – Regjistrat e viktimave të krimeve të luftës (${WAR_RECORDS_TIMEFRAME_LABEL})`;
@@ -52,9 +51,7 @@ export default function Page() {
       description={warRecordsHeroDescription}
     >
       <WarRecordsOverview />
-      <ReactQueryProvider>
-        <WarRecordsExplorer />
-      </ReactQueryProvider>
+      <WarRecordsExplorer />
     </ToolPage>
   );
 }

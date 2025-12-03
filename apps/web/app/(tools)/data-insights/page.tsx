@@ -74,14 +74,14 @@ export default async function DataInsightsPage() {
       description="Vizualizoni trendet e tregtisë, energjisë, transportit dhe turizmit me grafika interaktive të bazuara në të dhënat e Agjencisë së Statistikave të Kosovës."
     >
       <DataInsightsDashboard
-        tradeChapters={tradeChapters}
-        tradePartners={tradePartners}
-        employmentActivityGender={employmentActivityGender}
-        wageLevels={wageLevels}
-        fuelDataset={fuelDataset}
-        vehicleTypesYearly={vehicleTypesYearly}
-        tourismCountry={tourismCountry}
-        tourismRegion={tourismRegion}
+        initialTradeChapters={tradeChapters}
+        initialTradePartners={tradePartners}
+        initialEmploymentActivityGender={employmentActivityGender}
+        initialWageLevels={wageLevels}
+        initialFuelDataset={fuelDataset}
+        initialVehicleTypesYearly={vehicleTypesYearly}
+        initialTourismCountry={tourismCountry}
+        initialTourismRegion={tourismRegion}
       />
     </ToolPage>
   );

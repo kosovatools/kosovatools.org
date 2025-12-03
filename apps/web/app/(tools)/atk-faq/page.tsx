@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Info } from "lucide-react";
 
 import { AtkFaqExplorer } from "@workspace/atk-faq";
-import ReactQueryProvider from "@/components/react-query-provider";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 import {
   Alert,
@@ -44,33 +43,31 @@ export const metadata: Metadata = {
 
 export default function AtkFaqPage() {
   return (
-    <ReactQueryProvider>
-      <ToolPage
-        title="Pyetje të shpeshta të ATK"
-        description="Shfleto bazën e pyetjeve të Administratës Tatimore të Kosovës (ATK) dhe gjej shpejt udhëzimet për deklarim, TVSH dhe kasat fiskale."
-        footer="Burimi: Administrata Tatimore e Kosovës"
-      >
-        <Alert className="bg-muted/40">
-          <Info aria-hidden className="text-primary" />
-          <AlertTitle>Si funksionon ky mjet?</AlertTitle>
-          <AlertDescription className="inline">
-            Shfaqim listën e plotë të pyetje/përgjigjeve të ATK (faqja e ATK i
-            shfaq vetëm 5 për faqe dhe pa kërkim të mençur). Filtrat heqin numra
-            telefoni ose email-e, por nëse duhet hequr diçka tjetër na
-            kontaktoni në{" "}
-            <a
-              href="mailto:contact@kosovatools.org"
-              className="text-primary underline underline-offset-4"
-            >
-              contact@kosovatools.org
-            </a>
-            . Të dhënat janë publike në faqen zyrtare të ATK-së. Përgjigjet janë
-            orientuese; konfirmoni çdo rast me ATK dhe mbani përgjegjësinë për
-            vendimet tuaja.
-          </AlertDescription>
-        </Alert>
-        <AtkFaqExplorer />
-      </ToolPage>
-    </ReactQueryProvider>
+    <ToolPage
+      title="Pyetje të shpeshta të ATK"
+      description="Shfleto bazën e pyetjeve të Administratës Tatimore të Kosovës (ATK) dhe gjej shpejt udhëzimet për deklarim, TVSH dhe kasat fiskale."
+      footer="Burimi: Administrata Tatimore e Kosovës"
+    >
+      <Alert className="bg-muted/40">
+        <Info aria-hidden className="text-primary" />
+        <AlertTitle>Si funksionon ky mjet?</AlertTitle>
+        <AlertDescription className="inline">
+          Shfaqim listën e plotë të pyetje/përgjigjeve të ATK (faqja e ATK i
+          shfaq vetëm 5 për faqe dhe pa kërkim të mençur). Filtrat heqin numra
+          telefoni ose email-e, por nëse duhet hequr diçka tjetër na kontaktoni
+          në{" "}
+          <a
+            href="mailto:contact@kosovatools.org"
+            className="text-primary underline underline-offset-4"
+          >
+            contact@kosovatools.org
+          </a>
+          . Të dhënat janë publike në faqen zyrtare të ATK-së. Përgjigjet janë
+          orientuese; konfirmoni çdo rast me ATK dhe mbani përgjegjësinë për
+          vendimet tuaja.
+        </AlertDescription>
+      </Alert>
+      <AtkFaqExplorer />
+    </ToolPage>
   );
 }
