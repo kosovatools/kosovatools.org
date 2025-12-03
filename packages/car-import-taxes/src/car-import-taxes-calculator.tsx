@@ -1,13 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   CAR_IMPORT_CONSTANTS,
   calculateCarImportTaxes,
   type FuelType,
 } from "./lib/car-import-calculator";
-import { CarImportTaxesInputs } from "./components/car-import-taxes-inputs";
 import { CarImportTaxesResults } from "./components/car-import-taxes-results";
 import {
   Card,
@@ -16,11 +15,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
+import { CarImportTaxesInputs } from "./components/car-import-taxes-inputs";
 
 export function CarImportTaxesCalculator() {
-  const currentYear = useMemo(() => new Date().getFullYear(), []);
-
-  const [vehicleYear, setVehicleYear] = useState(currentYear - 4);
+  const [currentYear, setCurrentYear] = useState(2020);
+  const [vehicleYear, setVehicleYear] = useState(2020);
   const [euroStandard, setEuroStandard] = useState(6);
   const [fuelType, setFuelType] = useState<FuelType>("petrol");
   const [engineCapacityCc, setEngineCapacityCc] = useState(1998);
@@ -38,6 +37,9 @@ export function CarImportTaxesCalculator() {
   );
   const [otherFees, setOtherFees] = useState(0);
 
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
   const result = useMemo(
     () =>
       calculateCarImportTaxes({
@@ -57,8 +59,8 @@ export function CarImportTaxesCalculator() {
         currentYear,
       }),
     [
-      currentYear,
       declaredCif,
+      currentYear,
       ecoTax,
       engineCapacityCc,
       euroStandard,

@@ -27,10 +27,10 @@ export interface CarImportTaxesInputsProps {
   declaredCif?: number | null;
   preferentialEuOrigin: boolean;
   isBrandNew: boolean;
+  currentYear: number;
   ecoTax: number;
   roadTax: number;
   otherFees: number;
-  currentYear: number;
   onVehicleYearChange: (value: number) => void;
   onEuroStandardChange: (value: number) => void;
   onFuelTypeChange: (value: FuelType) => void;
@@ -88,7 +88,6 @@ export function CarImportTaxesInputs({
   onOtherFeesChange,
 }: CarImportTaxesInputsProps) {
   const euroSelectId = React.useId();
-
   return (
     <div className="space-y-6">
       <section className="grid gap-4">

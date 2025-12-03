@@ -46,7 +46,7 @@ export const metadata: Metadata = {
       "Exploroni dashboard-e interaktive për tregtinë, karburantet, mjetet motorike dhe turizmin në Kosovë.",
   },
 };
-
+export const fetchCache = "force-cache";
 export default async function DataInsightsPage() {
   const [
     tradeChapters,

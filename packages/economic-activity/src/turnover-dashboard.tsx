@@ -7,8 +7,6 @@ import {
   fetchCitiesDataset,
   fetchCityCategoryYearlyDataset,
   fetchMonthlyCityCategoryDataset,
-} from "./api";
-import type {
   TurnoverCategoriesDataset,
   TurnoverCitiesDataset,
   CityCategoryYearlyDataset,

@@ -11,7 +11,10 @@ import {
 } from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 
-import { loadBuildingPermitsIndex, loadBuildingPermitsYear } from "../api";
+import {
+  loadBuildingPermitsIndex,
+  loadBuildingPermitsYear,
+} from "@workspace/data";
 import { DatasetSummaryCard } from "./building-permit-explorer/dataset-summary-card";
 import { PermitFiltersCard } from "./building-permit-explorer/permit-filters-card";
 
@@ -44,9 +47,7 @@ export function BuildingPermitExplorer() {
     staleTime: Infinity,
   });
 
-  const [selectedYear, setSelectedYear] = React.useState<number>(() => {
-    return index?.years[0]?.year ?? new Date().getFullYear();
-  });
+  const [selectedYear, setSelectedYear] = React.useState<number>(2025);
 
   React.useEffect(() => {
     if (!index?.years.length) {

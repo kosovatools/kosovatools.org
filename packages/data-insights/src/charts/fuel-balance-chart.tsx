@@ -49,7 +49,9 @@ export function FuelBalanceChart({
     metric,
     setMetric,
     metricOptions,
-  } = useDeriveChartControls(dataset);
+  } = useDeriveChartControls(dataset, {
+    initialMetric: "ready_for_market",
+  });
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({

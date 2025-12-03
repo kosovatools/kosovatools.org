@@ -28,7 +28,7 @@ export interface CarImportCalculationInput {
   ecoTax?: number;
   roadTax?: number;
   otherFees?: number;
-  currentYear?: number;
+  currentYear: number;
 }
 
 export interface CustomsDutyBreakdown {
@@ -76,10 +76,6 @@ const MAX_VEHICLE_AGE = 10;
 const MIN_EURO_STANDARD = 4;
 const DEFAULT_CUSTOMS_DUTY_RATE = 0.1;
 const VAT_RATE = 0.18;
-
-function getCurrentYear(): number {
-  return new Date().getFullYear();
-}
 
 function clampNonNegative(value: number): number {
   return Number.isFinite(value) && value > 0 ? value : 0;
@@ -170,11 +166,11 @@ function determineExciseAmount({
 export function evaluateEligibility({
   vehicleYear,
   euroStandard,
-  currentYear = getCurrentYear(),
+  currentYear,
 }: {
   vehicleYear: number;
   euroStandard: number;
-  currentYear?: number;
+  currentYear: number;
 }): EligibilityCheck {
   const vehicleAgeYears = Math.max(0, currentYear - vehicleYear);
   const reasons: string[] = [];
@@ -202,11 +198,10 @@ export function evaluateEligibility({
 export function calculateCarImportTaxes(
   input: CarImportCalculationInput,
 ): CarImportTaxesResult {
-  const currentYear = input.currentYear ?? getCurrentYear();
   const eligibility = evaluateEligibility({
     vehicleYear: input.vehicleYear,
     euroStandard: input.euroStandard,
-    currentYear,
+    currentYear: input.currentYear,
   });
 
   const purchasePrice = clampNonNegative(input.purchasePrice);
@@ -262,7 +257,7 @@ export function calculateCarImportTaxes(
   ];
 
   return {
-    currentYear,
+    currentYear: input.currentYear,
     eligibility,
     cifValue,
     customsDuty: {

@@ -7,8 +7,6 @@ import type {
 
 const fetchDataset = createDatasetFetcher(["kas"], { label: "kas" });
 
-
-
 export type {
   TradeChaptersDataset,
   TradePartnersDataset,

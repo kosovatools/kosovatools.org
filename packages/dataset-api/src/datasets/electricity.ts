@@ -3,8 +3,6 @@ import type { ElectricityDataset, FuelDataset } from "@kosovatools/data-types";
 
 const fetchDataset = createDatasetFetcher(["kas"], { label: "kas" });
 
-
-
 export type { ElectricityDataset, FuelDataset } from "@kosovatools/data-types";
 
 export async function loadElectricityDataset(): Promise<ElectricityDataset> {

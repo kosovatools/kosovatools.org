@@ -17,8 +17,6 @@ export async function loadKasElectricityDataset() {
 export type FuelDatasetView = DatasetView<FuelDataset>;
 
 export async function loadKasFuelDataset() {
-  const data = await fetchDataset<FuelDataset>(
-    "kas_energy_fuels_monthly.json",
-  );
+  const data = await fetchDataset<FuelDataset>("kas_energy_fuels_monthly.json");
   return data;
 }

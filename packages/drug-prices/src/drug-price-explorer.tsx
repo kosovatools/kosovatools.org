@@ -40,7 +40,7 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field";
 
-import { loadDrugPriceRecords, checkDrugPriceVersions } from "./api";
+import { loadDrugPriceRecords, checkDrugPriceVersions } from "@workspace/data";
 import {
   PAGE_SIZE,
   SEARCH_FIELD_OPTIONS,

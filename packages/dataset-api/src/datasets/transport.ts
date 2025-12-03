@@ -7,8 +7,6 @@ import { DatasetView } from "../dataset-helpers";
 
 const fetchDataset = createDatasetFetcher(["kas"], { label: "kas" });
 
-
-
 export type {
   AirTransportDataset,
   VehicleTypesDataset,

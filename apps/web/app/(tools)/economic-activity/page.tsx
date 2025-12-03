@@ -44,6 +44,7 @@ export const metadata: Metadata = {
       "BPV sipas aktiviteteve, qarkullimi i bizneseve dhe balanca e të hyrave/shpenzimeve qeveritare me të dhëna të ASK dhe Ministrisë së Financave.",
   },
 };
+export const fetchCache = "force-cache";
 
 export default async function EconomicActivityPage() {
   const [revenue, expenditure, gdpByActivity] = await Promise.all([
