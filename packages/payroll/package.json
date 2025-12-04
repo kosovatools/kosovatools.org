@@ -19,18 +19,18 @@
     "recharts": "3.5.1"
   },
   "peerDependencies": {
-    "react": "^19.2.0",
+    "react": "19.2.1",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "@workspace/utils": "workspace:*",
     "eslint": "^9.39.1",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
     "typescript": "^5.9.3"
   },
   "license": "AGPL-3.0-only"
