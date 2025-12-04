@@ -50,6 +50,7 @@ const DEFAULT_ERROR_TITLE = "Shfaqja e të dhëna dështoi";
 const DEFAULT_ERROR_MESSAGE = "Provoni përsëri më vonë.";
 const DEFAULT_LOADING_MESSAGE = "Të dhënat po ngarkohen...";
 const DEFAULT_EMPTY_MESSAGE = "Nuk ka të dhëna për t'u shfaqur.";
+const ONE_WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
 export function DatasetRenderer<TDataset extends GenericDataset>({
   title,
@@ -64,12 +65,23 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
   className,
   id,
 }: DatasetRendererProps<TDataset>) {
+  const parsedInitialDataUpdatedAt = initialData?.meta.generated_at
+    ? Date.parse(initialData.meta.generated_at)
+    : undefined;
+  const initialDataUpdatedAt = Number.isFinite(parsedInitialDataUpdatedAt)
+    ? parsedInitialDataUpdatedAt
+    : undefined;
+  const defaultStaleTime =
+    initialData && initialDataUpdatedAt ? ONE_WEEK_IN_MS : Infinity;
+
   const queryResult = useQuery<TDataset, Error>({
+    ...queryOptions,
     queryKey,
     queryFn: datasetLoader,
     initialData,
-    staleTime: Infinity,
-    ...queryOptions,
+    initialDataUpdatedAt:
+      queryOptions?.initialDataUpdatedAt ?? initialDataUpdatedAt,
+    staleTime: queryOptions?.staleTime ?? defaultStaleTime,
   });
 
   const isLoading =
@@ -77,7 +89,7 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
     (typeof queryResult.data === "undefined" || queryResult.data === null);
   const isRefetching = queryResult.isFetching && !isLoading;
 
-  const refreshButton = (
+  const refreshButton = initialData ? (
     <Button
       variant="outline"
       size="sm"
@@ -94,7 +106,7 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
         )}
       />
     </Button>
-  );
+  ) : null;
 
   const headerContent = (
     <div className="space-y-2">
@@ -155,7 +167,7 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
     return (
       <section id={id} className={cn("space-y-4", className)}>
         {headerContent}
-        <div className="flex min-h-[200px] items-center justify-center text-sm text-muted-foreground">
+        <div className="w-full aspect-[1/1.5] sm:aspect-video flex items-center justify-center text-sm text-muted-foreground">
           {DEFAULT_LOADING_MESSAGE}
         </div>
       </section>
