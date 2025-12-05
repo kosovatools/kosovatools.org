@@ -1,8 +1,11 @@
-import { buildUiHierarchy } from "@workspace/data";
-import type { CpiDatasetView } from "@workspace/data";
+import {
+  buildUiHierarchy,
+  type DatasetView,
+  type CpiDataset,
+} from "@workspace/data";
 import type { HierarchicalNode } from "@workspace/ui/custom-components/hierarchical-multi-select";
 
-export function buildCpiHierarchy(dataset: CpiDatasetView): {
+export function buildCpiHierarchy(dataset: DatasetView<CpiDataset>): {
   nodes: HierarchicalNode[];
   labelMap: Record<string, string>;
   defaultId: string;

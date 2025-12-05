@@ -2,14 +2,14 @@
 
 import { DailyFlowChart } from "./charts/energy-flow-daily-chart";
 import { MonthlyFlowTrendChart } from "./charts/energy-flow-monthly-trend-chart";
-import { loadDailyDataset, loadMonthlyDataset } from "./flow-service";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
+import { loadDataset } from "@workspace/data";
 
 export function EnergyFlowExplorer() {
   return (
     <div className="space-y-8">
       <DatasetRenderer
-        datasetLoader={loadMonthlyDataset}
+        datasetLoader={() => loadDataset("energy.crossborder-monthly")}
         queryKey={["energy-flow", "monthly-dataset"]}
         emptyStateContent="Nuk ka të dhëna mujore për flukset e energjisë."
         title="Trendi i flukseve mujore"
@@ -28,7 +28,7 @@ export function EnergyFlowExplorer() {
       </DatasetRenderer>
 
       <DatasetRenderer
-        datasetLoader={loadDailyDataset}
+        datasetLoader={() => loadDataset("energy.crossborder-daily")}
         queryKey={["energy-flow", "daily-dataset"]}
         emptyStateContent="Nuk ka ende të dhëna ditore për periudhën e fundit."
         title="Modeli ditor i flukseve"

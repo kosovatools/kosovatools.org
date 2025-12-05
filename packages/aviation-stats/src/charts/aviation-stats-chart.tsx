@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, Line, XAxis, YAxis } from "recharts";
 
-import { AirTransportDatasetView } from "@workspace/data";
+import { type DatasetView, type AirTransportDataset } from "@workspace/data";
 import { formatCount } from "@workspace/utils";
 import {
   ChartContainer,
@@ -39,7 +39,7 @@ export function AviationStatsChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: AirTransportDatasetView;
+  dataset: DatasetView<AirTransportDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const {

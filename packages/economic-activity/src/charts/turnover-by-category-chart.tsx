@@ -12,7 +12,7 @@ import { TreemapCellContent } from "@workspace/ui/custom-components/treemap-cell
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
-import type { TurnoverCategoriesDatasetView } from "@workspace/data";
+import type { DatasetView, TurnoverCategoriesDataset } from "@workspace/data";
 import { formatCount, formatCurrencyCompact } from "@workspace/utils";
 import { addThemeToChartConfig } from "@workspace/ui/lib/chart-palette";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
@@ -27,7 +27,7 @@ const METRIC_FORMATTERS = {
 export function TurnoverByCategoryChart({
   dataset,
 }: {
-  dataset: TurnoverCategoriesDatasetView;
+  dataset: DatasetView<TurnoverCategoriesDataset>;
 }) {
   const { metric, setMetric, metricOptions } = useDeriveChartControls(dataset, {
     initialMetric: "turnover",

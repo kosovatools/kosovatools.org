@@ -18,7 +18,11 @@ import {
   type StackedKeySelectionState,
 } from "@workspace/ui/custom-components/stacked-key-selector";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { createDataset, type GdpByActivityDatasetView } from "@workspace/data";
+import {
+  createDataset,
+  type DatasetView,
+  type GdpByActivityDataset,
+} from "@workspace/data";
 import {
   TimelineEventMarkerControls,
   TimelineEventMarkers,
@@ -32,7 +36,7 @@ export function GdpActivityStackedChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: GdpByActivityDatasetView;
+  dataset: DatasetView<GdpByActivityDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const baseDataset = React.useMemo(

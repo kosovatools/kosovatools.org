@@ -10,7 +10,10 @@ import {
   YAxis,
 } from "recharts";
 
-import { type EmploymentActivityGenderDatasetView } from "@workspace/data";
+import {
+  type DatasetView,
+  type EmploymentActivityGenderDataset,
+} from "@workspace/data";
 import { formatCount } from "@workspace/utils";
 import {
   ChartContainer,
@@ -34,13 +37,13 @@ export function EmploymentActivityChart({
   top = 8,
   timelineEvents,
 }: {
-  dataset: EmploymentActivityGenderDatasetView;
+  dataset: DatasetView<EmploymentActivityGenderDataset>;
   top?: number;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const [gender, setGender] =
     React.useState<
-      EmploymentActivityGenderDatasetView["meta"]["dimensions"]["gender"][number]["key"]
+      DatasetView<EmploymentActivityGenderDataset>["meta"]["dimensions"]["gender"][number]["key"]
     >("total");
   const {
     periodGrouping,

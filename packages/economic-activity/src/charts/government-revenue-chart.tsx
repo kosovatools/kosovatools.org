@@ -16,7 +16,8 @@ import { HierarchicalMultiSelect } from "@workspace/ui/custom-components/hierarc
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import {
   buildUiHierarchy,
-  type GovernmentRevenueDatasetView,
+  type DatasetView,
+  type GovernmentRevenueDataset,
 } from "@workspace/data";
 import {
   TimelineEventMarkers,
@@ -76,7 +77,7 @@ export function GovernmentRevenueStackedChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: GovernmentRevenueDatasetView;
+  dataset: DatasetView<GovernmentRevenueDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const { nodes: hierarchyNodes, labelMap } = React.useMemo(

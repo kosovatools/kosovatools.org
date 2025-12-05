@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import type { EnergyMonthlyDatasetView } from "@workspace/data";
+import type { DatasetView, EnergyMonthlyDataset } from "@workspace/data";
 import {
   ChartContainer,
   ChartLegend,
@@ -40,7 +40,7 @@ export function MonthlyFlowTrendChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: EnergyMonthlyDatasetView;
+  dataset: DatasetView<EnergyMonthlyDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const chartConfig = energyFlowChartConfig;

@@ -20,7 +20,7 @@ import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffold
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
-import { TourismRegionDatasetView } from "@workspace/data";
+import { type DatasetView, type TourismRegionDataset } from "@workspace/data";
 
 const DEFAULT_GROUP_LABEL = "Total";
 
@@ -41,12 +41,12 @@ export function TourismRegionCharts({
   dataset,
   timelineEvents,
 }: {
-  dataset: TourismRegionDatasetView;
+  dataset: DatasetView<TourismRegionDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const [group, setGroup] =
     React.useState<
-      TourismRegionDatasetView["meta"]["dimensions"]["visitor_group"][number]["key"]
+      DatasetView<TourismRegionDataset>["meta"]["dimensions"]["visitor_group"][number]["key"]
     >("total");
   const {
     periodGrouping,

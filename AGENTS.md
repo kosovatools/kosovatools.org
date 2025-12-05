@@ -8,10 +8,10 @@
 
 ## Data & Dataset Workflow
 
-- Refresh Kosovo Agency of Statistics sources from the data repo (or consume them via `@workspace/data`). JSON snapshots live in `data/kas/*.json` under `{ meta, records }` envelopes.
-- Load hosted datasets through `createDatasetFetcher` from `@workspace/data`, passing a stable prefix plus an optional `label`, then cache the resulting promise inside the loader module to avoid duplicate requests.
+- Datasets live at https://data.kosovatools.org; the `data/` submodule is only vendored to supply `@kosovatools/data-types` into `packages/data`—don’t rely on local JSON snapshots.
+- Use the centralized registry in `packages/data/src/dataset-registry.ts` and fetch via `loadDataset(<key>)` from `@workspace/data`; add new datasets by extending the registry with `prefix`, `path`, and optional `label`/`defaultInit`. Reach for `createDatasetFetcher` only for dynamic paths (e.g., paginated war records).
 - Wrap every dataset in `createDataset` from `@workspace/data`. The returned `DatasetView` exposes `limit`, `slice`, `aggregate`, `viewAsStack`, and `summarizeStack`, so all derived series respect the metadata’s granularity and coverage info.
-- Surface dataset sections with `DatasetRenderer` (`@workspace/ui/custom-components`). Pass either a static `dataset` or a TanStack Query `query`, optional `isEmpty` logic, and let the component render loading/error states plus the standard footer (`Burimi`, `Gjeneruar më`, `Periudha` when `getDatasetCoverageLabel` returns a string).
+- For SSG/SSR loaders, call `loadDataset` and pass the result as `initialData` to your TanStack Query; `DatasetRenderer` (`@workspace/ui/custom-components`) will render the prefetched payload and transparently refetch on the client. Provide optional `isEmpty` logic, and the component will handle loading/error states plus the standard footer (`Burimi`, `Gjeneruar më`, `Periudha` when `getDatasetCoverageLabel` returns a string).
 
 ## UI, Charts & Layout
 

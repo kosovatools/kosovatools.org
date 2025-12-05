@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { TradePartnersDatasetView } from "@workspace/data";
+import { type DatasetView, type TradePartnersDataset } from "@workspace/data";
 import { formatCurrencyCompact } from "@workspace/utils";
 import {
   ChartContainer,
@@ -41,7 +41,7 @@ export function TradePartnersStackedChart({
   top = DEFAULT_TOP_PARTNERS,
   timelineEvents,
 }: {
-  dataset: TradePartnersDatasetView;
+  dataset: DatasetView<TradePartnersDataset>;
   top?: number;
   timelineEvents?: TimelineEventMarkerControls;
 }) {

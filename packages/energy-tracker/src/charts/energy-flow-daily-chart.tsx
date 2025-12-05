@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import type { EnergyDailyDatasetView } from "@workspace/data";
+import type { DatasetView, EnergyDailyDataset } from "@workspace/data";
 import { formatDayLabel } from "../date-formatters";
 import {
   ChartContainer,
@@ -40,7 +40,7 @@ export function DailyFlowChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: EnergyDailyDatasetView;
+  dataset: DatasetView<EnergyDailyDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const chartConfig = energyFlowChartConfig;

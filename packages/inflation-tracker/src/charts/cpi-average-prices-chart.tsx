@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import { CpiAveragePriceDatasetView } from "@workspace/data";
+import { type DatasetView, type CpiAveragePriceDataset } from "@workspace/data";
 import { formatCurrency } from "@workspace/utils";
 import {
   ChartContainer,
@@ -27,7 +27,7 @@ const MAX_SELECTED_ARTICLES = 10;
 const DEFAULT_VISIBLE_ARTICLES = 3;
 
 type Props = {
-  dataset: CpiAveragePriceDatasetView;
+  dataset: DatasetView<CpiAveragePriceDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 };
 

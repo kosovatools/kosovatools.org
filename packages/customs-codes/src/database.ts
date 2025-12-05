@@ -1,6 +1,6 @@
 import Dexie, { type Table } from "dexie";
 import MiniSearch from "minisearch";
-import { loadCustomsTariffs } from "@workspace/data";
+import { loadDataset } from "@workspace/data";
 
 import type { CustomsTreeNode, CustomsRecord } from "@workspace/data";
 import { InitializationProgress } from "./types";
@@ -101,7 +101,7 @@ export class CustomsDataService {
         message: "Duke ngarkuar të dhënat e tarifave...",
       });
 
-      const data = await loadCustomsTariffs();
+      const data = await loadDataset("customs.tariffs");
 
       const total = data.length;
       if (total === 0) {

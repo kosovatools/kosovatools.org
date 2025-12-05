@@ -33,10 +33,10 @@ export const metadata: Metadata = {
 
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 import { AviationStats } from "@workspace/aviation-stats";
-import { loadAirTransportDataset } from "@workspace/data";
+import { loadDataset } from "@workspace/data";
 
 export default async function AviationStatsPage() {
-  const airTransport = await loadAirTransportDataset();
+  const airTransport = await loadDataset("kas.air-transport");
 
   return (
     <ToolPage

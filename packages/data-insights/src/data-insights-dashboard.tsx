@@ -1,13 +1,6 @@
 "use client";
 import {
-  loadEmploymentActivityGenderDataset,
-  loadKasFuelDataset,
-  loadTourismCountryDataset,
-  loadTourismRegionDataset,
-  loadTradeChaptersDataset,
-  loadTradePartnersDataset,
-  loadVehicleTypesDataset,
-  loadWageLevelsDataset,
+  loadDataset,
   type TradePartnersDataset,
   type FuelDataset,
   type TradeChaptersDataset,
@@ -56,7 +49,7 @@ export function DataInsightsDashboard({
           Tregtia & Dogana
         </h2>
         <DatasetRenderer
-          datasetLoader={loadTradeChaptersDataset}
+          datasetLoader={() => loadDataset("kas.trade-chapters")}
           queryKey={["trade", "chapters", "monthly"]}
           initialData={initialTradeChapters}
           title="Kapitujt kryesorë të tregtisë (shtresuar)"
@@ -66,7 +59,7 @@ export function DataInsightsDashboard({
           {(dataset) => <TradeChapterStackedChart dataset={dataset} />}
         </DatasetRenderer>
         <DatasetRenderer
-          datasetLoader={loadTradePartnersDataset}
+          datasetLoader={() => loadDataset("kas.trade-partners")}
           queryKey={["trade", "partners"]}
           initialData={initialTradePartners}
           title="Kontributet e partnerëve (shtresuar)"
@@ -80,7 +73,7 @@ export function DataInsightsDashboard({
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold tracking-tight">Tregu i punës</h2>
         <DatasetRenderer
-          datasetLoader={loadWageLevelsDataset}
+          datasetLoader={() => loadDataset("kas.wage-levels")}
           queryKey={["labour", "wage-levels"]}
           initialData={initialWageLevels}
           title="Pagat mesatare sipas sektorit"
@@ -98,7 +91,7 @@ export function DataInsightsDashboard({
           )}
         </DatasetRenderer>
         <DatasetRenderer
-          datasetLoader={loadEmploymentActivityGenderDataset}
+          datasetLoader={() => loadDataset("kas.employment-activity-gender")}
           queryKey={["labour", "employment-activity-gender"]}
           initialData={initialEmploymentActivityGender}
           title="Punësimi sipas aktivitetit dhe gjinisë"
@@ -120,7 +113,7 @@ export function DataInsightsDashboard({
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold tracking-tight">Karburantet</h2>
         <DatasetRenderer
-          datasetLoader={loadKasFuelDataset}
+          datasetLoader={() => loadDataset("kas.fuel")}
           queryKey={["energy", "fuel", "monthly"]}
           initialData={initialFuelDataset}
           title="Bilanci i furnizimit me karburante"
@@ -134,7 +127,7 @@ export function DataInsightsDashboard({
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold tracking-tight">Transporti</h2>
         <DatasetRenderer
-          datasetLoader={loadVehicleTypesDataset}
+          datasetLoader={() => loadDataset("kas.vehicle-types")}
           queryKey={["transport", "vehicle-types", "yearly"]}
           initialData={initialVehicleTypesYearly}
           title="Mjetet motorike sipas llojit"
@@ -148,7 +141,7 @@ export function DataInsightsDashboard({
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold tracking-tight">Turizmi</h2>
         <DatasetRenderer
-          datasetLoader={loadTourismCountryDataset}
+          datasetLoader={() => loadDataset("kas.tourism-country")}
           queryKey={["tourism", "country", "visitors"]}
           initialData={initialTourismCountry}
           title="Vendet kryesore të vizitorëve (shtresuar)"
@@ -167,7 +160,7 @@ export function DataInsightsDashboard({
           )}
         </DatasetRenderer>
         <DatasetRenderer
-          datasetLoader={loadTourismRegionDataset}
+          datasetLoader={() => loadDataset("kas.tourism-region")}
           queryKey={["tourism", "region"]}
           initialData={initialTourismRegion}
           title="Turizmi sipas rajonit"

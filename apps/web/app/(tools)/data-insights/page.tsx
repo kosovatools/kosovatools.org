@@ -2,16 +2,7 @@ import type { Metadata } from "next";
 
 import { DataInsightsDashboard } from "@workspace/data-insights";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
-import {
-  loadTradeChaptersDataset,
-  loadTradePartnersDataset,
-  loadEmploymentActivityGenderDataset,
-  loadWageLevelsDataset,
-  loadKasFuelDataset,
-  loadVehicleTypesDataset,
-  loadTourismCountryDataset,
-  loadTourismRegionDataset,
-} from "@workspace/data";
+import { loadDataset } from "@workspace/data";
 
 export const metadata: Metadata = {
   title:
@@ -58,14 +49,14 @@ export default async function DataInsightsPage() {
     tourismCountry,
     tourismRegion,
   ] = await Promise.all([
-    loadTradeChaptersDataset(),
-    loadTradePartnersDataset(),
-    loadEmploymentActivityGenderDataset(),
-    loadWageLevelsDataset(),
-    loadKasFuelDataset(),
-    loadVehicleTypesDataset(),
-    loadTourismCountryDataset(),
-    loadTourismRegionDataset(),
+    loadDataset("kas.trade-chapters"),
+    loadDataset("kas.trade-partners"),
+    loadDataset("kas.employment-activity-gender"),
+    loadDataset("kas.wage-levels"),
+    loadDataset("kas.fuel"),
+    loadDataset("kas.vehicle-types"),
+    loadDataset("kas.tourism-country"),
+    loadDataset("kas.tourism-region"),
   ]);
 
   return (

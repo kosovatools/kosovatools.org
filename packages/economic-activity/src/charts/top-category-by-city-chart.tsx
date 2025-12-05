@@ -3,7 +3,11 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { createDataset } from "@workspace/data";
+import {
+  createDataset,
+  type DatasetView,
+  type CityCategoryYearlyDataset,
+} from "@workspace/data";
 import {
   ChartContainer,
   ChartLegend,
@@ -28,7 +32,6 @@ import {
 import { formatCurrencyCompact, getPeriodFormatter } from "@workspace/utils";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
-import type { CityCategoryYearlyDatasetView } from "@workspace/data";
 import { CITY_STACK_TOP, OTHER_LABEL } from "./constants";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
@@ -36,7 +39,7 @@ export function TopCategoryByCityStackedChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: CityCategoryYearlyDatasetView;
+  dataset: DatasetView<CityCategoryYearlyDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const cities = dataset.meta.dimensions.city;
@@ -62,7 +65,7 @@ export function TopCategoryByCityStackedChart({
   const stackConfig = React.useMemo(
     () => ({
       valueAccessor: (
-        record: CityCategoryYearlyDatasetView["records"][number],
+        record: DatasetView<CityCategoryYearlyDataset>["records"][number],
       ) => record.turnover,
       dimension: "category",
       otherLabel: OTHER_LABEL,

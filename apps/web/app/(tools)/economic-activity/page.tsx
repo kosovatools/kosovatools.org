@@ -6,11 +6,7 @@ import {
   TurnoverDashboard,
 } from "@workspace/economic-activity";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
-import {
-  loadGovernmentExpenditureDataset,
-  loadGovernmentRevenueDataset,
-  loadGdpByActivityDataset,
-} from "@workspace/data";
+import { loadDataset } from "@workspace/data";
 
 export const metadata: Metadata = {
   title: "Aktiviteti ekonomik dhe financat publike të Kosovës",
@@ -47,9 +43,9 @@ export const fetchCache = "force-cache";
 
 export default async function EconomicActivityPage() {
   const [revenue, expenditure, gdpByActivity] = await Promise.all([
-    loadGovernmentRevenueDataset(),
-    loadGovernmentExpenditureDataset(),
-    loadGdpByActivityDataset(),
+    loadDataset("kas.government-revenue"),
+    loadDataset("kas.government-expenditure"),
+    loadDataset("kas.gdp-activity"),
   ]);
 
   return (

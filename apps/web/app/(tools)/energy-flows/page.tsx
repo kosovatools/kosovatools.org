@@ -3,7 +3,7 @@ import {
   EnergyFlowExplorer,
   EnergyImportAndProduction,
 } from "@workspace/energy-tracker";
-import { loadKasElectricityDataset } from "@workspace/data";
+import { loadDataset } from "@workspace/data";
 
 export const metadata: Metadata = {
   title: "Gjurmuesi i rrjedhës së energjisë – Flukset kufitare të Kosovës",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
 export default async function EnergyFlowsPage() {
-  const electricityDataset = await loadKasElectricityDataset();
+  const electricityDataset = await loadDataset("kas.electricity");
 
   return (
     <ToolPage

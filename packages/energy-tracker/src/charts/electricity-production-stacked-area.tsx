@@ -10,7 +10,11 @@ import {
   YAxis,
 } from "recharts";
 
-import { createLabelMap, type ElectricityDatasetView } from "@workspace/data";
+import {
+  createLabelMap,
+  type DatasetView,
+  type ElectricityDataset,
+} from "@workspace/data";
 import { sanitizeValue } from "@workspace/utils";
 import {
   ChartContainer,
@@ -34,7 +38,7 @@ export function ElectricityProductionStackedAreaChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: ElectricityDatasetView;
+  dataset: DatasetView<ElectricityDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const labelMap = createLabelMap(dataset.meta.fields);

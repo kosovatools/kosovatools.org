@@ -2,7 +2,7 @@
 
 import { LoanInterestExplorerChart } from "./charts/loan-interest-explorer-chart";
 import { LoanInterestSegmentChart } from "./charts/loan-interest-segment-chart";
-import { loadLoanInterestDataset } from "@workspace/data";
+import { loadDataset } from "@workspace/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
 export function LoanInterestDashboard() {
@@ -12,7 +12,7 @@ export function LoanInterestDashboard() {
         id="loan-interest-overview"
         title="Normat mesatare të interesit për kreditë e reja"
         description="Krahaso normat mujore për totalin, ekonomitë familjare dhe korporatat jofinanciare. Filtrat kohorë ndihmojnë për të parë ndryshimet pas 2020 ose vitet e fundit."
-        datasetLoader={loadLoanInterestDataset}
+        datasetLoader={() => loadDataset("cbk.loan-interests")}
         queryKey={["cbk", "loan-interests"]}
       >
         {(dataset) => (
@@ -30,7 +30,7 @@ export function LoanInterestDashboard() {
         id="loan-interest-explorer"
         title="Eksploro segmentet dhe maturitetet"
         description="Përdor hierarkinë e kodeve të CBK për të zgjedhur produkte specifike (hipotekat sipas afatit, kartelat, linjat kreditore) dhe krahaso trendet mujore."
-        datasetLoader={loadLoanInterestDataset}
+        datasetLoader={() => loadDataset("cbk.loan-interests")}
         queryKey={["cbk", "loan-interests"]}
       >
         {(dataset) => (

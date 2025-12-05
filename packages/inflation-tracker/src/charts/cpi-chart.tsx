@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import { CpiDatasetView } from "@workspace/data";
+import { type DatasetView, type CpiDataset } from "@workspace/data";
 import { formatNumber, formatSignedPercent } from "@workspace/utils";
 import {
   ChartContainer,
@@ -41,7 +41,7 @@ export function CpiChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: CpiDatasetView;
+  dataset: DatasetView<CpiDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const { nodes, labelMap, defaultId } = useMemo(

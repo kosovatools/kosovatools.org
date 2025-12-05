@@ -40,7 +40,7 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field";
 
-import { loadDrugPriceRecords, checkDrugPriceVersions } from "@workspace/data";
+import { loadDataset } from "@workspace/data";
 import {
   PAGE_SIZE,
   SEARCH_FIELD_OPTIONS,
@@ -226,7 +226,7 @@ export function DrugPriceExplorer() {
     refetch,
   } = useQuery({
     queryKey: ["drug-price-records"],
-    queryFn: loadDrugPriceRecords,
+    queryFn: () => loadDataset("drug-prices.records"),
     staleTime: Infinity,
   });
 
@@ -235,7 +235,7 @@ export function DrugPriceExplorer() {
     setIsRefreshing(true);
     try {
       // Check for new versions (bypassing cache)
-      await checkDrugPriceVersions();
+      await loadDataset("drug-prices.versions", { cache: "no-store" });
 
       // Invalidate and refetch records
       await queryClient.invalidateQueries({ queryKey: ["drug-price-records"] });

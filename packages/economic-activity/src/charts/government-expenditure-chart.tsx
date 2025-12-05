@@ -18,7 +18,10 @@ import {
   type StackedKeySelectionState,
 } from "@workspace/ui/custom-components/stacked-key-selector";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { type GovernmentExpenditureDatasetView } from "@workspace/data";
+import {
+  type DatasetView,
+  type GovernmentExpenditureDataset,
+} from "@workspace/data";
 import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
@@ -35,7 +38,7 @@ export function GovernmentExpenditureStackedChart({
   searchPlaceholder,
   timelineEvents,
 }: {
-  dataset: GovernmentExpenditureDatasetView;
+  dataset: DatasetView<GovernmentExpenditureDataset>;
   title: string;
   selectionLabel: string;
   searchPlaceholder: string;

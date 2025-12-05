@@ -36,18 +36,14 @@ export const metadata: Metadata = {
 };
 
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
-import {
-  loadCpiDataset,
-  loadCpiAveragePricesDataset,
-  loadConstructionCostIndexDataset,
-} from "@workspace/data";
+import { loadDataset } from "@workspace/data";
 
 export default async function InflationTrackerPage() {
   const [cpiDataset, cpiAveragePricesYearly, constructionCostIndexDataset] =
     await Promise.all([
-      loadCpiDataset(),
-      loadCpiAveragePricesDataset(),
-      loadConstructionCostIndexDataset(),
+      loadDataset("cpi.headline"),
+      loadDataset("cpi.average-prices"),
+      loadDataset("construction.cost-index"),
     ]);
 
   return (

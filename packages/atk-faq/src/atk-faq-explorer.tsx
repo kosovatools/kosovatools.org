@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import MiniSearch from "minisearch";
 import { ChevronDown, Link, Search, X } from "lucide-react";
 
-import { loadAtkFaq, type AtkFaqEntry } from "@workspace/data";
+import { loadDataset, type AtkFaqEntry } from "@workspace/data";
 import { mergeSearchParams } from "@workspace/utils";
 import {
   Collapsible,
@@ -196,7 +196,7 @@ export function AtkFaqExplorer() {
 
   const { data, status, error } = useQuery({
     queryKey: ["atk", "faq"],
-    queryFn: loadAtkFaq,
+    queryFn: () => loadDataset("atk.faq"),
     staleTime: Infinity,
   });
 

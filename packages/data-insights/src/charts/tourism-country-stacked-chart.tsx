@@ -25,7 +25,7 @@ import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffold
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
-import { TourismCountryDatasetView } from "@workspace/data";
+import { type DatasetView, type TourismCountryDataset } from "@workspace/data";
 
 const DEFAULT_TOP_COUNTRIES = 5;
 
@@ -34,7 +34,7 @@ export function TourismCountryStackedChart({
   top = DEFAULT_TOP_COUNTRIES,
   timelineEvents,
 }: {
-  dataset: TourismCountryDatasetView;
+  dataset: DatasetView<TourismCountryDataset>;
   top?: number;
   timelineEvents?: TimelineEventMarkerControls;
 }) {

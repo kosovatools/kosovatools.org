@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  fetchCategoriesDataset,
-  fetchCitiesDataset,
-  fetchCityCategoryYearlyDataset,
-  fetchMonthlyCityCategoryDataset,
-} from "@workspace/data";
+import { loadDataset } from "@workspace/data";
 
 import { CategoriesOverYearsChart } from "./charts/categories-over-years-chart";
 import { MonthlyCategoryStackedChart } from "./charts/monthly-category-stacked-chart";
@@ -17,7 +12,7 @@ import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-rendere
 function CategorySection() {
   return (
     <DatasetRenderer
-      datasetLoader={fetchCategoriesDataset}
+      datasetLoader={() => loadDataset("economic-activity.categories")}
       queryKey={["mfk", "turnover", "categories", "dataset"]}
       title="Qarkullimi sipas kategorive kryesore"
       id="turnover-by-category"
@@ -37,7 +32,7 @@ function CategorySection() {
 function CitySection() {
   return (
     <DatasetRenderer
-      datasetLoader={fetchCitiesDataset}
+      datasetLoader={() => loadDataset("economic-activity.cities")}
       queryKey={["mfk", "turnover", "cities", "dataset"]}
       isEmpty={(data) => data.limit(1).records.length === 0}
       emptyStateContent="Nuk ka të dhëna për komunat me qarkullimin më të lartë."
@@ -58,7 +53,7 @@ function CitySection() {
 function CategoryTrendSection() {
   return (
     <DatasetRenderer
-      datasetLoader={fetchCategoriesDataset}
+      datasetLoader={() => loadDataset("economic-activity.categories")}
       queryKey={["mfk", "turnover", "categories", "dataset"]}
       isEmpty={(data) => data.limit(1).records.length === 0}
       emptyStateContent="Nuk ka të dhëna shumëvjeçare për t'u paraqitur."
@@ -74,7 +69,9 @@ function CategoryTrendSection() {
 function MonthlyCategorySection() {
   return (
     <DatasetRenderer
-      datasetLoader={fetchMonthlyCityCategoryDataset}
+      datasetLoader={() =>
+        loadDataset("economic-activity.city-category-monthly")
+      }
       queryKey={["mfk", "turnover", "monthly", "category-city"]}
       emptyStateContent="Nuk ka të dhëna mujore për këtë periudhë."
       title="Dinamika mujore e kategorive"
@@ -99,7 +96,9 @@ function MonthlyCategorySection() {
 function TopCategoryByCitySection() {
   return (
     <DatasetRenderer
-      datasetLoader={fetchCityCategoryYearlyDataset}
+      datasetLoader={() =>
+        loadDataset("economic-activity.city-category-yearly")
+      }
       queryKey={["mfk", "turnover", "city-category", "yearly"]}
       emptyStateContent="Nuk ka të dhëna për kategoritë kryesuese sipas komunave."
       title="Kategoritë dominuese sipas komunave"

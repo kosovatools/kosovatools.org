@@ -1,9 +1,6 @@
 "use client";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
-import {
-  loadKasElectricityDataset,
-  type ElectricityDataset,
-} from "@workspace/data";
+import { loadDataset, type ElectricityDataset } from "@workspace/data";
 import { ElectricityBalanceStackedAreaChart } from "./charts/electricity-balance-stacked-area";
 import { ElectricityProductionStackedAreaChart } from "./charts/electricity-production-stacked-area";
 
@@ -15,7 +12,7 @@ export function EnergyImportAndProduction({
   return (
     <>
       <DatasetRenderer
-        datasetLoader={loadKasElectricityDataset}
+        datasetLoader={() => loadDataset("kas.electricity")}
         queryKey={["kas", "electricity", "monthly"]}
         initialData={initialDataset}
         title="Importet kundrejt prodhimit vendas"
@@ -25,7 +22,7 @@ export function EnergyImportAndProduction({
         {(dataset) => <ElectricityBalanceStackedAreaChart dataset={dataset} />}
       </DatasetRenderer>
       <DatasetRenderer
-        datasetLoader={loadKasElectricityDataset}
+        datasetLoader={() => loadDataset("kas.electricity")}
         queryKey={["kas", "electricity", "monthly"]}
         initialData={initialDataset}
         title="Si ndryshon prodhimi vendas sipas burimit"

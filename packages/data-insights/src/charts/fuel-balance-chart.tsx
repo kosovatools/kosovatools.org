@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { FuelDatasetView } from "@workspace/data";
+import { type DatasetView, type FuelDataset } from "@workspace/data";
 import { formatCount } from "@workspace/utils";
 import {
   ChartContainer,
@@ -34,7 +34,7 @@ export function FuelBalanceChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: FuelDatasetView;
+  dataset: DatasetView<FuelDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const {

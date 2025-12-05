@@ -1,5 +1,3 @@
-import { loadDailyDataset, loadMonthlyDataset } from "@workspace/data";
-
 export function getMonthlyPeriodRange(period: string): {
   start: string;
   end: string;
@@ -17,5 +15,3 @@ export function getMonthlyPeriodRange(period: string): {
     end: endDate.toISOString(),
   };
 }
-
-export { loadMonthlyDataset, loadDailyDataset };

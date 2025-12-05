@@ -23,7 +23,7 @@ import {
 import { formatCurrencyCompact, getPeriodFormatter } from "@workspace/utils";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
-import type { MonthlyCategoryCityDatasetView } from "@workspace/data";
+import type { DatasetView, MonthlyCategoryCityDataset } from "@workspace/data";
 import { MONTHLY_STACK_TOP, OTHER_LABEL } from "./constants";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
@@ -31,13 +31,13 @@ export function MonthlyCategoryStackedChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: MonthlyCategoryCityDatasetView;
+  dataset: DatasetView<MonthlyCategoryCityDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const stackConfig = React.useMemo(
     () => ({
       valueAccessor: (
-        record: MonthlyCategoryCityDatasetView["records"][number],
+        record: DatasetView<MonthlyCategoryCityDataset>["records"][number],
       ) => record.turnover,
       dimension: "category",
       otherLabel: OTHER_LABEL,

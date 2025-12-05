@@ -1,9 +1,6 @@
 "use client";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
-import {
-  loadAirTransportDataset,
-  type AirTransportDataset,
-} from "@workspace/data";
+import { loadDataset, type AirTransportDataset } from "@workspace/data";
 import { AviationStatsChart } from "./charts/aviation-stats-chart";
 
 export function AviationStats({
@@ -13,7 +10,7 @@ export function AviationStats({
 }) {
   return (
     <DatasetRenderer
-      datasetLoader={loadAirTransportDataset}
+      datasetLoader={() => loadDataset("kas.air-transport")}
       queryKey={["kas", "aviation", "air-transport"]}
       initialData={initialDataset}
       id="aviation-stats"

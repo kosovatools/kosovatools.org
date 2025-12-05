@@ -3,7 +3,7 @@
 import * as React from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import { type WageLevelsDatasetView } from "@workspace/data";
+import { type DatasetView, type WageLevelsDataset } from "@workspace/data";
 import { formatCurrencyCompact } from "@workspace/utils";
 import {
   ChartContainer,
@@ -26,7 +26,7 @@ export function WageLevelsChart({
   dataset,
   timelineEvents,
 }: {
-  dataset: WageLevelsDatasetView;
+  dataset: DatasetView<WageLevelsDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
   const {

@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { type VehicleTypesDatasetView } from "@workspace/data";
+import { type DatasetView, type VehicleTypesDataset } from "@workspace/data";
 import {
   ChartContainer,
   ChartLegend,
@@ -18,7 +18,7 @@ import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffold
 export function VehicleTypesStackedChart({
   dataset,
 }: {
-  dataset: VehicleTypesDatasetView;
+  dataset: DatasetView<VehicleTypesDataset>;
 }) {
   const stackResult = useMemo(() => {
     if (!dataset.records.length) return null;

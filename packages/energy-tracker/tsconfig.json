@@ -3,8 +3,8 @@
   "compilerOptions": {
     "outDir": "dist",
     "paths": {
-      "@workspace/data": ["../dataset-api/src/index.ts"],
-      "@workspace/data/*": ["../dataset-api/src/*"]
+      "@workspace/data": ["../data/src/index.ts"],
+      "@workspace/data/*": ["../data/src/*"]
     }
   },
   "include": ["src", "data"]

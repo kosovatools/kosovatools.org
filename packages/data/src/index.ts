@@ -1,5 +1,6 @@
 export * from "./client";
 export * from "./dataset-helpers";
+export * from "./dataset-registry";
 export * from "./datasets/customs-codes";
 export * from "./datasets/drug-prices";
 export * from "./datasets/economic-activity";
@@ -8,7 +9,6 @@ export * from "./datasets/prishtina-building-permits";
 export * from "./datasets/war-records";
 export * from "./datasets/atk-faq";
 export * from "./datasets/loan-interests";
-export * from "./datasets/electricity";
 export * from "./datasets/trade";
 export * from "./datasets/gdp";
 export * from "./datasets/government";

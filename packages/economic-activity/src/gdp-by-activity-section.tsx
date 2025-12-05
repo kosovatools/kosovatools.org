@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  loadGdpByActivityDataset,
-  type GdpByActivityDataset,
-} from "@workspace/data";
+import { loadDataset, type GdpByActivityDataset } from "@workspace/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
 import { GdpActivityStackedChart } from "./charts/gdp-activity-stacked-chart";
@@ -15,7 +12,7 @@ export function GdpByActivitySection({
 }) {
   return (
     <DatasetRenderer
-      datasetLoader={loadGdpByActivityDataset}
+      datasetLoader={() => loadDataset("kas.gdp-activity")}
       queryKey={["kas", "gdp", "by-activity", "quarterly"]}
       initialData={initialDataset}
       title="BPV sipas aktiviteteve ekonomike"

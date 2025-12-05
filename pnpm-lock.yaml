@@ -59,7 +59,7 @@ importers:
         version: link:../../packages/customs-codes
       '@workspace/data':
         specifier: workspace:*
-        version: link:../../packages/dataset-api
+        version: link:../../packages/data
       '@workspace/data-insights':
         specifier: workspace:*
         version: link:../../packages/data-insights
@@ -156,7 +156,7 @@ importers:
     dependencies:
       '@workspace/data':
         specifier: workspace:*
-        version: link:../dataset-api
+        version: link:../data
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -202,7 +202,7 @@ importers:
     dependencies:
       '@workspace/data':
         specifier: workspace:*
-        version: link:../dataset-api
+        version: link:../data
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -282,7 +282,7 @@ importers:
         version: 3.13.12(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@workspace/data':
         specifier: workspace:*
-        version: link:../dataset-api
+        version: link:../data
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -328,7 +328,7 @@ importers:
     dependencies:
       '@workspace/data':
         specifier: workspace:*
-        version: link:../dataset-api
+        version: link:../data
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -364,7 +364,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/dataset-api:
+  packages/data:
     dependencies:
       '@kosovatools/data-types':
         specifier: file:../../data/packages/data-types
@@ -390,7 +390,7 @@ importers:
     dependencies:
       '@workspace/data':
         specifier: workspace:*
-        version: link:../dataset-api
+        version: link:../data
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -433,7 +433,7 @@ importers:
     dependencies:
       '@workspace/data':
         specifier: workspace:*
-        version: link:../dataset-api
+        version: link:../data
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -476,7 +476,7 @@ importers:
     dependencies:
       '@workspace/data':
         specifier: workspace:*
-        version: link:../dataset-api
+        version: link:../data
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -583,7 +583,7 @@ importers:
     dependencies:
       '@workspace/data':
         specifier: workspace:*
-        version: link:../dataset-api
+        version: link:../data
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -626,7 +626,7 @@ importers:
     dependencies:
       '@workspace/data':
         specifier: workspace:*
-        version: link:../dataset-api
+        version: link:../data
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -709,7 +709,7 @@ importers:
     dependencies:
       '@workspace/data':
         specifier: workspace:*
-        version: link:../dataset-api
+        version: link:../data
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui
@@ -863,7 +863,7 @@ importers:
         version: 5.90.12(react@19.2.1)
       '@workspace/data':
         specifier: workspace:*
-        version: link:../dataset-api
+        version: link:../data
       '@workspace/timeline-events':
         specifier: workspace:*
         version: link:../timeline-events
@@ -969,7 +969,7 @@ importers:
         version: 3.13.12(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@workspace/data':
         specifier: workspace:*
-        version: link:../dataset-api
+        version: link:../data
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui

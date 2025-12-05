@@ -1,8 +1,6 @@
 "use client";
 import {
-  loadConstructionCostIndexDataset,
-  loadCpiAveragePricesDataset,
-  loadCpiDataset,
+  loadDataset,
   type ConstructionCostIndexDataset,
   type CpiAveragePriceDataset,
   type CpiDataset,
@@ -26,7 +24,7 @@ export function InflationTracker({
   return (
     <div className="space-y-12">
       <DatasetRenderer
-        datasetLoader={loadCpiDataset}
+        datasetLoader={() => loadDataset("cpi.headline")}
         queryKey={["kas", "cpi", "monthly"]}
         initialData={initialCpiDataset}
         id="cpi-index"
@@ -48,7 +46,7 @@ export function InflationTracker({
       </DatasetRenderer>
 
       <DatasetRenderer
-        datasetLoader={loadCpiAveragePricesDataset}
+        datasetLoader={() => loadDataset("cpi.average-prices")}
         queryKey={["kas", "cpi", "average-prices", "yearly"]}
         initialData={initialCpiAveragePricesYearly}
         title="Çmimet mesatare vjetore"
@@ -59,7 +57,7 @@ export function InflationTracker({
       </DatasetRenderer>
 
       <DatasetRenderer
-        datasetLoader={loadConstructionCostIndexDataset}
+        datasetLoader={() => loadDataset("construction.cost-index")}
         queryKey={["kas", "construction-cost-index", "quarterly"]}
         initialData={initialConstructionCostIndexDataset}
         title="Indeksi i kostos së ndërtimit"
