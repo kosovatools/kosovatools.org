@@ -12,9 +12,9 @@ export function EnergyFlowExplorer() {
         datasetLoader={() => loadDataset("energy.crossborder-monthly")}
         queryKey={["energy-flow", "monthly-dataset"]}
         emptyStateContent="Nuk ka të dhëna mujore për flukset e energjisë."
-        title="Trendi i flukseve mujore"
+        title="Flukset neto mujore ndërkufitare"
         id="monthly-flow-trend"
-        description="Analizo importet, eksportet dhe bilancin neto të energjisë elektrike të Kosovës përgjatë periudhave të disponueshme nga ENTSO-E."
+        description="Shiko bilancin neto (import minus eksport) të energjisë elektrike sipas fqinjëve, në periudhat e mbledhura nga ENTSO-E. Vlerat tregojnë rrjedhën neto në rrjet dhe mund të përfshijnë tranzit, prandaj nuk përfaqësojnë domosdoshmërisht blerje nga vendi përkatës."
       >
         {(dataset) => (
           <MonthlyFlowTrendChart
@@ -28,12 +28,12 @@ export function EnergyFlowExplorer() {
       </DatasetRenderer>
 
       <DatasetRenderer
-        datasetLoader={() => loadDataset("energy.crossborder-daily")}
-        queryKey={["energy-flow", "daily-dataset"]}
+        datasetLoader={() => loadDataset("energy.crossborder-daily-v2")}
+        queryKey={["energy-flow", "daily-dataset-v2"]}
         emptyStateContent="Nuk ka ende të dhëna ditore për periudhën e fundit."
-        title="Modeli ditor i flukseve"
+        title="Bilanci ditor neto ndërkufitar"
         id="daily-flow-pattern"
-        description="Shiko importet dhe eksportet ditore për muajin më të fundit të përpunuar nga ENTSO-E Transparency Platform."
+        description="Vëzhgo bilancin neto ditor të flukseve kufitare sipas fqinjëve për muajin më të fundit të përpunuar nga ENTSO-E. Shifrat tregojnë rrjedhën neto në rrjet dhe mund të përfshijnë tranzit, ndaj nuk barazohen gjithmonë me blerje direkte nga ai vend."
       >
         {(dataset) => (
           <DailyFlowChart

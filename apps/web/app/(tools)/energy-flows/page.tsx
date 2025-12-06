@@ -51,10 +51,14 @@ export default async function EnergyFlowsPage() {
           <h2 className="text-2xl font-semibold tracking-tight">
             Flukset kufitare të energjisë
           </h2>
-          <p className="max-w-2xl text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Eksploro trendet mujore dhe modelet ditore të importeve/eksporteve
             për çdo fqinj të Kosovës duke përdorur të dhënat e agreguara nga
-            ENTSO-E Transparency Platform.
+            ENTSO-E Transparency Platform. Rrjeti funksionon si një treg i
+            përbashkët europian: rrjedhat në kufi tregojnë vetëm nga cili
+            interkoneksion ndërkufitar po kalon energjia, jo vendin e origjinës. Është si të
+            numërosh makina ose aeroplanë që hyjnë nga një kufi pa targa a
+            flamuj — e dimë kufirin, por jo shtetin nga nisën.
           </p>
         </div>
         <EnergyFlowExplorer />

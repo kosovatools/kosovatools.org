@@ -2,10 +2,11 @@
 
 import * as React from "react";
 import {
-  Area,
+  Bar,
   CartesianGrid,
   ComposedChart,
   Line,
+  ReferenceLine,
   XAxis,
   YAxis,
 } from "recharts";
@@ -18,6 +19,7 @@ import {
   ChartTooltip,
   COMMON_CHART_MARGINS,
 } from "@workspace/ui/components/chart";
+import type { ChartConfig } from "@workspace/ui/components/chart";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import {
   TimelineEventMarkers,
@@ -25,15 +27,18 @@ import {
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
+import {
+  createChromaPalette,
+  resolvePaletteColor,
+} from "@workspace/ui/lib/chart-palette";
 
 import { energyFlowChartConfig } from "../utils/chart-config";
 import { formatAuto } from "../utils/number-format";
 
 type TrendChartRow = {
   period: string;
-  imports: number;
-  exports: number;
   net: number;
+  [key: string]: number | string;
 };
 
 export function MonthlyFlowTrendChart({
@@ -43,7 +48,6 @@ export function MonthlyFlowTrendChart({
   dataset: DatasetView<EnergyMonthlyDataset>;
   timelineEvents?: TimelineEventMarkerControls;
 }) {
-  const chartConfig = energyFlowChartConfig;
   const {
     periodGrouping,
     setPeriodGrouping,
@@ -55,34 +59,68 @@ export function MonthlyFlowTrendChart({
     periodFormatter,
   } = useDeriveChartControls(dataset, {
     includeSeasonal: true,
+    initialGrouping: "quarterly",
   });
 
-  const chartData = React.useMemo<TrendChartRow[]>(() => {
-    const aggregated = datasetView.aggregate({
-      grouping: periodGrouping,
-      fields: [
-        {
-          key: "imports",
-          valueAccessor: (record) => record.import ?? 0,
-        },
-        {
-          key: "exports",
-          valueAccessor: (record) => record.export ?? 0,
-        },
-        {
-          key: "net",
-          valueAccessor: (record) => record.net ?? 0,
-        },
-      ],
+  const neighborPalette = React.useMemo(() => createChromaPalette(6), []);
+  const neighborLabelMap = React.useMemo(() => {
+    const options = dataset.meta.dimensions?.neighbor ?? [];
+    return Object.fromEntries(
+      options.map((option) => [option.key, option.label]),
+    );
+  }, [dataset.meta.dimensions]);
+
+  const netStack = React.useMemo(
+    () =>
+      datasetView.viewAsStack({
+        dimension: "neighbor",
+        valueAccessor: (record) => record.net ?? 0,
+        periodGrouping,
+      }),
+    [datasetView, periodGrouping],
+  );
+
+  const neighborKeys = netStack.keys;
+
+  const chartConfig = React.useMemo<ChartConfig>(() => {
+    const baseConfig: ChartConfig = {
+      net: energyFlowChartConfig.net,
+    };
+
+    neighborKeys.forEach((key, index) => {
+      const theme = resolvePaletteColor(neighborPalette, index);
+      const label = neighborLabelMap[key] ?? key;
+      baseConfig[`net-${key}`] = {
+        label: `Bilanci neto · ${label}`,
+        theme,
+      };
     });
 
-    return aggregated.map((row) => ({
-      period: row.period,
-      imports: row.imports ?? 0,
-      exports: row.exports ?? 0,
-      net: row.net ?? 0,
-    }));
-  }, [datasetView, periodGrouping]);
+    return baseConfig;
+  }, [neighborKeys, neighborLabelMap, neighborPalette]);
+
+  const chartData = React.useMemo<TrendChartRow[]>(() => {
+    return netStack.series.map((row) => {
+      const values = row.values ?? {};
+      const netTotal = Object.values(values).reduce(
+        (sum, value) => sum + (typeof value === "number" ? value : 0),
+        0,
+      );
+
+      const dataRow: TrendChartRow = {
+        period: row.period,
+        net: netTotal,
+      };
+
+      neighborKeys.forEach((key) => {
+        const value = values[key];
+        dataRow[`net-${key}`] =
+          typeof value === "number" && Number.isFinite(value) ? value : 0;
+      });
+
+      return dataRow;
+    });
+  }, [netStack.series, neighborKeys]);
 
   return (
     <ChartScaffolding
@@ -107,7 +145,11 @@ export function MonthlyFlowTrendChart({
         config={chartConfig}
         className="aspect-[1/1.5] sm:aspect-video"
       >
-        <ComposedChart data={chartData} margin={COMMON_CHART_MARGINS}>
+        <ComposedChart
+          data={chartData}
+          margin={COMMON_CHART_MARGINS}
+          stackOffset="sign"
+        >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="period"
@@ -134,24 +176,19 @@ export function MonthlyFlowTrendChart({
             }
           />
           <ChartLegend content={<ChartLegendContent />} />
-          <Area
-            isAnimationActive={false}
-            dataKey="imports"
-            type="monotone"
-            fill="var(--color-imports)"
-            fillOpacity={0.2}
-            stroke="var(--color-imports)"
-            strokeWidth={2}
-          />
-          <Area
-            isAnimationActive={false}
-            dataKey="exports"
-            type="monotone"
-            fill="var(--color-exports)"
-            fillOpacity={0.15}
-            stroke="var(--color-exports)"
-            strokeWidth={2}
-          />
+          <ReferenceLine y={0} stroke="var(--muted-foreground)" />
+          {neighborKeys.map((key) => (
+            <Bar
+              key={`net-${key}`}
+              isAnimationActive={false}
+              dataKey={`net-${key}`}
+              stackId="net"
+              fill={`var(--color-net-${key})`}
+              stroke={`var(--color-net-${key})`}
+              radius={3}
+              maxBarSize={24}
+            />
+          ))}
           <Line
             isAnimationActive={false}
             type="monotone"

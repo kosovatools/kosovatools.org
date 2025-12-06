@@ -92,9 +92,9 @@ export const DATASET_REGISTRY = {
     prefix: ["mfk", "turnover"],
     path: "mfk_turnover_city_category_yearly.json",
   }),
-  "energy.crossborder-daily": defineDatasetEntry<EnergyDailyDataset>({
+  "energy.crossborder-daily-v2": defineDatasetEntry<EnergyDailyDataset>({
     prefix: ["energy"],
-    path: "energy_crossborder_daily.json",
+    path: "energy_crossborder_daily_v2.json",
   }),
   "energy.crossborder-monthly": defineDatasetEntry<EnergyMonthlyDataset>({
     prefix: ["energy"],
