@@ -9,6 +9,7 @@ import {
   type WageLevelsDataset,
   type TourismCountryDataset,
   type TourismRegionDataset,
+  type EducationBachelorFirstTimeDataset,
 } from "@workspace/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
@@ -20,6 +21,7 @@ import { WageLevelsChart } from "./charts/wage-levels-chart";
 import { TourismCountryStackedChart } from "./charts/tourism-country-stacked-chart";
 import { TourismRegionCharts } from "./charts/tourism-region-stacked-chart";
 import { VehicleTypesStackedChart } from "./charts/vehicle-types-stacked-chart";
+import { EducationBachelorFirstTimeChart } from "./charts/education-bachelor-first-time-chart";
 
 type DataInsightsProps = {
   initialTradeChapters?: TradeChaptersDataset;
@@ -30,6 +32,7 @@ type DataInsightsProps = {
   initialVehicleTypesYearly?: VehicleTypesDataset;
   initialTourismCountry?: TourismCountryDataset;
   initialTourismRegion?: TourismRegionDataset;
+  initialEducationBachelorFirstTime?: EducationBachelorFirstTimeDataset;
 };
 
 export function DataInsightsDashboard({
@@ -41,6 +44,7 @@ export function DataInsightsDashboard({
   initialVehicleTypesYearly,
   initialTourismCountry,
   initialTourismRegion,
+  initialEducationBachelorFirstTime,
 }: DataInsightsProps) {
   return (
     <div className="space-y-8">
@@ -106,6 +110,24 @@ export function DataInsightsDashboard({
                 includeCategories: ["public_health", "government_change"],
               }}
             />
+          )}
+        </DatasetRenderer>
+      </section>
+
+      <section className="space-y-6">
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Arsimi i lartë
+        </h2>
+        <DatasetRenderer
+          datasetLoader={() => loadDataset("kas.education-bachelor-first-time")}
+          queryKey={["education", "bachelor-first-time"]}
+          initialData={initialEducationBachelorFirstTime}
+          title="Regjistrimet e para në Bachelor (shtresuar)"
+          id="education-bachelor-first-time"
+          description="Studentët në vitin e parë të programit Bachelor sipas fushës së studimit dhe gjinisë. Ndrysho gjininë ose fushat kryesore për të parë si ka evoluar kërkesa akademike."
+        >
+          {(dataset) => (
+            <EducationBachelorFirstTimeChart dataset={dataset} top={7} />
           )}
         </DatasetRenderer>
       </section>

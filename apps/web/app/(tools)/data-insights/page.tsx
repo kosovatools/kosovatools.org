@@ -6,9 +6,9 @@ import { loadDataset } from "@workspace/data";
 
 export const metadata: Metadata = {
   title:
-    "Statistika të përgjithshme të Kosovës – Tregtia, energjia, transporti dhe turizmi",
+    "Statistika të përgjithshme të Kosovës – Tregtia, puna, arsimi, energjia, transporti dhe turizmi",
   description:
-    "Vizualizoni eksportet/importet, furnizimin me karburante, flotën e mjeteve dhe prurjet e turizmit me grafika interaktive të bazuara në të dhënat e Agjencisë së Statistikave të Kosovës.",
+    "Vizualizoni eksportet/importet, tregun e punës, regjistrimet Bachelor, furnizimin me karburante, flotën e mjeteve dhe prurjet e turizmit me grafika interaktive të bazuara në të dhënat e Agjencisë së Statistikave të Kosovës.",
   keywords: [
     "statistika kosovë",
     "të dhëna të hapura",
@@ -23,18 +23,18 @@ export const metadata: Metadata = {
     type: "website",
     url: "/data-insights",
     title:
-      "Statistika të përgjithshme të Kosovës – Tregtia, energjia, transporti dhe turizmi",
+      "Statistika të përgjithshme të Kosovës – Tregtia, puna, arsimi, energjia, transporti dhe turizmi",
     description:
-      "Grafika dinamike për tregtinë e jashtme, karburantet, mjetet motorike dhe turizmin bazuar në të dhënat zyrtare të Kosovës.",
+      "Grafika dinamike për tregtinë e jashtme, tregun e punës, regjistrimet Bachelor, karburantet, mjetet motorike dhe turizmin bazuar në të dhënat zyrtare të Kosovës.",
     siteName: "Kosova Tools",
     locale: "sq_AL",
   },
   twitter: {
     card: "summary_large_image",
     title:
-      "Statistika të përgjithshme të Kosovës – Tregtia, energjia, transporti dhe turizmi",
+      "Statistika të përgjithshme të Kosovës – Tregtia, puna, arsimi, energjia, transporti dhe turizmi",
     description:
-      "Exploroni dashboard-e interaktive për tregtinë, karburantet, mjetet motorike dhe turizmin në Kosovë.",
+      "Exploroni dashboard-e interaktive për tregtinë, tregun e punës, regjistrimet Bachelor, karburantet, mjetet motorike dhe turizmin në Kosovë.",
   },
 };
 export const fetchCache = "force-cache";
@@ -44,6 +44,7 @@ export default async function DataInsightsPage() {
     tradePartners,
     employmentActivityGender,
     wageLevels,
+    educationBachelorFirstTime,
     fuelDataset,
     vehicleTypesYearly,
     tourismCountry,
@@ -53,6 +54,7 @@ export default async function DataInsightsPage() {
     loadDataset("kas.trade-partners"),
     loadDataset("kas.employment-activity-gender"),
     loadDataset("kas.wage-levels"),
+    loadDataset("kas.education-bachelor-first-time"),
     loadDataset("kas.fuel"),
     loadDataset("kas.vehicle-types"),
     loadDataset("kas.tourism-country"),
@@ -62,13 +64,14 @@ export default async function DataInsightsPage() {
   return (
     <ToolPage
       title="Statistika të përgjithshme të Kosovës – Dashboard nga ASK"
-      description="Vizualizoni trendet e tregtisë, energjisë, transportit dhe turizmit me grafika interaktive të bazuara në të dhënat e Agjencisë së Statistikave të Kosovës."
+      description="Vizualizoni trendet e tregtisë, tregut të punës, arsimit, energjisë, transportit dhe turizmit me grafika interaktive të bazuara në të dhënat e Agjencisë së Statistikave të Kosovës."
     >
       <DataInsightsDashboard
         initialTradeChapters={tradeChapters}
         initialTradePartners={tradePartners}
         initialEmploymentActivityGender={employmentActivityGender}
         initialWageLevels={wageLevels}
+        initialEducationBachelorFirstTime={educationBachelorFirstTime}
         initialFuelDataset={fuelDataset}
         initialVehicleTypesYearly={vehicleTypesYearly}
         initialTourismCountry={tourismCountry}

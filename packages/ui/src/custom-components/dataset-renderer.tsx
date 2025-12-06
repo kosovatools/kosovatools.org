@@ -9,13 +9,11 @@ import {
   GenericDataset,
   getDatasetCoverageLabel,
 } from "@workspace/data";
-import { Button } from "@workspace/ui/components/button";
 import {
   type QueryKey,
   useQuery,
   type UseQueryOptions,
 } from "@tanstack/react-query";
-import { RotateCw } from "lucide-react";
 import {
   Alert,
   AlertDescription,
@@ -50,7 +48,7 @@ const DEFAULT_ERROR_TITLE = "Shfaqja e të dhëna dështoi";
 const DEFAULT_ERROR_MESSAGE = "Provoni përsëri më vonë.";
 const DEFAULT_LOADING_MESSAGE = "Të dhënat po ngarkohen...";
 const DEFAULT_EMPTY_MESSAGE = "Nuk ka të dhëna për t'u shfaqur.";
-const ONE_WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
+const ONE_MONTH_IN_MS = 30 * 24 * 60 * 60 * 1000;
 
 export function DatasetRenderer<TDataset extends GenericDataset>({
   title,
@@ -72,7 +70,7 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
     ? parsedInitialDataUpdatedAt
     : undefined;
   const defaultStaleTime =
-    initialData && initialDataUpdatedAt ? ONE_WEEK_IN_MS : Infinity;
+    initialData && initialDataUpdatedAt ? ONE_MONTH_IN_MS : Infinity;
 
   const queryResult = useQuery<TDataset, Error>({
     ...queryOptions,
@@ -87,55 +85,30 @@ export function DatasetRenderer<TDataset extends GenericDataset>({
   const isLoading =
     queryResult.isLoading &&
     (typeof queryResult.data === "undefined" || queryResult.data === null);
-  const isRefetching = queryResult.isFetching && !isLoading;
-
-  const refreshButton = initialData ? (
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={() => void queryResult.refetch()}
-      disabled={isLoading || isRefetching}
-      className="gap-2"
-      aria-label="Rifresko të dhënat"
-    >
-      <RotateCw
-        aria-hidden
-        className={cn(
-          "h-4 w-4",
-          isRefetching ? "animate-spin text-primary" : "text-muted-foreground",
-        )}
-      />
-    </Button>
-  ) : null;
 
   const headerContent = (
     <div className="space-y-2">
-      <div className="flex items-start gap-3">
-        <div className="flex-1 space-y-2">
-          {typeof title === "string" ? (
-            <h2 className="text-2xl font-semibold tracking-tight">
-              {id ? (
-                <a
-                  href={`#${id}`}
-                  className="hover:underline decoration-muted-foreground/50 underline-offset-4"
-                >
-                  {title}
-                </a>
-              ) : (
-                title
-              )}
-            </h2>
+      {typeof title === "string" ? (
+        <h2 className="text-2xl font-semibold tracking-tight">
+          {id ? (
+            <a
+              href={`#${id}`}
+              className="hover:underline decoration-muted-foreground/50 underline-offset-4"
+            >
+              {title}
+            </a>
           ) : (
             title
           )}
-          {typeof description === "string" ? (
-            <p className="text-sm text-muted-foreground">{description}</p>
-          ) : (
-            description
-          )}
-        </div>
-        <div className="flex shrink-0 justify-end">{refreshButton}</div>
-      </div>
+        </h2>
+      ) : (
+        title
+      )}
+      {typeof description === "string" ? (
+        <p className="text-sm text-muted-foreground">{description}</p>
+      ) : (
+        description
+      )}
     </div>
   );
 

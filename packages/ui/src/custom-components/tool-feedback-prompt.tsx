@@ -17,6 +17,8 @@ type ToolFeedbackPromptProps = {
 
 const STORAGE_PREFIX = "ktools:tool-feedback";
 const SHOW_DELAY_MS = 1200;
+const POSITIVE_EVENT = "Tool feedback positive";
+const NEGATIVE_EVENT = "Tool feedback negative";
 
 export function ToolFeedbackPrompt({
   toolId,
@@ -103,7 +105,7 @@ export function ToolFeedbackPrompt({
           className="rounded-full"
           aria-label="Po, vegla ishte e dobishme"
           onClick={() => handleResponse("yes")}
-          data-umami-event="Tool feedback"
+          data-umami-event={POSITIVE_EVENT}
           data-umami-event-id={eventId}
           data-umami-event-tool={eventTool}
           data-umami-event-response="yes"
@@ -116,7 +118,7 @@ export function ToolFeedbackPrompt({
           variant="ghost"
           aria-label="Jo, vegla nuk ishte e dobishme"
           onClick={() => handleResponse("no")}
-          data-umami-event="Tool feedback"
+          data-umami-event={NEGATIVE_EVENT}
           data-umami-event-id={eventId}
           data-umami-event-tool={eventTool}
           data-umami-event-response="no"

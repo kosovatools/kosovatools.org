@@ -8,6 +8,7 @@ import type {
   CpiAveragePriceDataset,
   CpiDataset,
   CustomsRecord,
+  EducationBachelorFirstTimeDataset,
   DrugPriceRecordsDataset,
   DrugPriceVersionsDataset,
   ElectricityDataset,
@@ -114,6 +115,10 @@ export const DATASET_REGISTRY = {
   "kas.employment-activity-gender": defineDatasetEntry<EmploymentActivityGenderDataset>({
     prefix: ["kas"],
     path: "kas_labour_employment_activity_gender_quarterly.json",
+  }),
+  "kas.education-bachelor-first-time": defineDatasetEntry<EducationBachelorFirstTimeDataset>({
+    prefix: ["kas"],
+    path: "kas_education_bachelor_first_time_field_gender_yearly.json",
   }),
   "kas.vehicle-types": defineDatasetEntry<VehicleTypesDataset>({
     prefix: ["kas"],

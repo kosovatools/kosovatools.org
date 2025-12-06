@@ -18,3 +18,4 @@ export * from "./datasets/construction-cost-index";
 export * from "./datasets/tourism";
 export * from "./datasets/transport";
 export * from "./datasets/kas-energy";
+export * from "./datasets/education";
