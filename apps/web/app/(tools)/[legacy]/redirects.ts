@@ -1,0 +1,16 @@
+export const legacyRedirects: Record<string, string> = {
+  "economic-activity": "/aktiviteti-ekonomik",
+  "inflation-tracker": "/indeksi-i-cmimeve",
+  "data-insights": "/statistika",
+  "loan-interest-rates": "/normat-e-interesit",
+  "aviation-stats": "/aviacioni",
+  "energy-flows": "/energjia",
+  "wage-calculator": "/kalkulatori-i-pagave",
+  "public-wage-calculator": "/pagat-publike",
+  "customs-codes": "/tarifat-doganore",
+  "car-import-taxes": "/taksa-e-veturave",
+  "atk-faq": "/pyetje-atk",
+  "drug-prices": "/cmimet-e-barnave",
+  "prishtina-building-permits": "/lejet-ndertimit",
+  "war-records": "/regjistrat-e-luftes",
+};

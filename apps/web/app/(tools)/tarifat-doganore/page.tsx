@@ -14,11 +14,11 @@ export const metadata: Metadata = {
     "TVSH importi",
   ],
   alternates: {
-    canonical: "/customs-codes",
+    canonical: "/tarifat-doganore",
   },
   openGraph: {
     type: "article",
-    url: "/customs-codes",
+    url: "/tarifat-doganore",
     title: "Tarifat Doganore të Kosovës – Shfletues i kodeve HS",
     description:
       "Eksploroni tarifat doganore të Kosovës dhe llogaritni detyrimet e importit sipas kodit HS.",

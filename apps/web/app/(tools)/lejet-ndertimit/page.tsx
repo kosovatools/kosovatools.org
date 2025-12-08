@@ -15,11 +15,11 @@ export const metadata: Metadata = {
     "building permits",
   ],
   alternates: {
-    canonical: "/prishtina-building-permits",
+    canonical: "/lejet-ndertimit",
   },
   openGraph: {
     type: "website",
-    url: "/prishtina-building-permits",
+    url: "/lejet-ndertimit",
     title: "Lejet e ndërtimit të Komunës së Prishtinës",
     description:
       "Krahasoni sipërfaqet, tarifat dhe dokumentet zyrtare të lejeve të ndërtimit të publikuara nga Drejtoria e Urbanizmit e Prishtinës.",

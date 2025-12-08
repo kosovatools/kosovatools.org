@@ -21,11 +21,11 @@ export const metadata: Metadata = {
     "komunat e Kosovës",
   ],
   alternates: {
-    canonical: "/economic-activity",
+    canonical: "/aktiviteti-ekonomik",
   },
   openGraph: {
     type: "website",
-    url: "/economic-activity",
+    url: "/aktiviteti-ekonomik",
     title: "Aktiviteti ekonomik dhe financat publike të Kosovës",
     description:
       "BPV tremujor sipas aktiviteteve, qarkullimi i bizneseve sipas kategorive/komunave dhe struktura e të hyrave/shpenzimeve të Qeverisë së Përgjithshme.",

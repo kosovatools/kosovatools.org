@@ -12,11 +12,11 @@ export const metadata: Metadata = {
     "fluturimet kosovë",
   ],
   alternates: {
-    canonical: "/aviation-stats",
+    canonical: "/aviacioni",
   },
   openGraph: {
     type: "website",
-    url: "/aviation-stats",
+    url: "/aviacioni",
     title: "Statistikat e aviacionit – Pasagjerët dhe fluturimet mujore",
     description:
       "Vizualizime interaktive për hyrjet/daljet e pasagjerëve dhe frekuencën e fluturimeve të trafikut ajror në Kosovë.",

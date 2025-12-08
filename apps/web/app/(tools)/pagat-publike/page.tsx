@@ -16,11 +16,11 @@ export const metadata: Metadata = {
     "kalkulator",
   ],
   alternates: {
-    canonical: "/public-wage-calculator",
+    canonical: "/pagat-publike",
   },
   openGraph: {
     type: "article",
-    url: "/public-wage-calculator",
+    url: "/pagat-publike",
     title:
       "Kosovo Public Wage Calculator – Llogarit paga bruto sipas koeficientit",
     description:

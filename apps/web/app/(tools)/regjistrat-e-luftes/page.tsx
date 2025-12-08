@@ -21,14 +21,14 @@ export const metadata: Metadata = {
   description: warRecordsDescription,
   openGraph: {
     type: "article",
-    url: "/war-records",
+    url: "/regjistrat-e-luftes",
     title: warRecordsTitle,
     description: warRecordsDescription,
     siteName: "Kosova Tools",
     locale: "sq_AL",
   },
   alternates: {
-    canonical: "/war-records",
+    canonical: "/regjistrat-e-luftes",
   },
   twitter: {
     card: "summary_large_image",

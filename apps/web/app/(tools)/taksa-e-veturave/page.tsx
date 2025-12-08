@@ -15,11 +15,11 @@ export const metadata: Metadata = {
     "import makine",
   ],
   alternates: {
-    canonical: "/car-import-taxes",
+    canonical: "/taksa-e-veturave",
   },
   openGraph: {
     type: "article",
-    url: "/car-import-taxes",
+    url: "/taksa-e-veturave",
     title: "Kalkulatori i taksave të importit të veturave në Kosovë",
     description:
       "Përllogarit TVSH-në, akcizën dhe detyrimet doganore për importin e veturave sipas legjislacionit të Kosovës.",

@@ -17,11 +17,11 @@ export const metadata: Metadata = {
     "kalkulatori",
   ],
   alternates: {
-    canonical: "/wage-calculator",
+    canonical: "/kalkulatori-i-pagave",
   },
   openGraph: {
     type: "article",
-    url: "/wage-calculator",
+    url: "/kalkulatori-i-pagave",
     title: "Paga dhe Rroga – Neto në Bruto, Tatimet & Trusti",
     description:
       "Llogarisni pagën neto dhe bruto në Kosovë me tatimin progresiv, kontributet në Trust dhe detyrimet e punëdhënësit.",

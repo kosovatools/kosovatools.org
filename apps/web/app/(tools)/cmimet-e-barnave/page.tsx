@@ -15,11 +15,11 @@ export const metadata: Metadata = {
     "mh drug prices",
   ],
   alternates: {
-    canonical: "/drug-prices",
+    canonical: "/cmimet-e-barnave",
   },
   openGraph: {
     type: "website",
-    url: "/drug-prices",
+    url: "/cmimet-e-barnave",
     title: "Çmimet e barnave të Ministrisë së Shëndetësisë",
     description:
       "Analizo çmimet referuese të barnave, autorizimet dhe versionet e shkarkuara nga Ministria e Shëndetësisë.",

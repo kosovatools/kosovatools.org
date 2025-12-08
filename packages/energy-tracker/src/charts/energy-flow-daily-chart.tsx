@@ -125,12 +125,7 @@ export function DailyFlowChart({
 
       return row;
     });
-  }, [
-    periods,
-    netByPeriod,
-    netTotalsByPeriod,
-    neighborKeys,
-  ]);
+  }, [periods, netByPeriod, netTotalsByPeriod, neighborKeys]);
 
   return (
     <ChartScaffolding>

@@ -17,11 +17,11 @@ export const metadata: Metadata = {
     "vizualizime të dhënash",
   ],
   alternates: {
-    canonical: "/data-insights",
+    canonical: "/statistika",
   },
   openGraph: {
     type: "website",
-    url: "/data-insights",
+    url: "/statistika",
     title:
       "Statistika të përgjithshme të Kosovës – Tregtia, puna, arsimi, energjia, transporti dhe turizmi",
     description:

@@ -14,11 +14,11 @@ export const metadata: Metadata = {
     "kosova statistikë",
   ],
   alternates: {
-    canonical: "/inflation-tracker",
+    canonical: "/indeksi-i-cmimeve",
   },
   openGraph: {
     type: "website",
-    url: "/inflation-tracker",
+    url: "/indeksi-i-cmimeve",
     title:
       "Inflacioni në Kosovë – IHÇK, çmimet mesatare dhe kostot e ndërtimit",
     description:

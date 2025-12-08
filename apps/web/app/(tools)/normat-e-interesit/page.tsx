@@ -22,11 +22,11 @@ export const metadata: Metadata = {
     "kredi konsumuse",
   ],
   alternates: {
-    canonical: "/loan-interest-rates",
+    canonical: "/normat-e-interesit",
   },
   openGraph: {
     type: "website",
-    url: "/loan-interest-rates",
+    url: "/normat-e-interesit",
     title: "Normat e interesit për kreditë e reja (CBK)",
     description:
       "Vizualizo normat e interesit për kreditë e reja sipas segmentit dhe llojit të kredisë duke përdorur të dhënat mujore të CBK.",

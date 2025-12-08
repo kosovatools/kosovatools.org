@@ -17,11 +17,11 @@ export const metadata: Metadata = {
     "rrjedhat e energjisë kosovë",
   ],
   alternates: {
-    canonical: "/energy-flows",
+    canonical: "/energjia",
   },
   openGraph: {
     type: "website",
-    url: "/energy-flows",
+    url: "/energjia",
     title: "Gjurmuesi i rrjedhës së energjisë – Flukset kufitare të Kosovës",
     description:
       "Analizo flukset kufitare të energjisë elektrike dhe bilancin neto të Kosovës sipas të dhënave mujore të ENTSO-E.",
@@ -56,9 +56,9 @@ export default async function EnergyFlowsPage() {
             për çdo fqinj të Kosovës duke përdorur të dhënat e agreguara nga
             ENTSO-E Transparency Platform. Rrjeti funksionon si një treg i
             përbashkët europian: rrjedhat në kufi tregojnë vetëm nga cili
-            interkoneksion ndërkufitar po kalon energjia, jo vendin e origjinës. Është si të
-            numërosh makina ose aeroplanë që hyjnë nga një kufi pa targa a
-            flamuj — e dimë kufirin, por jo shtetin nga nisën.
+            interkoneksion ndërkufitar po kalon energjia, jo vendin e origjinës.
+            Është si të numërosh makina ose aeroplanë që hyjnë nga një kufi pa
+            targa a flamuj — e dimë kufirin, por jo shtetin nga nisën.
           </p>
         </div>
         <EnergyFlowExplorer />

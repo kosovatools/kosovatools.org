@@ -22,11 +22,11 @@ export const metadata: Metadata = {
     "Administrata Tatimore e Kosovës",
   ],
   alternates: {
-    canonical: "/atk-faq",
+    canonical: "/pyetje-atk",
   },
   openGraph: {
     type: "website",
-    url: "/atk-faq",
+    url: "/pyetje-atk",
     title: "Pyetje të shpeshta të Administratës Tatimore të Kosovës",
     description:
       "Shfleto bazën e pyetjeve të ATK-së dhe gjej shpejt përgjigje për obligimet tatimore në Kosovë.",
