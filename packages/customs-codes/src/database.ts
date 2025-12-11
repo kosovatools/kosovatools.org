@@ -1,8 +1,8 @@
 import Dexie, { type Table } from "dexie";
 import MiniSearch from "minisearch";
-import { loadDataset } from "@workspace/data";
+import { loadDataset } from "@kosovatools/data";
 
-import type { CustomsTreeNode, CustomsRecord } from "@workspace/data";
+import type { CustomsTreeNode, CustomsRecord } from "@kosovatools/data";
 import { InitializationProgress } from "./types";
 
 const MINISEARCH_HIGHLIGHT_TEMPLATE =

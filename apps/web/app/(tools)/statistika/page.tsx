@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { DataInsightsDashboard } from "@workspace/data-insights";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
-import { loadDataset } from "@workspace/data";
+import { loadDataset } from "@kosovatools/data";
 
 export const metadata: Metadata = {
   title:

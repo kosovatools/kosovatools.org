@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import MiniSearch from "minisearch";
 import { ChevronDown, Link, Search, X } from "lucide-react";
 
-import { loadDataset, type AtkFaqEntry } from "@workspace/data";
+import { loadDataset, type AtkFaqEntry } from "@kosovatools/data";
 import { mergeSearchParams } from "@workspace/utils";
 import {
   Collapsible,

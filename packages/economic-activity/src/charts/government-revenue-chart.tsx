@@ -14,11 +14,8 @@ import {
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
 import { HierarchicalMultiSelect } from "@workspace/ui/custom-components/hierarchical-multi-select";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import {
-  buildUiHierarchy,
-  type DatasetView,
-  type GovernmentRevenueDataset,
-} from "@workspace/data";
+import type { GovernmentRevenueDataset } from "@kosovatools/data";
+import { buildUiHierarchy, type DatasetView } from "@workspace/utils";
 import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,

@@ -3,8 +3,8 @@
 import type {
   GovernmentExpenditureDataset,
   GovernmentRevenueDataset,
-} from "@workspace/data";
-import { loadDataset } from "@workspace/data";
+} from "@kosovatools/data";
+import { loadDataset } from "@kosovatools/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
 import { GovernmentExpenditureStackedChart } from "./charts/government-expenditure-chart";

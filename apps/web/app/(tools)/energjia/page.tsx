@@ -3,7 +3,7 @@ import {
   EnergyFlowExplorer,
   EnergyImportAndProduction,
 } from "@workspace/energy-tracker";
-import { loadDataset } from "@workspace/data";
+import { loadDataset } from "@kosovatools/data";
 
 export const metadata: Metadata = {
   title: "Gjurmuesi i rrjedhës së energjisë – Flukset kufitare të Kosovës",

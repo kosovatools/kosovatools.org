@@ -1,4 +1,4 @@
-import type { BuildingPermitsYearDataset } from "@workspace/data";
+import type { BuildingPermitsYearDataset } from "@kosovatools/data";
 
 export const collator = new Intl.Collator("sq");
 

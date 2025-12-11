@@ -19,7 +19,7 @@
     "@workspace/aviation-stats": "workspace:*",
     "@workspace/car-import-taxes": "workspace:*",
     "@workspace/customs-codes": "workspace:*",
-    "@workspace/data": "workspace:*",
+    "@kosovatools/data": "file:../../data/packages/data",
     "@workspace/data-insights": "workspace:*",
     "@workspace/drug-prices": "workspace:*",
     "@workspace/economic-activity": "workspace:*",

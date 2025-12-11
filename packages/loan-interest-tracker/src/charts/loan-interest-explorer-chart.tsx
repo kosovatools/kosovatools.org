@@ -22,9 +22,9 @@ import {
   TimelineEventMarkerControls,
   TimelineEventMarkers,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import { formatPercent } from "@workspace/utils";
+import { formatPercent, type DatasetView } from "@workspace/utils";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
-import { DatasetView, LoanInterestDataset } from "@workspace/data";
+import type { LoanInterestDataset } from "@kosovatools/data";
 
 type ChartRow = { period: string } & Record<string, number | string | null>;
 

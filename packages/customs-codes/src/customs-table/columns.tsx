@@ -7,7 +7,7 @@ import { Filter, X } from "lucide-react";
 
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
-import type { CustomsTreeNode } from "@workspace/data";
+import type { CustomsTreeNode } from "@kosovatools/data";
 
 import { ExpandIcon } from "../expand-icon";
 import { highlightPrefix } from "../highlighting";

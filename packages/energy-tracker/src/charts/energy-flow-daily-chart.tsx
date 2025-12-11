@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-import type { DatasetView, EnergyDailyDataset } from "@workspace/data";
+import type { EnergyDailyDataset } from "@kosovatools/data";
 import { formatDayLabel } from "../date-formatters";
 import {
   ChartContainer,
@@ -32,6 +32,7 @@ import {
   createChromaPalette,
   resolvePaletteColor,
 } from "@workspace/ui/lib/chart-palette";
+import type { DatasetView } from "@workspace/utils";
 
 type DailyChartRow = Record<string, number | string> & {
   period: string;

@@ -1,6 +1,6 @@
 "use client";
 
-import { loadDataset } from "@workspace/data";
+import { loadDataset } from "@kosovatools/data";
 
 import { CategoriesOverYearsChart } from "./charts/categories-over-years-chart";
 import { MonthlyCategoryStackedChart } from "./charts/monthly-category-stacked-chart";

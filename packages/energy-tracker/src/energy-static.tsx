@@ -1,6 +1,6 @@
 "use client";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
-import { loadDataset, type ElectricityDataset } from "@workspace/data";
+import { loadDataset, type ElectricityDataset } from "@kosovatools/data";
 import { ElectricityBalanceStackedAreaChart } from "./charts/electricity-balance-stacked-area";
 import { ElectricityProductionStackedAreaChart } from "./charts/electricity-production-stacked-area";
 

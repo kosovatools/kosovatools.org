@@ -3,8 +3,12 @@
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import { type DatasetView, type CpiDataset } from "@workspace/data";
-import { formatNumber, formatSignedPercent } from "@workspace/utils";
+import type { CpiDataset } from "@kosovatools/data";
+import {
+  formatNumber,
+  formatSignedPercent,
+  type DatasetView,
+} from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,

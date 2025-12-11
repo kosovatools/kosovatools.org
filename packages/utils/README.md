@@ -3,7 +3,8 @@
 Utility primitives that power Kosova Tools visualisations. The package now
 focuses on typed helpers for formatting values, grouping periods, computing
 stacked series metadata, and managing time-range controls. Dataset loaders and
-KAS fetch scripts live in `@workspace/data`.
+the centralized registry live in `@kosovatools/data` (vendored via the `data/`
+submodule).
 
 ## What lives here
 
@@ -11,9 +12,8 @@ KAS fetch scripts live in `@workspace/data`.
   `formatCurrency`, `formatNumber`, and `formatCount`.
 - `src/utils/period.ts` — period parsing, grouping, and labelling helpers plus
   `getPeriodGroupingOptions` and `sortGroupedPeriods`.
-- `src/utils/stack.ts` — generic stack builders used by domain wrappers in
-  `@workspace/data` (e.g., `buildStackSeries`, `summarizeStackTotals`,
-  `getPeriodFormatter`).
+- `src/utils/stack.ts` — generic stack builders used by domain wrappers
+  (e.g., `buildStackSeries`, `summarizeStackTotals`, `getPeriodFormatter`).
   `DEFAULT_DAILY_TIME_RANGE_OPTIONS`, `DEFAULT_MONTHLY_TIME_RANGE_OPTIONS`,
   `DEFAULT_QUARTERLY_TIME_RANGE_OPTIONS`, `DEFAULT_YEARLY_TIME_RANGE_OPTIONS`, plus
   `limitTimeRangeOptions` for deriving selector options from dataset metadata.
@@ -33,8 +33,9 @@ import {
 } from "@workspace/utils";
 ```
 
-Use `@workspace/data` when you need the KAS datasets or domain-specific
-stack wrappers.
+Use `@kosovatools/data` for dataset types, registry entries, and the dataset
+fetcher. Use `@workspace/utils` for dataset view helpers like `createDataset`
+and `getDatasetCoverageLabel`.
 
 For time range selectors, call `limitTimeRangeOptions(meta.time)` so monthly
 datasets receive month-based intervals, quarterly datasets get quarter-based

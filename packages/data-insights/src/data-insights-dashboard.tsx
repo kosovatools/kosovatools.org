@@ -10,7 +10,7 @@ import {
   type TourismCountryDataset,
   type TourismRegionDataset,
   type EducationBachelorFirstTimeDataset,
-} from "@workspace/data";
+} from "@kosovatools/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
 import { FuelBalanceChart } from "./charts/fuel-balance-chart";

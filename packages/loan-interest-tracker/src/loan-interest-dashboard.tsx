@@ -2,7 +2,7 @@
 
 import { LoanInterestExplorerChart } from "./charts/loan-interest-explorer-chart";
 import { LoanInterestSegmentChart } from "./charts/loan-interest-segment-chart";
-import { loadDataset } from "@workspace/data";
+import { loadDataset } from "@kosovatools/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
 export function LoanInterestDashboard() {

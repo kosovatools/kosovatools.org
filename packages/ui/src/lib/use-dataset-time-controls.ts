@@ -12,7 +12,7 @@ import {
   type DatasetTimeMetadata,
   type TimeRangeOption,
 } from "@workspace/utils";
-import type { GenericDataset, DatasetView } from "@workspace/data";
+import type { GenericDataset, DatasetView } from "@workspace/utils";
 
 type useDeriveChartControlsOptions<TDataset extends GenericDataset> = {
   initialGrouping?: PeriodGrouping;

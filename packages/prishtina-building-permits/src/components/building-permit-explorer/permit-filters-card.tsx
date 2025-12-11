@@ -24,7 +24,7 @@ import {
 import type {
   BuildingPermitsIndex,
   BuildingPermitsYearDataset,
-} from "@workspace/data";
+} from "@kosovatools/data";
 import { collator, sumRecords, toOptionLabel } from "./helpers";
 import { PermitRecordsTable } from "./permit-records-table";
 

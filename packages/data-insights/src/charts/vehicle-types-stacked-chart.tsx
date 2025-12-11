@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { type DatasetView, type VehicleTypesDataset } from "@workspace/data";
+import type { VehicleTypesDataset } from "@kosovatools/data";
 import {
   ChartContainer,
   ChartLegend,
@@ -12,7 +12,7 @@ import {
   COMMON_CHART_MARGINS,
 } from "@workspace/ui/components/chart";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { formatCount } from "@workspace/utils";
+import { formatCount, type DatasetView } from "@workspace/utils";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 export function VehicleTypesStackedChart({

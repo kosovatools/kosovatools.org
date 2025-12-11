@@ -3,8 +3,8 @@
 import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, Line, XAxis, YAxis } from "recharts";
 
-import { type DatasetView, type AirTransportDataset } from "@workspace/data";
-import { formatCount } from "@workspace/utils";
+import type { AirTransportDataset } from "@kosovatools/data";
+import { formatCount, type DatasetView } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,

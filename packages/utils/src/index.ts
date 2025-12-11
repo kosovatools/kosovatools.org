@@ -59,3 +59,4 @@ export type {
 } from "./utils/search-params";
 export { buildKeyLabelMap, DEFAULT_OTHER_LABEL } from "./utils/labels";
 export type { KeyLabelOption } from "./utils/labels";
+export * from "./dataset";

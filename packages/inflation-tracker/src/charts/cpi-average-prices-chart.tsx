@@ -3,8 +3,8 @@
 import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import { type DatasetView, type CpiAveragePriceDataset } from "@workspace/data";
-import { formatCurrency } from "@workspace/utils";
+import type { CpiAveragePriceDataset } from "@kosovatools/data";
+import { formatCurrency, type DatasetView } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,

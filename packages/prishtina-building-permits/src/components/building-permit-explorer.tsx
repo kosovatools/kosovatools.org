@@ -11,10 +11,7 @@ import {
 } from "@workspace/ui/components/card";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 
-import {
-  loadBuildingPermitsIndex,
-  loadBuildingPermitsYear,
-} from "@workspace/data";
+import { loadBuildingPermitsIndex, loadBuildingPermitsYear } from "../data";
 import { DatasetSummaryCard } from "./building-permit-explorer/dataset-summary-card";
 import { PermitFiltersCard } from "./building-permit-explorer/permit-filters-card";
 

@@ -20,7 +20,7 @@ import {
 import type {
   BuildingPermitsIndex,
   BuildingPermitsYearDataset,
-} from "@workspace/data";
+} from "@kosovatools/data";
 import { sumRecords } from "./helpers";
 
 type DatasetSummaryCardProps = {

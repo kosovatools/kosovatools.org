@@ -10,11 +10,8 @@ import {
   YAxis,
 } from "recharts";
 
-import {
-  type DatasetView,
-  type EmploymentActivityGenderDataset,
-} from "@workspace/data";
-import { formatCount } from "@workspace/utils";
+import type { EmploymentActivityGenderDataset } from "@kosovatools/data";
+import { formatCount, type DatasetView } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,

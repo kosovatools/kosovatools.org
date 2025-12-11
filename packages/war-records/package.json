@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@tanstack/react-virtual": "^3.13.12",
-    "@workspace/data": "workspace:*",
+    "@kosovatools/data": "file:../../data/packages/data",
     "@workspace/ui": "workspace:*",
     "@workspace/utils": "workspace:*",
     "lucide-react": "^0.475.0",

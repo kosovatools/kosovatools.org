@@ -1,17 +1,21 @@
+import { formatDate } from "./formatters";
 import {
-  aggregateSeriesByPeriod,
-  buildStackSeries,
-  summarizeStackTotals,
   groupPeriod,
   getPeriodFormatter,
-  formatDate,
   type PeriodGrouping,
   type PeriodFormatterOptions,
+} from "./utils/period";
+import {
+  aggregateSeriesByPeriod,
   type SeriesAggregationField,
+} from "./utils/series";
+import {
+  buildStackSeries,
+  summarizeStackTotals,
   type StackBuildResult,
   type StackOptions,
   type StackTotal,
-} from "@workspace/utils";
+} from "./utils/stack";
 import type {
   Dataset,
   DatasetMeta,
@@ -20,7 +24,7 @@ import type {
   DimensionOption,
   GenericDatasetMeta,
   TimeGranularity,
-} from "@kosovatools/data-types";
+} from "@kosovatools/data";
 
 // ---------- Meta helpers ----------
 type KeyLabelOption<TKey extends string = string> = Readonly<{

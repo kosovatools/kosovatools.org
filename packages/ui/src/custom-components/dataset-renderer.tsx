@@ -8,7 +8,7 @@ import {
   formatGeneratedAt,
   GenericDataset,
   getDatasetCoverageLabel,
-} from "@workspace/data";
+} from "@workspace/utils";
 import {
   type QueryKey,
   useQuery,

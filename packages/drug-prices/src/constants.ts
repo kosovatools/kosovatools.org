@@ -1,4 +1,4 @@
-import type { DrugPriceRecord } from "@workspace/data";
+import type { DrugPriceRecord } from "@kosovatools/data";
 
 export const PAGE_SIZE = 25;
 

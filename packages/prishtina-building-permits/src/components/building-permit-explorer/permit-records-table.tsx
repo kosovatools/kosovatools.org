@@ -9,7 +9,7 @@ import {
 import {
   BuildingPermitsIndex,
   BuildingPermitsYearDataset,
-} from "@workspace/data";
+} from "@kosovatools/data";
 type PermitRecordsTableProps = {
   records: BuildingPermitsYearDataset["records"];
   hasFilters: boolean;

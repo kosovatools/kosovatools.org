@@ -11,7 +11,7 @@ import {
   YAxis,
 } from "recharts";
 
-import type { DatasetView, EnergyMonthlyDataset } from "@workspace/data";
+import type { EnergyMonthlyDataset } from "@kosovatools/data";
 import {
   ChartContainer,
   ChartLegend,
@@ -34,6 +34,7 @@ import {
 
 import { energyFlowChartConfig } from "../utils/chart-config";
 import { formatAuto } from "../utils/number-format";
+import type { DatasetView } from "@workspace/utils";
 
 type TrendChartRow = {
   period: string;

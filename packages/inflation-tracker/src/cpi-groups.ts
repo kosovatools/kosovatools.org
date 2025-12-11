@@ -1,8 +1,5 @@
-import {
-  buildUiHierarchy,
-  type DatasetView,
-  type CpiDataset,
-} from "@workspace/data";
+import type { CpiDataset } from "@kosovatools/data";
+import { buildUiHierarchy, type DatasetView } from "@workspace/utils";
 import type { HierarchicalNode } from "@workspace/ui/custom-components/hierarchical-multi-select";
 
 export function buildCpiHierarchy(dataset: DatasetView<CpiDataset>): {

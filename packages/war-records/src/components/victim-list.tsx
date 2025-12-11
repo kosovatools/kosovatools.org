@@ -8,7 +8,7 @@ import { cn } from "@workspace/ui/lib/utils";
 import { formatDate } from "@workspace/utils";
 
 import { formatLabel } from "../lib/format";
-import { VictimChunk } from "@workspace/data";
+import { VictimChunk } from "@kosovatools/data";
 
 const FALLBACK_NAME = "Emër i panjohur";
 

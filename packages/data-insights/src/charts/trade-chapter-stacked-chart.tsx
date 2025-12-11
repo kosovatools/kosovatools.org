@@ -3,7 +3,7 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import { formatCurrencyCompact } from "@workspace/utils";
+import { formatCurrencyCompact, type DatasetView } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,
@@ -24,7 +24,7 @@ import {
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import { type DatasetView, type TradeChaptersDataset } from "@workspace/data";
+import type { TradeChaptersDataset } from "@kosovatools/data";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 
 const DEFAULT_TOP_CHAPTERS = 6;

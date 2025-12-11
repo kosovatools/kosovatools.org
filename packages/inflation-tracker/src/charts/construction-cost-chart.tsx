@@ -26,11 +26,8 @@ import {
   CONSTRUCTION_DEFAULT_CATEGORY_CODES,
   CONSTRUCTION_DEFAULT_EXPANDED_CODES,
 } from "../construction-cost-groups";
-import {
-  buildUiHierarchy,
-  ConstructionCostIndexDataset,
-  DatasetView,
-} from "@workspace/data";
+import type { ConstructionCostIndexDataset } from "@kosovatools/data";
+import { buildUiHierarchy, type DatasetView } from "@workspace/utils";
 
 type ChartRow = { period: string } & Record<string, number | string | null>;
 

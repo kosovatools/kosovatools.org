@@ -16,7 +16,7 @@ import { formatDate } from "@workspace/utils";
 import { createCustomsColumns } from "./customs-table/columns";
 import { VirtualizedTreeTable } from "./virtualized-tree-table";
 import { useCustomsSearchState } from "./use-customs-search-state";
-import { CustomsTreeNode } from "@workspace/data";
+import { CustomsTreeNode } from "@kosovatools/data";
 import { InitializationProgress } from "./types";
 
 type DatasetValidity = {

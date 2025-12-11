@@ -1,4 +1,4 @@
-import type { DrugPriceRecord } from "@workspace/data";
+import type { DrugPriceRecord } from "@kosovatools/data";
 import { formatCurrency, formatDate } from "@workspace/utils";
 type VersionHistoryTableProps = {
   entries: DrugPriceRecord["version_history"];

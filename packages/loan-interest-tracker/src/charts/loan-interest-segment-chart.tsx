@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import type { DatasetView, LoanInterestDataset } from "@workspace/data";
+import type { LoanInterestDataset } from "@kosovatools/data";
 import {
   ChartContainer,
   ChartLegend,
@@ -19,7 +19,7 @@ import {
   TimelineEventMarkerControls,
   TimelineEventMarkers,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import { formatPercent } from "@workspace/utils";
+import { formatPercent, type DatasetView } from "@workspace/utils";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
 type ChartRow = { period: string } & Record<string, string | number | null>;

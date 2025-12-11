@@ -10,12 +10,12 @@ import {
   YAxis,
 } from "recharts";
 
+import type { ElectricityDataset } from "@kosovatools/data";
 import {
+  sanitizeValue,
   createLabelMap,
   type DatasetView,
-  type ElectricityDataset,
-} from "@workspace/data";
-import { sanitizeValue } from "@workspace/utils";
+} from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,

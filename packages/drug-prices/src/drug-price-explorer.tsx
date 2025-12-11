@@ -40,7 +40,7 @@ import {
   FieldLabel,
 } from "@workspace/ui/components/field";
 
-import { loadDataset } from "@workspace/data";
+import { loadDataset } from "@kosovatools/data";
 import {
   PAGE_SIZE,
   SEARCH_FIELD_OPTIONS,

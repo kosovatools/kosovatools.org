@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
-import { loadDataset } from "@workspace/data";
+import { loadDataset } from "@kosovatools/data";
 
 export default async function InflationTrackerPage() {
   const [cpiDataset, cpiAveragePricesYearly, constructionCostIndexDataset] =

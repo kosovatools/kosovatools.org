@@ -20,10 +20,14 @@ import {
   TimelineEventMarkers,
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
-import { formatCurrencyCompact, getPeriodFormatter } from "@workspace/utils";
+import {
+  formatCurrencyCompact,
+  getPeriodFormatter,
+  type DatasetView,
+} from "@workspace/utils";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
-import type { DatasetView, MonthlyCategoryCityDataset } from "@workspace/data";
+import type { MonthlyCategoryCityDataset } from "@kosovatools/data";
 import { MONTHLY_STACK_TOP, OTHER_LABEL } from "./constants";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 

@@ -10,8 +10,8 @@ import {
   YAxis,
 } from "recharts";
 
-import { type DatasetView, type TradePartnersDataset } from "@workspace/data";
-import { formatCurrencyCompact } from "@workspace/utils";
+import type { TradePartnersDataset } from "@kosovatools/data";
+import { formatCurrencyCompact, type DatasetView } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,

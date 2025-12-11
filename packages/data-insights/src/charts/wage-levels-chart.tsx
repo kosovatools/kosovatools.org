@@ -3,8 +3,8 @@
 import * as React from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-import { type DatasetView, type WageLevelsDataset } from "@workspace/data";
-import { formatCurrencyCompact } from "@workspace/utils";
+import type { WageLevelsDataset } from "@kosovatools/data";
+import { formatCurrencyCompact, type DatasetView } from "@workspace/utils";
 import {
   ChartContainer,
   ChartLegend,

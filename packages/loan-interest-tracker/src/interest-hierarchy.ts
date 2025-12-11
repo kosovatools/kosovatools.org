@@ -1,8 +1,5 @@
-import {
-  buildUiHierarchy,
-  DatasetView,
-  LoanInterestDataset,
-} from "@workspace/data";
+import type { LoanInterestDataset } from "@kosovatools/data";
+import { buildUiHierarchy, type DatasetView } from "@workspace/utils";
 import type { HierarchicalNode } from "@workspace/ui/custom-components/hierarchical-multi-select";
 
 export const SEGMENT_CODES = ["T", "H", "N"] as const;

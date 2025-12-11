@@ -1,6 +1,6 @@
 "use client";
 
-import { loadDataset, type GdpByActivityDataset } from "@workspace/data";
+import { loadDataset, type GdpByActivityDataset } from "@kosovatools/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 
 import { GdpActivityStackedChart } from "./charts/gdp-activity-stacked-chart";

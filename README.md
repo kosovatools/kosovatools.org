@@ -46,8 +46,8 @@ Run `pnpm --filter web dev` for app-only development, `pnpm --filter web lint` t
 
 ### Data Workflow
 
-- Datasets are hosted at https://data.kosovatools.org; the `data/` submodule is vendored only to expose `@kosovatools/data-types` for `packages/data`, so local JSON snapshots are not part of the app workflow.
-- Use the centralized registry in `packages/data/src/dataset-registry.ts` and fetch via `loadDataset(<key>)` from `@workspace/data`; add new datasets by extending the registry with `prefix`, `path`, and optional `label`/`defaultInit`. Reach for `createDatasetFetcher` only when you truly need a dynamic path.
+- Datasets are hosted at https://data.kosovatools.org; the `data/` submodule is vendored only to expose `@kosovatools/data` for `packages/data`, so local JSON snapshots are not part of the app workflow.
+- Use the centralized registry from `@kosovatools/data` and fetch via `loadDataset(<key>)`; add new datasets by extending the registry with `prefix`, `path`, and optional `label`/`defaultInit`. Reach for `createDatasetFetcher` only when you truly need a dynamic path.
 - Wrap datasets with `createDataset` to get a `DatasetView` that supports `limit`, `slice`, `aggregate`, `viewAsStack`, and `summarizeStack` while preserving metadata coverage.
 - For SSG/SSR routes, prefetch via `loadDataset` and pass the result as `initialData` to your TanStack Query. `DatasetRenderer` (`@workspace/ui/custom-components`) will render the prefetched payload, refetch on the client, handle loading/error states, and print the standard footer copy; you can also hand it a static dataset and an optional empty state when needed.
 

@@ -8,7 +8,11 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  transpilePackages: ["@workspace/ui", "@workspace/car-import-taxes"],
+  transpilePackages: [
+    "@workspace/ui",
+    "@workspace/car-import-taxes",
+    "@kosovatools/data",
+  ],
 };
 
 export default withBundleAnalyzer({

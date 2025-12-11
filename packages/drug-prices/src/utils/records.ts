@@ -1,4 +1,4 @@
-import type { DrugPriceRecord } from "@workspace/data";
+import type { DrugPriceRecord } from "@kosovatools/data";
 import { REFERENCE_PRICE_LABELS } from "../constants";
 
 export type ReferenceSection = {

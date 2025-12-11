@@ -3,7 +3,7 @@
 import { DailyFlowChart } from "./charts/energy-flow-daily-chart";
 import { MonthlyFlowTrendChart } from "./charts/energy-flow-monthly-trend-chart";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
-import { loadDataset } from "@workspace/data";
+import { loadDataset } from "@kosovatools/data";
 
 export function EnergyFlowExplorer() {
   return (

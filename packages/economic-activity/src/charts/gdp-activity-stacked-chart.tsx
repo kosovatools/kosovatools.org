@@ -18,11 +18,8 @@ import {
   type StackedKeySelectionState,
 } from "@workspace/ui/custom-components/stacked-key-selector";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
-import {
-  createDataset,
-  type DatasetView,
-  type GdpByActivityDataset,
-} from "@workspace/data";
+import { createDataset, type DatasetView } from "@workspace/utils";
+import type { GdpByActivityDataset } from "@kosovatools/data";
 import {
   TimelineEventMarkerControls,
   TimelineEventMarkers,

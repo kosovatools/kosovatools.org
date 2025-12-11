@@ -3,11 +3,8 @@
 import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import {
-  createDataset,
-  type DatasetView,
-  type CityCategoryYearlyDataset,
-} from "@workspace/data";
+import { createDataset, type DatasetView } from "@workspace/utils";
+import type { CityCategoryYearlyDataset } from "@kosovatools/data";
 import {
   ChartContainer,
   ChartLegend,

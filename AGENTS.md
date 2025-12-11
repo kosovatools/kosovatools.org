@@ -8,9 +8,9 @@
 
 ## Data & Dataset Workflow
 
-- Datasets live at https://data.kosovatools.org; the `data/` submodule is only vendored to supply `@kosovatools/data-types` into `packages/data`—don’t rely on local JSON snapshots.
-- Use the centralized registry in `packages/data/src/dataset-registry.ts` and fetch via `loadDataset(<key>)` from `@workspace/data`; add new datasets by extending the registry with `prefix`, `path`, and optional `label`/`defaultInit`. Reach for `createDatasetFetcher` only for dynamic paths (e.g., paginated war records).
-- Wrap every dataset in `createDataset` from `@workspace/data`. The returned `DatasetView` exposes `limit`, `slice`, `aggregate`, `viewAsStack`, and `summarizeStack`, so all derived series respect the metadata’s granularity and coverage info.
+- Datasets live at https://data.kosovatools.org; the `data/` submodule is only vendored to supply `@kosovatools/data` into `packages/data`—don’t rely on local JSON snapshots.
+- Use the centralized registry from `@kosovatools/data` and fetch via `loadDataset(<key>)`; add new datasets by extending the registry with `prefix`, `path`, and optional `label`/`defaultInit`. Reach for `createDatasetFetcher` only for dynamic paths (e.g., paginated war records).
+- Wrap every dataset in `createDataset` from `@workspace/utils`. The returned `DatasetView` exposes `limit`, `slice`, `aggregate`, `viewAsStack`, and `summarizeStack`, so all derived series respect the metadata’s granularity and coverage info.
 - For SSG/SSR loaders, call `loadDataset` and pass the result as `initialData` to your TanStack Query; `DatasetRenderer` (`@workspace/ui/custom-components`) will render the prefetched payload and transparently refetch on the client. Provide optional `isEmpty` logic, and the component will handle loading/error states plus the standard footer (`Burimi`, `Gjeneruar më`, `Periudha` when `getDatasetCoverageLabel` returns a string).
 
 ## UI, Charts & Layout

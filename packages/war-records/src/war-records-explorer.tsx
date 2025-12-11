@@ -9,8 +9,8 @@ import {
 import { Loader2, Search } from "lucide-react";
 
 import { VictimList } from "./components/victim-list";
-import { fetchWarVictimChunk } from "@workspace/data";
-import type { VictimChunk } from "@workspace/data";
+import { fetchWarVictimChunk } from "./fetch-war-dataset";
+import type { VictimChunk } from "@kosovatools/data";
 import {
   Card,
   CardContent,

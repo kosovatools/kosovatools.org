@@ -1,6 +1,6 @@
 "use client";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
-import { loadDataset, type AirTransportDataset } from "@workspace/data";
+import { loadDataset, type AirTransportDataset } from "@kosovatools/data";
 import { AviationStatsChart } from "./charts/aviation-stats-chart";
 
 export function AviationStats({

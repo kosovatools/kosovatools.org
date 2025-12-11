@@ -4,7 +4,7 @@ import {
   type ConstructionCostIndexDataset,
   type CpiAveragePriceDataset,
   type CpiDataset,
-} from "@workspace/data";
+} from "@kosovatools/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 import { CpiChart } from "./charts/cpi-chart";
 import { ConstructionCostIndexChart } from "./charts/construction-cost-chart";

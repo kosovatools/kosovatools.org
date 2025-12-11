@@ -21,11 +21,11 @@ import {
   type TimelineEventMarkerControls,
 } from "@workspace/ui/custom-components/timeline-event-markers";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
-import { formatCurrencyCompact } from "@workspace/utils";
+import { formatCurrencyCompact, type DatasetView } from "@workspace/utils";
 import { useDeriveChartControls } from "@workspace/ui/lib/use-dataset-time-controls";
 import { ChartScaffolding } from "@workspace/ui/custom-components/chart-scaffolding";
 
-import type { DatasetView, TurnoverCategoriesDataset } from "@workspace/data";
+import type { TurnoverCategoriesDataset } from "@kosovatools/data";
 import { CATEGORY_STACK_TOP, OTHER_LABEL } from "./constants";
 import { buildStackedChartData } from "@workspace/ui/lib/stacked-chart-helpers";
 
