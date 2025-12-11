@@ -4,22 +4,26 @@ import {
   type ConstructionCostIndexDataset,
   type CpiAveragePriceDataset,
   type CpiDataset,
+  type PropertyPriceIndexDataset,
 } from "@kosovatools/data";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 import { CpiChart } from "./charts/cpi-chart";
 import { ConstructionCostIndexChart } from "./charts/construction-cost-chart";
 import { CpiAveragePricesChart } from "./charts/cpi-average-prices-chart";
+import { PropertyPriceIndexChart } from "./charts/property-price-index-chart";
 
 type InflationTrackerProps = {
   initialCpiDataset?: CpiDataset;
   initialCpiAveragePricesYearly?: CpiAveragePriceDataset;
   initialConstructionCostIndexDataset?: ConstructionCostIndexDataset;
+  initialPropertyPriceIndexDataset?: PropertyPriceIndexDataset;
 };
 
 export function InflationTracker({
   initialCpiDataset,
   initialCpiAveragePricesYearly,
   initialConstructionCostIndexDataset,
+  initialPropertyPriceIndexDataset,
 }: InflationTrackerProps) {
   return (
     <div className="space-y-12">
@@ -54,6 +58,25 @@ export function InflationTracker({
         description="Analizo trendet e çmimeve për artikuj specifikë të shportës së CPI-së dhe krahaso deri në pesë produkte / shërbime në të njëjtin grafik."
       >
         {(dataset) => <CpiAveragePricesChart dataset={dataset} />}
+      </DatasetRenderer>
+
+      <DatasetRenderer
+        datasetLoader={() => loadDataset("kas.property-price-index")}
+        queryKey={["kas", "property-price-index", "quarterly"]}
+        initialData={initialPropertyPriceIndexDataset}
+        title="Indeksi i çmimeve të patundshmërive"
+        id="property-price-index"
+        description="Shiko lëvizjet tremujore të çmimeve të pronave në Kosovë (baza 2018 = 100) dhe krahaso mesataret vjetore."
+      >
+        {(dataset) => (
+          <PropertyPriceIndexChart
+            dataset={dataset}
+            timelineEvents={{
+              enabled: true,
+              includeCategories: ["security", "public_health"],
+            }}
+          />
+        )}
       </DatasetRenderer>
 
       <DatasetRenderer
