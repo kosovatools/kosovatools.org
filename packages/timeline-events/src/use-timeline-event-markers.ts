@@ -1,16 +1,8 @@
 import * as React from "react";
 
-import timelineEventsJson from "../data/events.json" with { type: "json" };
-import {
-  PeriodGrouping,
-  type TimelineEvent,
-  type TimelineEventCategory,
-  groupPeriod,
-} from "@workspace/utils";
-
-export type { TimelineEventCategory };
-
-const timelineEvents = timelineEventsJson as TimelineEvent[];
+import timelineEvents, { TimelineEventCategory } from "../data/events";
+import { groupPeriod } from "@workspace/utils";
+import type { PeriodGrouping } from "@workspace/utils";
 
 type ChartDatum = {
   period: string;
@@ -25,8 +17,7 @@ export type ChartEventMarker = {
 };
 
 export type UseTimelineEventMarkersOptions = {
-  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-  includeCategories?: ReadonlyArray<TimelineEventCategory | string>;
+  includeCategories?: ReadonlyArray<TimelineEventCategory>;
 };
 
 export function useTimelineEventMarkers(
@@ -47,8 +38,8 @@ export function useTimelineEventMarkers(
         : null;
     const visibleEvents = includeCategorySet
       ? timelineEvents.filter((event) =>
-          event.category.some((cat) => includeCategorySet.has(cat)),
-        )
+        event.category.some((cat) => includeCategorySet.has(cat)),
+      )
       : timelineEvents;
 
     const periodSet = new Set(data.map((row) => row.period));

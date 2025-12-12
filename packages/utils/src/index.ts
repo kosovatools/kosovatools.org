@@ -41,7 +41,6 @@ export type {
   SeriesAggregationField,
   SeriesAggregationMode,
 } from "./utils/series";
-export type { TimelineEvent, TimelineEventCategory } from "./types/timeline";
 export {
   mergeSearchParams,
   buildSearchString,
