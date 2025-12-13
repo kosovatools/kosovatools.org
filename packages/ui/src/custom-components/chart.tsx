@@ -420,6 +420,9 @@ function ChartLegendContent({
     return null;
   }
 
+  const normalizedPayload = payload.filter((item) => item.type !== "none");
+  const configOrder = Object.keys(config);
+
   return (
     <div
       className={cn(
@@ -428,9 +431,18 @@ function ChartLegendContent({
         className,
       )}
     >
-      {payload
-        .filter((item) => item.type !== "none")
-        .map((item) => {
+      {normalizedPayload
+        .sort((a, b) => {
+          const keyA = resolveConfigKey(nameKey, a.dataKey);
+          const keyB = resolveConfigKey(nameKey, b.dataKey);
+          const indexA = configOrder.indexOf(keyA);
+          const indexB = configOrder.indexOf(keyB);
+          return (
+            (indexA === -1 ? Number.MAX_SAFE_INTEGER : indexA) -
+            (indexB === -1 ? Number.MAX_SAFE_INTEGER : indexB)
+          );
+        })
+        .map((item, index) => {
           const key = resolveConfigKey(nameKey, item.dataKey);
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
           const color =
@@ -438,10 +450,12 @@ function ChartLegendContent({
             itemConfig?.color ??
             getPayloadFill(item.payload as unknown) ??
             `var(--color-${key})`;
+          const legendLabel = itemConfig?.label ?? item.value ?? key;
+          const legendKey = `${key ?? legendLabel}-${index}`;
 
           return (
             <div
-              key={item.value}
+              key={legendKey}
               className="flex items-center gap-1.5 text-xs [&>svg]:text-muted-foreground [&>svg]:h-3 [&>svg]:w-3"
             >
               {itemConfig?.icon && !hideIcon ? (
@@ -452,9 +466,7 @@ function ChartLegendContent({
                   style={{ backgroundColor: color }}
                 />
               )}
-              <span className="text-muted-foreground">
-                {itemConfig?.label ?? item.value}
-              </span>
+              <span className="text-muted-foreground">{legendLabel}</span>
             </div>
           );
         })}

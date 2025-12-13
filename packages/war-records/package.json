@@ -15,8 +15,8 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@tanstack/react-virtual": "^3.13.12",
     "@kosovatools/data": "file:../../data/packages/data",
+    "@tanstack/react-virtual": "^3.13.12",
     "@workspace/ui": "workspace:*",
     "@workspace/utils": "workspace:*",
     "lucide-react": "^0.475.0",
@@ -28,7 +28,7 @@
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "@tanstack/react-query": "^5.90.12",
+    "@tanstack/react-query": "5.90.12",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@workspace/eslint-config": "workspace:*",

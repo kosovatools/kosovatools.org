@@ -10,7 +10,7 @@
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
-    "@types/node": "^24.10.1",
+    "@types/node": "^24.10.3",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "prettier": "^3.7.4",
@@ -25,8 +25,8 @@
     "overrides": {
       "@types/react": "19.2.7",
       "@types/react-dom": "19.2.3",
-      "react": "19.2.1",
-      "react-dom": "19.2.1",
+      "react": "19.2.3",
+      "react-dom": "19.2.3",
       "@tanstack/react-query": "5.90.12"
     }
   },

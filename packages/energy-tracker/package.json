@@ -27,7 +27,7 @@
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "@tanstack/react-query": "^5.90.12",
+    "@tanstack/react-query": "5.90.12",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@workspace/eslint-config": "workspace:*",

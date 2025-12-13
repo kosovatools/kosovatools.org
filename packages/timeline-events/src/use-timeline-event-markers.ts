@@ -38,8 +38,8 @@ export function useTimelineEventMarkers(
         : null;
     const visibleEvents = includeCategorySet
       ? timelineEvents.filter((event) =>
-        event.category.some((cat) => includeCategorySet.has(cat)),
-      )
+          event.category.some((cat) => includeCategorySet.has(cat)),
+        )
       : timelineEvents;
 
     const periodSet = new Set(data.map((row) => row.period));

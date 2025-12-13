@@ -457,7 +457,7 @@ export function DrugPriceExplorer() {
             className={cn("size-4", isRefreshing && "animate-spin")}
             aria-hidden="true"
           />
-          1{isRefreshing ? "Duke përditësuar..." : "Kontrollo për përditësime"}
+          {isRefreshing ? "Duke përditësuar..." : "Kontrollo për përditësime"}
         </Button>
       </div>
 
