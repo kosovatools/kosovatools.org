@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Compass } from "lucide-react";
 
 import { cn } from "@workspace/ui/lib/utils";
 import { ToolFeedbackPrompt } from "./tool-feedback-prompt";
@@ -47,6 +48,15 @@ export function ToolPage({
             )}
           </div>
         ) : null}
+        <div className="flex justify-center">
+          <a
+            href="/#tools"
+            className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-medium text-primary transition hover:bg-primary/5"
+          >
+            Shiko veglat e tjera
+            <Compass className="h-4 w-4" aria-hidden />
+          </a>
+        </div>
       </div>
       <ToolFeedbackPrompt toolTitle={titleText} />
     </>
