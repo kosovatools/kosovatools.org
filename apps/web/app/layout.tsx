@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { Github } from "lucide-react";
 import { Geist } from "next/font/google";
@@ -116,7 +117,15 @@ export default function RootLayout({
                     href="/"
                     className="flex items-center gap-2 text-sm font-bold tracking-tight transition hover:text-primary sm:text-base"
                   >
-                    Kosova Tools
+                    <Image
+                      src="/logo.png"
+                      alt="Kosova Tools logo"
+                      width={36}
+                      height={24}
+                      priority
+                      className="h-6 w-auto"
+                    />
+                    <span>Kosova Tools</span>
                   </Link>
                   <nav className="hidden items-center gap-6 text-sm font-medium text-muted-foreground md:flex md:text-base">
                     <Link
