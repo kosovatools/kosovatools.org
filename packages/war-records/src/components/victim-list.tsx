@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 
 import { cn } from "@workspace/ui/lib/utils";
@@ -33,11 +33,25 @@ export function VictimList({
   const loadRequestedRef = useRef(false);
   const wasLoadingMoreRef = useRef(isLoadingMore);
 
+  const [scrollMargin, setScrollMargin] = useState(0);
+
+  useLayoutEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+
+    const update = () => setScrollMargin(el.offsetTop);
+    update();
+
+    // Keep it correct if layout changes / resizes.
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   const rowVirtualizer = useWindowVirtualizer({
-    count: canLoadMore ? victims.length + 1 : victims.length,
+    count: victims.length,
     estimateSize: () => 100,
     overscan: 10,
-    scrollMargin: listRef.current?.offsetTop ?? 0,
+    scrollMargin,
   });
 
   const virtualItems = rowVirtualizer.getVirtualItems();

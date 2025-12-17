@@ -27,9 +27,9 @@
     "@types/react-dom": "19.2.3",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
-    "eslint": "^9.39.1",
-    "react": "19.2.1",
-    "react-dom": "19.2.1",
+    "eslint": "^9.39.2",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "typescript": "^5.9.3"
   },
   "license": "AGPL-3.0-only"

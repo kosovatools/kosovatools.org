@@ -206,7 +206,10 @@ export function HierarchicalMultiSelect({
   );
 
   const renderNodes = React.useCallback(
-    (list: InternalNode[], depth: number): React.ReactNode => {
+    function renderNodeList(
+      list: InternalNode[],
+      depth: number,
+    ): React.ReactNode {
       if (!list.length) {
         return null;
       }
@@ -327,7 +330,7 @@ export function HierarchicalMultiSelect({
             </div>
             {hasChildren && isExpanded ? (
               <ul className="flex min-w-0 flex-col gap-1">
-                {renderNodes(node.children, depth + 1)}
+                {renderNodeList(node.children, depth + 1)}
               </ul>
             ) : null}
           </li>

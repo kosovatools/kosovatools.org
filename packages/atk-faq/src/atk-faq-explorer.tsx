@@ -118,13 +118,7 @@ function FaqItem({
   forceOpen?: boolean;
   defaultOpen?: boolean;
 }) {
-  const [open, setOpen] = useState(defaultOpen);
-
-  useEffect(() => {
-    if (forceOpen) {
-      setOpen(true);
-    }
-  }, [forceOpen]);
+  const [open, setOpen] = useState(forceOpen || defaultOpen);
 
   const contentId = `${searchable.anchorId}-content`;
 
@@ -371,7 +365,7 @@ export function AtkFaqExplorer() {
             const forceOpen = targetId === entry.anchorId;
             return (
               <FaqItem
-                key={entry.anchorId}
+                key={entry.anchorId + (forceOpen ? "-open" : "")}
                 searchable={entry}
                 highlightedQuestion={highlightedQuestion}
                 shareHref={shareHref}

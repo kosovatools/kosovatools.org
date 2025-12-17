@@ -79,10 +79,13 @@ export function ToolFeedbackPrompt({
     [resolvedToolId],
   );
 
-  const handleResponse = React.useCallback((value: FeedbackResponse) => {
-    persistResponse(value);
-    setStatus("hidden");
-  }, [persistResponse]);
+  const handleResponse = React.useCallback(
+    (value: FeedbackResponse) => {
+      persistResponse(value);
+      setStatus("hidden");
+    },
+    [persistResponse],
+  );
 
   if (status === "hidden") {
     return null;
