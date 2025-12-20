@@ -60,29 +60,31 @@ const themeInitScript = `
 })();
 `;
 
-const siteUrl =
+const siteUrl = (
   process.env.NEXT_PUBLIC_SITE_URL ??
   metadata.metadataBase?.toString() ??
-  "https://kosovatools.org";
+  "https://kosovatools.org"
+).replace(/\/$/, "");
 
-const structuredData = [
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "Kosova Tools",
-    url: siteUrl,
-    logo: `${siteUrl}/favicon.ico`,
-    sameAs: [GITHUB_REPO_URL],
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "Kosova Tools",
-    url: siteUrl,
-    inLanguage: "sq",
-    image: `${siteUrl}/og.png`,
-  },
-];
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: "Kosova Tools",
+      url: siteUrl,
+      logo: `${siteUrl}/favicon.ico`,
+      sameAs: [GITHUB_REPO_URL],
+    },
+    {
+      "@type": "WebSite",
+      name: "Kosova Tools",
+      url: siteUrl,
+      inLanguage: "sq",
+      image: `${siteUrl}/og.png`,
+    },
+  ],
+};
 
 const currentYear = new Date().getFullYear();
 

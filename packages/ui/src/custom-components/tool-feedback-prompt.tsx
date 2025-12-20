@@ -16,10 +16,19 @@ type ToolFeedbackPromptProps = {
 };
 
 const STORAGE_PREFIX = "ktools:tool-feedback";
-const SHOW_DELAY_MS = 1200;
+const SHOW_DELAY_MS = 1000 * 60; // 60 sec
+const UMAMI_POLL_INTERVAL_MS = 250;
+const UMAMI_POLL_TIMEOUT_MS = 5000;
 const POSITIVE_EVENT = "Tool feedback positive";
 const NEGATIVE_EVENT = "Tool feedback negative";
 const DISMISS_EVENT = "Tool feedback dismissed";
+const hasUmamiTracker = () => {
+  if (typeof window === "undefined") return false;
+  return (
+    typeof (window as Window & { umami?: { track?: unknown } }).umami?.track ===
+    "function"
+  );
+};
 
 export function ToolFeedbackPrompt({
   toolId,
@@ -31,6 +40,8 @@ export function ToolFeedbackPrompt({
   );
   const [status, setStatus] = React.useState<FeedbackStatus>("hidden");
   const showTimeoutRef = React.useRef<number | null>(null);
+  const umamiPollRef = React.useRef<number | null>(null);
+  const umamiPollStartRef = React.useRef<number | null>(null);
 
   React.useEffect(() => {
     if (toolId && toolId !== resolvedToolId) {
@@ -47,15 +58,53 @@ export function ToolFeedbackPrompt({
     if (!resolvedToolId || typeof window === "undefined") return undefined;
 
     const storageKey = `${STORAGE_PREFIX}:${resolvedToolId}`;
+    const stopUmamiPoll = () => {
+      if (umamiPollRef.current) {
+        window.clearTimeout(umamiPollRef.current);
+        umamiPollRef.current = null;
+      }
+      umamiPollStartRef.current = null;
+    };
+    const startUmamiPoll = () => {
+      if (umamiPollRef.current) return;
+      umamiPollStartRef.current =
+        window.performance?.now?.() ?? window.Date.now();
+      const poll = () => {
+        if (hasUmamiTracker()) {
+          stopUmamiPoll();
+          setStatus("visible");
+          return;
+        }
+        const now = window.performance?.now?.() ?? window.Date.now();
+        if (
+          umamiPollStartRef.current &&
+          now - umamiPollStartRef.current >= UMAMI_POLL_TIMEOUT_MS
+        ) {
+          stopUmamiPoll();
+          return;
+        }
+        umamiPollRef.current = window.setTimeout(poll, UMAMI_POLL_INTERVAL_MS);
+      };
+      umamiPollRef.current = window.setTimeout(poll, UMAMI_POLL_INTERVAL_MS);
+    };
+
     try {
       const stored = window.localStorage.getItem(storageKey);
       if (!stored) {
         showTimeoutRef.current = window.setTimeout(() => {
-          setStatus("visible");
+          if (hasUmamiTracker()) {
+            setStatus("visible");
+          } else {
+            startUmamiPoll();
+          }
         }, SHOW_DELAY_MS);
       }
     } catch {
-      setStatus("visible");
+      if (hasUmamiTracker()) {
+        setStatus("visible");
+      } else {
+        startUmamiPoll();
+      }
     }
 
     return () => {
@@ -63,6 +112,7 @@ export function ToolFeedbackPrompt({
         window.clearTimeout(showTimeoutRef.current);
         showTimeoutRef.current = null;
       }
+      stopUmamiPoll();
     };
   }, [resolvedToolId]);
 

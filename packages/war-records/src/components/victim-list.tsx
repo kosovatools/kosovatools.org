@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useWindowVirtualizer } from "@tanstack/react-virtual";
 
 import { cn } from "@workspace/ui/lib/utils";
@@ -33,28 +33,14 @@ export function VictimList({
   const loadRequestedRef = useRef(false);
   const wasLoadingMoreRef = useRef(isLoadingMore);
 
-  const [scrollMargin, setScrollMargin] = useState(0);
-
-  useLayoutEffect(() => {
-    const el = listRef.current;
-    if (!el) return;
-
-    const update = () => setScrollMargin(el.offsetTop);
-    update();
-
-    // Keep it correct if layout changes / resizes.
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
+  // eslint-disable-next-line react-hooks/refs
   const rowVirtualizer = useWindowVirtualizer({
-    count: victims.length,
+    count: canLoadMore ? victims.length + 1 : victims.length,
     estimateSize: () => 100,
     overscan: 10,
-    scrollMargin,
+    // eslint-disable-next-line react-hooks/refs
+    scrollMargin: listRef.current?.offsetTop ?? 0,
   });
-
-  const virtualItems = rowVirtualizer.getVirtualItems();
 
   useEffect(() => {
     if (!canLoadMore) {
@@ -74,7 +60,7 @@ export function VictimList({
       return;
     }
 
-    const lastItem = virtualItems[virtualItems.length - 1];
+    const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
     if (!lastItem) {
       return;
     }
@@ -83,7 +69,13 @@ export function VictimList({
       loadRequestedRef.current = true;
       onLoadMore?.();
     }
-  }, [canLoadMore, isLoadingMore, onLoadMore, virtualItems, victims.length]);
+  }, [
+    canLoadMore,
+    isLoadingMore,
+    onLoadMore,
+    victims.length,
+    rowVirtualizer.getVirtualItems(),
+  ]);
 
   const height = rowVirtualizer.getTotalSize();
 
@@ -97,7 +89,7 @@ export function VictimList({
             position: "relative",
           }}
         >
-          {virtualItems.map((virtualRow) => {
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
             const isLoaderRow =
               canLoadMore && virtualRow.index >= victims.length;
             if (isLoaderRow) {
@@ -188,7 +180,7 @@ export function VictimList({
                 }}
               >
                 <p className="border-border/40 text-center text-sm leading-relaxed text-foreground md:text-base">
-                  <span className="block font-semibold uppercase tracking-wide text-primary text-base md:text-xl">
+                  <span className="block font-semibold uppercase tracking-wide text-foreground text-base md:text-xl">
                     {name.toLocaleUpperCase("sq-AL")}
                   </span>
                   <span className="mt-1 block text-xs uppercase tracking-wide text-muted-foreground md:text-sm">
