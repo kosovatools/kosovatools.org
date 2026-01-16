@@ -23,6 +23,7 @@
     "@workspace/data-insights": "workspace:*",
     "@workspace/drug-prices": "workspace:*",
     "@workspace/economic-activity": "workspace:*",
+    "@workspace/election-recount": "workspace:*",
     "@workspace/energy-tracker": "workspace:*",
     "@workspace/inflation-tracker": "workspace:*",
     "@workspace/loan-interest-tracker": "workspace:*",

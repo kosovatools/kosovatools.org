@@ -15,9 +15,9 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { OptionSelector } from "@workspace/ui/custom-components/option-selector";
-import { loadDataset, type KqzRecountDiffDataset } from "@kosovatools/data";
+import { loadDataset } from "@kosovatools/data";
 import { formatCount, type DatasetView } from "@workspace/utils";
-import { buildKqzRecountDeltaDataset } from "@/lib/kqz-recount";
+import { buildKqzRecountDeltaDataset } from "./kqz-recount";
 
 type KqzRecountDeltaDataset = ReturnType<typeof buildKqzRecountDeltaDataset>;
 type KqzRecountDeltaView = DatasetView<KqzRecountDeltaDataset>;
@@ -49,16 +49,7 @@ const DEFAULT_FILTERS: FilterState = {
 const formatDelta = (value: number) =>
   `${value > 0 ? "+" : ""}${formatCount(value)}`;
 
-export function RecountDiffExplorer({
-  initialDiff,
-}: {
-  initialDiff?: KqzRecountDiffDataset;
-}) {
-  const initialDataset = React.useMemo(
-    () =>
-      initialDiff ? buildKqzRecountDeltaDataset(initialDiff) : undefined,
-    [initialDiff],
-  );
+export function RecountDiffExplorer() {
   const [filters, setFilters] = React.useState<FilterState>(DEFAULT_FILTERS);
 
   const updateFilter =
@@ -76,7 +67,6 @@ export function RecountDiffExplorer({
         )
       }
       queryKey={["kqz", "recount-diff"]}
-      initialData={initialDataset}
       queryOptions={{ staleTime: 24 * 60 * 60 * 1000 }}
       id="rinumrimi-votave"
       title="Diferencat e rinumërimit 2025"

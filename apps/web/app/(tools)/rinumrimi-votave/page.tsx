@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
-import { RecountDiffExplorer } from "./recount-diff-explorer";
+import { RecountDiffExplorer } from "@workspace/election-recount";
 
 export const metadata: Metadata = {
   title:
@@ -37,12 +37,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RecountDiffPage() {
+export default function RecountDiffPage() {
   return (
     <ToolPage
       title="Rinumërimi i votave 2025"
       description="Krahaso diferencat në vota mes numërimit fillestar dhe rinumërimit vetëm për vendvotimet që u rishikuan nga KQZ."
-      footer="Burimi: Komisioni Qendror i Zgjedhjeve (KQZ). Ky eksplorues paraqet vetëm diferencat për vendvotimet e rinumëruara."
       className="space-y-6"
     >
       <RecountDiffExplorer />

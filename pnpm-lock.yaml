@@ -69,6 +69,9 @@ importers:
       '@workspace/economic-activity':
         specifier: workspace:*
         version: link:../../packages/economic-activity
+      '@workspace/election-recount':
+        specifier: workspace:*
+        version: link:../../packages/election-recount
       '@workspace/energy-tracker':
         specifier: workspace:*
         version: link:../../packages/energy-tracker
@@ -421,6 +424,46 @@ importers:
       recharts:
         specifier: 3.6.0
         version: 3.6.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react-is@16.13.1)(react@19.2.3)(redux@5.0.1)
+    devDependencies:
+      '@tanstack/react-query':
+        specifier: 5.90.12
+        version: 5.90.12(react@19.2.3)
+      '@types/react':
+        specifier: 19.2.7
+        version: 19.2.7
+      '@types/react-dom':
+        specifier: 19.2.3
+        version: 19.2.3(@types/react@19.2.7)
+      '@workspace/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^9.39.2
+        version: 9.39.2(jiti@2.6.1)
+      react:
+        specifier: 19.2.3
+        version: 19.2.3
+      react-dom:
+        specifier: 19.2.3
+        version: 19.2.3(react@19.2.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/election-recount:
+    dependencies:
+      '@kosovatools/data':
+        specifier: file:../../data/packages/data
+        version: file:data/packages/data
+      '@workspace/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@workspace/utils':
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       '@tanstack/react-query':
         specifier: 5.90.12
