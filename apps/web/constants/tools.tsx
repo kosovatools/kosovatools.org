@@ -160,6 +160,15 @@ export const tools: ToolCard[] = [
     icon: CandleIcon,
     category: "Eksplorues të të dhënave",
   },
+  {
+    name: "Rinumërimi i votave 2025",
+    href: "/rinumrimi-votave",
+    description:
+      "Krahaso diferencat mes numërimit fillestar dhe rinumërimit në vendvotimet e rishikuara nga KQZ.",
+    cta: "Shiko diferencat",
+    icon: BarChart3,
+    category: "Eksplorues të të dhënave",
+  },
 ];
 
 export const toolRoutes = tools.map((tool) => tool.href.replace(/^\//, ""));
