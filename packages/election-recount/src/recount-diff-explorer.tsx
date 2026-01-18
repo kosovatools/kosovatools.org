@@ -145,7 +145,10 @@ function RecountDiffContent({
       if (filters.party !== "all") {
         if (record.party_id !== filters.party) return false;
       }
-      if (Math.abs(record.delta) < filters.minAbsDelta) {
+      if (
+        filters.level !== "party" &&
+        Math.abs(record.delta) < filters.minAbsDelta
+      ) {
         return false;
       }
       if (!search) return true;
@@ -209,6 +212,28 @@ function RecountDiffContent({
     return Array.from(map.values());
   }, [filtered, filters.granularity]);
 
+  const candidateAbsDeltaByPartyBucket = React.useMemo(() => {
+    const map = new Map<string, number>();
+    records.forEach((record) => {
+      if (record.level !== "candidate") return;
+      if (
+        filters.municipality !== "all" &&
+        record.municipality_id !== filters.municipality
+      ) {
+        return;
+      }
+      const bucket =
+        filters.granularity === "national"
+          ? "national"
+          : filters.granularity === "municipality"
+            ? record.municipality_id
+            : `${record.municipality_id}::${record.voting_station_id}`;
+      const key = `${bucket}|${record.party_id}`;
+      map.set(key, (map.get(key) ?? 0) + Math.abs(record.delta));
+    });
+    return map;
+  }, [records, filters.granularity, filters.municipality]);
+
   const sorted = React.useMemo(() => {
     const list = [...aggregated];
     if (filters.sort === "candidate") {
@@ -225,11 +250,37 @@ function RecountDiffContent({
       });
     }
     return list.sort((a, b) => {
+      if (filters.level === "party") {
+        const bucketA =
+          filters.granularity === "national"
+            ? "national"
+            : filters.granularity === "municipality"
+              ? a.municipality_id
+              : `${a.municipality_id}::${a.voting_station_id}`;
+        const bucketB =
+          filters.granularity === "national"
+            ? "national"
+            : filters.granularity === "municipality"
+              ? b.municipality_id
+              : `${b.municipality_id}::${b.voting_station_id}`;
+        const absA =
+          candidateAbsDeltaByPartyBucket.get(`${bucketA}|${a.party_id}`) ?? 0;
+        const absB =
+          candidateAbsDeltaByPartyBucket.get(`${bucketB}|${b.party_id}`) ?? 0;
+        const absDiff = absB - absA;
+        if (absDiff !== 0) return absDiff;
+      }
       const diff = Math.abs(b.delta) - Math.abs(a.delta);
       if (diff !== 0) return diff;
       return b.delta - a.delta;
     });
-  }, [aggregated, filters.sort]);
+  }, [
+    aggregated,
+    candidateAbsDeltaByPartyBucket,
+    filters.granularity,
+    filters.level,
+    filters.sort,
+  ]);
 
   const limited = sorted.slice(0, filters.limit);
 
@@ -412,25 +463,27 @@ function RecountDiffContent({
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Min. ndryshim absolut
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Input
-              type="number"
-              min={0}
-              value={filters.minAbsDelta}
-              onChange={(event) =>
-                updateFilter("minAbsDelta")(
-                  Math.max(0, Number(event.target.value)),
-                )
-              }
-            />
-          </CardContent>
-        </Card>
+        {filters.level === "party" ? null : (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Min. ndryshim absolut
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Input
+                type="number"
+                min={0}
+                value={filters.minAbsDelta}
+                onChange={(event) =>
+                  updateFilter("minAbsDelta")(
+                    Math.max(0, Number(event.target.value)),
+                  )
+                }
+              />
+            </CardContent>
+          </Card>
+        )}
         <Card className="flex flex-col justify-between">
           <CardHeader>
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -450,6 +503,11 @@ function RecountDiffContent({
               <tr>
                 <th className="px-4 py-3 text-left">Ndryshimi</th>
                 <th className="px-4 py-3 text-left">Subjekti</th>
+                {filters.level === "party" ? (
+                  <th className="px-4 py-3 text-left">
+                    Ndryshimi abs. kandidatëve
+                  </th>
+                ) : null}
                 {filters.level === "party" ? null : (
                   <th className="px-4 py-3 text-left">Kandidati</th>
                 )}
@@ -482,6 +540,21 @@ function RecountDiffContent({
                       {record.party_id}
                     </div>
                   </td>
+                  {filters.level === "party" ? (
+                    <td className="px-4 py-2 text-sm text-muted-foreground">
+                      {formatCount(
+                        candidateAbsDeltaByPartyBucket.get(
+                          `${
+                            filters.granularity === "national"
+                              ? "national"
+                              : filters.granularity === "municipality"
+                                ? record.municipality_id
+                                : `${record.municipality_id}::${record.voting_station_id}`
+                          }|${record.party_id}`,
+                        ) ?? 0,
+                      )}
+                    </td>
+                  ) : null}
                   {filters.level === "party" ? null : (
                     <td className="px-4 py-2">
                       <div className="font-medium">
@@ -520,14 +593,14 @@ function RecountDiffContent({
                     colSpan={
                       filters.granularity === "national"
                         ? filters.level === "party"
-                          ? 3
+                          ? 4
                           : 4
                         : filters.granularity === "municipality"
                           ? filters.level === "party"
-                            ? 4
+                            ? 5
                             : 5
                           : filters.level === "party"
-                            ? 5
+                            ? 6
                             : 6
                     }
                     className="px-4 py-8 text-center text-sm text-muted-foreground"
