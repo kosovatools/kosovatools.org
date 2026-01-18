@@ -165,9 +165,7 @@ function RecountDiffContent({
         record.municipality_name ?? record.municipality_id,
       );
     });
-    return Array.from(map.entries()).sort((a, b) =>
-      a[1].localeCompare(b[1]),
-    );
+    return Array.from(map.entries()).sort((a, b) => a[1].localeCompare(b[1]));
   }, [candidateRecords]);
 
   const partyOptions = React.useMemo(() => {
@@ -450,9 +448,9 @@ function RecountDiffContent({
             className="w-full [&>div]:w-full [&>div]:flex-nowrap [&>div>button]:flex-1"
           />
           <p className="mt-2 text-xs text-muted-foreground">
-            Zgjedh nivelin e agregimit. Kombëtare bashkon të gjitha vendvotimet e
-            rinumëruara, ndërsa Komunë dhe Qendër votimi i grupojnë ndryshimet për
-            secilën zonë.
+            Zgjedh nivelin e agregimit. Kombëtare bashkon të gjitha vendvotimet
+            e rinumëruara, ndërsa Komunë dhe Qendër votimi i grupojnë ndryshimet
+            për secilën zonë.
           </p>
         </CardContent>
       </Card>
@@ -512,7 +510,9 @@ function RecountDiffContent({
           </label>
           <NativeSelect
             value={filters.municipality}
-            onChange={(event) => updateFilter("municipality")(event.target.value)}
+            onChange={(event) =>
+              updateFilter("municipality")(event.target.value)
+            }
             className="mt-2"
           >
             <NativeSelectOption value="all">Të gjitha</NativeSelectOption>
@@ -635,10 +635,7 @@ function RecountDiffContent({
           </p>
         </CardHeader>
         <CardContent className="p-0">
-          <div
-            ref={partyTableRef}
-            className="max-h-[320px] overflow-auto"
-          >
+          <div ref={partyTableRef} className="max-h-[320px] overflow-auto">
             <table className="w-full table-fixed text-sm">
               <colgroup>
                 <col style={{ width: "96px" }} />
@@ -670,10 +667,7 @@ function RecountDiffContent({
                     <td
                       colSpan={getPartyTableColSpan(filters)}
                       style={{
-                        height: Math.max(
-                          0,
-                          partyVirtualItems[0]?.start ?? 0,
-                        ),
+                        height: Math.max(0, partyVirtualItems[0]?.start ?? 0),
                       }}
                     />
                   </tr>
@@ -724,8 +718,7 @@ function RecountDiffContent({
                       style={{
                         height: Math.max(
                           0,
-                          partyTotalSize -
-                            (partyVirtualItems.at(-1)?.end ?? 0),
+                          partyTotalSize - (partyVirtualItems.at(-1)?.end ?? 0),
                         ),
                       }}
                     />
@@ -753,10 +746,7 @@ function RecountDiffContent({
           ndryshimi negativ tregon vota të humbura. Lista bazohet në kandidatët
           brenda të njëjtës parti.
         </div>
-        <div
-          ref={candidateTableRef}
-          className="max-h-[520px] overflow-auto"
-        >
+        <div ref={candidateTableRef} className="max-h-[520px] overflow-auto">
           <table className="w-full text-sm">
             <thead className="sticky top-0 bg-muted/70 text-xs uppercase text-muted-foreground">
               <tr>
@@ -777,10 +767,7 @@ function RecountDiffContent({
                   <td
                     colSpan={emptyStateColSpan}
                     style={{
-                      height: Math.max(
-                        0,
-                        candidateVirtualItems[0]?.start ?? 0,
-                      ),
+                      height: Math.max(0, candidateVirtualItems[0]?.start ?? 0),
                     }}
                   />
                 </tr>
@@ -904,8 +891,9 @@ function RecountDiffContent({
               Po nëse një qytetar ka zgjedhur më pak se 10 kandidatë?
             </div>
             <p>
-              Është e zakonshme të zgjidhen më pak se 10. Problemi lind kur gjatë
-              numërimit janë shtuar kandidatë që votuesi nuk i kishte shënuar.
+              Është e zakonshme të zgjidhen më pak se 10. Problemi lind kur
+              gjatë numërimit janë shtuar kandidatë që votuesi nuk i kishte
+              shënuar.
             </p>
           </div>
           <div>

@@ -30,7 +30,10 @@ type KqzRecountMeta = DatasetMetaYearly<
   }
 >;
 
-export type KqzRecountDeltaDataset = Dataset<KqzRecountDeltaRecord, KqzRecountMeta>;
+export type KqzRecountDeltaDataset = Dataset<
+  KqzRecountDeltaRecord,
+  KqzRecountMeta
+>;
 
 const FALLBACK_PERIOD = String(new Date().getFullYear());
 
@@ -38,6 +41,7 @@ export function buildKqzRecountDeltaDataset(
   diff: KqzRecountDiffDataset,
 ): KqzRecountDeltaDataset {
   const period = FALLBACK_PERIOD;
+  const generatedAt = diff.generated_at ?? new Date().toISOString();
   const records: KqzRecountDeltaRecord[] = [];
   const municipalityOptions = new Map<string, string>();
   const partyOptions = new Map<string, string>();
@@ -105,7 +109,7 @@ export function buildKqzRecountDeltaDataset(
   return {
     meta: {
       id: "kqz.parliamentary-recount-diff",
-      generated_at: new Date().toISOString(),
+      generated_at: generatedAt,
       updated_at: null,
       time: {
         key: "period",
