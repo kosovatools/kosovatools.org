@@ -19,6 +19,7 @@ type VirtualizedTreeTableProps = {
   data: CustomsTreeNode[];
   loading: boolean;
   autoExpandAll?: boolean;
+  virtualize?: boolean;
 };
 
 const GRID_TEMPLATE =
@@ -69,6 +70,7 @@ export function VirtualizedTreeTable({
   data,
   loading,
   autoExpandAll = true,
+  virtualize = true,
 }: VirtualizedTreeTableProps) {
   const table = useReactTable<CustomsTreeNode>({
     data,
@@ -99,6 +101,7 @@ export function VirtualizedTreeTable({
 
   const virtualItems = rowVirtualizer.getVirtualItems();
   const totalSize = rowVirtualizer.getTotalSize();
+  const shouldVirtualize = virtualize;
 
   return (
     <div className="w-full overflow-x-auto">
@@ -129,65 +132,116 @@ export function VirtualizedTreeTable({
             scrollbarGutter: "stable both-edges",
           }}
         >
-          <div style={{ height: totalSize, position: "relative" }}>
-            {virtualItems.map((virtualItem) => {
-              if (loading) {
+          {shouldVirtualize ? (
+            <div style={{ height: totalSize, position: "relative" }}>
+              {virtualItems.map((virtualItem) => {
+                if (loading) {
+                  return (
+                    <div
+                      key={`skeleton-${virtualItem.index}`}
+                      data-index={virtualItem.index}
+                      ref={rowVirtualizer.measureElement}
+                      className="absolute inset-x-0 grid items-center gap-4 border-b px-4 py-3 text-sm"
+                      style={{
+                        gridTemplateColumns: GRID_TEMPLATE,
+                        transform: `translateY(${virtualItem.start}px)`,
+                        height: virtualItem.size,
+                      }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Skeleton className="h-4 w-4 rounded-full" />
+                        <Skeleton className="h-4 w-24" />
+                      </div>
+                      {SKELETON_SECONDARY_WIDTHS.map((className, index) => (
+                        <Skeleton key={index} className={className} />
+                      ))}
+                    </div>
+                  );
+                }
+
+                const row = rows[virtualItem.index];
+                if (!row) return null;
+                const isLeafRow = !row.getCanExpand();
+                const rowHasNoTaxes = isLeafRow && hasNoTaxes(row.original);
                 return (
                   <div
-                    key={`skeleton-${virtualItem.index}`}
+                    key={row.id}
                     data-index={virtualItem.index}
                     ref={rowVirtualizer.measureElement}
-                    className="absolute inset-x-0 grid items-center gap-4 border-b px-4 py-3 text-sm"
+                    className={cn(
+                      "absolute inset-x-0 grid gap-4 border-b px-4 py-3 text-sm transition-colors",
+                      rowHasNoTaxes
+                        ? "bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-400/20 dark:hover:bg-emerald-400/30"
+                        : "hover:bg-muted/40",
+                    )}
                     style={{
                       gridTemplateColumns: GRID_TEMPLATE,
                       transform: `translateY(${virtualItem.start}px)`,
                       height: virtualItem.size,
                     }}
                   >
-                    <div className="flex items-center gap-3">
-                      <Skeleton className="h-4 w-4 rounded-full" />
-                      <Skeleton className="h-4 w-24" />
-                    </div>
-                    {SKELETON_SECONDARY_WIDTHS.map((className, index) => (
-                      <Skeleton key={index} className={className} />
+                    {row.getVisibleCells().map((cell) => (
+                      <div key={cell.id} className="min-w-0">
+                        {flexRender(cell.column.columnDef.cell, {
+                          ...cell.getContext(),
+                          row,
+                        })}
+                      </div>
                     ))}
                   </div>
                 );
-              }
-
-              const row = rows[virtualItem.index];
-              if (!row) return null;
-              const isLeafRow = !row.getCanExpand();
-              const rowHasNoTaxes = isLeafRow && hasNoTaxes(row.original);
-              return (
-                <div
-                  key={row.id}
-                  data-index={virtualItem.index}
-                  ref={rowVirtualizer.measureElement}
-                  className={cn(
-                    "absolute inset-x-0 grid gap-4 border-b px-4 py-3 text-sm transition-colors",
-                    rowHasNoTaxes
-                      ? "bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-400/20 dark:hover:bg-emerald-400/30"
-                      : "hover:bg-muted/40",
-                  )}
-                  style={{
-                    gridTemplateColumns: GRID_TEMPLATE,
-                    transform: `translateY(${virtualItem.start}px)`,
-                    height: virtualItem.size,
-                  }}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <div key={cell.id} className="min-w-0">
-                      {flexRender(cell.column.columnDef.cell, {
-                        ...cell.getContext(),
-                        row,
-                      })}
+              })}
+            </div>
+          ) : (
+            <div>
+              {loading
+                ? Array.from({ length: SKELETON_ROW_COUNT }).map((_, index) => (
+                    <div
+                      key={`skeleton-${index}`}
+                      className="grid items-center gap-4 border-b px-4 py-3 text-sm"
+                      style={{ gridTemplateColumns: GRID_TEMPLATE }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Skeleton className="h-4 w-4 rounded-full" />
+                        <Skeleton className="h-4 w-24" />
+                      </div>
+                      {SKELETON_SECONDARY_WIDTHS.map(
+                        (className, secondaryIndex) => (
+                          <Skeleton
+                            key={secondaryIndex}
+                            className={className}
+                          />
+                        ),
+                      )}
                     </div>
-                  ))}
-                </div>
-              );
-            })}
-          </div>
+                  ))
+                : rows.map((row) => {
+                    const isLeafRow = !row.getCanExpand();
+                    const rowHasNoTaxes = isLeafRow && hasNoTaxes(row.original);
+                    return (
+                      <div
+                        key={row.id}
+                        className={cn(
+                          "grid gap-4 border-b px-4 py-3 text-sm transition-colors",
+                          rowHasNoTaxes
+                            ? "bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-400/20 dark:hover:bg-emerald-400/30"
+                            : "hover:bg-muted/40",
+                        )}
+                        style={{ gridTemplateColumns: GRID_TEMPLATE }}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <div key={cell.id} className="min-w-0">
+                            {flexRender(cell.column.columnDef.cell, {
+                              ...cell.getContext(),
+                              row,
+                            })}
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })}
+            </div>
+          )}
         </div>
       </div>
     </div>

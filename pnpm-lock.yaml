@@ -458,6 +458,9 @@ importers:
       '@kosovatools/data':
         specifier: file:../../data/packages/data
         version: file:data/packages/data
+      '@tanstack/react-virtual':
+        specifier: ^3.13.13
+        version: 3.13.13(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@workspace/ui':
         specifier: workspace:*
         version: link:../ui

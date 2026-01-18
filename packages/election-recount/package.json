@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@kosovatools/data": "file:../../data/packages/data",
+    "@tanstack/react-virtual": "^3.13.13",
     "@workspace/ui": "workspace:*",
     "@workspace/utils": "workspace:*"
   },

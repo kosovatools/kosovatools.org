@@ -24,6 +24,13 @@ type DatasetValidity = {
   display: string;
 };
 
+function countTreeNodes(nodes: CustomsTreeNode[]): number {
+  return nodes.reduce((total, node) => {
+    const children = node.subRows ?? [];
+    return total + 1 + countTreeNodes(children);
+  }, 0);
+}
+
 export function CustomsExplorer() {
   const [treeData, setTreeData] = useState<CustomsTreeNode[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -180,6 +187,9 @@ export function CustomsExplorer() {
         )
       : null;
 
+  const totalNodeCount = useMemo(() => countTreeNodes(treeData), [treeData]);
+  const shouldVirtualize = totalNodeCount > 250;
+
   return (
     <>
       <Alert className="border-amber-200 bg-amber-50 text-amber-800">
@@ -227,6 +237,7 @@ export function CustomsExplorer() {
           data={treeData}
           loading={loading || isPending}
           autoExpandAll
+          virtualize={shouldVirtualize}
         />
       </div>
     </>

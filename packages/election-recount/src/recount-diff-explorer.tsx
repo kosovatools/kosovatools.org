@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { DatasetRenderer } from "@workspace/ui/custom-components/dataset-renderer";
 import { Input } from "@workspace/ui/components/input";
 import {
@@ -21,33 +22,82 @@ import { buildKqzRecountDeltaDataset } from "./kqz-recount";
 
 type KqzRecountDeltaDataset = ReturnType<typeof buildKqzRecountDeltaDataset>;
 type KqzRecountDeltaView = DatasetView<KqzRecountDeltaDataset>;
+type KqzRecountDeltaRecord = KqzRecountDeltaView["records"][number];
 
 type FilterState = {
   search: string;
-  level: "all" | "party" | "candidate";
   granularity: "national" | "municipality" | "voting-station";
   sort: "delta" | "candidate";
   direction: "all" | "positive" | "negative";
   municipality: string;
   party: string;
-  minAbsDelta: number;
-  limit: number;
 };
 
 const DEFAULT_FILTERS: FilterState = {
   search: "",
-  level: "candidate",
   granularity: "national",
   sort: "delta",
   direction: "all",
   municipality: "all",
   party: "all",
-  minAbsDelta: 3,
-  limit: 50,
 };
 
 const formatDelta = (value: number) =>
   `${value > 0 ? "+" : ""}${formatCount(value)}`;
+
+const getGranularityBucket = (
+  record: KqzRecountDeltaRecord,
+  granularity: FilterState["granularity"],
+) => {
+  if (granularity === "national") return "national";
+  if (granularity === "municipality") return record.municipality_id;
+  return `${record.municipality_id}::${record.voting_station_id}`;
+};
+
+const withGranularityLabels = (
+  record: KqzRecountDeltaRecord,
+  granularity: FilterState["granularity"],
+) => {
+  const next = { ...record };
+  if (granularity === "national") {
+    next.municipality_id = "0";
+    next.municipality_name = "Kombëtare";
+    next.voting_station_id = "all";
+    next.voting_station_name = "Të gjitha qendrat e votimit";
+    next.polling_station_id = "all";
+    next.polling_station_name = "Të gjitha vendvotimet";
+  } else if (granularity === "municipality") {
+    next.voting_station_id = "all";
+    next.voting_station_name = "Të gjitha qendrat e votimit";
+    next.polling_station_id = "all";
+    next.polling_station_name = "Të gjitha vendvotimet";
+  } else {
+    next.polling_station_id = "all";
+    next.polling_station_name = "Të gjitha vendvotimet";
+  }
+  return next;
+};
+
+const getEmptyTableColSpan = (filters: FilterState) => {
+  let count = 2; // delta + party
+  count += 1; // candidate
+  if (filters.granularity !== "national") count += 1;
+  if (filters.granularity === "voting-station") count += 1;
+  return count;
+};
+
+const getPartyTableColSpan = (filters: FilterState) => {
+  let count = 3; // abs votes + net + party
+  if (filters.granularity !== "national") count += 1;
+  if (filters.granularity === "voting-station") count += 1;
+  return count;
+};
+
+const PARTY_ROW_HEIGHT = 52;
+const CANDIDATE_ROW_HEIGHT = 60;
+
+const getCandidateRowKey = (record: KqzRecountDeltaRecord) =>
+  `${record.municipality_id}-${record.voting_station_id}-${record.polling_station_id}-${record.party_id}-${record.candidate_id}-${record.level}`;
 
 export function RecountDiffExplorer() {
   const [filters, setFilters] = React.useState<FilterState>(DEFAULT_FILTERS);
@@ -97,9 +147,18 @@ function RecountDiffContent({
 }) {
   const { records } = dataset;
 
+  const candidateRecords = React.useMemo(
+    () =>
+      records.filter(
+        (record) =>
+          record.level === "candidate" && record.candidate_id !== "total",
+      ),
+    [records],
+  );
+
   const municipalityOptions = React.useMemo(() => {
     const map = new Map<string, string>();
-    records.forEach((record) => {
+    candidateRecords.forEach((record) => {
       if (!record.municipality_id) return;
       map.set(
         record.municipality_id,
@@ -109,11 +168,11 @@ function RecountDiffContent({
     return Array.from(map.entries()).sort((a, b) =>
       a[1].localeCompare(b[1]),
     );
-  }, [records]);
+  }, [candidateRecords]);
 
   const partyOptions = React.useMemo(() => {
     const map = new Map<string, string>();
-    records.forEach((record) => {
+    candidateRecords.forEach((record) => {
       if (!record.party_id) return;
       map.set(
         record.party_id,
@@ -125,14 +184,11 @@ function RecountDiffContent({
     return Array.from(map.entries())
       .sort((a, b) => a[1].localeCompare(b[1], undefined, { numeric: true }))
       .map(([id, label]) => ({ id, label }));
-  }, [records]);
+  }, [candidateRecords]);
 
-  const filtered = React.useMemo(() => {
+  const filteredCandidateRecords = React.useMemo(() => {
     const search = filters.search.trim().toLowerCase();
-    return records.filter((record) => {
-      if (filters.level !== "all" && record.level !== filters.level) {
-        return false;
-      }
+    return candidateRecords.filter((record) => {
       if (filters.direction === "positive" && record.delta <= 0) {
         return false;
       }
@@ -144,12 +200,6 @@ function RecountDiffContent({
       }
       if (filters.party !== "all") {
         if (record.party_id !== filters.party) return false;
-      }
-      if (
-        filters.level !== "party" &&
-        Math.abs(record.delta) < filters.minAbsDelta
-      ) {
-        return false;
       }
       if (!search) return true;
       const haystack = [
@@ -168,74 +218,43 @@ function RecountDiffContent({
         .toLowerCase();
       return haystack.includes(search);
     });
-  }, [records, filters]);
+  }, [candidateRecords, filters]);
 
-  const aggregated = React.useMemo(() => {
-    const map = new Map<string, typeof records[number]>();
-    filtered.forEach((record) => {
-      const bucket =
-        filters.granularity === "national"
-          ? "national"
-          : filters.granularity === "municipality"
-            ? record.municipality_id
-            : `${record.municipality_id}::${record.voting_station_id}`;
-      const key = [
-        bucket,
-        record.level,
-        record.party_id,
-        record.candidate_id,
-      ].join("|");
+  const aggregatedCandidates = React.useMemo(() => {
+    const map = new Map<string, KqzRecountDeltaRecord>();
+    filteredCandidateRecords.forEach((record) => {
+      const bucket = getGranularityBucket(record, filters.granularity);
+      const key = [bucket, record.party_id, record.candidate_id].join("|");
       const existing = map.get(key);
       if (existing) {
         existing.delta += record.delta;
         return;
       }
-      const next = { ...record };
-      if (filters.granularity === "national") {
-        next.municipality_id = "0";
-        next.municipality_name = "Kombëtare";
-        next.voting_station_id = "all";
-        next.voting_station_name = "Të gjitha qendrat e votimit";
-        next.polling_station_id = "all";
-        next.polling_station_name = "Të gjitha vendvotimet";
-      } else if (filters.granularity === "municipality") {
-        next.voting_station_id = "all";
-        next.voting_station_name = "Të gjitha qendrat e votimit";
-        next.polling_station_id = "all";
-        next.polling_station_name = "Të gjitha vendvotimet";
-      } else {
-        next.polling_station_id = "all";
-        next.polling_station_name = "Të gjitha vendvotimet";
-      }
-      map.set(key, next);
+      map.set(key, withGranularityLabels(record, filters.granularity));
     });
     return Array.from(map.values());
-  }, [filtered, filters.granularity]);
+  }, [filteredCandidateRecords, filters.granularity]);
 
-  const candidateAbsDeltaByPartyBucket = React.useMemo(() => {
-    const map = new Map<string, number>();
-    records.forEach((record) => {
-      if (record.level !== "candidate") return;
-      if (
-        filters.municipality !== "all" &&
-        record.municipality_id !== filters.municipality
-      ) {
-        return;
-      }
-      const bucket =
-        filters.granularity === "national"
-          ? "national"
-          : filters.granularity === "municipality"
-            ? record.municipality_id
-            : `${record.municipality_id}::${record.voting_station_id}`;
+  const partyDeltaByBucket = React.useMemo(() => {
+    const totals = new Map<string, { abs: number; net: number }>();
+    const labels = new Map<string, KqzRecountDeltaRecord>();
+    filteredCandidateRecords.forEach((record) => {
+      const bucket = getGranularityBucket(record, filters.granularity);
       const key = `${bucket}|${record.party_id}`;
-      map.set(key, (map.get(key) ?? 0) + Math.abs(record.delta));
+      const current = totals.get(key) ?? { abs: 0, net: 0 };
+      totals.set(key, {
+        abs: current.abs + Math.abs(record.delta),
+        net: current.net + record.delta,
+      });
+      if (!labels.has(key)) {
+        labels.set(key, withGranularityLabels(record, filters.granularity));
+      }
     });
-    return map;
-  }, [records, filters.granularity, filters.municipality]);
+    return { totals, labels };
+  }, [filteredCandidateRecords, filters.granularity]);
 
-  const sorted = React.useMemo(() => {
-    const list = [...aggregated];
+  const sortedCandidates = React.useMemo(() => {
+    const list = [...aggregatedCandidates];
     if (filters.sort === "candidate") {
       return list.sort((a, b) => {
         const nameA = a.candidate_name ?? a.candidate_id ?? "";
@@ -250,59 +269,117 @@ function RecountDiffContent({
       });
     }
     return list.sort((a, b) => {
-      if (filters.level === "party") {
-        const bucketA =
-          filters.granularity === "national"
-            ? "national"
-            : filters.granularity === "municipality"
-              ? a.municipality_id
-              : `${a.municipality_id}::${a.voting_station_id}`;
-        const bucketB =
-          filters.granularity === "national"
-            ? "national"
-            : filters.granularity === "municipality"
-              ? b.municipality_id
-              : `${b.municipality_id}::${b.voting_station_id}`;
-        const absA =
-          candidateAbsDeltaByPartyBucket.get(`${bucketA}|${a.party_id}`) ?? 0;
-        const absB =
-          candidateAbsDeltaByPartyBucket.get(`${bucketB}|${b.party_id}`) ?? 0;
-        const absDiff = absB - absA;
-        if (absDiff !== 0) return absDiff;
-      }
       const diff = Math.abs(b.delta) - Math.abs(a.delta);
       if (diff !== 0) return diff;
       return b.delta - a.delta;
     });
-  }, [
-    aggregated,
-    candidateAbsDeltaByPartyBucket,
-    filters.granularity,
-    filters.level,
-    filters.sort,
-  ]);
+  }, [aggregatedCandidates, filters.sort]);
 
-  const limited = sorted.slice(0, filters.limit);
+  const worstOffenderCandidates = React.useMemo(() => {
+    const list = aggregatedCandidates.filter((record) => record.delta < 0);
+    return list
+      .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
+      .slice(0, 10);
+  }, [aggregatedCandidates]);
+
+  const emptyStateColSpan = getEmptyTableColSpan(filters);
 
   const uniqueCandidates = React.useMemo(() => {
     const set = new Set<string>();
-    records.forEach((record) => {
-      if (record.level === "candidate") {
-        set.add(`${record.party_id}-${record.candidate_id}`);
-      }
-    });
+    candidateRecords.forEach((record) =>
+      set.add(`${record.party_id}-${record.candidate_id}`),
+    );
     return set.size;
-  }, [records]);
+  }, [candidateRecords]);
 
   const changedPollingStations = React.useMemo(() => {
     const set = new Set<string>();
-    records.forEach((record) => set.add(record.polling_station_id));
+    candidateRecords.forEach((record) => set.add(record.polling_station_id));
     return set.size;
-  }, [records]);
+  }, [candidateRecords]);
+
+  const shiftedVoteTotal = React.useMemo(
+    () =>
+      filteredCandidateRecords.reduce(
+        (total, record) => total + Math.abs(record.delta),
+        0,
+      ),
+    [filteredCandidateRecords],
+  );
+
+  const netVoteTotal = React.useMemo(
+    () =>
+      filteredCandidateRecords.reduce(
+        (total, record) => total + record.delta,
+        0,
+      ),
+    [filteredCandidateRecords],
+  );
+
+  const partyImpactRows = React.useMemo(() => {
+    const rows = Array.from(partyDeltaByBucket.totals.entries()).map(
+      ([key, totals]) => ({
+        key,
+        totals,
+        record: partyDeltaByBucket.labels.get(key),
+      }),
+    );
+    return rows
+      .filter((row) => row.record)
+      .sort((a, b) => b.totals.abs - a.totals.abs);
+  }, [partyDeltaByBucket]);
+
+  const partyTableRef = React.useRef<HTMLDivElement | null>(null);
+  const getPartyScrollElement = React.useCallback(
+    () => partyTableRef.current,
+    [],
+  );
+  const estimatePartySize = React.useCallback(() => PARTY_ROW_HEIGHT, []);
+  const getPartyItemKey = React.useCallback(
+    (index: number) => partyImpactRows[index]?.key ?? index,
+    [partyImpactRows],
+  );
+  const partyVirtualizer = useVirtualizer({
+    count: partyImpactRows.length,
+    getScrollElement: getPartyScrollElement,
+    estimateSize: estimatePartySize,
+    overscan: 8,
+    getItemKey: getPartyItemKey,
+  });
+
+  const partyVirtualItems = partyVirtualizer.getVirtualItems();
+  const partyTotalSize = partyVirtualizer.getTotalSize();
+
+  const candidateTableRef = React.useRef<HTMLDivElement | null>(null);
+  const getCandidateScrollElement = React.useCallback(
+    () => candidateTableRef.current,
+    [],
+  );
+  const estimateCandidateSize = React.useCallback(
+    () => CANDIDATE_ROW_HEIGHT,
+    [],
+  );
+  const getCandidateItemKey = React.useCallback(
+    (index: number) =>
+      sortedCandidates[index]
+        ? getCandidateRowKey(sortedCandidates[index])
+        : index,
+    [sortedCandidates],
+  );
+  const candidateVirtualizer = useVirtualizer({
+    count: sortedCandidates.length,
+    getScrollElement: getCandidateScrollElement,
+    estimateSize: estimateCandidateSize,
+    overscan: 12,
+    getItemKey: getCandidateItemKey,
+  });
+
+  const candidateVirtualItems = candidateVirtualizer.getVirtualItems();
+  const candidateTotalSize = candidateVirtualizer.getTotalSize();
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader>
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -323,32 +400,35 @@ function RecountDiffContent({
             {formatCount(uniqueCandidates)}
           </CardContent>
         </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Vota të zhvendosura (abs.)
+            </CardTitle>
+            <p className="text-xs text-muted-foreground">
+              Shuma absolute e ndryshimeve tregon sa vota u ridrejtuan brenda
+              partive, pa u anuluar nga drejtimi.
+            </p>
+          </CardHeader>
+          <CardContent className="text-2xl font-semibold">
+            {formatCount(shiftedVoteTotal)}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Efekti neto i ndryshimeve
+            </CardTitle>
+            <p className="text-xs text-muted-foreground">
+              Shuma neto e ndryshimeve tregon efektin final pasi pluset dhe
+              minuset anulohen.
+            </p>
+          </CardHeader>
+          <CardContent className="text-2xl font-semibold">
+            {formatDelta(netVoteTotal)}
+          </CardContent>
+        </Card>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm font-medium text-muted-foreground">
-            Niveli i analizës
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <OptionSelector
-            value={filters.level}
-            onChange={(value) =>
-              updateFilter("level")(value as FilterState["level"])
-            }
-            options={[
-              { label: "Kandidat", key: "candidate" },
-              { label: "Parti", key: "party" },
-            ]}
-            className="w-full [&>div]:w-full [&>div]:flex-nowrap [&>div>button]:flex-1"
-          />
-          <p className="mt-2 text-xs text-muted-foreground">
-            Zgjidh nëse po shfaqen ndryshimet për kandidatë apo vetëm totalet e
-            partive.
-          </p>
-        </CardContent>
-      </Card>
 
       <Card>
         <CardHeader>
@@ -462,55 +542,227 @@ function RecountDiffContent({
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {filters.level === "party" ? null : (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Min. ndryshim absolut
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Input
-                type="number"
-                min={0}
-                value={filters.minAbsDelta}
-                onChange={(event) =>
-                  updateFilter("minAbsDelta")(
-                    Math.max(0, Number(event.target.value)),
-                  )
-                }
-              />
-            </CardContent>
-          </Card>
-        )}
-        <Card className="flex flex-col justify-between">
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Rekorde të filtruara
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-2xl font-semibold">
-            {formatCount(aggregated.length)}
-          </CardContent>
-        </Card>
-      </div>
+      <div className="grid gap-4 md:grid-cols-2" />
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            Hall of shame (humbësit më të mëdhenj)
+          </CardTitle>
+          <p className="text-xs text-muted-foreground">
+            Kandidatët me humbjen më të madhe të votave brenda partisë.
+          </p>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="max-h-[320px] overflow-auto">
+            <table className="w-full table-fixed text-sm">
+              <colgroup>
+                <col style={{ width: "96px" }} />
+                <col style={{ width: "96px" }} />
+                <col />
+                {filters.granularity === "national" ? null : (
+                  <col style={{ width: "160px" }} />
+                )}
+                {filters.granularity === "voting-station" ? (
+                  <col style={{ width: "180px" }} />
+                ) : null}
+              </colgroup>
+              <thead className="sticky top-0 bg-muted/70 text-xs uppercase text-muted-foreground">
+                <tr>
+                  <th className="px-4 py-3 text-left">Ndryshimi</th>
+                  <th className="px-4 py-3 text-left">Kandidati</th>
+                  <th className="px-4 py-3 text-left">Subjekti</th>
+                  {filters.granularity === "national" ? null : (
+                    <th className="px-4 py-3 text-left">Komuna</th>
+                  )}
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {worstOffenderCandidates.map((record) => (
+                  <tr key={`shame-${getCandidateRowKey(record)}`}>
+                    <td className="px-4 py-2">
+                      <Badge variant="secondary" className="text-xs">
+                        {formatDelta(record.delta)}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-2">
+                      <div className="font-medium">
+                        {record.candidate_name ?? record.candidate_id}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {record.candidate_id}
+                      </div>
+                    </td>
+                    <td className="px-4 py-2">
+                      <div className="font-medium">
+                        {record.party_name ?? record.party_id}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {record.party_id}
+                      </div>
+                    </td>
+                    {filters.granularity === "national" ? null : (
+                      <td className="px-4 py-2">
+                        {record.municipality_name ?? record.municipality_id}
+                      </td>
+                    )}
+                  </tr>
+                ))}
+                {worstOffenderCandidates.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={filters.granularity === "national" ? 3 : 4}
+                      className="px-4 py-8 text-center text-sm text-muted-foreground"
+                    >
+                      Nuk ka të dhëna për filtrat e zgjedhur.
+                    </td>
+                  </tr>
+                ) : null}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            Ndikimi i partive (vota të zhvendosura brenda partisë)
+          </CardTitle>
+          <p className="text-xs text-muted-foreground">
+            Shuma absolute tregon sa vota janë ridrejtuar brenda partisë, ndërsa
+            efekti neto tregon balancën përfundimtare.
+          </p>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div
+            ref={partyTableRef}
+            className="max-h-[320px] overflow-auto"
+          >
+            <table className="w-full table-fixed text-sm">
+              <colgroup>
+                <col style={{ width: "96px" }} />
+                <col style={{ width: "180px" }} />
+                <col />
+                {filters.granularity === "national" ? null : (
+                  <col style={{ width: "160px" }} />
+                )}
+                {filters.granularity === "voting-station" ? (
+                  <col style={{ width: "180px" }} />
+                ) : null}
+              </colgroup>
+              <thead className="sticky top-0 bg-muted/70 text-xs uppercase text-muted-foreground">
+                <tr>
+                  <th className="px-4 py-3 text-left">Vota abs.</th>
+                  <th className="px-4 py-3 text-left">Efekti neto</th>
+                  <th className="px-4 py-3 text-left">Subjekti</th>
+                  {filters.granularity === "national" ? null : (
+                    <th className="px-4 py-3 text-left">Komuna</th>
+                  )}
+                  {filters.granularity === "voting-station" ? (
+                    <th className="px-4 py-3 text-left">Qendra e votimit</th>
+                  ) : null}
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {partyImpactRows.length > 0 ? (
+                  <tr>
+                    <td
+                      colSpan={getPartyTableColSpan(filters)}
+                      style={{
+                        height: Math.max(
+                          0,
+                          partyVirtualItems[0]?.start ?? 0,
+                        ),
+                      }}
+                    />
+                  </tr>
+                ) : null}
+                {partyVirtualItems.map((virtualRow) => {
+                  const row = partyImpactRows[virtualRow.index];
+                  const record = row?.record;
+                  if (!record) return null;
+                  return (
+                    <tr key={row.key}>
+                      <td className="px-4 py-2 text-sm text-muted-foreground">
+                        {formatCount(row.totals.abs)}
+                      </td>
+                      <td className="px-4 py-2 text-sm text-muted-foreground">
+                        {formatDelta(row.totals.net)}
+                      </td>
+                      <td className="px-4 py-2">
+                        <div className="font-medium">
+                          {record.party_name ?? record.party_id}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {record.party_id}
+                        </div>
+                      </td>
+                      {filters.granularity === "national" ? null : (
+                        <td className="px-4 py-2">
+                          {record.municipality_name ?? record.municipality_id}
+                        </td>
+                      )}
+                      {filters.granularity === "voting-station" ? (
+                        <td className="px-4 py-2">
+                          <div className="font-medium">
+                            {record.voting_station_name ??
+                              record.voting_station_id}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {record.polling_station_id}
+                          </div>
+                        </td>
+                      ) : null}
+                    </tr>
+                  );
+                })}
+                {partyImpactRows.length > 0 ? (
+                  <tr>
+                    <td
+                      colSpan={getPartyTableColSpan(filters)}
+                      style={{
+                        height: Math.max(
+                          0,
+                          partyTotalSize -
+                            (partyVirtualItems.at(-1)?.end ?? 0),
+                        ),
+                      }}
+                    />
+                  </tr>
+                ) : null}
+                {partyImpactRows.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={getPartyTableColSpan(filters)}
+                      className="px-4 py-8 text-center text-sm text-muted-foreground"
+                    >
+                      Nuk ka të dhëna për filtrat e zgjedhur.
+                    </td>
+                  </tr>
+                ) : null}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="overflow-hidden rounded-lg border">
-        <div className="max-h-[520px] overflow-auto">
+        <div className="border-b bg-muted/20 px-4 py-2 text-xs text-muted-foreground">
+          Ndryshimi pozitiv tregon vota të shtuar për kandidatin, ndërsa
+          ndryshimi negativ tregon vota të humbura. Lista bazohet në kandidatët
+          brenda të njëjtës parti.
+        </div>
+        <div
+          ref={candidateTableRef}
+          className="max-h-[520px] overflow-auto"
+        >
           <table className="w-full text-sm">
             <thead className="sticky top-0 bg-muted/70 text-xs uppercase text-muted-foreground">
               <tr>
                 <th className="px-4 py-3 text-left">Ndryshimi</th>
                 <th className="px-4 py-3 text-left">Subjekti</th>
-                {filters.level === "party" ? (
-                  <th className="px-4 py-3 text-left">
-                    Ndryshimi abs. kandidatëve
-                  </th>
-                ) : null}
-                {filters.level === "party" ? null : (
-                  <th className="px-4 py-3 text-left">Kandidati</th>
-                )}
+                <th className="px-4 py-3 text-left">Kandidati</th>
                 {filters.granularity === "national" ? null : (
                   <th className="px-4 py-3 text-left">Komuna</th>
                 )}
@@ -520,89 +772,85 @@ function RecountDiffContent({
               </tr>
             </thead>
             <tbody className="divide-y">
-              {limited.map((record) => (
-                <tr
-                  key={`${record.municipality_id}-${record.voting_station_id}-${record.polling_station_id}-${record.party_id}-${record.candidate_id}-${record.level}`}
-                >
-                  <td className="px-4 py-2">
-                    <Badge
-                      variant={record.delta < 0 ? "destructive" : "secondary"}
-                      className="text-xs"
-                    >
-                      {formatDelta(record.delta)}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-2">
-                    <div className="font-medium">
-                      {record.party_name ?? record.party_id}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {record.party_id}
-                    </div>
-                  </td>
-                  {filters.level === "party" ? (
-                    <td className="px-4 py-2 text-sm text-muted-foreground">
-                      {formatCount(
-                        candidateAbsDeltaByPartyBucket.get(
-                          `${
-                            filters.granularity === "national"
-                              ? "national"
-                              : filters.granularity === "municipality"
-                                ? record.municipality_id
-                                : `${record.municipality_id}::${record.voting_station_id}`
-                          }|${record.party_id}`,
-                        ) ?? 0,
-                      )}
-                    </td>
-                  ) : null}
-                  {filters.level === "party" ? null : (
-                    <td className="px-4 py-2">
-                      <div className="font-medium">
-                        {record.candidate_id === "total"
-                          ? "Totali i partisë"
-                          : record.candidate_name ?? record.candidate_id}
-                      </div>
-                      {record.candidate_id === "total" ? null : (
-                        <div className="text-xs text-muted-foreground">
-                          {record.candidate_id}
-                        </div>
-                      )}
-                    </td>
-                  )}
-                  {filters.granularity === "national" ? null : (
-                    <td className="px-4 py-2">
-                      {record.municipality_name ?? record.municipality_id}
-                    </td>
-                  )}
-                  {filters.granularity === "voting-station" ? (
-                    <td className="px-4 py-2">
-                      <div className="font-medium">
-                        {record.voting_station_name ??
-                          record.voting_station_id}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {record.polling_station_id}
-                      </div>
-                    </td>
-                  ) : null}
-                </tr>
-              ))}
-              {limited.length === 0 ? (
+              {sortedCandidates.length > 0 ? (
                 <tr>
                   <td
-                    colSpan={
-                      filters.granularity === "national"
-                        ? filters.level === "party"
-                          ? 4
-                          : 4
-                        : filters.granularity === "municipality"
-                          ? filters.level === "party"
-                            ? 5
-                            : 5
-                          : filters.level === "party"
-                            ? 6
-                            : 6
-                    }
+                    colSpan={emptyStateColSpan}
+                    style={{
+                      height: Math.max(
+                        0,
+                        candidateVirtualItems[0]?.start ?? 0,
+                      ),
+                    }}
+                  />
+                </tr>
+              ) : null}
+              {candidateVirtualItems.map((virtualRow) => {
+                const record = sortedCandidates[virtualRow.index];
+                if (!record) return null;
+                return (
+                  <tr key={getCandidateRowKey(record)}>
+                    <td className="px-4 py-2">
+                      <Badge
+                        variant={record.delta < 0 ? "destructive" : "secondary"}
+                        className="text-xs"
+                      >
+                        {formatDelta(record.delta)}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-2">
+                      <div className="font-medium">
+                        {record.party_name ?? record.party_id}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {record.party_id}
+                      </div>
+                    </td>
+                    <td className="px-4 py-2">
+                      <div className="font-medium">
+                        {record.candidate_name ?? record.candidate_id}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {record.candidate_id}
+                      </div>
+                    </td>
+                    {filters.granularity === "national" ? null : (
+                      <td className="px-4 py-2">
+                        {record.municipality_name ?? record.municipality_id}
+                      </td>
+                    )}
+                    {filters.granularity === "voting-station" ? (
+                      <td className="px-4 py-2">
+                        <div className="font-medium">
+                          {record.voting_station_name ??
+                            record.voting_station_id}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {record.polling_station_id}
+                        </div>
+                      </td>
+                    ) : null}
+                  </tr>
+                );
+              })}
+              {sortedCandidates.length > 0 ? (
+                <tr>
+                  <td
+                    colSpan={emptyStateColSpan}
+                    style={{
+                      height: Math.max(
+                        0,
+                        candidateTotalSize -
+                          (candidateVirtualItems.at(-1)?.end ?? 0),
+                      ),
+                    }}
+                  />
+                </tr>
+              ) : null}
+              {sortedCandidates.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={emptyStateColSpan}
                     className="px-4 py-8 text-center text-sm text-muted-foreground"
                   >
                     Nuk ka të dhëna për filtrat e zgjedhur.
@@ -613,6 +861,92 @@ function RecountDiffContent({
           </table>
         </div>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            Shpjegim i thjeshtë
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2 text-sm text-muted-foreground">
+          <p>
+            Çdo votues zgjedh një parti dhe deri në 10 kandidatë nga ajo parti.
+            Shumë qytetarë zgjedhin më pak se 10. Në disa vendnumërime, janë
+            shtuar kandidatë shtesë ose janë zhvendosur vota brenda të njëjtës
+            parti, edhe kur votuesi nuk i kishte shënuar.
+          </p>
+          <p>
+            Kjo faqe tregon ndryshimet mes numërimit fillestar dhe rinumërimit
+            të KQZ-së. Kjo nuk ndryshon votën për parti, por tregon nëse votat
+            për kandidat janë lëvizur.
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-sm font-medium text-muted-foreground">
+            Pyetje të shpeshta (FAQ)
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <div>
+            <div className="font-medium text-foreground">
+              Çfarë do të thotë “Vota të zhvendosura (abs.)”?
+            </div>
+            <p>
+              Është shuma e të gjitha ndryshimeve pa marrë parasysh drejtimin.
+              Kjo tregon sa vota janë lëvizur brenda partisë.
+            </p>
+          </div>
+          <div>
+            <div className="font-medium text-foreground">
+              Po nëse një qytetar ka zgjedhur më pak se 10 kandidatë?
+            </div>
+            <p>
+              Është e zakonshme të zgjidhen më pak se 10. Problemi lind kur gjatë
+              numërimit janë shtuar kandidatë që votuesi nuk i kishte shënuar.
+            </p>
+          </div>
+          <div>
+            <div className="font-medium text-foreground">
+              Çfarë do të thotë “Efekti neto i ndryshimeve”?
+            </div>
+            <p>
+              Është shuma me shenjë (+/‑). Pluset dhe minuset anulohen, prandaj
+              tregon rezultatin final, jo madhësinë e lëvizjes.
+            </p>
+          </div>
+          <div>
+            <div className="font-medium text-foreground">
+              Pse një kandidat ka ndryshim negativ?
+            </div>
+            <p>
+              Do të thotë se në rinumërim ai kandidat ka më pak vota se në
+              numërimin fillestar. Këto vota zakonisht shkojnë te kandidatët e
+              tjerë të së njëjtës parti.
+            </p>
+          </div>
+          <div>
+            <div className="font-medium text-foreground">
+              Çfarë tregon “Hall of shame”?
+            </div>
+            <p>
+              Liston kandidatët që kanë humbjet më të mëdha të votave brenda
+              partisë, sipas rinumërimit.
+            </p>
+          </div>
+          <div>
+            <div className="font-medium text-foreground">
+              A ndryshon kjo rezultatin e partisë?
+            </div>
+            <p>
+              Jo. Këto ndryshime janë brenda të njëjtës parti dhe prekin vetëm
+              renditjen e kandidatëve, jo votën e partisë.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground">
         ID-të e subjekteve dhe kandidatëve shfaqen sipas listës së KQZ-së. Për
