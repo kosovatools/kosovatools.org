@@ -1,4 +1,10 @@
-import { groupPeriod, type PeriodGrouping } from "./period";
+import {
+  groupPeriod,
+  type PeriodGrouping,
+  expectedPeriodsPerGroup,
+  resolveValidGroupedPeriods,
+  buildGroupedPeriodList,
+} from "./period";
 import { isFiniteNumber, type NumericInput } from "./number";
 
 export type SeriesAggregationMode = "sum" | "average" | "rate";
@@ -86,23 +92,39 @@ export function aggregateSeriesByPeriod<TRecord, TKey extends string>(
     getPeriod: (record: TRecord) => string;
     grouping: PeriodGrouping;
     fields: ReadonlyArray<SeriesAggregationField<TRecord, TKey>>;
+    baseGrouping?: PeriodGrouping;
+    dropIncompletePeriods?: boolean;
+    preserveLatestIncomplete?: boolean;
   },
 ): AggregatedRow<TKey>[] {
-  const { getPeriod, grouping, fields } = options;
+  const {
+    getPeriod,
+    grouping,
+    fields,
+    baseGrouping,
+    dropIncompletePeriods,
+    preserveLatestIncomplete = false,
+  } = options;
   if (!records.length || !fields.length) {
     return [];
   }
 
   const buckets = new Map<string, Record<TKey, AggregationState>>();
-  const order: string[] = [];
+  const groupPeriodCoverage = new Map<string, Set<string>>();
 
   for (const record of records) {
-    const periodKey = groupPeriod(getPeriod(record), grouping);
+    const rawPeriod = getPeriod(record);
+    const periodKey = groupPeriod(rawPeriod, grouping);
+
     if (!buckets.has(periodKey)) {
       buckets.set(periodKey, createBucket(fields));
-      order.push(periodKey);
     }
     const bucket = buckets.get(periodKey)!;
+
+    const coverage = groupPeriodCoverage.get(periodKey) ?? new Set<string>();
+    coverage.add(rawPeriod);
+    groupPeriodCoverage.set(periodKey, coverage);
+
     for (const field of fields) {
       const rawValue = field.getValue(record);
       if (!isFiniteNumber(rawValue)) {
@@ -112,7 +134,30 @@ export function aggregateSeriesByPeriod<TRecord, TKey extends string>(
     }
   }
 
-  return order.map((period) => {
+  const rawPeriods = Array.from(
+    new Set(records.map((r) => getPeriod(r))),
+  ).sort();
+  const groupedPeriods = buildGroupedPeriodList(rawPeriods, grouping);
+
+  const effectiveBaseGrouping = baseGrouping ?? grouping;
+  const shouldDrop =
+    dropIncompletePeriods ??
+    (grouping !== effectiveBaseGrouping ? true : false);
+  const expectedCount = expectedPeriodsPerGroup(effectiveBaseGrouping, grouping);
+
+  const validGroups = resolveValidGroupedPeriods(
+    groupedPeriods,
+    groupPeriodCoverage,
+    expectedCount,
+    shouldDrop,
+    preserveLatestIncomplete,
+  );
+
+  const finalPeriods = validGroups
+    ? groupedPeriods.filter((p) => validGroups.has(p))
+    : groupedPeriods;
+
+  return finalPeriods.map((period) => {
     const bucket = buckets.get(period);
     const result = { period } as AggregatedRow<TKey>;
     if (!bucket) {

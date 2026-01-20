@@ -128,16 +128,16 @@ type DatasetViewRecord<TDataset extends GenericDataset> =
     infer TRecord extends DatasetRecordBase,
     infer _TMeta
   >
-    ? TRecord
-    : DatasetRecordBase;
+  ? TRecord
+  : DatasetRecordBase;
 
 type DatasetViewMeta<TDataset extends GenericDataset> =
   TDataset extends Dataset<
     infer _TRecord extends DatasetRecordBase,
     infer TMeta extends GenericDatasetMeta
   >
-    ? TMeta
-    : GenericDatasetMeta;
+  ? TMeta
+  : GenericDatasetMeta;
 
 export type DatasetView<TDataset extends GenericDataset> = Dataset<
   DatasetViewRecord<TDataset>,
@@ -165,8 +165,8 @@ export type HydratableDataset<
   TDataset extends GenericDataset = GenericDataset,
 > =
   TDataset extends DatasetView<infer InnerDataset extends GenericDataset>
-    ? InnerDataset
-    : TDataset;
+  ? InnerDataset
+  : TDataset;
 
 export type SerializableDataset<
   TDataset extends GenericDataset = GenericDataset,
@@ -192,6 +192,9 @@ export type DatasetAggregateOptions<
 > = {
   fields: ReadonlyArray<DatasetAggregateFieldInput<TRecord, TKey>>;
   grouping?: PeriodGrouping;
+  baseGrouping?: PeriodGrouping;
+  dropIncompletePeriods?: boolean;
+  preserveLatestIncomplete?: boolean;
   filter?: (record: TRecord) => boolean;
 };
 
@@ -394,8 +397,8 @@ function buildDimensionContext<
     dimensionOptions ??
     (dimension
       ? (meta.dimensions?.[dimension] as
-          | ReadonlyArray<DimensionOption<TKey>>
-          | undefined)
+        | ReadonlyArray<DimensionOption<TKey>>
+        | undefined)
       : undefined);
 
   const labelMap = dimensionOpts
@@ -507,6 +510,9 @@ function aggregateRecords<
   return aggregateSeriesByPeriod(relevantRecords, {
     getPeriod: (record) => record.period,
     grouping,
+    baseGrouping: options.baseGrouping ?? meta.time.granularity,
+    dropIncompletePeriods: options.dropIncompletePeriods,
+    preserveLatestIncomplete: options.preserveLatestIncomplete,
     fields: seriesFields,
   });
 }
@@ -558,7 +564,7 @@ function prepareStackContext<
     keyAccessor ??
     (dimension
       ? (record: TRecord) =>
-          (record as Record<string, unknown>)[dimension] as TKey
+        (record as Record<string, unknown>)[dimension] as TKey
       : undefined);
 
   if (!resolvedKeyAccessor) {

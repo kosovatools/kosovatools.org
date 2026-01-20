@@ -328,6 +328,46 @@ export function groupPeriod(
   }
 }
 
+export const expectedPeriodsPerGroup = (
+  base: PeriodGrouping,
+  grouping: PeriodGrouping,
+): number | null => {
+  if (base === grouping) return 1;
+  if (base === "monthly") {
+    if (grouping === "quarterly" || grouping === "seasonal") return 3;
+    if (grouping === "yearly") return 12;
+    return null;
+  }
+  if (base === "quarterly") {
+    if (grouping === "yearly") return 4;
+    return null;
+  }
+  if (base === "yearly" && grouping === "yearly") return 1;
+  return null;
+};
+
+export const resolveValidGroupedPeriods = (
+  groupedPeriods: string[],
+  groupPeriodSet: Map<string, Set<string>>,
+  expectedCount: number | null,
+  dropIncomplete: boolean,
+  preserveLatestIncomplete: boolean,
+): Set<string> | null => {
+  if (!dropIncomplete || !expectedCount) return null;
+  const valid = new Set<string>();
+  const latest = groupedPeriods[groupedPeriods.length - 1];
+
+  for (const gp of groupedPeriods) {
+    const coverage = groupPeriodSet.get(gp)?.size ?? 0;
+    const isComplete = coverage >= expectedCount;
+    if (isComplete || (preserveLatestIncomplete && gp === latest)) {
+      valid.add(gp);
+    }
+  }
+
+  return valid;
+};
+
 export function buildGroupedPeriodList(
   periods: string[],
   grouping: PeriodGrouping,
