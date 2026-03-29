@@ -20,7 +20,6 @@
       "@workspace/prishtina-building-permits": [
         "../../packages/prishtina-building-permits/src/index.ts"
       ],
-      "@workspace/war-records": ["../../packages/war-records/src/index.ts"],
       "@workspace/ui/*": ["../../packages/ui/src/*"]
     },
     "plugins": [

@@ -32,7 +32,6 @@
     "@workspace/public-wage-calculator": "workspace:*",
     "@workspace/ui": "workspace:*",
     "@workspace/utils": "workspace:*",
-    "@workspace/war-records": "workspace:*",
     "babel-plugin-react-compiler": "^1.0.0",
     "chroma-js": "^3.2.0",
     "d3-scale": "^4.0.2",

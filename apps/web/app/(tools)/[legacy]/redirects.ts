@@ -12,5 +12,4 @@ export const legacyRedirects: Record<string, string> = {
   "atk-faq": "/pyetje-atk",
   "drug-prices": "/cmimet-e-barnave",
   "prishtina-building-permits": "/lejet-ndertimit",
-  "war-records": "/regjistrat-e-luftes",
 };
