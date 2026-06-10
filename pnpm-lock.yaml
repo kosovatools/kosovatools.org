@@ -96,9 +96,6 @@ importers:
       '@workspace/utils':
         specifier: workspace:*
         version: link:../../packages/utils
-      '@workspace/war-records':
-        specifier: workspace:*
-        version: link:../../packages/war-records
       babel-plugin-react-compiler:
         specifier: ^1.0.0
         version: 1.0.0
