@@ -60,7 +60,7 @@ jobs:
       - name: Restore Turbo cache
         id: turbo-cache
         if: ${{ !(github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true') }}
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         with:
           path: .turbo
           key: ${{ steps.turbo-key.outputs.key }}
@@ -77,7 +77,7 @@ jobs:
 
       - name: Save Turbo cache
         if: ${{ !startsWith(steps.turbo-cache.outputs.cache-matched-key, steps.turbo-key.outputs.revision) }}
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         with:
           path: .turbo
           key: ${{ steps.turbo-key.outputs.key }}
