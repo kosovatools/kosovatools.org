@@ -81,9 +81,9 @@ export function DatasetSummaryCard({
             hint={`Gjeneruar më ${formatDate(index.generated_at)}`}
           />
           <MetricStat
-            label="Sipërfaqja totale"
+            label="Sipërfaqja bruto e kateve"
             value={totalArea > 0 ? `${formatDecimal(totalArea)} m²` : "—"}
-            hint="Sipas sipërfaqes së kateve të raportuara"
+            hint="Shuma e sipërfaqeve të raportuara"
           />
           <MetricStat
             label="Tarifat totale"

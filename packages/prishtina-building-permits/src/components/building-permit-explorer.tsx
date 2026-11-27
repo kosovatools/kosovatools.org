@@ -44,15 +44,11 @@ export function BuildingPermitExplorer() {
     staleTime: Infinity,
   });
 
-  const [selectedYear, setSelectedYear] = React.useState<number>(2025);
+  const [selectedYear, setSelectedYear] = React.useState<number | null>(null);
 
   const selectedSummary =
     index?.years.find((entry) => entry.year === selectedYear) ??
     index?.years[0];
-
-  if (selectedSummary && selectedSummary.year !== selectedYear) {
-    setSelectedYear(selectedSummary.year);
-  }
 
   const {
     data: dataset,

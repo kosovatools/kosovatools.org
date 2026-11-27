@@ -26,7 +26,8 @@ import type {
   BuildingPermitsYearDataset,
 } from "@kosovatools/data";
 import { collator, sumRecords, toOptionLabel } from "./helpers";
-import { PermitRecordsTable } from "./permit-records-table";
+import { PermitRecordsList } from "./permit-records-list";
+import { PermitFootprintMap } from "./permit-footprint-map";
 
 type PermitFiltersCardProps = {
   dataset: BuildingPermitsYearDataset;
@@ -40,6 +41,7 @@ export function PermitFiltersCard({
   const [searchValue, setSearchValue] = React.useState("");
   const [neighbourhood, setNeighbourhood] = React.useState<string>("all");
   const [destination, setDestination] = React.useState<string>("all");
+  const filterId = React.useId();
 
   const neighbourhoodOptions = React.useMemo(() => {
     const values = new Set<string>();
@@ -77,6 +79,9 @@ export function PermitFiltersCard({
       if (!normalizedSearch) {
         return true;
       }
+      if (normalizedSearch.startsWith("#")) {
+        return normalizedSearch.slice(1) === record.permit_number;
+      }
       const haystacks = [
         record.permit_number,
         record.owner,
@@ -85,6 +90,7 @@ export function PermitFiltersCard({
         record.destination,
         record.neighbourhood,
         record.document_reference,
+        ...(record.site?.parcels.map((parcel) => parcel.reference) ?? []),
       ]
         .filter(Boolean)
         .map((value) => value!.toLowerCase());
@@ -97,6 +103,12 @@ export function PermitFiltersCard({
     normalizedSearch.length > 0 ||
     neighbourhood !== "all" ||
     destination !== "all";
+  const showParcels = dataset.records.some(
+    (record) => record.site?.parcels.length,
+  );
+  const showFootprints = dataset.records.some(
+    (record) => record.footprints?.length,
+  );
 
   const filteredArea = sumRecords(
     filteredRecords,
@@ -118,16 +130,19 @@ export function PermitFiltersCard({
       <CardHeader>
         <CardTitle>Filtro lejet ({dataset.year})</CardTitle>
         <CardDescription>
-          Kërko sipas pronarit, lagjes ose destinimit për të gjetur lejet në
-          listën e publikuar.
+          Kërko sipas pronarit, lagjes{showParcels ? ", parcelës" : ""} ose
+          destinimit për të gjetur lejet në listën e publikuar.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <FieldGroup className="grid gap-4 md:grid-cols-3">
           <Field>
-            <FieldLabel>Lagjja</FieldLabel>
+            <FieldLabel htmlFor={`${filterId}-neighbourhood`}>
+              Lagjja
+            </FieldLabel>
             <FieldContent>
               <NativeSelect
+                id={`${filterId}-neighbourhood`}
                 value={neighbourhood}
                 onChange={(event) => setNeighbourhood(event.target.value)}
               >
@@ -143,9 +158,12 @@ export function PermitFiltersCard({
             </FieldContent>
           </Field>
           <Field>
-            <FieldLabel>Destinimi</FieldLabel>
+            <FieldLabel htmlFor={`${filterId}-destination`}>
+              Destinimi
+            </FieldLabel>
             <FieldContent>
               <NativeSelect
+                id={`${filterId}-destination`}
                 value={destination}
                 onChange={(event) => setDestination(event.target.value)}
               >
@@ -161,12 +179,17 @@ export function PermitFiltersCard({
             </FieldContent>
           </Field>
           <Field>
-            <FieldLabel>Kërko tekst</FieldLabel>
+            <FieldLabel htmlFor={`${filterId}-search`}>Kërko tekst</FieldLabel>
             <FieldContent>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="Pronari, investitori, destinimi..."
+                  id={`${filterId}-search`}
+                  placeholder={
+                    showParcels
+                      ? "Pronari, parcela, destinimi..."
+                      : "Pronari, investitori, destinimi..."
+                  }
                   value={searchValue}
                   onChange={(event) => setSearchValue(event.target.value)}
                   className="pl-9"
@@ -176,7 +199,7 @@ export function PermitFiltersCard({
           </Field>
         </FieldGroup>
         <div className="flex flex-col gap-3 border-y border-border/80 py-4 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
-          <div>
+          <div role="status">
             Duke shfaqur{" "}
             <span className="font-semibold text-foreground">
               {formatCount(filteredRecords.length)}
@@ -186,7 +209,7 @@ export function PermitFiltersCard({
           </div>
           <div className="space-x-4">
             <span>
-              Sipërfaqe:{" "}
+              Sipërfaqja bruto e kateve:{" "}
               <span className="font-semibold text-foreground">
                 {filteredArea > 0 ? `${formatDecimal(filteredArea)} m²` : "—"}
               </span>
@@ -210,10 +233,11 @@ export function PermitFiltersCard({
             Pastro filtrat
           </Button>
         </div>
-        <PermitRecordsTable
+        {showFootprints && <PermitFootprintMap records={filteredRecords} />}
+        <PermitRecordsList
           records={filteredRecords}
           hasFilters={hasFilters}
-          selectedSummary={selectedSummary}
+          year={selectedSummary.year}
         />
       </CardContent>
     </Card>
