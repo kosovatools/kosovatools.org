@@ -16,5 +16,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      workflow-actions:
+        patterns:
+          - "*"
     commit-message:
       prefix: "chore(ci)"
