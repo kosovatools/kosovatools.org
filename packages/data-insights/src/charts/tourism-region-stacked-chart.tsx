@@ -60,15 +60,14 @@ export function TourismRegionCharts({
     periodFormatter,
   } = useDeriveChartControls(dataset);
 
-  React.useEffect(() => {
-    if (
-      !dataset.meta.dimensions.visitor_group.some(
-        (option) => option.key === group,
-      )
-    ) {
-      setGroup("total");
-    }
-  }, [group, dataset.meta.dimensions.visitor_group]);
+  if (
+    group !== "total" &&
+    !dataset.meta.dimensions.visitor_group.some(
+      (option) => option.key === group,
+    )
+  ) {
+    setGroup("total");
+  }
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({

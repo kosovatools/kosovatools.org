@@ -81,15 +81,17 @@ export function GdpActivityStackedChart({
       }),
   );
 
-  React.useEffect(() => {
-    setSelection((current) =>
+  const [previousTotals, setPreviousTotals] = React.useState(totals);
+  if (previousTotals !== totals) {
+    setPreviousTotals(totals);
+    setSelection(
       createInitialStackedKeySelection({
         totals,
         topCount: DEFAULT_TOP_ACTIVITIES,
-        initialIncludeOther: current.includeOther,
+        initialIncludeOther: selection.includeOther,
       }),
     );
-  }, [totals]);
+  }
 
   const stackResult = React.useMemo(() => {
     return datasetView.viewAsStack({

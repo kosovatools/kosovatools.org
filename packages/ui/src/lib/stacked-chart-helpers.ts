@@ -34,7 +34,7 @@ export function buildStackedChartData<TKey extends string>(
     return {
       chartKeys: [],
       chartData: [],
-      chartConfig: {} as ChartConfig,
+      chartConfig: {},
     };
   }
 
@@ -45,9 +45,7 @@ export function buildStackedChartData<TKey extends string>(
   };
   const entries: StackEntry[] = stack.keys.map((stackKey) => {
     const rawLabel =
-      stackKey === "Other"
-        ? otherKey
-        : (stack.labelMap[stackKey] ?? (stackKey as string));
+      stackKey === "Other" ? otherKey : (stack.labelMap[stackKey] ?? stackKey);
     const chartKey = String(stackKey);
     return { stackKey, chartKey, label: rawLabel };
   });

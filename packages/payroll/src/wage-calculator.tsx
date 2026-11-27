@@ -73,8 +73,7 @@ export function WageCalculator() {
     [targetNetPay, employeePensionRate, employerPensionRate, jobType],
   );
 
-  const activeResult =
-    mode === "grossToNet" ? grossBreakdown : inverseBreakdown.breakdown;
+  const inverseResult = mode === "netToGross" ? inverseBreakdown : undefined;
 
   return (
     <div className="space-y-8">
@@ -105,12 +104,28 @@ export function WageCalculator() {
           </CardContent>
         </Card>
 
-        <WageCalculatorResults
-          result={activeResult}
-          inverseResult={mode === "netToGross" ? inverseBreakdown : undefined}
-          formatCurrency={(value) => formatCurrency(value)}
-          formatPercentage={formatPercent}
-        />
+        {inverseResult && "error" in inverseResult ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Përmbledhja mujore</CardTitle>
+            </CardHeader>
+            <CardContent
+              role="status"
+              className="text-sm text-muted-foreground"
+            >
+              {inverseResult.error === "fullEmployeePension"
+                ? "Nuk ka pagë bruto që mund të japë një pagë neto pozitive kur kontributi i punonjësit është 100%."
+                : "Shuma e nevojshme e tejkalon kufirin që mund të llogarisë kalkulatori."}
+            </CardContent>
+          </Card>
+        ) : (
+          <WageCalculatorResults
+            result={inverseResult?.breakdown ?? grossBreakdown}
+            inverseResult={inverseResult}
+            formatCurrency={(value) => formatCurrency(value)}
+            formatPercentage={formatPercent}
+          />
+        )}
       </div>
 
       <Card>

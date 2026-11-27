@@ -76,7 +76,7 @@ export function CpiAveragePricesChart({ dataset, timelineEvents }: Props) {
     for (const record of datasetView.records) {
       let row = rowsByPeriod.get(record.period);
       if (!row) {
-        row = { period: record.period } as ChartRow;
+        row = { period: record.period };
         rowsByPeriod.set(record.period, row);
       }
       row[record.article] =

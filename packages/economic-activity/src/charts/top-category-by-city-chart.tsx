@@ -85,14 +85,16 @@ export function TopCategoryByCityStackedChart({
       }),
   );
 
-  React.useEffect(() => {
+  const [previousTotals, setPreviousTotals] = React.useState(totals);
+  if (previousTotals !== totals) {
+    setPreviousTotals(totals);
     setSelection(
       createInitialStackedKeySelection({
         totals,
         topCount: CITY_STACK_TOP,
       }),
     );
-  }, [selectedCity, totals]);
+  }
 
   const stackResult = React.useMemo(() => {
     if (!chartDataset) return null;

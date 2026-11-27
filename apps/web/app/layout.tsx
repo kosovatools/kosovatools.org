@@ -81,7 +81,7 @@ const structuredData = {
       name: "Kosova Tools",
       url: siteUrl,
       inLanguage: "sq",
-      image: `${siteUrl}/og.png`,
+      image: `${siteUrl}/opengraph-image.png`,
     },
   ],
 };

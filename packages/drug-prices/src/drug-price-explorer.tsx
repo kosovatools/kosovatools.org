@@ -45,7 +45,6 @@ import {
   PAGE_SIZE,
   SEARCH_FIELD_OPTIONS,
   SEARCH_FIELD_ACCESSORS,
-  SearchField,
   isValidSearchField,
   pageIndexToParam,
 } from "./constants";
@@ -66,40 +65,47 @@ function getCurrentSearchString(): string {
   return search.startsWith("?") ? search.slice(1) : search;
 }
 
+const SEARCH_PARAMS_CHANGE_EVENT = "drug-price-search-params-change";
+
+function subscribeToSearchParams(onChange: () => void): () => void {
+  window.addEventListener("popstate", onChange);
+  window.addEventListener(SEARCH_PARAMS_CHANGE_EVENT, onChange);
+  return () => {
+    window.removeEventListener("popstate", onChange);
+    window.removeEventListener(SEARCH_PARAMS_CHANGE_EVENT, onChange);
+  };
+}
+
+function getServerSearchString(): string {
+  return "";
+}
+
+function updateUrlState(updates: SearchParamUpdates): void {
+  const nextParams = mergeSearchParams(getCurrentSearchString(), updates, {
+    removeEmpty: false,
+  });
+  const queryString = nextParams.toString();
+  if (queryString === getCurrentSearchString()) return;
+  const { pathname, hash } = window.location;
+  const nextUrl = `${pathname}${queryString ? `?${queryString}` : ""}${hash}`;
+  window.history.replaceState({}, "", nextUrl);
+  window.dispatchEvent(new Event(SEARCH_PARAMS_CHANGE_EVENT));
+}
+
 export function DrugPriceExplorer() {
   const queryClient = useQueryClient();
   const [isRefreshing, setIsRefreshing] = React.useState(false);
 
-  const [searchParamsSnapshot, setSearchParamsSnapshot] = React.useState(() =>
-    getCurrentSearchString(),
+  const searchParamsSnapshot = React.useSyncExternalStore(
+    subscribeToSearchParams,
+    getCurrentSearchString,
+    getServerSearchString,
   );
-  const searchParamsRef = React.useRef(searchParamsSnapshot);
-
-  React.useEffect(() => {
-    searchParamsRef.current = searchParamsSnapshot;
-  }, [searchParamsSnapshot]);
-
-  React.useEffect(() => {
-    if (typeof window === "undefined") {
-      return undefined;
-    }
-    const syncFromLocation = () => {
-      const nextSearch = getCurrentSearchString();
-      if (nextSearch !== searchParamsRef.current) {
-        searchParamsRef.current = nextSearch;
-        setSearchParamsSnapshot(nextSearch);
-      }
-    };
-    syncFromLocation();
-    window.addEventListener("popstate", syncFromLocation);
-    return () => {
-      window.removeEventListener("popstate", syncFromLocation);
-    };
-  }, []);
 
   const urlState = React.useMemo(() => {
     const params = new URLSearchParams(searchParamsSnapshot);
-    const searchValue = getSearchParamString(params, "search") ?? "";
+    const searchValue =
+      getSearchParamString(params, "search", { trim: false }) ?? "";
     const versionValue = getSearchParamString(params, "version") ?? null;
     const formValue = getSearchParamString(params, "form") ?? null;
     const rawSearchField = getSearchParamString(params, "searchField");
@@ -109,7 +115,6 @@ export function DrugPriceExplorer() {
         : null;
     const rawPageIndex = getSearchParamNumber(params, "page", {
       integer: true,
-      min: 0,
     });
     const normalizedPageIndex =
       typeof rawPageIndex === "number" && rawPageIndex >= 0 ? rawPageIndex : 0;
@@ -127,50 +132,13 @@ export function DrugPriceExplorer() {
     };
   }, [searchParamsSnapshot]);
 
-  const [search, setSearch] = React.useState(urlState.search);
-  const [versionFilter, setVersionFilter] = React.useState<string | null>(
-    urlState.version,
-  );
-  const [formFilter, setFormFilter] = React.useState<string | null>(
-    urlState.form,
-  );
-  const [searchField, setSearchField] = React.useState<SearchField | null>(
-    urlState.searchField,
-  );
-  const [pageIndex, setPageIndex] = React.useState(urlState.pageIndex);
+  const {
+    search,
+    version: versionFilter,
+    form: formFilter,
+    searchField,
+  } = urlState;
   const resultsRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    setSearch(urlState.search);
-  }, [urlState.search]);
-
-  React.useEffect(() => {
-    setVersionFilter(urlState.version);
-  }, [urlState.version]);
-
-  React.useEffect(() => {
-    setFormFilter(urlState.form);
-  }, [urlState.form]);
-
-  React.useEffect(() => {
-    setSearchField(urlState.searchField);
-  }, [urlState.searchField]);
-
-  React.useEffect(() => {
-    setPageIndex(urlState.pageIndex);
-  }, [urlState.pageIndex]);
-
-  const updateUrlState = React.useCallback((updates: SearchParamUpdates) => {
-    const nextParams = mergeSearchParams(searchParamsRef.current, updates);
-    const queryString = nextParams.toString();
-    searchParamsRef.current = queryString;
-    setSearchParamsSnapshot(queryString);
-    if (typeof window !== "undefined") {
-      const pathname = window.location.pathname;
-      const nextUrl = queryString ? `${pathname}?${queryString}` : pathname;
-      window.history.replaceState({}, "", nextUrl);
-    }
-  }, []);
 
   React.useEffect(() => {
     if (urlState.needsPageIndexNormalization) {
@@ -178,11 +146,7 @@ export function DrugPriceExplorer() {
         page: pageIndexToParam(urlState.pageIndex),
       });
     }
-  }, [
-    updateUrlState,
-    urlState.needsPageIndexNormalization,
-    urlState.pageIndex,
-  ]);
+  }, [urlState.needsPageIndexNormalization, urlState.pageIndex]);
 
   React.useEffect(() => {
     if (urlState.needsSearchFieldNormalization) {
@@ -190,21 +154,14 @@ export function DrugPriceExplorer() {
         searchField: urlState.searchField,
       });
     }
-  }, [
-    updateUrlState,
-    urlState.needsSearchFieldNormalization,
-    urlState.searchField,
-  ]);
+  }, [urlState.needsSearchFieldNormalization, urlState.searchField]);
 
   const applyFilterUpdates = React.useCallback(
     (updates: SearchParamUpdates, resetPage = false) => {
-      if (resetPage && pageIndex !== 0) {
-        setPageIndex(0);
-      }
       const nextUpdates = resetPage ? { ...updates, page: null } : updates;
       updateUrlState(nextUpdates);
     },
-    [pageIndex, updateUrlState],
+    [],
   );
 
   const scrollToResultsTop = React.useCallback(() => {
@@ -311,16 +268,16 @@ export function DrugPriceExplorer() {
   const totalPages = recordsDataset
     ? Math.max(1, Math.ceil(filteredRecords.length / pageSize))
     : 0;
+  const maxPageIndex = Math.max(totalPages - 1, 0);
+  const pageIndex = Math.min(urlState.pageIndex, maxPageIndex);
 
   React.useEffect(() => {
-    const maxPageIndex = Math.max(totalPages - 1, 0);
-    if (pageIndex > maxPageIndex) {
-      setPageIndex(maxPageIndex);
+    if (recordsDataset && urlState.pageIndex > pageIndex) {
       updateUrlState({
-        page: pageIndexToParam(maxPageIndex),
+        page: pageIndexToParam(pageIndex),
       });
     }
-  }, [pageIndex, totalPages, updateUrlState]);
+  }, [recordsDataset, pageIndex, urlState.pageIndex]);
 
   const appliedFilters =
     (normalizedSearch ? 1 : 0) +
@@ -329,10 +286,6 @@ export function DrugPriceExplorer() {
     (normalizedSearch && searchField ? 1 : 0);
 
   const clearFilters = React.useCallback(() => {
-    setSearch("");
-    setVersionFilter(null);
-    setFormFilter(null);
-    setSearchField(null);
     applyFilterUpdates(
       {
         search: null,
@@ -346,7 +299,6 @@ export function DrugPriceExplorer() {
 
   const handleFormFilterChange = (value: string | null) => {
     const nextValue = value || null;
-    setFormFilter(nextValue);
     applyFilterUpdates({ form: nextValue }, true);
   };
 
@@ -354,7 +306,6 @@ export function DrugPriceExplorer() {
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const value = event.target.value;
-    setSearch(value);
     applyFilterUpdates({ search: value || null }, true);
   };
 
@@ -363,14 +314,12 @@ export function DrugPriceExplorer() {
   ) => {
     const value = event.target.value;
     const nextField = value && isValidSearchField(value) ? value : null;
-    setSearchField(nextField);
     applyFilterUpdates({ searchField: nextField }, true);
   };
 
   const handlePreviousPage = () => {
     if (pageIndex === 0) return;
     const nextIndex = Math.max(pageIndex - 1, 0);
-    setPageIndex(nextIndex);
     updateUrlState({
       page: pageIndexToParam(nextIndex),
     });
@@ -381,7 +330,6 @@ export function DrugPriceExplorer() {
     const maxPageIndex = Math.max(totalPages - 1, 0);
     if (pageIndex >= maxPageIndex) return;
     const nextIndex = Math.min(pageIndex + 1, maxPageIndex);
-    setPageIndex(nextIndex);
     updateUrlState({
       page: pageIndexToParam(nextIndex),
     });

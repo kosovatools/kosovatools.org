@@ -64,7 +64,6 @@ export function CustomsExplorer() {
   }, []);
 
   useEffect(() => {
-    setLoading(true);
     void (async () => {
       try {
         await CustomsDataService.initializeData({

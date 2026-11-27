@@ -72,6 +72,9 @@ export function VirtualizedTreeTable({
   autoExpandAll = true,
   virtualize = true,
 }: VirtualizedTreeTableProps) {
+  "use no memo";
+
+  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Table v8 mutates its instance, so this component opts out of compiler memoization.
   const table = useReactTable<CustomsTreeNode>({
     data,
     columns,

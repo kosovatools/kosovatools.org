@@ -152,7 +152,7 @@ export function addThemeToChartConfig<TConfig extends ConfigRecord>(
         light: paletteEntry.light,
         dark: paletteEntry.dark,
       },
-    } as ThemedChartConfig<TConfig>[typeof key];
+    };
   });
 
   return nextConfig as unknown as ThemedChartConfig<TConfig>;

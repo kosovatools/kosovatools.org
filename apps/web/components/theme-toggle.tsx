@@ -14,6 +14,7 @@ type ThemeToggleProps = {
 };
 
 const FALLBACK_LABEL = "Ndrysho temën";
+const subscribeToHydration = () => () => {};
 
 const themeLabels: Record<ThemeOption, string> = {
   light: "Ndrysho në temën e ndritshme",
@@ -23,11 +24,11 @@ const themeLabels: Record<ThemeOption, string> = {
 
 export function ThemeToggle({ className }: ThemeToggleProps) {
   const { theme, resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = React.useSyncExternalStore(
+    subscribeToHydration,
+    () => true,
+    () => false,
+  );
 
   const currentTheme = mounted ? ((theme ?? "system") as ThemeOption) : null;
   const activeResolvedTheme = mounted

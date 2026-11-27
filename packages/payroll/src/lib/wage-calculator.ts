@@ -40,6 +40,10 @@ export interface NetToGrossResult {
   differenceFromTarget: number;
 }
 
+export interface NetToGrossError {
+  error: "fullEmployeePension" | "amountOutOfRange";
+}
+
 const PRIMARY_JOB_BRACKETS: Array<{
   limit: number;
   rate: number;
@@ -66,12 +70,12 @@ const SECONDARY_JOB_RATE = 0.1;
 
 const MINIMUM_PENSION_RATE = 5;
 
-function sanitizeRate(rate: number) {
+function sanitizePensionRate(rate: number) {
   if (!Number.isFinite(rate)) {
-    return 0;
+    return MINIMUM_PENSION_RATE;
   }
 
-  return Math.min(Math.max(rate, 0), 100);
+  return Math.min(Math.max(rate, MINIMUM_PENSION_RATE), 100);
 }
 
 function sanitizeAmount(amount: number) {
@@ -86,18 +90,14 @@ export function calculateWageBreakdown(
   input: WageCalculatorInput,
 ): WageCalculatorResult {
   const grossPay = sanitizeAmount(input.grossPay);
-  const employeePensionRate =
-    Math.max(sanitizeRate(input.employeePensionRate), MINIMUM_PENSION_RATE) /
-    100;
-  const employerPensionRate =
-    Math.max(sanitizeRate(input.employerPensionRate), MINIMUM_PENSION_RATE) /
-    100;
+  const employeePensionRate = sanitizePensionRate(input.employeePensionRate);
+  const employerPensionRate = sanitizePensionRate(input.employerPensionRate);
   const jobType = input.jobType;
 
-  const employeePension = Math.min(grossPay, grossPay * employeePensionRate);
-  const employerPension = Math.min(grossPay, grossPay * employerPensionRate);
+  const employeePension = grossPay * (employeePensionRate / 100);
+  const employerPension = grossPay * (employerPensionRate / 100);
 
-  const taxableIncome = Math.max(grossPay - employeePension, 0);
+  const taxableIncome = grossPay * ((100 - employeePensionRate) / 100);
 
   const incomeTaxBreakdown: TaxBreakdownEntry[] = [];
 
@@ -142,7 +142,7 @@ export function calculateWageBreakdown(
   }
 
   const sanitizedIncomeTax = Math.max(incomeTax, 0);
-  const netPay = Math.max(grossPay - employeePension - sanitizedIncomeTax, 0);
+  const netPay = Math.max(taxableIncome - sanitizedIncomeTax, 0);
   const employerTotalCost = grossPay + employerPension;
   const effectiveTaxRate = grossPay > 0 ? sanitizedIncomeTax / grossPay : 0;
 
@@ -159,89 +159,66 @@ export function calculateWageBreakdown(
   };
 }
 
-export function calculateGrossFromNet(
-  input: NetToGrossInput,
-): NetToGrossResult {
-  const employeePensionRate = Math.max(
-    sanitizeRate(input.employeePensionRate),
-    MINIMUM_PENSION_RATE,
-  );
-  const employerPensionRate = Math.max(
-    sanitizeRate(input.employerPensionRate),
-    MINIMUM_PENSION_RATE,
-  );
-  const jobType = input.jobType;
-  const targetNetPay = sanitizeAmount(input.targetNetPay);
-
-  if (targetNetPay <= 0) {
-    const breakdown = calculateWageBreakdown({
-      grossPay: 0,
-      employeePensionRate,
-      employerPensionRate,
-      jobType,
-    });
-
-    return {
-      targetNetPay,
-      estimatedGrossPay: 0,
-      breakdown,
-      differenceFromTarget: 0,
-    };
+function calculateTaxableIncomeFromNet(netPay: number, jobType: JobType) {
+  if (jobType === "secondary") {
+    return netPay / (1 - SECONDARY_JOB_RATE);
   }
 
-  let lower = 0;
-  let upper = Math.max(targetNetPay * 1.5, 600);
-  const MAX_UPPER_BOUND = 100_000;
+  let taxableIncome = 0;
+  let remaining = netPay;
 
-  while (upper < MAX_UPPER_BOUND) {
-    const testBreakdown = calculateWageBreakdown({
-      grossPay: upper,
-      employeePensionRate,
-      employerPensionRate,
-      jobType,
-    });
-
-    if (testBreakdown.netPay >= targetNetPay) {
+  for (const bracket of PRIMARY_JOB_BRACKETS) {
+    if (remaining <= 0) {
       break;
     }
 
-    lower = upper;
-    upper = Math.min(upper * 2, MAX_UPPER_BOUND);
+    const netRate = 1 - bracket.rate;
+    const netAmount = Math.min(remaining, bracket.limit * netRate);
+    taxableIncome += netAmount / netRate;
+    remaining -= netAmount;
   }
 
-  let estimatedGross = upper;
-  let breakdown = calculateWageBreakdown({
-    grossPay: estimatedGross,
+  return taxableIncome;
+}
+
+export function calculateGrossFromNet(
+  input: NetToGrossInput,
+): NetToGrossResult | NetToGrossError {
+  const employeePensionRate = sanitizePensionRate(input.employeePensionRate);
+  const employerPensionRate = sanitizePensionRate(input.employerPensionRate);
+  const jobType = input.jobType;
+  const targetNetPay = sanitizeAmount(input.targetNetPay);
+
+  if (targetNetPay > 0 && employeePensionRate === 100) {
+    return { error: "fullEmployeePension" };
+  }
+
+  const estimatedGrossPay =
+    targetNetPay === 0
+      ? 0
+      : calculateTaxableIncomeFromNet(targetNetPay, jobType) /
+        ((100 - employeePensionRate) / 100);
+
+  if (!Number.isFinite(estimatedGrossPay)) {
+    return { error: "amountOutOfRange" };
+  }
+
+  const breakdown = calculateWageBreakdown({
+    grossPay: estimatedGrossPay,
     employeePensionRate,
     employerPensionRate,
     jobType,
   });
 
-  for (let iteration = 0; iteration < 50; iteration += 1) {
-    if (Math.abs(breakdown.netPay - targetNetPay) <= 0.5) {
-      break;
-    }
-
-    if (breakdown.netPay > targetNetPay) {
-      upper = estimatedGross;
-    } else {
-      lower = estimatedGross;
-    }
-
-    estimatedGross = (lower + upper) / 2;
-    breakdown = calculateWageBreakdown({
-      grossPay: estimatedGross,
-      employeePensionRate,
-      employerPensionRate,
-      jobType,
-    });
+  if (!Number.isFinite(breakdown.employerTotalCost)) {
+    return { error: "amountOutOfRange" };
   }
 
   const differenceFromTarget = breakdown.netPay - targetNetPay;
 
   return {
     targetNetPay,
-    estimatedGrossPay: estimatedGross,
+    estimatedGrossPay,
     breakdown,
     differenceFromTarget,
   };

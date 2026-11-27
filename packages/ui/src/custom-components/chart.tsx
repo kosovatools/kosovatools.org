@@ -448,7 +448,7 @@ function ChartLegendContent({
           const color =
             item.color ??
             itemConfig?.color ??
-            getPayloadFill(item.payload as unknown) ??
+            getPayloadFill(item.payload) ??
             `var(--color-${key})`;
           const legendLabel = itemConfig?.label ?? item.value ?? key;
           const legendKey = `${key ?? legendLabel}-${index}`;

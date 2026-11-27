@@ -6,7 +6,6 @@ import { ThumbsDown, ThumbsUp, X } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { cn } from "@workspace/ui/lib/utils";
 
-type FeedbackStatus = "hidden" | "visible";
 type FeedbackResponse = "yes" | "no" | "dismissed";
 
 type ToolFeedbackPromptProps = {
@@ -30,33 +29,29 @@ const hasUmamiTracker = () => {
   );
 };
 
-export function ToolFeedbackPrompt({
+export function ToolFeedbackPrompt(props: ToolFeedbackPromptProps) {
+  return (
+    <ToolFeedbackPromptContent
+      key={props.toolId ?? props.toolTitle}
+      {...props}
+    />
+  );
+}
+
+function ToolFeedbackPromptContent({
   toolId,
   toolTitle,
   className,
 }: ToolFeedbackPromptProps) {
-  const [resolvedToolId, setResolvedToolId] = React.useState<string | null>(
-    toolId ?? null,
-  );
-  const [status, setStatus] = React.useState<FeedbackStatus>("hidden");
+  const [visibleToolId, setVisibleToolId] = React.useState<string | null>(null);
   const showTimeoutRef = React.useRef<number | null>(null);
   const umamiPollRef = React.useRef<number | null>(null);
   const umamiPollStartRef = React.useRef<number | null>(null);
 
   React.useEffect(() => {
-    if (toolId && toolId !== resolvedToolId) {
-      setResolvedToolId(toolId);
-      return;
-    }
+    if (typeof window === "undefined") return undefined;
 
-    if (!resolvedToolId && typeof window !== "undefined") {
-      setResolvedToolId(window.location.pathname || "unknown");
-    }
-  }, [resolvedToolId, toolId]);
-
-  React.useEffect(() => {
-    if (!resolvedToolId || typeof window === "undefined") return undefined;
-
+    const resolvedToolId = toolId || window.location.pathname || "unknown";
     const storageKey = `${STORAGE_PREFIX}:${resolvedToolId}`;
     const stopUmamiPoll = () => {
       if (umamiPollRef.current) {
@@ -72,7 +67,7 @@ export function ToolFeedbackPrompt({
       const poll = () => {
         if (hasUmamiTracker()) {
           stopUmamiPoll();
-          setStatus("visible");
+          setVisibleToolId(resolvedToolId);
           return;
         }
         const now = window.performance?.now?.() ?? window.Date.now();
@@ -93,18 +88,14 @@ export function ToolFeedbackPrompt({
       if (!stored) {
         showTimeoutRef.current = window.setTimeout(() => {
           if (hasUmamiTracker()) {
-            setStatus("visible");
+            setVisibleToolId(resolvedToolId);
           } else {
             startUmamiPoll();
           }
         }, SHOW_DELAY_MS);
       }
     } catch {
-      if (hasUmamiTracker()) {
-        setStatus("visible");
-      } else {
-        startUmamiPoll();
-      }
+      startUmamiPoll();
     }
 
     return () => {
@@ -114,34 +105,34 @@ export function ToolFeedbackPrompt({
       }
       stopUmamiPoll();
     };
-  }, [resolvedToolId]);
+  }, [toolId]);
 
   const persistResponse = React.useCallback(
     (value: FeedbackResponse) => {
-      if (!resolvedToolId || typeof window === "undefined") return;
-      const storageKey = `${STORAGE_PREFIX}:${resolvedToolId}`;
+      if (!visibleToolId || typeof window === "undefined") return;
+      const storageKey = `${STORAGE_PREFIX}:${visibleToolId}`;
       try {
         window.localStorage.setItem(storageKey, value);
       } catch {
         // Ignore write errors (e.g., private mode) to avoid blocking UI.
       }
     },
-    [resolvedToolId],
+    [visibleToolId],
   );
 
   const handleResponse = React.useCallback(
     (value: FeedbackResponse) => {
       persistResponse(value);
-      setStatus("hidden");
+      setVisibleToolId(null);
     },
     [persistResponse],
   );
 
-  if (status === "hidden") {
+  if (visibleToolId === null) {
     return null;
   }
 
-  const eventId = resolvedToolId ?? "unknown";
+  const eventId = visibleToolId;
   const eventTool = toolTitle ?? eventId;
 
   return (

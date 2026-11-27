@@ -394,12 +394,7 @@ function buildDimensionContext<
   allowedKeys?: readonly TKey[];
 } {
   const dimensionOpts =
-    dimensionOptions ??
-    (dimension
-      ? (meta.dimensions?.[dimension] as
-        | ReadonlyArray<DimensionOption<TKey>>
-        | undefined)
-      : undefined);
+    dimensionOptions ?? (dimension ? meta.dimensions?.[dimension] : undefined);
 
   const labelMap = dimensionOpts
     ? createLabelMap(dimensionOpts as ReadonlyArray<DimensionOption<TKey>>)
@@ -495,7 +490,7 @@ function aggregateRecords<
       return {
         period: record.period,
         ...values,
-      } as DatasetAggregateRow<TKey>;
+      };
     });
   }
 

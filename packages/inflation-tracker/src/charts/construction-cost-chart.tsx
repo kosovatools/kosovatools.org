@@ -81,7 +81,7 @@ export function ConstructionCostIndexChart({ dataset, timelineEvents }: Props) {
       if (!selectedSet.has(record.cost_category)) continue;
       let row = rowsByPeriod.get(record.period);
       if (!row) {
-        row = { period: record.period } as ChartRow;
+        row = { period: record.period };
         rowsByPeriod.set(record.period, row);
       }
       row[record.cost_category] =

@@ -22,7 +22,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NEXT_PUBLIC_BASE_URL: https://kosovatools.org
+  NEXT_PUBLIC_SITE_URL: https://kosovatools.org
 
 jobs:
   build:
@@ -50,19 +50,17 @@ jobs:
         id: turbo-key
         run: |
           BASE="turbo-data-$(date -u +%G-W%V)"
-          HASH="${{ hashFiles('turbo.json', 'pnpm-lock.yaml') }}"
-          BUST="${{ github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true' }}"
-          if [ "$BUST" = "true" ]; then
-            SUFFIX="$HASH-bust-$GITHUB_RUN_ID"
-          else
-            SUFFIX="$HASH"
-          fi
-          echo "key=$BASE-$SUFFIX" >> "$GITHUB_OUTPUT"
-          echo "restore=$BASE-" >> "$GITHUB_OUTPUT"
+          REVISION="$BASE-$GITHUB_SHA-"
+          {
+            echo "key=$REVISION$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+            echo "revision=$REVISION"
+            echo "restore=$BASE-"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Restore Turbo cache
         id: turbo-cache
-        uses: actions/cache@v4
+        if: ${{ !(github.event_name == 'workflow_dispatch' && github.event.inputs.bust_data_cache == 'true') }}
+        uses: actions/cache/restore@v4
         with:
           path: .turbo
           key: ${{ steps.turbo-key.outputs.key }}
@@ -76,7 +74,13 @@ jobs:
         run: pnpm turbo run build --filter=web...
         env:
           NEXT_TELEMETRY_DISABLED: "1"
-          NEXT_PUBLIC_BASE_URL: ${{ env.NEXT_PUBLIC_BASE_URL }}
+
+      - name: Save Turbo cache
+        if: ${{ !startsWith(steps.turbo-cache.outputs.cache-matched-key, steps.turbo-key.outputs.revision) }}
+        uses: actions/cache/save@v4
+        with:
+          path: .turbo
+          key: ${{ steps.turbo-key.outputs.key }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

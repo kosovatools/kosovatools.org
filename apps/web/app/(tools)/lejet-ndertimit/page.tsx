@@ -3,10 +3,12 @@ import type { Metadata } from "next";
 import { BuildingPermitExplorer } from "@workspace/prishtina-building-permits";
 import { ToolPage } from "@workspace/ui/custom-components/tool-page";
 
+const title = "Lejet e ndërtimit në Prishtinë";
+
 export const metadata: Metadata = {
-  title: "Lejet e ndërtimit të Komunës së Prishtinës",
+  title,
   description:
-    "Shfleto lejet zyrtare të ndërtimit nga Komuna e Prishtinës (2012‑2025), filtro sipas lagjes, pronarit ose destinimit",
+    "Shfleto lejet e ndërtimit të publikuara nga Komuna e Prishtinës për vitet 2012–2025. Filtro sipas lagjes, pronarit ose destinimit.",
   keywords: [
     "lejet e ndërtimit",
     "Prishtina",
@@ -20,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "/lejet-ndertimit",
-    title: "Lejet e ndërtimit të Komunës së Prishtinës",
+    title,
     description:
       "Krahasoni sipërfaqet, tarifat dhe dokumentet zyrtare të lejeve të ndërtimit të publikuara nga Drejtoria e Urbanizmit e Prishtinës.",
     siteName: "Kosova Tools",
@@ -28,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lejet e ndërtimit të Komunës së Prishtinës",
+    title,
     description: "Filtroni lejet sipas pronarit, projektuesit ose destinimit.",
   },
 };
@@ -36,8 +38,8 @@ export const metadata: Metadata = {
 export default function PrishtinaBuildingPermitsPage() {
   return (
     <ToolPage
-      title="Lejet zyrtare të ndërtimit (2012–2025)"
-      description="Analizo regjistrin e plotë të lejeve të ndërtimit të publikuara nga Komuna e Prishtinës për të parë sipërfaqet, tarifat dhe dokumentet shoqëruese për çdo aplikim."
+      title={title}
+      description="Shfleto lejet e publikuara nga Komuna e Prishtinës për vitet 2012–2025. Kërko sipas lagjes ose pronarit dhe shiko sipërfaqen, tarifat dhe dokumentet e çdo lejeje."
       footer="Komuna e Prishtinës · Drejtoria e Urbanizmit"
     >
       <BuildingPermitExplorer />

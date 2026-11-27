@@ -320,7 +320,7 @@ export function buildStackSeries<TRecord, TKey extends string>(
     for (const k of primaryKeys) if (!(k in acc)) acc[k] = 0;
     if (includeOther) acc.Other = other;
 
-    return { period: gp, values: acc as Record<TKey | "Other", number> };
+    return { period: gp, values: acc };
   });
 
   const keys: Array<TKey | "Other"> = includeOther

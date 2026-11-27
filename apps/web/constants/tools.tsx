@@ -13,11 +13,7 @@ import {
   TrendingUp,
   Zap,
   type LucideIcon,
-  type LucideProps,
-  Icon,
 } from "lucide-react";
-import { candlestick } from "@lucide/lab";
-import { forwardRef } from "react";
 
 export type ToolCard = {
   name: string;
@@ -27,11 +23,6 @@ export type ToolCard = {
   icon: LucideIcon;
   category: string;
 };
-
-const CandleIcon: LucideIcon = forwardRef<SVGSVGElement, LucideProps>(
-  (props, ref) => <Icon ref={ref} iconNode={candlestick} {...props} />,
-);
-CandleIcon.displayName = "CandleIcon";
 
 export const tools: ToolCard[] = [
   {
@@ -125,7 +116,7 @@ export const tools: ToolCard[] = [
     category: "Statistika",
   },
   {
-    name: "Lejet e ndërtimit të Prishtinës",
+    name: "Lejet e ndërtimit në Prishtinë",
     href: "/lejet-ndertimit",
     description:
       "Shfleto lejet e ndërtimit të publikuara nga Komuna e Prishtinës, filtro sipas lagjes, destinimit ose pronarit",
@@ -149,15 +140,6 @@ export const tools: ToolCard[] = [
       "Kërko barnat e licencuara nga Ministria e Shëndetësisë, shiko çmimet referuese të shumicës/pakicës dhe krahaso versionet e publikimeve.",
     cta: "Hulumto çmimet",
     icon: Pill,
-    category: "Eksplorues të të dhënave",
-  },
-  {
-    name: "Regjistrat e luftës",
-    href: "/regjistrat-e-luftes",
-    description:
-      "Statistika dhe regjistrat e personave të vrarë ose të zhdukur në Kosovë (1998-2000) sipas Kosovo Memory Book.",
-    cta: "Shfleto regjistrat",
-    icon: CandleIcon,
     category: "Eksplorues të të dhënave",
   },
   {

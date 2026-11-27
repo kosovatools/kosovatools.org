@@ -31,7 +31,7 @@ export function TreemapCellContent({
       width={width}
       height={height}
       style={{
-        fill: `var(--color-${props[colorKey]})`,
+        fill: `var(--color-${String(props[colorKey])})`,
         stroke: "#fff",
         fillOpacity: 0.3,
         strokeWidth: 1,

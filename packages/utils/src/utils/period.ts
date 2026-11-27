@@ -435,6 +435,7 @@ export function formatPeriodLabel(
       const fmt = new Intl.DateTimeFormat(locale, {
         month: "short",
         year: "2-digit",
+        timeZone: "UTC",
       });
       return fmt.format(new Date(Date.UTC(parsed.year, parsed.month - 1, 1)));
     }
@@ -447,7 +448,10 @@ export function formatPeriodLabel(
     case "yearly": {
       const y = toInt(period);
       if (!isFiniteNum(y)) return fallbackLabel;
-      const fmt = new Intl.DateTimeFormat(locale, { year: "numeric" });
+      const fmt = new Intl.DateTimeFormat(locale, {
+        year: "numeric",
+        timeZone: "UTC",
+      });
       return fmt.format(new Date(Date.UTC(y, 0, 1)));
     }
     default:

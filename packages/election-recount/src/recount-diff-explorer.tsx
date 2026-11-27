@@ -145,6 +145,8 @@ function RecountDiffContent({
     key: K,
   ) => (value: FilterState[K]) => void;
 }) {
+  "use no memo";
+
   const { records } = dataset;
 
   const candidateRecords = React.useMemo(
@@ -337,6 +339,7 @@ function RecountDiffContent({
     (index: number) => partyImpactRows[index]?.key ?? index,
     [partyImpactRows],
   );
+  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Virtual mutates its instances, so this component opts out of compiler memoization.
   const partyVirtualizer = useVirtualizer({
     count: partyImpactRows.length,
     getScrollElement: getPartyScrollElement,
@@ -437,9 +440,7 @@ function RecountDiffContent({
         <CardContent>
           <OptionSelector
             value={filters.granularity}
-            onChange={(value) =>
-              updateFilter("granularity")(value as FilterState["granularity"])
-            }
+            onChange={updateFilter("granularity")}
             options={[
               { label: "Kombëtare", key: "national" },
               { label: "Komunë", key: "municipality" },

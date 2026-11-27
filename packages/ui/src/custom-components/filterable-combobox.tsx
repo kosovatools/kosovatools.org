@@ -86,6 +86,11 @@ export function FilterableCombobox(props: FilterableComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
 
+  if (disabled && open) {
+    setOpen(false);
+    setSearch("");
+  }
+
   const optionLookup = React.useMemo(
     () => new Map(options.map((option) => [option.value, option])),
     [options],
@@ -159,13 +164,6 @@ export function FilterableCombobox(props: FilterableComboboxProps) {
     },
     [disabled],
   );
-
-  React.useEffect(() => {
-    if (disabled && open) {
-      setOpen(false);
-      setSearch("");
-    }
-  }, [disabled, open]);
 
   const handleSelect = React.useCallback(
     (optionValue: string) => {

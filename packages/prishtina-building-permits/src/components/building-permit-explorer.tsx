@@ -46,21 +46,13 @@ export function BuildingPermitExplorer() {
 
   const [selectedYear, setSelectedYear] = React.useState<number>(2025);
 
-  React.useEffect(() => {
-    if (!index?.years.length) {
-      return;
-    }
-    setSelectedYear((current) => {
-      if (index?.years.some((entry) => entry.year === current)) {
-        return current;
-      }
-      return index?.years[0]?.year ?? current;
-    });
-  }, [index?.years]);
+  const selectedSummary =
+    index?.years.find((entry) => entry.year === selectedYear) ??
+    index?.years[0];
 
-  const selectedSummary = index?.years.find(
-    (entry) => entry.year === selectedYear,
-  );
+  if (selectedSummary && selectedSummary.year !== selectedYear) {
+    setSelectedYear(selectedSummary.year);
+  }
 
   const {
     data: dataset,

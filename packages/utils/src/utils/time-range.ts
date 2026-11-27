@@ -18,7 +18,7 @@ export function normalizeTimeRange<T extends TimeRangeOption>(
   if (value === null) return null as T;
   if (fallback === null) return fallback;
   if (isPositiveFiniteNumber(value)) {
-    return value as T;
+    return value;
   }
   return fallback;
 }
@@ -26,7 +26,7 @@ export function normalizeTimeRange<T extends TimeRangeOption>(
 export const DEFAULT_DAILY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> =
   [
     // Use day counts that roughly correspond to the yearly-labeled ranges.
-    { key: 365, label: "1 vjet" },
+    { key: 365, label: "1 vit" },
     { key: 1095, label: "3 vjet" },
     { key: 1825, label: "5 vjet" },
     { key: 3650, label: "10 vjet" },
@@ -35,7 +35,7 @@ export const DEFAULT_DAILY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition
 
 export const DEFAULT_MONTHLY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> =
   [
-    { key: 12, label: "1 vjet" },
+    { key: 12, label: "1 vit" },
     { key: 36, label: "3 vjet" },
     { key: 60, label: "5 vjet" },
     { key: 120, label: "10 vjet" },
@@ -44,7 +44,7 @@ export const DEFAULT_MONTHLY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefiniti
 
 export const DEFAULT_YEARLY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> =
   [
-    { key: 1, label: "1 vjet" },
+    { key: 1, label: "1 vit" },
     { key: 3, label: "3 vjet" },
     { key: 5, label: "5 vjet" },
     { key: 10, label: "10 vjet" },
@@ -53,7 +53,7 @@ export const DEFAULT_YEARLY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinitio
 
 export const DEFAULT_QUARTERLY_TIME_RANGE_OPTIONS: ReadonlyArray<TimeRangeDefinition> =
   [
-    { key: 8, label: "1 vjet" },
+    { key: 4, label: "1 vit" },
     { key: 12, label: "3 vjet" },
     { key: 20, label: "5 vjet" },
     { key: 40, label: "10 vjet" },
