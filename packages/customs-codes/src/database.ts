@@ -72,9 +72,6 @@ type InitializeOptions = {
 };
 
 export class CustomsDataService {
-  private static descriptionIndex: MiniSearch<DescriptionIndexDocument> | null =
-    null;
-
   static async initializeData({
     force = false,
     onProgress,
@@ -130,8 +127,6 @@ export class CustomsDataService {
         }
       });
 
-      await this.ensureDescriptionIndex();
-
       onProgress?.({
         phase: "done",
         loaded: total,
@@ -150,39 +145,6 @@ export class CustomsDataService {
       });
       return false;
     }
-  }
-
-  private static async ensureDescriptionIndex(): Promise<
-    MiniSearch<DescriptionIndexDocument>
-  > {
-    if (this.descriptionIndex) return this.descriptionIndex;
-
-    const db = getDb();
-    const data = await db.customs.orderBy("code").toArray();
-    const documents: DescriptionIndexDocument[] = data.map((row) => ({
-      code: row.code,
-      description: row.description ?? "",
-    }));
-
-    const index = new MiniSearch<DescriptionIndexDocument>({
-      fields: ["description"],
-      storeFields: ["description"],
-      idField: "code",
-      extractField: (doc, fieldName) => {
-        const key = fieldName as keyof DescriptionIndexDocument;
-        const value = doc[key];
-        return typeof value === "string" ? value : "";
-      },
-      searchOptions: {
-        fuzzy: false,
-        prefix: true,
-      },
-    });
-
-    index.addAll(documents);
-
-    this.descriptionIndex = index;
-    return index;
   }
 
   static async getAllData(): Promise<CustomsRecord[]> {
@@ -244,139 +206,51 @@ export class CustomsDataService {
     return roots;
   }
 
-  private static async findExistingParent(
-    db: CustomsDatabase,
-    code: string,
-  ): Promise<string | null> {
-    for (let i = code.length - 1; i > 0; i--) {
-      const candidate = code.slice(0, i);
-      const record = await db.customs.get(candidate);
-      if (record) return candidate;
-    }
-    return null;
+  static async getTariffSearch() {
+    const records = await getDb().customs.orderBy("code").toArray();
+    return new CustomsTariffSearch(records);
   }
 
-  private static async getLowestExistingAncestor(
-    db: CustomsDatabase,
-    prefix: string,
-  ): Promise<string | null> {
-    let current: string | null = prefix;
-    while (current && current.length > 0) {
-      const record = await db.customs.get(current);
-      if (record) return current;
-      current = await this.findExistingParent(db, current);
-    }
-    return null;
+  static async searchByFields(idPrefix = "", descQuery = "") {
+    if (typeof window === "undefined") return [];
+    return (await this.getTariffSearch()).searchByFields(idPrefix, descQuery);
+  }
+}
+
+export class CustomsTariffSearch {
+  private descriptionIndex: MiniSearch<DescriptionIndexDocument> | null = null;
+  private readonly codes: Set<string>;
+
+  constructor(readonly records: CustomsRecord[]) {
+    this.codes = new Set(records.map((row) => row.code));
   }
 
-  private static async getPath(
-    db: CustomsDatabase,
-    target: string,
-  ): Promise<string[]> {
-    const path: string[] = [target];
-    let current = target;
-    while (true) {
-      const parent = await this.findExistingParent(db, current);
-      if (!parent) break;
-      path.unshift(parent);
-      current = parent;
-    }
-    return path;
-  }
+  private ensureDescriptionIndex() {
+    if (this.descriptionIndex) return this.descriptionIndex;
 
-  private static async getDirectChildrenRecords(
-    db: CustomsDatabase,
-    parentCode: string,
-  ): Promise<CustomsRecord[]> {
-    const candidates = await db.customs
-      .where("code")
-      .startsWith(parentCode)
-      .toArray();
-    if (candidates.length === 0) return [];
-
-    const codeSet = new Set(candidates.map((record) => record.code));
-    const children = candidates.filter((record) => {
-      if (record.code === parentCode) return false;
-      return findParentCode(record.code, codeSet) === parentCode;
+    const index = new MiniSearch<DescriptionIndexDocument>({
+      fields: ["description"],
+      storeFields: ["description"],
+      idField: "code",
+      extractField: (doc, fieldName) => {
+        const key = fieldName as keyof DescriptionIndexDocument;
+        const value = doc[key];
+        return typeof value === "string" ? value : "";
+      },
+      searchOptions: {
+        fuzzy: false,
+        prefix: true,
+      },
     });
 
-    return children.map((record) => ({ ...record })).sort(compareRecords);
+    index.addAll(this.records);
+
+    this.descriptionIndex = index;
+    return index;
   }
 
-  private static async getSubtreeWithAncestors(
-    target: string,
-  ): Promise<CustomsRecord[]> {
-    const db = getDb();
-    const subtree = await db.customs.where("code").startsWith(target).toArray();
-    if (subtree.length === 0) return [];
-
-    const lca = await this.getLowestExistingAncestor(db, target);
-    const pathToLca = lca ? await this.getPath(db, lca) : [];
-    const allRecords = new Map<string, CustomsRecord>();
-
-    const addRecord = (record: CustomsRecord | null | undefined) => {
-      if (!record) return;
-      if (allRecords.has(record.code)) return;
-      allRecords.set(record.code, { ...record });
-    };
-
-    subtree.forEach((record) => addRecord(record));
-
-    const ancestorRecords = await Promise.all(
-      pathToLca.map((code) => db.customs.get(code)),
-    );
-    ancestorRecords.forEach((record) => addRecord(record));
-
-    const parentsForSiblings = new Set<string>();
-    for (const code of pathToLca) {
-      const parent = await this.findExistingParent(db, code);
-      if (parent) parentsForSiblings.add(parent);
-    }
-
-    for (const parentCode of parentsForSiblings) {
-      const directChildren = await this.getDirectChildrenRecords(
-        db,
-        parentCode,
-      );
-      directChildren.forEach((record) => addRecord(record));
-    }
-
-    return Array.from(allRecords.values()).sort(compareRecords);
-  }
-
-  private static async getSubtreesForHits(
-    codes: string[],
-    hits: MiniSearchHit[],
-  ): Promise<CustomsRecord[]> {
-    const highlightMap = new Map(
-      hits.map((hit) => [hit.id, hit.highlight || null]),
-    );
-    const allRecords = new Map<string, CustomsRecord>();
-
-    const subtrees = await Promise.all(
-      codes.map((code) => this.getSubtreeWithAncestors(code)),
-    );
-
-    for (const subtree of subtrees) {
-      for (const record of subtree) {
-        if (!allRecords.has(record.code)) {
-          allRecords.set(record.code, { ...record });
-        }
-      }
-    }
-
-    for (const [code, record] of allRecords) {
-      const highlight = highlightMap.get(code);
-      if (highlight) record.highlightedDescription = highlight;
-    }
-
-    return Array.from(allRecords.values()).sort(compareRecords);
-  }
-
-  private static async searchByDescriptionHits(
-    query: string,
-  ): Promise<MiniSearchHit[]> {
-    const index = await this.ensureDescriptionIndex();
+  private searchByDescriptionHits(query: string): MiniSearchHit[] {
+    const index = this.ensureDescriptionIndex();
     const results = index.search(query, {
       prefix: true,
       fuzzy: false,
@@ -403,43 +277,46 @@ export class CustomsDataService {
     });
   }
 
-  static async searchByFields(
-    idPrefix = "",
-    descQuery = "",
-  ): Promise<CustomsRecord[]> {
-    if (typeof window === "undefined") return [];
-    const codePrefix = (idPrefix ?? "").trim();
-    const descQueryTrimmed = (descQuery ?? "").trim();
-    const hasCodeQuery = codePrefix.length > 0;
-    const hasDescQuery = descQueryTrimmed.length > 0;
+  searchByFields(idPrefix: string, descQuery: string): CustomsRecord[] {
+    const tariffs = this.records;
+    const codePrefix = idPrefix.trim();
+    const description = descQuery.trim();
 
-    try {
-      if (!hasCodeQuery && !hasDescQuery) {
-        return await this.getAllData();
-      }
-
-      if (!hasDescQuery) {
-        return await this.getSubtreeWithAncestors(codePrefix);
-      }
-
-      const hits = await this.searchByDescriptionHits(descQueryTrimmed);
-      const relevantHits = hasCodeQuery
-        ? hits.filter((hit) => hit.id.startsWith(codePrefix))
-        : hits;
-
-      if (relevantHits.length === 0) {
-        return hasCodeQuery
-          ? await this.getSubtreeWithAncestors(codePrefix)
-          : [];
-      }
-
-      return await this.getSubtreesForHits(
-        relevantHits.map((hit) => hit.id),
-        relevantHits,
-      );
-    } catch (error) {
-      console.error("Search failed:", { idPrefix, descQuery, error });
+    if (!codePrefix && !description) return tariffs;
+    const hits = description
+      ? this.searchByDescriptionHits(description).filter((hit) =>
+          hit.id.startsWith(codePrefix),
+        )
+      : [{ id: codePrefix, highlight: null }];
+    if (!hits.length) return [];
+    if (!description && !tariffs.some((row) => row.code.startsWith(codePrefix)))
       return [];
+
+    const targets = new Set(hits.map((hit) => hit.id));
+    const highlights = new Map(hits.map((hit) => [hit.id, hit.highlight]));
+    const ancestors = new Set<string>();
+    const siblingParents = new Set<string>();
+    for (const target of targets) {
+      let code = this.codes.has(target)
+        ? target
+        : findParentCode(target, this.codes);
+      while (code) {
+        ancestors.add(code);
+        code = findParentCode(code, this.codes);
+        if (code) siblingParents.add(code);
+      }
     }
+
+    return tariffs.flatMap((row) => {
+      const code = row.code;
+      if (!ancestors.has(code) && !findParentCode(code, targets)) {
+        const parent = findParentCode(code, this.codes);
+        if (!parent || !siblingParents.has(parent)) return [];
+      }
+      const highlightedDescription = highlights.get(code);
+      return [
+        highlightedDescription ? { ...row, highlightedDescription } : row,
+      ];
+    });
   }
 }

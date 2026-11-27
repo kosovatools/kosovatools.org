@@ -9,14 +9,14 @@ import {
   AlertTitle,
 } from "@workspace/ui/components/alert";
 import { AlertTriangle } from "lucide-react";
-import { CustomsDataService } from "./database";
+import { CustomsDataService, type CustomsTariffSearch } from "./database";
 
 import { formatDate } from "@workspace/utils";
 
 import { createCustomsColumns } from "./customs-table/columns";
 import { VirtualizedTreeTable } from "./virtualized-tree-table";
 import { useCustomsSearchState } from "./use-customs-search-state";
-import { CustomsTreeNode } from "@kosovatools/data";
+import type { CustomsTreeNode } from "@kosovatools/data";
 import { InitializationProgress } from "./types";
 
 type DatasetValidity = {
@@ -34,9 +34,12 @@ function countTreeNodes(nodes: CustomsTreeNode[]): number {
 export function CustomsExplorer() {
   const [treeData, setTreeData] = useState<CustomsTreeNode[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [searchFailed, setSearchFailed] = useState(false);
   const [indexingState, setIndexingState] =
     useState<InitializationProgress | null>(null);
-  const [initialized, setInitialized] = useState(false);
+  const [tariffSearch, setTariffSearch] = useState<CustomsTariffSearch | null>(
+    null,
+  );
   const [datasetValidity, setDatasetValidity] =
     useState<DatasetValidity | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -77,12 +80,12 @@ export function CustomsExplorer() {
           },
         });
 
-        const all = await CustomsDataService.getAllData();
+        const search = await CustomsDataService.getTariffSearch();
         const latestValidFromDate =
-          await CustomsDataService.getLatestValidFromDate(all);
+          await CustomsDataService.getLatestValidFromDate(search.records);
         if (!mountedRef.current) return;
         startTransition(() => {
-          setTreeData(CustomsDataService.buildTreeFromList(all));
+          setTariffSearch(search);
           setDatasetValidity(
             latestValidFromDate
               ? {
@@ -99,7 +102,6 @@ export function CustomsExplorer() {
                 }
               : null,
           );
-          setInitialized(true);
         });
       } catch (error) {
         console.error("Failed to initialize customs data:", error);
@@ -121,36 +123,19 @@ export function CustomsExplorer() {
   }, [startTransition]);
 
   useEffect(() => {
-    if (!initialized) return;
-    let cancelled = false;
-
-    void (async () => {
+    if (!tariffSearch) return;
+    startTransition(() => {
       try {
-        setLoading(true);
-
-        const idPref = debouncedId;
-        const desc = debouncedDesc;
-
-        const nextList =
-          !idPref && !desc
-            ? await CustomsDataService.getAllData()
-            : await CustomsDataService.searchByFields(idPref, desc);
-
-        if (cancelled || !mountedRef.current) return;
-        startTransition(() => {
-          setTreeData(CustomsDataService.buildTreeFromList(nextList));
-        });
+        const matches = tariffSearch.searchByFields(debouncedId, debouncedDesc);
+        setTreeData(CustomsDataService.buildTreeFromList(matches));
+        setSearchFailed(false);
       } catch (error) {
         console.error("Search error:", error);
-      } finally {
-        if (!cancelled && mountedRef.current) setLoading(false);
+        setSearchFailed(true);
+        setTreeData([]);
       }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [debouncedId, debouncedDesc, initialized, startTransition]);
+    });
+  }, [debouncedId, debouncedDesc, tariffSearch, startTransition]);
 
   const columns = useMemo(
     () =>
@@ -238,6 +223,23 @@ export function CustomsExplorer() {
           autoExpandAll
           virtualize={shouldVirtualize}
         />
+        {searchFailed ? (
+          <p role="alert" className="py-4 text-center text-sm">
+            Kërkimi dështoi. Provoni përsëri.
+          </p>
+        ) : tariffSearch &&
+          indexingState?.phase !== "error" &&
+          !loading &&
+          !isPending &&
+          !treeData.length &&
+          (debouncedId || debouncedDesc) ? (
+          <p
+            role="status"
+            className="py-4 text-center text-sm text-muted-foreground"
+          >
+            Nuk u gjet asnjë tarifë për këtë kërkim.
+          </p>
+        ) : null}
       </div>
     </>
   );

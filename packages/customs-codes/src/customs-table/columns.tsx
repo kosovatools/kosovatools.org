@@ -52,7 +52,7 @@ export function createCustomsColumns({
             onToggle={onToggleCodeFilter}
           >
             <Input
-              value={idQueryValue}
+              defaultValue={idQueryValue}
               onChange={(event) => onIdQueryChange(event.currentTarget.value)}
               placeholder="p.sh. 7208 ose 01"
               inputMode="numeric"
@@ -111,9 +111,9 @@ export function createCustomsColumns({
             onToggle={onToggleDescFilter}
           >
             <Input
-              value={descQueryValue}
+              defaultValue={descQueryValue}
               onChange={(event) => onDescQueryChange(event.currentTarget.value)}
-              placeholder='p.sh. "tub çeliku"'
+              placeholder="Së paku 3 shkronja"
               autoComplete="off"
               aria-label="Filtro sipas përshkrimit"
               className="h-8 w-full normal-case text-xs font-normal tracking-normal"
